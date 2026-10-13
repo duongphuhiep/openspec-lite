@@ -15,12 +15,12 @@ The default `spec-driven` schema has 4 artifacts:
 proposal → specs + design → tasks
 ```
 
-| Artifact | File | Purpose |
-|---|---|---|
-| proposal | proposal.md | WHY (motivation, scope, non-goals) |
-| specs | specs/<capability>/spec.md | WHAT (requirements + scenarios, delta only) |
-| design | design.md | HOW (architecture, decisions, tradeoffs) |
-| tasks | tasks.md | STEPS (implementation checklist) |
+| Artifact | File                       | Purpose                                     |
+| -------- | -------------------------- | ------------------------------------------- |
+| proposal | proposal.md                | WHY (motivation, scope, non-goals)          |
+| specs    | specs/<capability>/spec.md | WHAT (requirements + scenarios, delta only) |
+| design   | design.md                  | HOW (architecture, decisions, tradeoffs)    |
+| tasks    | tasks.md                   | STEPS (implementation checklist)            |
 
 A **Capability** is a named area of functionality (e.g. `user-auth`, `billing/invoices`).
 A **Requirement** is a behavioral rule using RFC 2119 keywords (SHALL/SHOULD/MAY).
@@ -37,17 +37,17 @@ A **Scenario** is a concrete WHEN/THEN testable example of a requirement.
 Custom schemas are fully supported. A `schema.yaml` needs:
 
 ```yaml
-name: <string>        # required
-version: <number>     # required
+name: <string> # required
+version: <number> # required
 description: <string> # optional
-artifacts:            # required
-  - id: <string>      # required
-    generates: <string>   # required (file glob or path)
+artifacts: # required
+  - id: <string> # required
+    generates: <string> # required (file glob or path)
     description: <string> # required
-    template: <string>    # required (path to template file)
+    template: <string> # required (path to template file)
     instruction: <string> # optional
-    requires: <string[]>  # optional, default []
-apply:                # optional
+    requires: <string[]> # optional, default []
+apply: # optional
   requires: <string[]>
   tracks: <string>
   instruction: <string>
@@ -79,13 +79,18 @@ Validation rules: no duplicate ids, no cycles, all `requires` entries must refer
 
 ```markdown
 ## ADDED Requirements
+
 ### Requirement: <name>
+
 <text using SHALL/SHOULD/MAY>
+
 #### Scenario: <name>
+
 - **WHEN** <condition>
 - **THEN** <expected outcome>
 
 ## MODIFIED Requirements
+
 ## REMOVED Requirements
 ```
 
@@ -105,6 +110,7 @@ Still in beta. Used when planning spans multiple repos or teams.
 **Source**: `dist/cli/archive.js` lines 1120-1567
 
 When a change has no `specs/` directory or empty delta, `openspec archive` works fine:
+
 - Skips the entire spec merge/validate/confirm block
 - Goes straight to moving the change directory to archive
 - No error thrown, no special flag needed
@@ -131,7 +137,7 @@ The change metadata file has a **required** `schema` field (`z.ZodString`). Full
 }
 ```
 
-To switch a change from `lite-plan` to `spec-driven`, edit the `schema:` value in `.openspec.yaml`.
+To switch a change from `plan-lite` to `spec-driven`, edit the `schema:` value in `.openspec.yaml`.
 
 ---
 
@@ -139,8 +145,9 @@ To switch a change from `lite-plan` to `spec-driven`, edit the `schema:` value i
 
 **Source**: `dist/cli/index.js` full command surface
 
-No `openspec change upgrade`, `migrate`, or schema-switching subcommand exists. Schema switch = manual edit to `.openspec.yaml`. 
+No `openspec change upgrade`, `migrate`, or schema-switching subcommand exists. Schema switch = manual edit to `.openspec.yaml`.
 
 The upgrade AI skill must:
-1. Edit `.openspec.yaml` — change `schema: lite-plan` → `schema: spec-driven`
+
+1. Edit `.openspec.yaml` — change `schema: plan-lite` → `schema: spec-driven`
 2. Scaffold missing artifacts (proposal.md, specs/, design.md, tasks.md) using content from plan.md

@@ -8,11 +8,11 @@ Design decisions for this project. Add rationale so future proposals can build o
 
 **Decision**: Adopt a 3-level workflow based on change complexity.
 
-| Level | Trigger | Artifacts |
-|---|---|---|
-| 1 — Direct | Small: bug fix, isolated refactor, obvious feature | None (prompt → implement → verify) |
-| 2 — Lightweight | Medium: needs planning, single session or short | plan.md (goal + non-goals + constraints, grows with decisions) |
-| 3 — OpenSpec | Large: multi-session, team, cross-repo, contract needed | proposal + specs + design + tasks |
+| Level           | Trigger                                                 | Artifacts                                                      |
+| --------------- | ------------------------------------------------------- | -------------------------------------------------------------- |
+| 1 — Direct      | Small: bug fix, isolated refactor, obvious feature      | None (prompt → implement → verify)                             |
+| 2 — Lightweight | Medium: needs planning, single session or short         | plan.md (goal + non-goals + constraints, grows with decisions) |
+| 3 — OpenSpec    | Large: multi-session, team, cross-repo, contract needed | proposal + specs + design + tasks                              |
 
 **Rationale**: OpenSpec overhead is only justified when context persistence matters across sessions, agents, or people. Most work is Level 1 or 2.
 
@@ -23,6 +23,7 @@ Design decisions for this project. Add rationale so future proposals can build o
 **Decision**: tasks.md should be optional or eliminated for Level 2 work.
 
 **Rationale**:
+
 - Forces premature implementation detail before exploration
 - AI re-derives tasks anyway during implementation
 - Becomes stale fast
@@ -34,6 +35,7 @@ For Level 2, implementation details emerge from exploration — not pre-planned.
 ## D3: plan.md Lifecycle
 
 **Decision**: When a Level-2 change is done:
+
 1. Archive `plan.md` locally (keep for archaeology)
 2. Selectively promote non-obvious, hard-to-deduce information to permanent specs
 3. Throw away implementation scaffolding (obvious from code)
@@ -65,6 +67,7 @@ For Level 2, implementation details emerge from exploration — not pre-planned.
 ## D6: Promotion Heuristic (Round 2)
 
 **Decision**: When archiving a Level-2 change, the AI proposes what to promote using two filters:
+
 1. **Non-obvious rule** — if a future reader can deduce it from the code in 5 minutes, skip it. If they'd need to ask someone, promote it.
 2. **Surprise rule** — would this surprise a new team member? If yes, promote it.
 
@@ -85,6 +88,7 @@ User reviews and approves the proposed list before promotion happens.
 ## D8: Promotion Targets (Round 2)
 
 **Decision**: When plan.md content is promoted to permanent storage:
+
 - Requirements and scenarios → `specs/<capability>/spec.md` (OpenSpec delta format)
 - Design decisions → `docs/adr/NNNN-<slug>.md` (ADR format)
 - Per-item: the AI judges which bucket each piece of information belongs to, user approves.
@@ -107,9 +111,13 @@ User reviews and approves the proposed list before promotion happens.
 
 ```markdown
 ## Goal
+
 ## Non-Goals
+
 ## Constraints
+
 ## Open Questions
+
 ## Decisions
 ```
 
@@ -122,18 +130,18 @@ The Decisions section is append-only: decisions are captured as they crystallize
 ## D11: Graduation Trigger (Round 3)
 
 **Decision**: Graduation from Level 2 → Level 3 is triggered two ways:
+
 1. **Explicit** — user says "upgrade this to Level 3", command scaffolds missing artifacts from plan.md
 2. **AI-suggested** — AI detects complexity signals (change spans >1 session, involves others, touches multiple capabilities) and suggests upgrading
 
-**Rationale**: Explicit covers intentional upgrades. AI-suggested catches the case where complexity crept in while the user was heads-down.
----
+## **Rationale**: Explicit covers intentional upgrades. AI-suggested catches the case where complexity crept in while the user was heads-down.
 
-## D12: lite-plan Schema (Round 4)
+## D12: plan-lite Schema (Round 4)
 
-**Decision**: The Level-2 custom schema is named `lite-plan`. Single artifact:
+**Decision**: The Level-2 custom schema is named `plan-lite`. Single artifact:
 
 ```yaml
-name: lite-plan
+name: plan-lite
 version: 1
 description: Lightweight plan — goal, constraints, decisions. No tasks. Upgradeable to spec-driven.
 artifacts:
@@ -150,7 +158,8 @@ artifacts:
 
 ## D13: Upgrade Mechanism (Round 4)
 
-**Decision**: Graduation from lite-plan → spec-driven is an AI skill that orchestrates existing CLI primitives. The skill:
+**Decision**: Graduation from plan-lite → spec-driven is an AI skill that orchestrates existing CLI primitives. The skill:
+
 1. Reads plan.md to extract goal, non-goals, constraints
 2. Changes the change's schema metadata (`.openspec.yaml`) to `spec-driven`
 3. Pre-fills proposal.md from plan.md content
@@ -162,7 +171,7 @@ artifacts:
 
 ## D14: Schema Distribution (Round 5)
 
-**Decision**: lite-plan schema starts as project-local (`openspec/schemas/lite-plan/`). If it proves useful in practice, contribute upstream to the OpenSpec package.
+**Decision**: plan-lite schema starts as project-local (`openspec/schemas/plan-lite/`). If it proves useful in practice, contribute upstream to the OpenSpec package.
 
 **Rationale**: Validate in real use before contributing. Avoids polluting upstream with an unproven design.
 
@@ -170,7 +179,7 @@ artifacts:
 
 ## D15: openspec-lite Scope (Round 5)
 
-**Decision**: `openspec-lite` is a complete package containing both the lite-plan schema and the AI skills for the lite-plan workflow.
+**Decision**: `openspec-lite` is a complete package containing both the plan-lite schema and the AI skills for the plan-lite workflow.
 
 **Rationale**: Schema and skills are useless without each other. A schema with no skill means the user has to manually run CLI commands. A skill with no schema has nothing to create.
 
@@ -180,10 +189,10 @@ artifacts:
 
 **Decision**: openspec-lite ships three skills:
 
-| Skill | Purpose |
-|---|---|
-| `opsx-lite:propose` | Create a lite-plan change (scaffolds plan.md) |
-| `opsx-lite:upgrade` | Promote lite-plan → spec-driven when complexity grows |
+| Skill               | Purpose                                                     |
+| ------------------- | ----------------------------------------------------------- |
+| `opsx-lite:propose` | Create a plan-lite change (scaffolds plan.md)               |
+| `opsx-lite:upgrade` | Promote plan-lite → spec-driven when complexity grows       |
 | `opsx-lite:archive` | Archive with selective promotion (AI judges, user approves) |
 
 `/opsx:explore` is reused as-is — no duplication needed.

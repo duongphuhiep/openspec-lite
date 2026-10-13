@@ -16,17 +16,17 @@ Level 3 ── spec-driven                (full OpenSpec)
                 upgrade path when scope grows
 ```
 
-| Level | When to use | Artifacts |
-|---|---|---|
-| 1 | Bug fix, isolated refactor, obvious feature | None |
-| 2 | Medium change: needs planning, single session | `plan.md` |
-| 3 | Multi-session, team handoff, cross-repo, contract needed | `proposal + specs + design + tasks` |
+| Level | When to use                                              | Artifacts                           |
+| ----- | -------------------------------------------------------- | ----------------------------------- |
+| 1     | Bug fix, isolated refactor, obvious feature              | None                                |
+| 2     | Medium change: needs planning, single session            | `plan.md`                           |
+| 3     | Multi-session, team handoff, cross-repo, contract needed | `proposal + specs + design + tasks` |
 
 ## What openspec-lite Ships
 
-- **`lite-plan` schema** — single `plan.md` artifact, no tasks, no design
-- **`opsx-lite:propose`** — create a lite-plan change
-- **`opsx-lite:upgrade`** — promote a lite-plan change to full spec-driven when complexity grows
+- **`plan-lite` schema** — single `plan.md` artifact, no tasks, no design
+- **`opsx-lite:propose`** — create a plan-lite change
+- **`opsx-lite:upgrade`** — promote a plan-lite change to full spec-driven when complexity grows
 - **`opsx-lite:archive`** — archive with selective promotion to permanent specs
 
 Use `/opsx:explore` as-is before proposing — no duplication needed.
@@ -37,9 +37,13 @@ Use `/opsx:explore` as-is before proposing — no duplication needed.
 
 ```markdown
 ## Goal
+
 ## Non-Goals
+
 ## Constraints
+
 ## Open Questions
+
 ## Decisions
 ```
 
@@ -47,6 +51,7 @@ The **Decisions** section is append-only. As decisions emerge during exploration
 
 ```markdown
 ### Decision: Use optimistic locking
+
 Chose optimistic locking over pessimistic because contention is low.
 Rejected row-level locks — too much overhead for read-heavy workload.
 ```
@@ -69,6 +74,7 @@ opsx-lite:propose
 ```
 
 At archive time, the AI proposes what to promote using two filters:
+
 - **Non-obvious**: a future reader can't deduce it from the code in 5 minutes
 - **Surprising**: would this surprise a new team member?
 
@@ -78,7 +84,7 @@ You review and approve the list conversationally before anything is written.
 
 When a Level-2 change grows beyond its original scope, `opsx-lite:upgrade`:
 
-1. Edits `.openspec.yaml` — changes `schema: lite-plan` → `schema: spec-driven`
+1. Edits `.openspec.yaml` — changes `schema: plan-lite` → `schema: spec-driven`
 2. Pre-fills `proposal.md` from `plan.md` content
 3. Scaffolds empty `specs/`, `design.md`, `tasks.md` for the AI to fill in
 

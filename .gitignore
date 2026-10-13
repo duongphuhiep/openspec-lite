@@ -466,5 +466,5 @@ tags
 
 # Project-specific
 build/
-.local-repos/
+.plan/
 .tmp/
