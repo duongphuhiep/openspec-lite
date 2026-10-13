@@ -25,7 +25,7 @@ Level 3 ── spec-driven                (full OpenSpec)
 ## What openspec-lite Ships
 
 - **`plan-lite` schema** — a required `plan.md` and an opt-in `tasks-preview.md`. No design, no `tasks.md`.
-- **`opsx-lite:propose`** — create a plan-lite change. It asks if you want a task preview.
+- **`opsx-lite:propose`** — create a plan-lite change. It asks if you want a tasks preview.
 - **`opsx-lite:tasks-preview`** — generate or regenerate `tasks-preview.md`.
 - **`opsx-lite:apply`** — implement from `plan.md`, with `tasks-preview.md` as a guide.
 - **`opsx-lite:upgrade`** — promote a plan-lite change to full spec-driven when complexity grows

@@ -1,6 +1,6 @@
 # openspec-lite
 
-A lightweight workflow on top of OpenSpec for medium changes. It replaces the full spec-driven change with a plan and an optional task preview.
+A lightweight workflow on top of OpenSpec for medium changes. It replaces the full spec-driven change with a plan and an optional tasks preview.
 
 ## Language
 

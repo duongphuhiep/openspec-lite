@@ -187,7 +187,7 @@ artifacts:
 
 ## D16: Skills Set (Round 5)
 
-**Decision**: openspec-lite ships three skills:
+**Decision**: openspec-lite ships five skills:
 
 | Skill                     | Purpose                                                           |
 | ------------------------- | ----------------------------------------------------------------- |
@@ -219,7 +219,7 @@ artifacts:
 
 ## D19: Task Preview Is AI-Generated (Tasks Round 1)
 
-**Decision**: The AI writes the task preview. It reads `plan.md` and explores the code first. Then it lists the code changes it intends to make.
+**Decision**: The AI writes the tasks preview. It reads `plan.md` and explores the code first. Then it lists the code changes it intends to make.
 
 **Rationale**: The value is a look at the agent's intent before it writes code. A human-written task list does not give this.
 
@@ -227,7 +227,7 @@ artifacts:
 
 ## D20: Task Preview Is On Demand (Tasks Round 1)
 
-**Decision**: The task preview is opt-in. The user asks for it when they want a preview. The default plan-lite flow does not include it.
+**Decision**: The tasks preview is opt-in. The user asks for it when they want a preview. The default plan-lite flow does not include it.
 
 **Rationale**: A mandatory task list makes plan-lite heavy again. It brings back downside 2 (D2).
 
@@ -235,7 +235,7 @@ artifacts:
 
 ## D21: Task Preview Value Is the Checkpoint (Tasks Round 1)
 
-**Decision**: The value of the task preview is the human review before coding. The artifact itself has no long-term value.
+**Decision**: The value of the tasks preview is the human review before coding. The artifact itself has no long-term value.
 
 **Rationale**: After the AI writes the code, the diff is the truth. The preview is not a contract.
 
@@ -243,7 +243,7 @@ artifacts:
 
 ## D22: Task Preview Is a File, tasks-preview.md (Tasks Round 2)
 
-**Decision**: The task preview is an opt-in artifact named `tasks-preview.md`. It is not a chat-only preview.
+**Decision**: The tasks preview is an opt-in artifact named `tasks-preview.md`. It is not a chat-only preview.
 
 - It is for the human. The human uses it to check that the AI will not do strange things.
 - It is a reference. It is not a list of fixed steps.
@@ -287,9 +287,9 @@ The schema has `apply.requires: [plan]` and no `apply.tracks`. This prevents bot
 
 ## D26: opsx-lite:tasks-preview Skill (Tasks Round 3)
 
-**Decision**: Two ways create the task preview:
+**Decision**: Two ways create the tasks preview:
 
-1. `opsx-lite:propose` asks at the end: "Do you want a task preview?"
+1. `opsx-lite:propose` asks at the end: "Do you want a tasks preview?"
 2. A separate skill, `opsx-lite:tasks-preview`, generates the preview at any time.
 
 `opsx-lite:tasks-preview` overwrites the old `tasks-preview.md`.
