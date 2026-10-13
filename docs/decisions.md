@@ -90,7 +90,7 @@ User reviews and approves the proposed list before promotion happens.
 **Decision**: When plan.md content is promoted to permanent storage:
 
 - Requirements and scenarios → `specs/<capability>/spec.md` (OpenSpec delta format)
-- Design decisions → `docs/adr/NNNN-<slug>.md` (ADR format)
+- Design decisions → `openspec/adr/NNNN-<slug>.md` (ADR format)
 - Per-item: the AI judges which bucket each piece of information belongs to, user approves.
 
 **Rationale**: Requirements and decisions have different lifecycles and audiences. Keeping them separate makes both more useful.
@@ -99,7 +99,7 @@ User reviews and approves the proposed list before promotion happens.
 
 ## D9: ADR Format for Permanent Decisions (Round 3)
 
-**Decision**: Permanent decisions are recorded as ADRs in `docs/adr/NNNN-<slug>.md`.
+**Decision**: Permanent decisions are recorded as ADRs in `openspec/adr/NNNN-<slug>.md`.
 
 **Rationale**: ADRs are self-contained, searchable, and linkable. One file per decision scales better than an append-only blob. Standard format means tooling and conventions already exist.
 
@@ -189,13 +189,13 @@ artifacts:
 
 **Decision**: openspec-lite ships three skills:
 
-| Skill               | Purpose                                                     |
-| ------------------- | ----------------------------------------------------------- |
-| `opsx-lite:propose` | Create a plan-lite change (scaffolds plan.md)               |
-| `opsx-lite:tasks-preview` | Generate or regenerate tasks-preview.md (added by D26) |
-| `opsx-lite:apply`   | Implement from plan.md + optional tasks-preview.md (added by D27) |
-| `opsx-lite:upgrade` | Promote plan-lite → spec-driven when complexity grows       |
-| `opsx-lite:archive` | Archive with selective promotion (AI judges, user approves) |
+| Skill                     | Purpose                                                           |
+| ------------------------- | ----------------------------------------------------------------- |
+| `opsx-lite:propose`       | Create a plan-lite change (scaffolds plan.md)                     |
+| `opsx-lite:tasks-preview` | Generate or regenerate tasks-preview.md (added by D26)            |
+| `opsx-lite:apply`         | Implement from plan.md + optional tasks-preview.md (added by D27) |
+| `opsx-lite:upgrade`       | Promote plan-lite → spec-driven when complexity grows             |
+| `opsx-lite:archive`       | Archive with selective promotion (AI judges, user approves)       |
 
 `/opsx:explore` is reused as-is — no duplication needed.
 

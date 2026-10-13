@@ -16,11 +16,11 @@ Level 3 ── spec-driven                (full OpenSpec)
                 upgrade path when scope grows
 ```
 
-| Level | When to use                                              | Artifacts                           |
-| ----- | -------------------------------------------------------- | ----------------------------------- |
-| 1     | Bug fix, isolated refactor, obvious feature              | None                                |
+| Level | When to use                                              | Artifacts                               |
+| ----- | -------------------------------------------------------- | --------------------------------------- |
+| 1     | Bug fix, isolated refactor, obvious feature              | None                                    |
 | 2     | Medium change: needs planning, single session            | `plan.md` + optional `tasks-preview.md` |
-| 3     | Multi-session, team handoff, cross-repo, contract needed | `proposal + specs + design + tasks` |
+| 3     | Multi-session, team handoff, cross-repo, contract needed | `proposal + specs + design + tasks`     |
 
 ## What openspec-lite Ships
 
@@ -94,7 +94,7 @@ opsx-lite:propose
                         │
                         ├── plan.md, tasks-preview.md → local archive
                         ├── requirements → specs/<capability>/spec.md
-                        └── decisions → docs/adr/NNNN-<slug>.md
+                        └── decisions → openspec/adr/NNNN-<slug>.md
 ```
 
 At archive time, the AI proposes what to promote using two filters:
