@@ -407,6 +407,8 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 **Rationale**: This mirrors the path where the schema lands in target projects (`openspec/schemas/plan-lite/`). The copy path is a one-liner and the intent is obvious to a reader.
 
+**Status**: Revised by D43 and D44. In this repo, the schema source is `skills/openspec-lite-schema/assets/plan-lite/`. The target path in a user project is still `openspec/schemas/plan-lite/`.
+
 ---
 
 ## D38: One Repo for Design and Deliverable
@@ -445,6 +447,8 @@ Version ranges use semver (npm-style): `>=1.9.0`, `^1.0.0`, `~1.7.0`, `<2.0.0`.
 Multi-version resolution (a schema index listing multiple versions) is deferred until a second schema version actually exists. Today there is one version. The skill fetches from the `main` branch. When a breaking change requires a new schema version, add the index then.
 
 **Rationale**: Both fields on one line each. `version` enables the "outdated?" check. `openspec-version` enables compatibility warning. Semver is the natural choice since openspec is an npm package. YAGNI on multi-version index.
+
+**Status**: D43 replaces the fetch from `main` with a copy from skill assets. The two metadata fields stay.
 
 ---
 

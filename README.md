@@ -118,6 +118,7 @@ No data is lost. The original `plan.md` stays as context.
 
 ## See Also
 
+- [`docs/design.md`](docs/design.md) — current rules for skills, schema, and delivery
 - [`CONTEXT.md`](CONTEXT.md) — glossary of project terms
 - [`docs/facts.md`](docs/facts.md) — discovered facts about OpenSpec internals
 - [`docs/decisions.md`](docs/decisions.md) — design decisions with rationale
