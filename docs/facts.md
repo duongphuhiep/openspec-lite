@@ -325,3 +325,14 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - With `SKILL.md` at the package root, APM copies the whole package folder into the harness, including `tests/` and `docs/` (`skill_integrator.py:1199-1208`).
 - A package author has no exclude mechanism. There is no `.apmignore`. `includes:` in `apm.yml` does not filter install (`docs/.../reference/manifest-schema.md:262-285`).
 - The lockfile `content_hash` covers the whole fetched package tree. `deployed_file_hashes` covers only the deployed files (`docs/.../reference/lockfile-spec.md:215`, `:221`).
+
+---
+
+## OpenSpec: Project Guidance for apply and archive
+
+**Source**: `dist/core/project-config.js:5`, `:70-80`; `dist/commands/workflow/instructions.js:434`; stock skill `openspec-archive-change/SKILL.md:39`
+
+- `openspec/config.yaml` can hold `operations.<id>.guidance`. The only operation IDs are `apply` and `archive`.
+- `openspec instructions archive --change <name> --json` returns this text as `operationGuidance`. The stock archive skill runs this command, so stock `/opsx:archive` sees the guidance.
+- The guidance is per project, not per schema.
+- A schema has no `archive` block. `SchemaYamlSchema` defines only `apply` (`dist/core/artifact-graph/types.js:30-46`).
