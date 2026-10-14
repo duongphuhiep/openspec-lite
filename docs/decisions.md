@@ -2,6 +2,8 @@
 
 Design decisions for this project. Add rationale so future proposals can build on them.
 
+This log is append-only. Do not edit an old entry. Add a `**Status**` line that names the newer decision.
+
 ---
 
 ## D1: Three-Level Workflow
@@ -75,6 +77,8 @@ User reviews and approves the proposed list before promotion happens.
 
 **Rationale**: Keeps permanent specs lean. Avoids both losing important context and polluting specs with noise.
 
+**Status**: D55 states that the two filters combine with OR.
+
 ---
 
 ## D7: Upgradeable Schema (Round 2)
@@ -95,7 +99,7 @@ User reviews and approves the proposed list before promotion happens.
 
 **Rationale**: Requirements and decisions have different lifecycles and audiences. Keeping them separate makes both more useful.
 
-**Status**: D47 defines how requirements reach the main specs.
+**Status**: D47 defines how requirements reach the main specs. D59 changes the ADR file name.
 
 ---
 
@@ -104,6 +108,8 @@ User reviews and approves the proposed list before promotion happens.
 **Decision**: Permanent decisions are recorded as ADRs in `openspec/adr/NNNN-<slug>.md`.
 
 **Rationale**: ADRs are self-contained, searchable, and linkable. One file per decision scales better than an append-only blob. Standard format means tooling and conventions already exist.
+
+**Status**: D59 changes the file name to `YYYY-MM-DD-<slug>.md` and fixes the template.
 
 ---
 
@@ -138,6 +144,8 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: Explicit covers intentional upgrades. AI-suggested catches the case where complexity crept in while the user was heads-down.
 
+**Status**: D54 revises the signals.
+
 ---
 
 ## D12: plan-lite Schema (Round 4)
@@ -158,7 +166,7 @@ artifacts:
 
 **Rationale**: One artifact, no dependencies, no tasks. Scratch notes stay in AI context, not a file.
 
-**Status**: Revised by D25. The schema now has a second, opt-in artifact: `tasks-preview`.
+**Status**: Revised by D25, then D53. The schema has only the `plan` artifact, plus the `apply` block from D25.
 
 ---
 
@@ -169,9 +177,11 @@ artifacts:
 1. Reads plan.md to extract goal, non-goals, constraints
 2. Changes the change's schema metadata (`.openspec.yaml`) to `spec-driven`
 3. Pre-fills proposal.md from plan.md content
-4. Leaves specs and design empty for the AI to fill in from plan.md context. D31 later seeds tasks.md from tasks-preview.md.
+4. Leaves specs and design empty for the AI to fill in from plan.md context.
 
 **Rationale**: CLI handles file/metadata mechanics. AI handles content extraction and mapping.
+
+**Status**: Extended by D31 and D46. Revised by D62: upgrade writes all four artifacts and moves the `plan.md` content.
 
 ---
 
@@ -206,6 +216,8 @@ artifacts:
 
 `/opsx:explore` is reused as-is — no duplication needed.
 
+**Status**: Revised by D26, D27, D42, and D44. The table shows the current set of skills.
+
 ---
 
 ## D17: Skill Naming (Round 5)
@@ -226,7 +238,7 @@ artifacts:
 
 ---
 
-## D19: Task Preview Is AI-Generated (Tasks Round 1)
+## D19: Tasks Preview Is AI-Generated (Tasks Round 1)
 
 **Decision**: The AI writes the tasks preview. It reads `plan.md` and explores the code first. Then it lists the code changes it intends to make.
 
@@ -234,7 +246,7 @@ artifacts:
 
 ---
 
-## D20: Task Preview Is On Demand (Tasks Round 1)
+## D20: Tasks Preview Is On Demand (Tasks Round 1)
 
 **Decision**: The tasks preview is opt-in. The user asks for it when they want a preview. The default plan-lite flow does not include it.
 
@@ -242,7 +254,7 @@ artifacts:
 
 ---
 
-## D21: Task Preview Value Is the Checkpoint (Tasks Round 1)
+## D21: Tasks Preview Value Is the Checkpoint (Tasks Round 1)
 
 **Decision**: The value of the tasks preview is the human review before coding. The artifact itself has no long-term value.
 
@@ -250,7 +262,7 @@ artifacts:
 
 ---
 
-## D22: Task Preview Is a File, tasks-preview.md (Tasks Round 2)
+## D22: Tasks Preview Is a File, tasks-preview.md (Tasks Round 2)
 
 **Decision**: The tasks preview is an opt-in artifact named `tasks-preview.md`. It is not a chat-only preview.
 
@@ -280,7 +292,9 @@ Do not split work into very small subtasks. Each task describes a meaningful, ve
 
 **Decision**: `tasks-preview.md` uses the same format and detail level as OpenSpec `tasks.md`. Pseudo-diffs are permitted.
 
-**Rationale**: The file is opt-in and reference-only. The difference from `tasks.md` is its status, not its format. Supersedes the Q5 detail-level question.
+**Rationale**: The file is opt-in and reference-only. The difference from `tasks.md` is its status, not its format.
+
+**Status**: D52 removes the checkboxes.
 
 ---
 
@@ -290,7 +304,7 @@ Do not split work into very small subtasks. Each task describes a meaningful, ve
 
 The schema has `apply.requires: [plan]` and no `apply.tracks`. This prevents both apply traps in `docs/facts.md`.
 
-**Status**: Resolved — see D27.
+**Status**: Superseded by D53. `tasks-preview` is no longer a schema artifact. The `apply` block stays.
 
 ---
 
@@ -319,6 +333,8 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 **Rationale**: Stock apply runs without `tasks.md`, but its text assumes checkboxes. It also never gets a done signal (see `docs/facts.md`). The user expects that `openspec-lite-apply` is not redundant. This is an instinct, with no evidence yet.
 
 **Review trigger**: Remove `openspec-lite-apply` if real use shows that stock `/opsx:apply` does the same job.
+
+**Status**: D64 makes the schema `apply.instruction` the only copy of the rules.
 
 ---
 
@@ -351,6 +367,8 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 **Decision**: `openspec-lite-upgrade` uses `tasks-preview.md` as the seed for `tasks.md`. The user reviews `tasks.md` again after the upgrade.
 
 **Rationale**: The format is the same (D24), so the content is reusable. The second review is necessary because `tasks.md` is a contract, not a reference.
+
+**Status**: Revised by D62. Upgrade seeds `tasks.md` last, after `specs` and `design`, then deletes the preview.
 
 ---
 
@@ -397,7 +415,9 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 **Decision**: The npm package name is `openspec-lite`.
 
-**Rationale**: Matches the repo name and the project identity. A scoped name (`@openspec/lite`) would imply official endorsement from the OpenSpec org, which is not the case. D42 later aligned the skill prefix with this name.
+**Rationale**: Matches the repo name and the project identity. A scoped name (`@openspec/lite`) would imply official endorsement from the OpenSpec org, which is not the case.
+
+**Status**: D42 aligns the skill prefix with this name.
 
 ---
 
@@ -427,9 +447,9 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 The skill embeds only the expected schema version string — not the full schema content. Full schema content is never in the skill's SKILL.md.
 
-**Status**: Superseded by D43 (copy from skill assets, not fetch from GitHub).
-
 **Rationale**: Token-efficient — schema content never travels through the LLM after first install. Handles both "not installed" and "outdated" cases. Version check costs one file read per invocation.
+
+**Status**: Superseded by D43 (copy from skill assets, not fetch from GitHub).
 
 ---
 
@@ -487,7 +507,7 @@ This revises D39. The version check from D39 and D40 stays:
 
 **Rationale**: No network access, so it works in sandboxed harnesses and behind proxies. No tokens are spent on schema content. The shipped schema always matches the installed skill version, which removes the risk in D39 of fetching a newer schema from `main`. skillpm and APM both keep skill `assets/` on disk next to `SKILL.md`.
 
-**Status**: The asset owner and the check are resolved in D44.
+**Status**: The asset owner and the check are resolved in D44. D56 and D65 add the mismatch rules and the copy command.
 
 ---
 
@@ -498,6 +518,8 @@ This revises D39. The version check from D39 and D40 stays:
 This revises D16 (six skills) and removes the `--update-schema` flag from D39.
 
 **Rationale**: A teammate can clone a repo and run any skill first, so every skill must check. One owner keeps one copy of the assets. No skill depends on the folder path of another skill. Schema update is a separate job, so it is not a flag on propose.
+
+**Status**: D56 adds the mismatch rules. D57 adds the fallback when a skill cannot invoke a skill.
 
 ---
 
@@ -536,6 +558,8 @@ This makes D8 more precise.
 
 **Rationale**: `openspec archive` merges any delta files under `<change>/specs/`, whatever the schema (`dist/core/archive.js:1127`). But it blocks when `skip_specs` is set and `specs/` has files (`archive.js:969`). Reusing the CLI merge avoids a second, untested merge that could corrupt the main specs. The CLI has no ADR concept, so ADRs are written directly.
 
+**Status**: D58 changes the order: validate and archive first, ADRs last.
+
 ---
 
 ## D48: OpenSpec Compatibility Is Declared Only in schema.yaml
@@ -561,6 +585,8 @@ This replaces the mtime check in D33.
 
 **Rationale**: `git clone`, `checkout`, and `pull` reset file mtimes, so mtime gives wrong results. A hash is exact and costs one shell call.
 
+**Status**: D51 changes the hash scope. D65 defines the command.
+
 ---
 
 ## D50: Propose and Apply Suggest an Upgrade
@@ -573,3 +599,203 @@ This replaces the mtime check in D33.
 The other skills do not suggest an upgrade.
 
 **Rationale**: Scope becomes visible at these two points. Checks in the other skills would only add noise.
+
+**Status**: D54 revises the signals. D68 adds a Level 1 signal to propose.
+
+---
+
+## D51: The Preview Hash Excludes the Decisions Section
+
+**Decision**: The `plan-sha256` hash (D49) covers `plan.md` without its `## Decisions` section. Before hashing, the command changes CRLF to LF and collapses each run of whitespace to one space.
+
+This revises D49.
+
+**Rationale**: Apply writes deviations into `## Decisions` (D29). A full-file hash then marks the preview as stale after the first deviation. Line endings and blank lines change between OS checkouts but do not change the meaning. `## Open Questions` stays in the hash, because an answer to an open question can change the preview.
+
+---
+
+## D52: The Tasks Preview Has No Checkboxes
+
+**Decision**: `tasks-preview.md` uses the layout of `tasks.md` (D24), but its items are plain bullets, not `- [ ]` checkboxes. When upgrade seeds `tasks.md` from the preview, it adds the checkboxes.
+
+This revises D24.
+
+**Rationale**: Stock `/opsx:apply` ticks checkboxes. That edits a file that nobody must edit (D32). With no checkboxes, stock apply has nothing to tick.
+
+---
+
+## D53: tasks-preview Is Not a Schema Artifact
+
+**Decision**: The plan-lite schema has one artifact again: `plan`. `tasks-preview.md` is a file that only `openspec-lite-tasks-preview` writes. Its template is inline in that skill's `SKILL.md`.
+
+This revises D25. D12 is current again, with the `apply` block from D25.
+
+**Rationale**: Stock `/opsx:continue` and `/opsx:ff` generate every artifact in the graph. They would create a preview that nobody asked for (D20), with no header and no hash. Outside the graph, the CLI does not know the file. The template is a few lines, so a separate asset file adds a file and a read for no benefit.
+
+---
+
+## D54: Upgrade Signals Use Handoff and Repos, Not Sessions
+
+**Decision**: The upgrade signals are:
+
+- Another person or agent must continue the work.
+- The change touches more than one capability.
+- The change touches more than one repo.
+- A contract (spec) becomes necessary.
+
+"The work spans more than one session" is removed.
+
+This revises D11 and D50.
+
+**Rationale**: plan-lite expects context clears (D22, D26), so a new session is normal. No skill can detect a session. A session count was a proxy for handoff, and handoff is the real reason for a contract. Cross-repo was a Level 3 trigger in D1 but was missing from the signals.
+
+---
+
+## D55: The Promotion Filters Combine With OR
+
+**Decision**: An item is a promotion candidate if it is non-obvious OR surprising (D6).
+
+**Rationale**: This matches the wording of D6. The user approves each item (D18), so the user removes the noise.
+
+---
+
+## D56: Schema Version Mismatch Stops the Skill
+
+**Decision**: Each workflow skill compares the repo schema with the shipped schema:
+
+- The repo copy is missing or older: run `openspec-lite-schema`. If the user declines the copy, stop.
+- The repo copy is newer: stop. Tell the user to update the openspec-lite package.
+- After a copy, show `git diff openspec/schemas/plan-lite/`, so the user sees overwritten local edits and can revert them.
+
+Each workflow skill also runs `openspec --version` and compares it with `openspec-version`. If it is outside the range, the skill warns and links to the compatibility table (D67).
+
+This makes D43 and D44 more precise.
+
+**Rationale**: An old skill on a new schema, or a new skill on an old schema, can write files that the schema rejects. The fix is one command. A CLI update is silent, so a check only at install misses it. The CLI check costs one fast shell call. `git diff` replaces any custom merge logic for local edits.
+
+---
+
+## D57: Skill Chaining Has a Fallback
+
+**Decision**: When a skill must run another skill (schema install, propose → tasks preview), it invokes the skill if the harness can. If the harness cannot, it tells the user which skill to run and stops.
+
+**Rationale**: Not every harness lets a skill invoke a skill. The fallback keeps one owner of the schema assets (D44) and works everywhere.
+
+---
+
+## D58: Archive Writes ADRs Last
+
+**Decision**: `openspec-lite-archive` runs in this order after approval:
+
+1. Write the approved delta files. For a MODIFIED requirement, copy the full requirement from the main spec, then edit it.
+2. Remove `skip_specs` if step 1 wrote files.
+3. Run `openspec validate <change>`. If it fails, stop and report.
+4. Run `openspec archive <change> --yes`.
+5. Write the approved ADRs.
+
+This revises the order in D47.
+
+**Rationale**: If validation or archive fails, no orphan ADR exists. `--yes` is safe because the user approved each item in the conversation. OpenSpec requires full content for MODIFIED, and partial content loses detail at archive time (`docs/facts.md`).
+
+---
+
+## D59: ADR Files Use a Date Prefix and a Fixed Template
+
+**Decision**: An ADR file is `openspec/adr/YYYY-MM-DD-<slug>.md`. Its sections are Title, Status, Context, Decision, and Consequences.
+
+This revises the `NNNN-<slug>.md` name in D8 and D9.
+
+**Rationale**: Two branches that each add an ADR cannot get the same name. The CLI does not read ADRs, so the name has no other constraint.
+
+---
+
+## D60: Apply Ends With a Done Checklist
+
+**Decision**: The end-of-apply summary checks: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty? `openspec-lite-archive` asks the same questions before it promotes, and warns on each "no".
+
+**Rationale**: The CLI never reports a plan-lite change as done, and archive does not check (`docs/facts.md`). Open questions that are still open are the real "not done" marker.
+
+---
+
+## D61: Change Selection
+
+**Decision**: A skill acts on the change named in the prompt. If no name is given and only one active change exists, it uses that change. Otherwise it asks.
+
+**Rationale**: The stock OpenSpec skills behave this way.
+
+---
+
+## D62: Upgrade Writes All Artifacts and Moves plan.md Content
+
+**Decision**: `openspec-lite-upgrade` writes the four spec-driven artifacts in dependency order. It gets each template from `openspec instructions <artifact>`.
+
+1. `proposal.md`: from Goal and Non-Goals.
+2. `specs/` and `design.md`: from `plan.md`. Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
+3. `tasks.md`: seeded from `tasks-preview.md` if it exists, with checkboxes added (D52). Then delete `tasks-preview.md`.
+4. Delete each `plan.md` section whose content moved. Keep a section that has no slot, for example open questions that are still open. If no section is left, delete `plan.md`.
+
+The user reviews all artifacts at the end. `tasks.md` gets an extra review, because it is a contract.
+
+This revises D13 and D31.
+
+**Rationale**: The spec-driven graph requires `specs` and `design` before `tasks`. Upgrade is the only step that knows both `plan.md` and the preview, so a split would lose context. `design.md` is where stock tools look for decisions. A preview or a plan next to the new artifacts is a stale second source of truth.
+
+---
+
+## D63: openspec-lite-archive Is for plan-lite Changes Only
+
+**Decision**: `openspec-lite-archive` refuses a change whose schema is not `plan-lite`. It tells the user to run stock `/opsx:archive`.
+
+**Rationale**: One job per skill. After upgrade, the decisions are in `design.md` (D62), and the stock flow handles spec-driven changes.
+
+---
+
+## D64: The Schema Holds the Only Copy of the Apply Rules
+
+**Decision**: The plan-lite apply rules live only in `apply.instruction` in `schema.yaml`. `openspec-lite-apply` runs `openspec instructions apply --change <name> --json` and follows that output. The skill adds only what stock apply does wrong for plan-lite: it ignores the checkbox text, and it ends with the done checklist (D60).
+
+This makes D27 more precise.
+
+**Rationale**: One source of truth. Stock `/opsx:apply` gets the same rules. The difference between the two apply paths becomes small and explicit, so the D27 review trigger is easy to test.
+
+---
+
+## D65: Shell Steps Use Node One-Liners
+
+**Decision**: The hash (D51) and the schema copy (D43) use `node -e` one-liners. The copy uses `fs.cpSync`.
+
+To find its own `assets/` folder, `openspec-lite-schema` uses the base directory from the harness if it gets one. Otherwise it searches these paths in order: `.agents/skills/openspec-lite-schema/`, `.claude/skills/openspec-lite-schema/`, `~/.claude/skills/openspec-lite-schema/`, then the APM output paths. If it finds nothing, it stops and tells the user.
+
+**Rationale**: OpenSpec is an npm package and requires Node `>=20.19.0`, so `node` is always present. One command works on macOS, Linux, and Windows. `sha256sum`, `shasum`, and `cp -r` do not. Not every harness gives a skill its base directory.
+
+---
+
+## D66: A Script Checks the Version Constant
+
+**Decision**: `scripts/check-version.mjs` compares the shipped-version constant in the five workflow skills with `version` in `assets/plan-lite/schema.yaml`. `package.json` runs it in `prepublishOnly`.
+
+**Rationale**: Six copies of one number drift. The script blocks a broken npm release. APM installs from git, so add a CI step on push when CI exists.
+
+---
+
+## D67: README Has a Compatibility Table
+
+**Decision**: README lists each openspec-lite version with its `openspec-version` range. The CLI version warning (D56) points to this table.
+
+**Rationale**: The user needs one lookup to find the package version that matches the installed CLI.
+
+---
+
+## D68: Propose Suggests Level 1 for Small Requests
+
+**Decision**: If the request is small (one obvious fix, no constraints or open questions worth recording), `openspec-lite-propose` asks: "This looks small. Implement directly with no change?"
+
+**Rationale**: It applies D1 at the point where the user selects a level.
+
+---
+
+## D69: Skills Are Tested by Hand Scenarios
+
+**Decision**: `docs/test-scenarios.md` lists about eight scenarios. Run them by hand before each release. Examples: fresh clone, newer repo schema, stale preview, upgrade with a preview, archive with a failing delta.
+
+**Rationale**: The scenarios also give the evidence for the D27 review trigger. Add automated evals when a regression happens.

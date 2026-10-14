@@ -3,6 +3,8 @@
 Discovered facts about OpenSpec and this project's context.
 Add evidence/source so we don't re-discover the same thing.
 
+All OpenSpec facts come from `@fission-ai/openspec` **1.9.0**, unless an entry states a different version.
+
 ---
 
 ## OpenSpec: Building Blocks
@@ -59,6 +61,28 @@ Validation rules: no duplicate ids, no cycles, all `requires` entries must refer
 
 **Only skip escape hatch**: `skip_specs: true` in a change's `.openspec.yaml` (allows zero spec deltas).
 
+**Unknown keys are dropped**: `SchemaYamlSchema` in `dist/core/artifact-graph/types.js:39` is a plain `z.object`, not `.strict()`. Zod removes unknown keys, so a key such as `openspec-version` causes no error. OpenSpec does not read it.
+
+---
+
+## OpenSpec: Schema Resolution Order
+
+**Source**: `dist/core/artifact-graph/resolver.js:107-119`
+
+The CLI looks for `<name>/schema.yaml` in this order:
+
+1. Project-local: `<projectRoot>/openspec/schemas/<name>/`
+2. User override: `${XDG_DATA_HOME}/openspec/schemas/<name>/`
+3. Package built-in: `<package>/schemas/<name>/`
+
+---
+
+## OpenSpec: `new change --schema`
+
+**Source**: `openspec new change --help`
+
+`openspec new change <name>` accepts `--schema <name>`. The default is `spec-driven`. Other options: `--description`, `--goal`, `--json`, `--store`.
+
 ---
 
 ## OpenSpec: Downsides
@@ -94,6 +118,12 @@ Validation rules: no duplicate ids, no cycles, all `requires` entries must refer
 ## REMOVED Requirements
 ```
 
+**MODIFIED needs full content** (source: `schemas/spec-driven/schema.yaml:75`, `:96-102`): a MODIFIED requirement must hold the full updated requirement. Copy it from `openspec/specs/<capability>/spec.md`, then edit it. Partial content loses detail at archive time.
+
+**Spec-driven template sections** (source: `schemas/spec-driven/templates/`): `proposal.md` has Why, What Changes, Capabilities, Impact. `design.md` has Context, Goals / Non-Goals, Decisions, Risks / Trade-offs. Neither has a section for constraints or open questions.
+
+**Node requirement** (source: `package.json` `engines`): `@fission-ai/openspec` requires Node `>=20.19.0`.
+
 ---
 
 ## OpenSpec: Stores
@@ -107,7 +137,7 @@ Still in beta. Used when planning spans multiple repos or teams.
 
 ## OpenSpec: Archive Behavior With No Specs
 
-**Source**: `dist/cli/archive.js` lines 1120-1567
+**Source**: `dist/core/archive.js` lines 1115-1567
 
 When a change has no `specs/` directory or empty delta, `openspec archive` works fine:
 
@@ -116,6 +146,20 @@ When a change has no `specs/` directory or empty delta, `openspec archive` works
 - No error thrown, no special flag needed
 
 An unmarked zero-delta change archives with only non-blocking proposal warnings.
+
+---
+
+## OpenSpec: Archive Confirmation Prompts
+
+**Source**: `dist/core/archive.js:1047`, `:1076`, `:1183`
+
+`openspec archive` asks for confirmation in three cases. `--yes` skips each prompt:
+
+- `--no-validate` is set: "Skipping validation may archive invalid specs."
+- The tracked tasks file has unchecked tasks: "N incomplete task(s) found."
+- The change has spec deltas: "Proceed with spec updates?"
+
+If the CLI cannot read an answer from stdin, it blocks with `archive_confirmation_required`.
 
 ---
 
@@ -145,12 +189,7 @@ To switch a change from `plan-lite` to `spec-driven`, edit the `schema:` value i
 
 **Source**: `dist/cli/index.js` full command surface
 
-No `openspec change upgrade`, `migrate`, or schema-switching subcommand exists. Schema switch = manual edit to `.openspec.yaml`.
-
-The upgrade AI skill must:
-
-1. Edit `.openspec.yaml` — change `schema: plan-lite` → `schema: spec-driven`
-2. Scaffold missing artifacts (proposal.md, specs/, design.md, tasks.md) using content from plan.md
+No `openspec change upgrade`, `migrate`, or schema-switching subcommand exists. To switch the schema, edit `.openspec.yaml` by hand. The CLI does not create the missing artifacts. `docs/design.md` §3 defines what the upgrade skill does (D62).
 
 ---
 
