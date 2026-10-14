@@ -401,6 +401,8 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 **Rationale**: skillpm gives npm discoverability and semver versioning. APM gives git-native install and polyglot project support. Dual-publish costs almost nothing — the deliverable files are identical, only the manifests differ.
 
+**Status**: Superseded by D70. skillpm installs only one skill per package, so openspec-lite ships through APM only. Also, APM installs skills in `apm install`; `apm compile` builds only context files (`docs/facts.md`).
+
 ---
 
 ## D35: No Raw Harness Plugin Manifests
@@ -408,6 +410,8 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 **Decision**: openspec-lite does not ship `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `.kimi-plugin/plugin.json`, or `GEMINI.md`.
 
 **Rationale**: skillpm (harness wiring through the `skills` tool) and APM (9+ explicit targets) together cover the expected install paths. Real coverage per harness is not yet tested. Raw manifests only serve a manual clone-and-link path. If that path is needed in the future, it can be added. Removing them keeps the repo minimal.
+
+**Status**: D70 removes skillpm. APM alone covers the install paths.
 
 ---
 
@@ -417,7 +421,7 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 **Rationale**: Matches the repo name and the project identity. A scoped name (`@openspec/lite`) would imply official endorsement from the OpenSpec org, which is not the case.
 
-**Status**: D42 aligns the skill prefix with this name.
+**Status**: D42 aligns the skill prefix with this name. D70 removes the npm package. The name stays the repo name and the skill prefix.
 
 ---
 
@@ -507,7 +511,7 @@ This revises D39. The version check from D39 and D40 stays:
 
 **Rationale**: No network access, so it works in sandboxed harnesses and behind proxies. No tokens are spent on schema content. The shipped schema always matches the installed skill version, which removes the risk in D39 of fetching a newer schema from `main`. skillpm and APM both keep skill `assets/` on disk next to `SKILL.md`.
 
-**Status**: The asset owner and the check are resolved in D44. D56 and D65 add the mismatch rules and the copy command.
+**Status**: The asset owner and the check are resolved in D44. D56 and D65 add the mismatch rules and the copy command. D70: the git tag that APM installs selects the schema version, not an npm package version.
 
 ---
 
@@ -567,6 +571,8 @@ This makes D8 more precise.
 **Decision**: The `openspec-version` field in `schema.yaml` (D40) is the only declaration of compatible OpenSpec versions. `package.json` has no `peerDependencies` on `@fission-ai/openspec`. The skills compare the range with the output of `openspec --version`.
 
 **Rationale**: One source of truth. It works for skillpm and APM installs the same way. A peer dependency does not help when the openspec CLI is installed globally.
+
+**Status**: D70 removes `package.json`. `schema.yaml` stays the only declaration.
 
 ---
 
@@ -768,6 +774,8 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: OpenSpec is an npm package and requires Node `>=20.19.0`, so `node` is always present. One command works on macOS, Linux, and Windows. `sha256sum`, `shasum`, and `cp -r` do not. Not every harness gives a skill its base directory.
 
+**Status**: D71 sets the fallback search paths.
+
 ---
 
 ## D66: A Script Checks the Version Constant
@@ -776,6 +784,8 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: Six copies of one number drift. The script blocks a broken npm release. APM installs from git, so add a CI step on push when CI exists.
 
+**Status**: D70 removes `package.json` and `prepublishOnly`. Run the script by hand before each release tag.
+
 ---
 
 ## D67: README Has a Compatibility Table
@@ -783,6 +793,8 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 **Decision**: README lists each openspec-lite version with its `openspec-version` range. The CLI version warning (D56) points to this table.
 
 **Rationale**: The user needs one lookup to find the package version that matches the installed CLI.
+
+**Status**: D70: the table lists git tags, not npm versions.
 
 ---
 
@@ -799,3 +811,25 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 **Decision**: `docs/test-scenarios.md` lists about eight scenarios. Run them by hand before each release. Examples: fresh clone, newer repo schema, stale preview, upgrade with a preview, archive with a failing delta.
 
 **Rationale**: The scenarios also give the evidence for the D27 review trigger. Add automated evals when a regression happens.
+
+**Status**: D70 adds the version script run to the release scenarios.
+
+---
+
+## D70: Ship Through APM Only
+
+**Decision**: openspec-lite ships through Microsoft APM only. The git repo is the package. Users install with `apm install <owner>/openspec-lite`. A release is a git tag. The repo has no `package.json` and no `apm.yml`.
+
+This supersedes D34 and revises D35, D36, D43, D48, D66, and D67.
+
+**Rationale**: skillpm installs only one skill per package. `publish` rejects a package with more than one skill, and the scanner reads only the first skill (`docs/facts.md`). The fix is seven npm packages that must change version together. APM installs all skills from one repo, covers 13 targets, and keeps `assets/`. A repo with `skills/<name>/SKILL.md` needs no `apm.yml`. The only loss is npm discovery. Add per-skill npm packages when a user asks for npm.
+
+---
+
+## D71: Fallback Search Paths for the Schema Assets
+
+**Decision**: When the harness gives no base directory, `openspec-lite-schema` searches for `openspec-lite-schema/assets/plan-lite/` under these folders, in order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`.
+
+This makes D65 more precise.
+
+**Rationale**: These are the APM project skill paths and the Claude Code user path (`docs/facts.md`). Claude Code, Codex, Copilot, and Gemini CLI give the base directory. Cursor is unverified, and APM installs Cursor skills in `.agents/skills/`.

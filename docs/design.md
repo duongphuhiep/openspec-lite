@@ -24,8 +24,6 @@ openspec-lite/
 │               └── plan.md
 ├── scripts/
 │   └── check-version.mjs
-├── apm.yml          # Microsoft APM manifest
-├── package.json     # npm manifest, for skillpm
 ├── docs/
 │   └── test-scenarios.md
 ├── CONTEXT.md
@@ -38,12 +36,15 @@ openspec-lite/
 
 ## 2. Delivery
 
-- Publish through skillpm (npm package `openspec-lite`) and Microsoft APM (git source) (D34, D36).
+- Ship through Microsoft APM only. The git repo is the package: `apm install <owner>/openspec-lite` (D70).
+- The repo has no `package.json` and no `apm.yml`. APM finds `skills/<name>/SKILL.md` without a manifest (D70).
+- A release is a git tag. The tag selects the schema version (D43, D70).
 - Ship skills only. Do not ship slash-command files or per-harness plugin manifests (D35, D42).
-- `package.json` has no `peerDependencies` on OpenSpec (D48).
-- `package.json` runs `scripts/check-version.mjs` in `prepublishOnly` (D66). The script fails if the shipped-version constant in a workflow skill differs from `version` in `assets/plan-lite/schema.yaml`.
-- README has a compatibility table: each openspec-lite version with its `openspec-version` range (D67).
-- Before each release, run the scenarios in `docs/test-scenarios.md` by hand (D69).
+- `schema.yaml` is the only declaration of compatible OpenSpec versions (D48).
+- README has a compatibility table: each openspec-lite tag with its `openspec-version` range (D67).
+- Before each release tag:
+  - Run `node scripts/check-version.mjs`. It fails if the shipped-version constant in a workflow skill differs from `version` in `assets/plan-lite/schema.yaml` (D66).
+  - Run the scenarios in `docs/test-scenarios.md` by hand (D69).
 
 ## 3. Skill Rules
 
@@ -68,11 +69,11 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
    - Its version is higher: stop. Tell the user to update the openspec-lite package.
 3. Run `openspec --version`. If the result is outside the `openspec-version` range, warn the user. Point to the README compatibility table.
 
-### openspec-lite-schema (D41, D43, D44, D48, D56, D65)
+### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71)
 
 - Find the skill's own `assets/plan-lite/` folder:
   1. Use the base directory from the harness, if it gives one.
-  2. Otherwise, search in order: `.agents/skills/openspec-lite-schema/`, `.claude/skills/openspec-lite-schema/`, `~/.claude/skills/openspec-lite-schema/`, then the APM output paths.
+  2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, in order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/` (D71).
   3. If no path has the folder, stop and tell the user.
 - Copy the folder to `<repo>/openspec/schemas/plan-lite/` with one command. Do not read the schema content into the conversation to install it:
 
@@ -218,3 +219,4 @@ Only propose and apply check these signals.
 - Upstream contribution of the schema to OpenSpec, until real use proves it (D14).
 - Automated skill evals. Add them when a regression happens (D69).
 - A CI version check. Add it when CI exists (D66).
+- npm and skillpm delivery. skillpm installs one skill per package. Add per-skill npm packages when a user asks for npm (D70).
