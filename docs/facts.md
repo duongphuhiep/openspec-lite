@@ -336,3 +336,13 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `openspec instructions archive --change <name> --json` returns this text as `operationGuidance`. The stock archive skill runs this command, so stock `/opsx:archive` sees the guidance.
 - The guidance is per project, not per schema.
 - A schema has no `archive` block. `SchemaYamlSchema` defines only `apply` (`dist/core/artifact-graph/types.js:30-46`).
+
+---
+
+## OpenSpec: Every Folder in schemas/ Is a Schema
+
+**Source**: `dist/core/artifact-graph/resolver.js:40-41`, `:56-72`
+
+- The project schema folder is exactly `<projectRoot>/openspec/schemas/`.
+- `isSchemaDir` treats every folder (or folder symlink) in it as a schema. It skips only the names of its own fork temp folders: `.fork-staging-*` and `*.fork-backup-*`.
+- So a backup folder inside `openspec/schemas/` appears as a schema. A folder outside it, for example `openspec/schemas-backup/`, is not scanned.
