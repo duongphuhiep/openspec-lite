@@ -66,7 +66,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 1. Read `version` from `openspec/schemas/plan-lite/schema.yaml` in the target repo.
 2. Compare it with the shipped version. The shipped version is a constant in each workflow skill. It must equal `version` in `assets/plan-lite/schema.yaml` (D66).
    - The file is missing or its version is lower: run `openspec-lite-schema`. If the user declines the copy, stop.
-   - Its version is higher: stop. Tell the user to update the openspec-lite package.
+   - Its version is higher: stop. Tell the user to install a newer openspec-lite release with APM.
 3. Run `openspec --version`. If the result is outside the `openspec-version` range, warn the user. Point to the README compatibility table.
 
 ### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71)

@@ -19,8 +19,8 @@ Level 3 ── spec-driven             (full OpenSpec)
 | Level | When to use                                              | Artifacts                               |
 | ----- | -------------------------------------------------------- | --------------------------------------- |
 | 1     | Bug fix, isolated refactor, obvious feature              | None                                    |
-| 2     | Medium change: needs planning, single session            | `plan.md` + optional `tasks-preview.md` |
-| 3     | Multi-session, team handoff, cross-repo, contract needed | `proposal + specs + design + tasks`     |
+| 2     | Medium change: needs planning, one person or agent       | `plan.md` + optional `tasks-preview.md` |
+| 3     | Handoff, multi-capability, cross-repo, contract needed   | `proposal + specs + design + tasks`     |
 
 ## Install
 

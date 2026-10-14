@@ -18,6 +18,8 @@ This log is append-only. Do not edit an old entry. Add a `**Status**` line that 
 
 **Rationale**: OpenSpec overhead is only justified when context persistence matters across sessions, agents, or people. Most work is Level 1 or 2.
 
+**Status**: D54 removes sessions as a trigger. Level 2 can span context clears. Level 3 triggers are handoff, more than one capability or repo, and a contract.
+
 ---
 
 ## D2: tasks.md Is the Main Pain Point
