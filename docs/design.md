@@ -85,18 +85,18 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 **Skill chaining** (D57): To run another skill, invoke it if the harness can. If the harness cannot, tell the user which skill to run, and stop.
 
-**Schema check** (D44, D56, D81): Do this before any other step.
+**Schema check** (D44, D56, D81): Do this after change selection and the change schema guard, before any other step. propose has no change yet, so it starts here.
 
 1. Read `version` from `openspec/schemas/plan-lite/schema.yaml` in the target repo.
 2. Compare it with the shipped version. The shipped version is a constant in each workflow skill. It must equal `version` in `assets/plan-lite/schema.yaml` (D66).
    - The file is missing or its version is lower: run `openspec-lite-schema`. If the user declines the copy, stop.
    - Its version is higher: stop. Tell the user: "Run `apm update`." To cross a major tag, the user edits the ref in `apm.yml` and runs `apm install`.
-3. Run `openspec --version`. If the result is outside the `openspec-version` range, warn the user. Point to the README compatibility table.
+3. Run `openspec --version`. If the result is outside the `openspec-version` range, warn the user. Point to the compatibility table at `https://github.com/<owner>/openspec-lite#compatibility`. The installed package has no README.
 
 **Plan hash** (D72): From the repo root, run:
 
 ```sh
-node openspec/schemas/plan-lite/plan-hash.mjs <change>/plan.md
+node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md
 ```
 
 ### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71, D82)

@@ -525,7 +525,7 @@ This revises D16 (six skills) and removes the `--update-schema` flag from D39.
 
 **Rationale**: A teammate can clone a repo and run any skill first, so every skill must check. One owner keeps one copy of the assets. No skill depends on the folder path of another skill. Schema update is a separate job, so it is not a flag on propose.
 
-**Status**: D56 adds the mismatch rules. D57 adds the fallback when a skill cannot invoke a skill.
+**Status**: D56 adds the mismatch rules. D57 adds the fallback when a skill cannot invoke a skill. Change selection (D61) and the change schema guard (D75) come before the schema check, so a refused change never triggers a schema install.
 
 ---
 
