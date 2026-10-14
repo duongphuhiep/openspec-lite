@@ -358,3 +358,77 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 **Decision**: If `plan.md` is newer than `tasks-preview.md`, apply tells the user and offers to regenerate the preview. When the two files conflict, `plan.md` wins.
 
 **Rationale**: A cheap check that catches a real mistake: the user changes the plan and forgets to regenerate.
+
+---
+
+## D34: Delivery via skillpm + Microsoft APM
+
+**Decision**: openspec-lite is published via two complementary package managers:
+
+- **skillpm** (npm-native): `npm install openspec-lite` + `skillpm sync` → wires skills into 40+ harnesses via the agentskills.io SKILL.md standard.
+- **Microsoft APM** (git-native): `apm install` + `apm compile -t <harness>` → generates harness-specific config for 9+ harnesses. No central registry; the GitHub repo is the package source.
+
+Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plugin/`, `.codex-plugin/`, etc.) are shipped — skillpm and APM together cover all install paths.
+
+**Rationale**: skillpm gives npm discoverability and 40+ harness coverage. APM gives git-native install and polyglot project support. Dual-publish costs almost nothing — the deliverable files are identical, only the manifests differ.
+
+---
+
+## D35: No Raw Harness Plugin Manifests
+
+**Decision**: openspec-lite does not ship `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `.kimi-plugin/plugin.json`, or `GEMINI.md`.
+
+**Rationale**: skillpm (40+ harnesses) and APM (9+ harnesses) together cover every real install scenario. Raw manifests only serve a manual clone-and-link path. If that path is needed in the future, it can be added. Removing them keeps the repo minimal.
+
+---
+
+## D36: npm Package Name
+
+**Decision**: The npm package name is `openspec-lite`.
+
+**Rationale**: Matches the repo name and the project identity. A scoped name (`@openspec/lite`) would imply official endorsement from the OpenSpec org, which is not the case. `opsx-lite` is the skill invocation prefix, not the user-facing package identity.
+
+---
+
+## D37: Schema Path in Repo
+
+**Decision**: The plan-lite schema lives at `openspec/schemas/plan-lite/` in the repo root.
+
+**Rationale**: This mirrors the path where the schema lands in target projects (`openspec/schemas/plan-lite/`). The copy path is a one-liner and the intent is obvious to a reader.
+
+---
+
+## D38: One Repo for Design and Deliverable
+
+**Decision**: This repo (`openspec-lite`) holds both design documents (`docs/`, `CONTEXT.md`, `README.md`) and the installable deliverable (skills, schema, package manifests).
+
+**Rationale**: Simpler than a separate dist repo. No sync problem between two repos. The design docs become the project's own documentation.
+
+---
+
+## D39: Schema Install — Fetch From GitHub on First Use
+
+**Decision**: `opsx-lite:propose` checks if `openspec/schemas/plan-lite/schema.yaml` exists in the target project. If not, it fetches the schema files from the GitHub repo and creates them. If the local schema `version` does not match the skill's expected version, the skill warns the user and offers to run `opsx-lite:propose --update-schema`.
+
+`--update-schema` finds the latest schema version whose `openspec-version` range matches the user's installed openspec CLI version, then replaces the local schema files.
+
+The skill embeds only the expected schema version string — not the full schema content. Full schema content is never in the skill's SKILL.md.
+
+**Rationale**: Token-efficient — schema content never travels through the LLM after first install. Handles both "not installed" and "outdated" cases. Version check costs one file read per invocation.
+
+---
+
+## D40: Schema Metadata Fields and Version Range Syntax
+
+**Decision**: `schema.yaml` carries two metadata fields:
+
+```yaml
+version: 1                     # integer, the schema's own version
+openspec-version: ">=1.9.0"    # semver range of compatible openspec CLI versions
+```
+
+Version ranges use semver (npm-style): `>=1.9.0`, `^1.0.0`, `~1.7.0`, `<2.0.0`.
+
+Multi-version resolution (a schema index listing multiple versions) is deferred until a second schema version actually exists. Today there is one version. The skill fetches from the `main` branch. When a breaking change requires a new schema version, add the index then.
+
+**Rationale**: Both fields on one line each. `version` enables the "outdated?" check. `openspec-version` enables compatibility warning. Semver is the natural choice since openspec is an npm package. YAGNI on multi-version index.
