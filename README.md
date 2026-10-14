@@ -27,7 +27,7 @@ Level 3 ── spec-driven             (full OpenSpec)
 Install with [Microsoft APM](https://github.com/microsoft/apm):
 
 ```sh
-apm install <owner>/openspec-lite#^1.0.0
+apm install <owner>/openspec-lite/package#^1.0.0
 ```
 
 ## What openspec-lite Ships

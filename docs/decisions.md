@@ -804,7 +804,7 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: Six copies of one number drift. The script blocks a broken npm release. APM installs from git, so add a CI step on push when CI exists.
 
-**Status**: D70 removes `package.json` and `prepublishOnly`. Run the script by hand before each release tag.
+**Status**: D70 removes `package.json` and `prepublishOnly`. Run the script by hand before each release tag. D85 adds the CI step.
 
 ---
 
@@ -832,7 +832,7 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: The scenarios also give the evidence for the D27 review trigger. Add automated evals when a regression happens.
 
-**Status**: D70 adds the version script run to the release scenarios.
+**Status**: D70 adds the version script run to the release scenarios. D83 adds a real-install check. D84 adds automated tests for the scripts.
 
 ---
 
@@ -844,7 +844,7 @@ This supersedes D34 and revises D35, D36, D43, D48, D66, and D67.
 
 **Rationale**: skillpm installs only one skill per package. `publish` rejects a package with more than one skill, and the scanner reads only the first skill (`docs/facts.md`). The fix is seven npm packages that must change version together. APM installs all skills from one repo, covers 13 targets, and keeps `assets/`. A repo with `skills/<name>/SKILL.md` needs no `apm.yml`. The only loss is npm discovery. Add per-skill npm packages when a user asks for npm.
 
-**Status**: D81 sets the install ref and the tag rule.
+**Status**: D81 sets the install ref and the tag rule. D83 moves the deliverable to `package/` and changes the install path.
 
 ---
 
@@ -979,6 +979,8 @@ This revises D56, D67, and D70.
 
 **Rationale**: `apm update` moves inside the range with one command (`docs/facts.md`). Major tags carry the breaking signal, so one schema version maps to one major tag.
 
+**Status**: D83 changes the install path to `<owner>/openspec-lite/package#^1.0.0`.
+
 ---
 
 ## D82: User-Scope Paths in the Asset Search
@@ -988,3 +990,37 @@ This revises D56, D67, and D70.
 This extends D71.
 
 **Rationale**: `apm install -g` puts skills there for Copilot, Cursor, Windsurf, and OpenCode (`docs/facts.md`). `~/.claude/skills/` is already in the list.
+
+---
+
+## D83: The Deliverable Lives in package/
+
+**Decision**: The skills live in `package/skills/<name>/`. Users install with `apm install <owner>/openspec-lite/package#^1.0.0`. `scripts/`, `tests/`, and `docs/` stay at the repo root, outside `package/`.
+
+Before each release tag, install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content.
+
+This revises D70 and D81.
+
+**Rationale**: A full-repo install clones the whole repo into `apm_modules/`, and APM has no exclude mechanism (`docs/facts.md`). A subdirectory install uses a sparse partial clone, so APM downloads only the files under `package/`. Users then never download tests, scripts, or design docs. The name `package/` is used because `dist/` suggests generated output. The real-install check exists because this fact comes from code reading, not from a run.
+
+---
+
+## D84: Script Tests Use the Node Built-In Runner
+
+**Decision**: Tests live in `tests/` at the repo root and run with `node --test tests/`. They have no dependencies and no `package.json`.
+
+- `tests/plan-hash.test.mjs`: CRLF, section order, Open Questions, and Decisions do not change the hash. A changed Constraint does.
+- `tests/check-version.test.mjs`: a match passes, and a mismatch fails.
+- `tests/schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It skips itself if `openspec` is not installed.
+
+**Rationale**: OpenSpec already requires Node `>=20.19.0`, which has a stable `node --test`. A framework would bring back the `package.json` that D70 removed. The schema test catches errors such as the wrong `template` path, which only a real CLI run shows (`docs/facts.md`).
+
+---
+
+## D85: CI Runs the Tests on Push
+
+**Decision**: `.github/workflows/test.yml` runs on push and pull request. It installs `@fission-ai/openspec` at the lowest version in `openspec-version`. Then it runs `node scripts/check-version.mjs` and `node --test tests/`.
+
+This revises D66, which deferred CI.
+
+**Rationale**: One small workflow catches a broken `plan-hash.mjs` or schema before a user installs it. The lowest supported OpenSpec version tests the bottom of the declared range.

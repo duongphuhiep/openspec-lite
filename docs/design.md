@@ -10,21 +10,28 @@ If this file and `decisions.md` disagree, this file is correct. Fix `decisions.m
 
 ```
 openspec-lite/
-├── skills/
-│   ├── openspec-lite-propose/SKILL.md
-│   ├── openspec-lite-tasks-preview/SKILL.md   # holds the preview template inline
-│   ├── openspec-lite-apply/SKILL.md
-│   ├── openspec-lite-upgrade/SKILL.md
-│   ├── openspec-lite-archive/SKILL.md
-│   └── openspec-lite-schema/
-│       ├── SKILL.md
-│       └── assets/plan-lite/
-│           ├── schema.yaml
-│           ├── plan-hash.mjs
-│           └── templates/
-│               └── plan.md
+├── package/                 # the only folder that APM downloads
+│   └── skills/
+│       ├── openspec-lite-propose/SKILL.md
+│       ├── openspec-lite-tasks-preview/SKILL.md   # holds the preview template inline
+│       ├── openspec-lite-apply/SKILL.md
+│       ├── openspec-lite-upgrade/SKILL.md
+│       ├── openspec-lite-archive/SKILL.md
+│       └── openspec-lite-schema/
+│           ├── SKILL.md
+│           └── assets/plan-lite/
+│               ├── schema.yaml
+│               ├── plan-hash.mjs
+│               └── templates/
+│                   └── plan.md
 ├── scripts/
 │   └── check-version.mjs
+├── tests/
+│   ├── plan-hash.test.mjs
+│   ├── check-version.test.mjs
+│   └── schema.test.mjs
+├── .github/workflows/
+│   └── test.yml
 ├── docs/
 │   └── test-scenarios.md
 ├── CONTEXT.md
@@ -32,22 +39,34 @@ openspec-lite/
 ```
 
 - The repo holds the design docs and the deliverable together (D38).
+- Only `package/` is the deliverable. Tests, scripts, and docs stay outside it, so APM does not download them (D83).
 - The schema source is in the assets of `openspec-lite-schema`. There is no other copy in this repo (D43, D44).
 - The tasks preview template is inline in the `openspec-lite-tasks-preview` SKILL.md (D53, D76).
 
 ## 2. Delivery
 
 - Ship through Microsoft APM only. The git repo is the package (D70).
-- README tells users to install with a semver range: `apm install <owner>/openspec-lite#^1.0.0` (D81).
-- The repo has no `package.json` and no `apm.yml`. APM finds `skills/<name>/SKILL.md` without a manifest (D70).
+- README tells users to install the `package/` subfolder with a semver range: `apm install <owner>/openspec-lite/package#^1.0.0` (D81, D83).
+- The repo has no `package.json` and no `apm.yml`. APM finds `package/skills/<name>/SKILL.md` without a manifest (D70, D83).
 - A release is a git tag. The tag selects the schema version (D43, D70).
 - A change to the schema `version` is a new major tag (D81).
 - Ship skills only. Do not ship slash-command files or per-harness plugin manifests (D35, D42).
 - `schema.yaml` is the only declaration of compatible OpenSpec versions (D48).
 - README has a compatibility table: each openspec-lite major tag with its `openspec-version` range (D67, D81).
+- CI (`.github/workflows/test.yml`) runs on push and pull request (D85):
+  - It installs `@fission-ai/openspec` at the lowest version in `openspec-version`.
+  - It runs `node scripts/check-version.mjs`. The script fails if the shipped-version constant in a workflow skill differs from `version` in `assets/plan-lite/schema.yaml` (D66).
+  - It runs `node --test tests/` (D84).
 - Before each release tag:
-  - Run `node scripts/check-version.mjs`. It fails if the shipped-version constant in a workflow skill differs from `version` in `assets/plan-lite/schema.yaml` (D66).
   - Run the scenarios in `docs/test-scenarios.md` by hand (D69).
+  - Install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83).
+
+## 2a. Tests (D84)
+
+- Tests live in `tests/` and run with `node --test tests/`. They have no dependencies.
+- `plan-hash.test.mjs`: CRLF, section order, Open Questions, and Decisions do not change the hash. A changed Constraint does.
+- `check-version.test.mjs`: a match passes, and a mismatch fails.
+- `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It skips itself if `openspec` is not installed.
 
 ## 3. Skill Rules
 
@@ -258,5 +277,4 @@ Only propose and apply check these signals.
 - The user-level schema location `${XDG_DATA_HOME}/openspec/schemas/` (D41).
 - Upstream contribution of the schema to OpenSpec, until real use proves it (D14).
 - Automated skill evals. Add them when a regression happens (D69).
-- A CI version check. Add it when CI exists (D66).
 - npm and skillpm delivery. skillpm installs one skill per package. Add per-skill npm packages when a user asks for npm (D70).
