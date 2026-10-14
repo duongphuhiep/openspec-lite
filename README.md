@@ -27,7 +27,7 @@ Level 3 ── spec-driven             (full OpenSpec)
 Install with [Microsoft APM](https://github.com/microsoft/apm):
 
 ```sh
-apm install <owner>/openspec-lite
+apm install <owner>/openspec-lite#^1.0.0
 ```
 
 ## What openspec-lite Ships
@@ -81,7 +81,7 @@ Rejected row-level locks because they add too much overhead for a read-heavy wor
 During apply:
 
 - When the two files conflict, `plan.md` wins.
-- If `plan.md` changed after the preview was generated, apply warns you. The preview stores a hash of `plan.md` for this check. The hash ignores the `## Decisions` section, because apply adds to it.
+- If `plan.md` changed after the preview was generated, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Non-Goals, and Constraints, because apply adds to the other sections.
 - Apply records each meaningful deviation in the `plan.md` decisions.
 
 ## Lifecycle
@@ -129,9 +129,11 @@ After an upgrade, archive with stock `/opsx:archive`.
 
 ## Compatibility
 
-| openspec-lite | OpenSpec CLI |
-| ------------- | ------------ |
-| (unreleased)  | `>=1.9.0`    |
+Each major tag ships one schema version. Run `apm update` to get the newest release in your range.
+
+| openspec-lite major tag | OpenSpec CLI |
+| ----------------------- | ------------ |
+| (unreleased)            | `>=1.9.0`    |
 
 ## See Also
 

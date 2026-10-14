@@ -620,6 +620,8 @@ This revises D49.
 
 **Rationale**: Apply writes deviations into `## Decisions` (D29). A full-file hash then marks the preview as stale after the first deviation. Line endings and blank lines change between OS checkouts but do not change the meaning. `## Open Questions` stays in the hash, because an answer to an open question can change the preview.
 
+**Status**: Revised by D72. The hash covers only Goal, Non-Goals, and Constraints. A script in the schema computes it.
+
 ---
 
 ## D52: The Tasks Preview Has No Checkboxes
@@ -639,6 +641,8 @@ This revises D24.
 This revises D25. D12 is current again, with the `apply` block from D25.
 
 **Rationale**: Stock `/opsx:continue` and `/opsx:ff` generate every artifact in the graph. They would create a preview that nobody asked for (D20), with no header and no hash. Outside the graph, the CLI does not know the file. The template is a few lines, so a separate asset file adds a file and a read for no benefit.
+
+**Status**: D76 defines the template text.
 
 ---
 
@@ -681,6 +685,8 @@ This makes D43 and D44 more precise.
 
 **Rationale**: An old skill on a new schema, or a new skill on an old schema, can write files that the schema rejects. The fix is one command. A CLI update is silent, so a check only at install misses it. The CLI check costs one fast shell call. `git diff` replaces any custom merge logic for local edits.
 
+**Status**: D81 changes the "newer schema" message to "Run `apm update`".
+
 ---
 
 ## D57: Skill Chaining Has a Fallback
@@ -705,6 +711,8 @@ This revises the order in D47.
 
 **Rationale**: If validation or archive fails, no orphan ADR exists. `--yes` is safe because the user approved each item in the conversation. OpenSpec requires full content for MODIFIED, and partial content loses detail at archive time (`docs/facts.md`).
 
+**Status**: Revised by D74 (scenarios, all four delta headers, draft before approval).
+
 ---
 
 ## D59: ADR Files Use a Date Prefix and a Fixed Template
@@ -723,6 +731,8 @@ This revises the `NNNN-<slug>.md` name in D8 and D9.
 
 **Rationale**: The CLI never reports a plan-lite change as done, and archive does not check (`docs/facts.md`). Open questions that are still open are the real "not done" marker.
 
+**Status**: D73 moves the checklist into `apply.instruction`. D77 adds "Archive anyway?" to archive.
+
 ---
 
 ## D61: Change Selection
@@ -730,6 +740,8 @@ This revises the `NNNN-<slug>.md` name in D8 and D9.
 **Decision**: A skill acts on the change named in the prompt. If no name is given and only one active change exists, it uses that change. Otherwise it asks.
 
 **Rationale**: The stock OpenSpec skills behave this way.
+
+**Status**: D80 adds the rule for the change name.
 
 ---
 
@@ -748,6 +760,8 @@ This revises D13 and D31.
 
 **Rationale**: The spec-driven graph requires `specs` and `design` before `tasks`. Upgrade is the only step that knows both `plan.md` and the preview, so a split would lose context. `design.md` is where stock tools look for decisions. A preview or a plan next to the new artifacts is a stale second source of truth.
 
+**Status**: D79 adds `openspec validate` at the end.
+
 ---
 
 ## D63: openspec-lite-archive Is for plan-lite Changes Only
@@ -755,6 +769,8 @@ This revises D13 and D31.
 **Decision**: `openspec-lite-archive` refuses a change whose schema is not `plan-lite`. It tells the user to run stock `/opsx:archive`.
 
 **Rationale**: One job per skill. After upgrade, the decisions are in `design.md` (D62), and the stock flow handles spec-driven changes.
+
+**Status**: Superseded by D75, a common guard for four skills.
 
 ---
 
@@ -766,6 +782,8 @@ This makes D27 more precise.
 
 **Rationale**: One source of truth. Stock `/opsx:apply` gets the same rules. The difference between the two apply paths becomes small and explicit, so the D27 review trigger is easy to test.
 
+**Status**: Revised by D73. The skill now adds only one rule: ignore checkbox text.
+
 ---
 
 ## D65: Shell Steps Use Node One-Liners
@@ -776,7 +794,7 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: OpenSpec is an npm package and requires Node `>=20.19.0`, so `node` is always present. One command works on macOS, Linux, and Windows. `sha256sum`, `shasum`, and `cp -r` do not. Not every harness gives a skill its base directory.
 
-**Status**: D71 sets the fallback search paths.
+**Status**: D71 sets the fallback search paths. D72 replaces the hash one-liner with `plan-hash.mjs`.
 
 ---
 
@@ -796,7 +814,7 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: The user needs one lookup to find the package version that matches the installed CLI.
 
-**Status**: D70: the table lists git tags, not npm versions.
+**Status**: D70: the table lists git tags, not npm versions. D81: the table lists major tags.
 
 ---
 
@@ -826,6 +844,8 @@ This supersedes D34 and revises D35, D36, D43, D48, D66, and D67.
 
 **Rationale**: skillpm installs only one skill per package. `publish` rejects a package with more than one skill, and the scanner reads only the first skill (`docs/facts.md`). The fix is seven npm packages that must change version together. APM installs all skills from one repo, covers 13 targets, and keeps `assets/`. A repo with `skills/<name>/SKILL.md` needs no `apm.yml`. The only loss is npm discovery. Add per-skill npm packages when a user asks for npm.
 
+**Status**: D81 sets the install ref and the tag rule.
+
 ---
 
 ## D71: Fallback Search Paths for the Schema Assets
@@ -835,3 +855,136 @@ This supersedes D34 and revises D35, D36, D43, D48, D66, and D67.
 This makes D65 more precise.
 
 **Rationale**: These are the APM project skill paths and the Claude Code user path (`docs/facts.md`). Claude Code, Codex, Copilot, and Gemini CLI give the base directory. Cursor is unverified, and APM installs Cursor skills in `.agents/skills/`.
+
+**Status**: D82 adds the user-scope paths.
+
+---
+
+## D72: A Schema Script Computes the Plan Hash
+
+**Decision**: The schema assets include `plan-hash.mjs`. It lands at `openspec/schemas/plan-lite/plan-hash.mjs` in the user repo. Both `openspec-lite-tasks-preview` and `apply.instruction` run `node openspec/schemas/plan-lite/plan-hash.mjs <change>/plan.md` from the repo root.
+
+The hash covers only `## Goal`, `## Non-Goals`, and `## Constraints`. It ignores line endings, whitespace, and section order.
+
+This revises D51 and D65.
+
+**Rationale**: Stock `/opsx:apply` reads only `apply.instruction`, so the hash command had to exist in two places. A script in the schema gives one copy, versioned and committed with the schema. The schema is always at this path, so no search is needed. OpenSpec accepts extra files in the schema folder (`docs/facts.md`). Open Questions left the hash because D60 empties that section. With it in the hash, each resumed apply shows a false stale warning. Each answer goes to `## Decisions`, and an answer that changes the approach is a recorded deviation.
+
+---
+
+## D73: The Done Checklist Is in apply.instruction
+
+**Decision**: The done checklist (D60) is in `apply.instruction`, so stock `/opsx:apply` uses it too. `openspec-lite-apply` adds one rule to the CLI output: ignore checkbox and task-count text.
+
+This revises D60 and D64.
+
+**Rationale**: Stock apply is the default path (D27). The checklist is not a fix for a stock bug, so it belongs with the shared rules. If stock apply then works well, the D27 review trigger removes `openspec-lite-apply`.
+
+---
+
+## D74: Archive Drafts Full Deltas Before Approval
+
+**Decision**: For each promotion candidate, archive drafts the full text first. Then the user approves, rejects, or edits it.
+
+- A requirement becomes a delta under one of the four headers: ADDED, MODIFIED, REMOVED, or RENAMED. Each ADDED or MODIFIED requirement has at least one `#### Scenario:`, derived from `plan.md` and the code.
+- A decision becomes the full ADR text.
+
+This revises D58 and D18.
+
+**Rationale**: `openspec validate` rejects a requirement with no scenario (`docs/facts.md`), and `plan.md` rarely has scenarios. The user must approve the scenarios, so the list shows the full text. The CLI merges all four headers, and a Level 2 change that removes a feature is common.
+
+---
+
+## D75: A Common Guard on the Change Schema
+
+**Decision**: `openspec-lite-tasks-preview`, `openspec-lite-apply`, `openspec-lite-upgrade`, and `openspec-lite-archive` refuse a change whose schema is not `plan-lite`. Each one points to the matching stock skill, for example `/opsx:archive`.
+
+This supersedes D63.
+
+**Rationale**: A preview or an upgrade on a spec-driven change would damage it. One common rule replaces four separate rules.
+
+---
+
+## D76: The Tasks Preview Template
+
+**Decision**: The template inline in `openspec-lite-tasks-preview` is:
+
+```markdown
+<!-- Generated. Edit plan.md, not this file. -->
+<!-- plan-sha256: <hash> -->
+
+## 1. <group title>
+
+- 1.1 <task: a verifiable outcome>
+  - Verify: <criteria>
+  - Files: <paths, optional>
+
+## 2. <next group, depends on 1>
+```
+
+This makes D53 precise.
+
+**Rationale**: It follows the group and number layout of `tasks.md`, with no checkboxes (D52). Upgrade only adds `[ ]` to each task line.
+
+---
+
+## D77: Archive Asks Before It Archives Unfinished Work
+
+**Decision**: If an answer in the done checklist is "no", archive shows the warnings and asks: "Archive anyway?" On no, it stops.
+
+This revises D60.
+
+**Rationale**: It prevents an archive of an unfinished change by mistake. The cost is one question.
+
+---
+
+## D78: Propose Gets the plan.md Template From the CLI
+
+**Decision**: `openspec-lite-propose` gets the template from `openspec instructions plan --change <name> --json` → `template`.
+
+**Rationale**: The CLI owns how the template path resolves (`docs/facts.md`). The skill keeps working if that resolution changes.
+
+---
+
+## D79: Upgrade Validates at the End
+
+**Decision**: `openspec-lite-upgrade` runs `openspec validate <name>` as its last step. It reports each error and does not fix errors silently.
+
+This extends D62.
+
+**Rationale**: It costs one call. The user sees missing scenarios before the archive.
+
+---
+
+## D80: Change Names
+
+**Decision**: Use the name from the prompt, if it has one. Otherwise, propose derives a kebab-case name of 2 to 5 words from the goal and shows it in the summary.
+
+This extends D61.
+
+**Rationale**: This matches the stock propose skill. The user can rename the folder.
+
+---
+
+## D81: Install With a Semver Range; a Schema Version Change Is a Major Tag
+
+**Decision**:
+
+- README tells users to install with a range: `apm install <owner>/openspec-lite#^1.0.0`.
+- A change to the schema `version` is a new major tag.
+- When the repo schema is newer than the shipped schema, the skill says: "Run `apm update`." To cross a major tag, the user edits the ref in `apm.yml` and runs `apm install`.
+- The compatibility table (D67) lists major tags.
+
+This revises D56, D67, and D70.
+
+**Rationale**: `apm update` moves inside the range with one command (`docs/facts.md`). Major tags carry the breaking signal, so one schema version maps to one major tag.
+
+---
+
+## D82: User-Scope Paths in the Asset Search
+
+**Decision**: The fallback list (D71) ends with `~/.agents/skills/` and `~/.config/opencode/skills/`.
+
+This extends D71.
+
+**Rationale**: `apm install -g` puts skills there for Copilot, Cursor, Windsurf, and OpenCode (`docs/facts.md`). `~/.claude/skills/` is already in the list.
