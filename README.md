@@ -10,7 +10,7 @@ OpenSpec's 4-artifact workflow (`proposal → specs → design → tasks`) is to
 
 ```
 Level 1 ── Direct implementation      (no artifacts)
-Level 2 ── opsx-lite                  (plan.md + optional tasks-preview.md)
+Level 2 ── openspec-lite                  (plan.md + optional tasks-preview.md)
 Level 3 ── spec-driven                (full OpenSpec)
                 ↑
                 upgrade path when scope grows
@@ -25,13 +25,14 @@ Level 3 ── spec-driven                (full OpenSpec)
 ## What openspec-lite Ships
 
 - **`plan-lite` schema** — a required `plan.md` and an opt-in `tasks-preview.md`. No design, no `tasks.md`.
-- **`opsx-lite:propose`** — create a plan-lite change. It asks if you want a tasks preview.
-- **`opsx-lite:tasks-preview`** — generate or regenerate `tasks-preview.md`.
-- **`opsx-lite:apply`** — implement from `plan.md`, with `tasks-preview.md` as a guide.
-- **`opsx-lite:upgrade`** — promote a plan-lite change to full spec-driven when complexity grows
-- **`opsx-lite:archive`** — archive with selective promotion to permanent specs
+- **`openspec-lite-propose`** — create a plan-lite change. It asks if you want a tasks preview.
+- **`openspec-lite-tasks-preview`** — generate or regenerate `tasks-preview.md`.
+- **`openspec-lite-apply`** — implement from `plan.md`, with `tasks-preview.md` as a guide.
+- **`openspec-lite-upgrade`** — upgrade a plan-lite change to full spec-driven when complexity grows
+- **`openspec-lite-archive`** — archive with selective promotion to permanent specs
+- **`openspec-lite-schema`** — install the plan-lite schema into the repo and check its version. The other skills run it when needed.
 
-Try stock `/opsx:apply` first. Use `opsx-lite:apply` if stock apply does not work well.
+Try stock `/opsx:apply` first. Use `openspec-lite-apply` if stock apply does not work well.
 
 Use `/opsx:explore` as-is before proposing — no duplication needed.
 
@@ -67,30 +68,30 @@ Rejected row-level locks — too much overhead for read-heavy workload.
 - It is a reference, not a contract. Apply can change the approach, for example to make the code simpler.
 - It uses the OpenSpec `tasks.md` format. Tasks are ordered by dependency. Each task has verification criteria. Tests and docs go with the related code.
 - Each task is a meaningful, verifiable outcome. Do not split work into very small subtasks.
-- Do not edit it by hand. Put corrections in `plan.md`, then run `opsx-lite:tasks-preview` again. It overwrites the old file.
+- Do not edit it by hand. Put corrections in `plan.md`, then run `openspec-lite-tasks-preview` again. It overwrites the old file.
 
 During apply:
 
 - `plan.md` wins when the two files conflict.
-- Apply warns you if `plan.md` is newer than `tasks-preview.md`.
+- Apply warns you if `plan.md` changed after the preview was generated. The preview stores a hash of `plan.md` for this check.
 - Apply records each meaningful deviation in the `plan.md` decisions.
 
 ## Lifecycle
 
 ```
-opsx-lite:propose
+openspec-lite-propose
       │
       ▼
   plan.md (grows during work)
       │
-      ├── want a preview? → opsx-lite:tasks-preview → tasks-preview.md
+      ├── want a preview? → openspec-lite-tasks-preview → tasks-preview.md
       │                         ↑ disagree? edit plan.md, regenerate
       │
-      ├── /opsx:apply or opsx-lite:apply → code
+      ├── /opsx:apply or openspec-lite-apply → code
       │
-      ├── scope grows? → opsx-lite:upgrade → spec-driven change
+      ├── scope grows? → openspec-lite-upgrade → spec-driven change
       │
-      └── done? → opsx-lite:archive
+      └── done? → openspec-lite-archive
                         │
                         ├── plan.md, tasks-preview.md → local archive
                         ├── requirements → specs/<capability>/spec.md
@@ -106,7 +107,7 @@ You review and approve the list conversationally before anything is written.
 
 ## Upgrade Path
 
-When a Level-2 change grows beyond its original scope, `opsx-lite:upgrade`:
+When a Level-2 change grows beyond its original scope, `openspec-lite-upgrade`:
 
 1. Edits `.openspec.yaml` — changes `schema: plan-lite` → `schema: spec-driven`
 2. Pre-fills `proposal.md` from `plan.md` content

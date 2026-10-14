@@ -18,4 +18,8 @@ _Avoid_: Tasks preview
 
 **Promotion**:
 The move of non-obvious information from an archived plan into permanent specs or ADRs.
-_Avoid_: Sync, merge
+_Avoid_: Sync, merge, upgrade
+
+**Upgrade**:
+The switch of an active change from plan-lite to spec-driven, when its scope grows.
+_Avoid_: Graduation, promotion, migration

@@ -42,7 +42,7 @@ For Level 2, implementation details emerge from exploration — not pre-planned.
 
 **Rationale**: Not all plan content is worth keeping. The AI should help judge what's non-obvious enough to promote.
 
-**Open question**: What heuristic does the AI use to decide what to promote? (unresolved — see grilling session)
+**Status**: The promotion heuristic is resolved in D6.
 
 ---
 
@@ -77,7 +77,7 @@ User reviews and approves the proposed list before promotion happens.
 
 ---
 
-## D7: Graduated Schema (Round 2)
+## D7: Upgradeable Schema (Round 2)
 
 **Decision**: Level 2 and Level 3 are not parallel tracks. A Level-2 change can be upgraded to Level 3 by running a command that scaffolds the missing artifacts (specs, design, tasks) from the existing plan.md.
 
@@ -94,6 +94,8 @@ User reviews and approves the proposed list before promotion happens.
 - Per-item: the AI judges which bucket each piece of information belongs to, user approves.
 
 **Rationale**: Requirements and decisions have different lifecycles and audiences. Keeping them separate makes both more useful.
+
+**Status**: D47 defines how requirements reach the main specs.
 
 ---
 
@@ -127,14 +129,16 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 ---
 
-## D11: Graduation Trigger (Round 3)
+## D11: Upgrade Trigger (Round 3)
 
-**Decision**: Graduation from Level 2 → Level 3 is triggered two ways:
+**Decision**: Upgrade from Level 2 → Level 3 is triggered two ways:
 
 1. **Explicit** — user says "upgrade this to Level 3", command scaffolds missing artifacts from plan.md
 2. **AI-suggested** — AI detects complexity signals (change spans >1 session, involves others, touches multiple capabilities) and suggests upgrading
 
-## **Rationale**: Explicit covers intentional upgrades. AI-suggested catches the case where complexity crept in while the user was heads-down.
+**Rationale**: Explicit covers intentional upgrades. AI-suggested catches the case where complexity crept in while the user was heads-down.
+
+---
 
 ## D12: plan-lite Schema (Round 4)
 
@@ -154,16 +158,18 @@ artifacts:
 
 **Rationale**: One artifact, no dependencies, no tasks. Scratch notes stay in AI context, not a file.
 
+**Status**: Revised by D25. The schema now has a second, opt-in artifact: `tasks-preview`.
+
 ---
 
 ## D13: Upgrade Mechanism (Round 4)
 
-**Decision**: Graduation from plan-lite → spec-driven is an AI skill that orchestrates existing CLI primitives. The skill:
+**Decision**: Upgrade from plan-lite → spec-driven is an AI skill that orchestrates existing CLI primitives. The skill:
 
 1. Reads plan.md to extract goal, non-goals, constraints
 2. Changes the change's schema metadata (`.openspec.yaml`) to `spec-driven`
 3. Pre-fills proposal.md from plan.md content
-4. Leaves specs/design/tasks empty for the AI to fill in from plan.md context
+4. Leaves specs and design empty for the AI to fill in from plan.md context. D31 later seeds tasks.md from tasks-preview.md.
 
 **Rationale**: CLI handles file/metadata mechanics. AI handles content extraction and mapping.
 
@@ -187,15 +193,16 @@ artifacts:
 
 ## D16: Skills Set (Round 5)
 
-**Decision**: openspec-lite ships five skills:
+**Decision**: openspec-lite ships six skills:
 
-| Skill                     | Purpose                                                           |
-| ------------------------- | ----------------------------------------------------------------- |
-| `opsx-lite:propose`       | Create a plan-lite change (scaffolds plan.md)                     |
-| `opsx-lite:tasks-preview` | Generate or regenerate tasks-preview.md (added by D26)            |
-| `opsx-lite:apply`         | Implement from plan.md + optional tasks-preview.md (added by D27) |
-| `opsx-lite:upgrade`       | Promote plan-lite → spec-driven when complexity grows             |
-| `opsx-lite:archive`       | Archive with selective promotion (AI judges, user approves)       |
+| Skill                         | Purpose                                                           |
+| ----------------------------- | ----------------------------------------------------------------- |
+| `openspec-lite-propose`       | Create a plan-lite change (scaffolds plan.md)                     |
+| `openspec-lite-tasks-preview` | Generate or regenerate tasks-preview.md (added by D26)            |
+| `openspec-lite-apply`         | Implement from plan.md + optional tasks-preview.md (added by D27) |
+| `openspec-lite-upgrade`       | Upgrade plan-lite → spec-driven when complexity grows             |
+| `openspec-lite-archive`       | Archive with selective promotion (AI judges, user approves)       |
+| `openspec-lite-schema`        | Install and version-check the plan-lite schema (added by D44)     |
 
 `/opsx:explore` is reused as-is — no duplication needed.
 
@@ -206,6 +213,8 @@ artifacts:
 **Decision**: Skills use the `opsx-lite:` prefix.
 
 **Rationale**: Signals it's an extension of the opsx family, not a standalone tool. Clearer than plain `lite:` when both opsx and opsx-lite are installed.
+
+**Status**: Superseded by D42. A colon is not valid in a skill name.
 
 ---
 
@@ -285,14 +294,14 @@ The schema has `apply.requires: [plan]` and no `apply.tracks`. This prevents bot
 
 ---
 
-## D26: opsx-lite:tasks-preview Skill (Tasks Round 3)
+## D26: openspec-lite-tasks-preview Skill (Tasks Round 3)
 
 **Decision**: Two ways create the tasks preview:
 
-1. `opsx-lite:propose` asks at the end: "Do you want a tasks preview?"
-2. A separate skill, `opsx-lite:tasks-preview`, generates the preview at any time.
+1. `openspec-lite-propose` asks at the end: "Do you want a tasks preview?"
+2. A separate skill, `openspec-lite-tasks-preview`, generates the preview at any time.
 
-`opsx-lite:tasks-preview` overwrites the old `tasks-preview.md`.
+`openspec-lite-tasks-preview` overwrites the old `tasks-preview.md`.
 
 **Rationale**: Two real workflows need the separate skill:
 
@@ -301,21 +310,21 @@ The schema has `apply.requires: [plan]` and no `apply.tracks`. This prevents bot
 
 ---
 
-## D27: opsx-lite:apply Skill (Tasks Round 3)
+## D27: openspec-lite-apply Skill (Tasks Round 3)
 
-**Decision**: Make an `opsx-lite:apply` skill. It implements from `plan.md`. It uses `tasks-preview.md` as a guide if the file exists.
+**Decision**: Make an `openspec-lite-apply` skill. It implements from `plan.md`. It uses `tasks-preview.md` as a guide if the file exists.
 
-The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds the plan-lite rules. If stock apply does not work as expected, the user changes to `opsx-lite:apply` and compares.
+The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds the plan-lite rules. If stock apply does not work as expected, the user changes to `openspec-lite-apply` and compares.
 
-**Rationale**: Stock apply runs without `tasks.md`, but its text assumes checkboxes. It also never gets a done signal (see `docs/facts.md`). The user expects that `opsx-lite:apply` is not redundant. This is an instinct, with no evidence yet.
+**Rationale**: Stock apply runs without `tasks.md`, but its text assumes checkboxes. It also never gets a done signal (see `docs/facts.md`). The user expects that `openspec-lite-apply` is not redundant. This is an instinct, with no evidence yet.
 
-**Review trigger**: Remove `opsx-lite:apply` if real use shows that stock `/opsx:apply` does the same job.
+**Review trigger**: Remove `openspec-lite-apply` if real use shows that stock `/opsx:apply` does the same job.
 
 ---
 
 ## D28: New Changes Set skip_specs (Tasks Round 3)
 
-**Decision**: `opsx-lite:propose` sets `skip_specs: true` in `.openspec.yaml` for each new plan-lite change.
+**Decision**: `openspec-lite-propose` sets `skip_specs: true` in `.openspec.yaml` for each new plan-lite change.
 
 **Rationale**: Without it, `openspec validate` fails with `CHANGE_NO_DELTAS`. A plan-lite change usually has no spec deltas.
 
@@ -339,7 +348,7 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 
 ## D31: Upgrade Seeds tasks.md From the Preview (Tasks Round 3)
 
-**Decision**: `opsx-lite:upgrade` uses `tasks-preview.md` as the seed for `tasks.md`. The user reviews `tasks.md` again after the upgrade.
+**Decision**: `openspec-lite-upgrade` uses `tasks-preview.md` as the seed for `tasks.md`. The user reviews `tasks.md` again after the upgrade.
 
 **Rationale**: The format is the same (D24), so the content is reusable. The second review is necessary because `tasks.md` is a contract, not a reference.
 
@@ -349,7 +358,7 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 
 **Decision**: `tasks-preview.md` is output only. The user puts every correction in `plan.md` and regenerates the preview. The file starts with this notice: "Generated. Edit plan.md, not this file."
 
-**Rationale**: `opsx-lite:tasks-preview` overwrites the file (D26). With one source of truth, a regeneration never loses information.
+**Rationale**: `openspec-lite-tasks-preview` overwrites the file (D26). With one source of truth, a regeneration never loses information.
 
 ---
 
@@ -359,18 +368,20 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 
 **Rationale**: A cheap check that catches a real mistake: the user changes the plan and forgets to regenerate.
 
+**Status**: D49 replaces the mtime comparison with a content hash.
+
 ---
 
 ## D34: Delivery via skillpm + Microsoft APM
 
 **Decision**: openspec-lite is published via two complementary package managers:
 
-- **skillpm** (npm-native): `npm install openspec-lite` + `skillpm sync` → wires skills into 40+ harnesses via the agentskills.io SKILL.md standard.
+- **skillpm** (npm-native): `npm install openspec-lite` + `skillpm sync` → copies skills into `.agents/skills/` and links harness folders to it. skillpm delegates harness wiring to the vercel-labs `skills` tool and lists no harnesses itself.
 - **Microsoft APM** (git-native): `apm install` + `apm compile -t <harness>` → generates harness-specific config for 9+ harnesses. No central registry; the GitHub repo is the package source.
 
 Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plugin/`, `.codex-plugin/`, etc.) are shipped — skillpm and APM together cover all install paths.
 
-**Rationale**: skillpm gives npm discoverability and 40+ harness coverage. APM gives git-native install and polyglot project support. Dual-publish costs almost nothing — the deliverable files are identical, only the manifests differ.
+**Rationale**: skillpm gives npm discoverability and semver versioning. APM gives git-native install and polyglot project support. Dual-publish costs almost nothing — the deliverable files are identical, only the manifests differ.
 
 ---
 
@@ -378,7 +389,7 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 **Decision**: openspec-lite does not ship `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `.kimi-plugin/plugin.json`, or `GEMINI.md`.
 
-**Rationale**: skillpm (40+ harnesses) and APM (9+ harnesses) together cover every real install scenario. Raw manifests only serve a manual clone-and-link path. If that path is needed in the future, it can be added. Removing them keeps the repo minimal.
+**Rationale**: skillpm (harness wiring through the `skills` tool) and APM (9+ explicit targets) together cover the expected install paths. Real coverage per harness is not yet tested. Raw manifests only serve a manual clone-and-link path. If that path is needed in the future, it can be added. Removing them keeps the repo minimal.
 
 ---
 
@@ -386,7 +397,7 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 **Decision**: The npm package name is `openspec-lite`.
 
-**Rationale**: Matches the repo name and the project identity. A scoped name (`@openspec/lite`) would imply official endorsement from the OpenSpec org, which is not the case. `opsx-lite` is the skill invocation prefix, not the user-facing package identity.
+**Rationale**: Matches the repo name and the project identity. A scoped name (`@openspec/lite`) would imply official endorsement from the OpenSpec org, which is not the case. D42 later aligned the skill prefix with this name.
 
 ---
 
@@ -408,11 +419,13 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 ## D39: Schema Install — Fetch From GitHub on First Use
 
-**Decision**: `opsx-lite:propose` checks if `openspec/schemas/plan-lite/schema.yaml` exists in the target project. If not, it fetches the schema files from the GitHub repo and creates them. If the local schema `version` does not match the skill's expected version, the skill warns the user and offers to run `opsx-lite:propose --update-schema`.
+**Decision**: `openspec-lite-propose` checks if `openspec/schemas/plan-lite/schema.yaml` exists in the target project. If not, it fetches the schema files from the GitHub repo and creates them. If the local schema `version` does not match the skill's expected version, the skill warns the user and offers to run `openspec-lite-propose --update-schema`.
 
 `--update-schema` finds the latest schema version whose `openspec-version` range matches the user's installed openspec CLI version, then replaces the local schema files.
 
 The skill embeds only the expected schema version string — not the full schema content. Full schema content is never in the skill's SKILL.md.
+
+**Status**: Superseded by D43 (copy from skill assets, not fetch from GitHub).
 
 **Rationale**: Token-efficient — schema content never travels through the LLM after first install. Handles both "not installed" and "outdated" cases. Version check costs one file read per invocation.
 
@@ -432,3 +445,127 @@ Version ranges use semver (npm-style): `>=1.9.0`, `^1.0.0`, `~1.7.0`, `<2.0.0`.
 Multi-version resolution (a schema index listing multiple versions) is deferred until a second schema version actually exists. Today there is one version. The skill fetches from the `main` branch. When a breaking change requires a new schema version, add the index then.
 
 **Rationale**: Both fields on one line each. `version` enables the "outdated?" check. `openspec-version` enables compatibility warning. Semver is the natural choice since openspec is an npm package. YAGNI on multi-version index.
+
+---
+
+## D41: Installed Schema Is Per Project and Committed to Git
+
+**Decision**: The plan-lite schema installs to `<repo>/openspec/schemas/plan-lite/` in the target project. The team commits it to git. The user-level location (`${XDG_DATA_HOME}/openspec/schemas/`) is not used.
+
+**Rationale**: A change with `schema: plan-lite` is unreadable without the schema. A teammate or a CI job that clones the repo must get both. One committed copy also gives the team one schema version, and git records each schema upgrade as a diff. The version check reads the repo copy only.
+
+---
+
+## D42: Skill Names Use the openspec-lite- Prefix
+
+**Decision**: Skills are named `openspec-lite-<action>`: `openspec-lite-propose`, `openspec-lite-tasks-preview`, `openspec-lite-apply`, `openspec-lite-upgrade`, `openspec-lite-archive`, and `openspec-lite-schema` (D44). The folder name is the same as the skill name. openspec-lite ships skills only. It ships no slash-command files.
+
+This revises D17.
+
+**Rationale**:
+
+- The agentskills.io spec permits only `a-z`, `0-9`, and `-` in a skill name. The name must match its folder. The old colon form (`opsx-lite:propose`) is not valid.
+- The prefix matches the repo name and the npm package name (D36).
+- The prefix matches the stock OpenSpec skill names, for example `openspec-explore` and `openspec-propose`.
+- Skills only: Codex has no command files, and skillpm delivers skills only. One naming form works on every harness.
+
+---
+
+## D43: Schema Ships in Skill Assets and Is Copied at Install
+
+**Decision**: The plan-lite schema files ship inside a skill's `assets/` folder. On install, the skill copies them into `<repo>/openspec/schemas/plan-lite/` with one shell command. The skill does not fetch from GitHub. The LLM does not read the schema content to install it.
+
+This revises D39. The version check from D39 and D40 stays:
+
+- The skill reads `version` and `openspec-version` from the repo copy.
+- If the repo copy is older than the shipped copy, the skill offers to copy again.
+- If the installed openspec CLI is outside the `openspec-version` range, the skill warns. The user then installs an openspec-lite package version that matches. The package version selects the schema version, so no schema index is necessary.
+
+**Rationale**: No network access, so it works in sandboxed harnesses and behind proxies. No tokens are spent on schema content. The shipped schema always matches the installed skill version, which removes the risk in D39 of fetching a newer schema from `main`. skillpm and APM both keep skill `assets/` on disk next to `SKILL.md`.
+
+**Status**: The asset owner and the check are resolved in D44.
+
+---
+
+## D44: openspec-lite-schema Skill Owns the Schema
+
+**Decision**: A sixth skill, `openspec-lite-schema`, holds `assets/plan-lite/`. It installs the schema into the repo and checks its version (D43). The five workflow skills each start with one step: check that `openspec/schemas/plan-lite/schema.yaml` exists, then compare its version. If the file is missing or old, the skill runs `openspec-lite-schema`.
+
+This revises D16 (six skills) and removes the `--update-schema` flag from D39.
+
+**Rationale**: A teammate can clone a repo and run any skill first, so every skill must check. One owner keeps one copy of the assets. No skill depends on the folder path of another skill. Schema update is a separate job, so it is not a flag on propose.
+
+---
+
+## D45: One Term per Concept — Upgrade vs Promotion
+
+**Decision**:
+
+- **Upgrade** is the switch of an active change from plan-lite to spec-driven.
+- **Promotion** is only the archive step that moves information into specs or ADRs.
+- "Graduation" is not used.
+- A new schema version is a schema **update**, not an upgrade.
+
+`CONTEXT.md` defines both terms. D7, D11, D13, D16, and the README use them.
+
+**Rationale**: Three words for one concept caused confusion. "Promote" also collided with the archive meaning.
+
+---
+
+## D46: Upgrade Removes skip_specs
+
+**Decision**: `openspec-lite-upgrade` removes `skip_specs: true` from `.openspec.yaml`. The end-of-upgrade summary tells the user that it did this.
+
+This completes D13 and D28.
+
+**Rationale**: With the flag set, the CLI marks `specs` as skipped and forbids spec files, so an upgraded change could never get specs. A spec-driven change without specs is rare. The user can put the flag back with one edit.
+
+---
+
+## D47: Archive Promotes Requirements Through the CLI Merge
+
+**Decision**: For each approved requirement, `openspec-lite-archive` writes a delta file at `<change>/specs/<capability>/spec.md` in the standard format (ADDED / MODIFIED). It removes `skip_specs` from `.openspec.yaml`, then runs `openspec archive`. The CLI validates the deltas and merges them into the main specs.
+
+Approved decisions go directly to `openspec/adr/NNNN-<slug>.md` (D9).
+
+This makes D8 more precise.
+
+**Rationale**: `openspec archive` merges any delta files under `<change>/specs/`, whatever the schema (`dist/core/archive.js:1127`). But it blocks when `skip_specs` is set and `specs/` has files (`archive.js:969`). Reusing the CLI merge avoids a second, untested merge that could corrupt the main specs. The CLI has no ADR concept, so ADRs are written directly.
+
+---
+
+## D48: OpenSpec Compatibility Is Declared Only in schema.yaml
+
+**Decision**: The `openspec-version` field in `schema.yaml` (D40) is the only declaration of compatible OpenSpec versions. `package.json` has no `peerDependencies` on `@fission-ai/openspec`. The skills compare the range with the output of `openspec --version`.
+
+**Rationale**: One source of truth. It works for skillpm and APM installs the same way. A peer dependency does not help when the openspec CLI is installed globally.
+
+---
+
+## D49: Stale Preview Detection Uses a Content Hash
+
+**Decision**: `openspec-lite-tasks-preview` writes the SHA-256 of `plan.md` in the preview header, after the notice from D32:
+
+```markdown
+<!-- Generated. Edit plan.md, not this file. -->
+<!-- plan-sha256: <hash> -->
+```
+
+Apply computes the hash of the current `plan.md` and compares. A different hash means the preview is stale.
+
+This replaces the mtime check in D33.
+
+**Rationale**: `git clone`, `checkout`, and `pull` reset file mtimes, so mtime gives wrong results. A hash is exact and costs one shell call.
+
+---
+
+## D50: Propose and Apply Suggest an Upgrade
+
+**Decision**: Two skills watch for the upgrade signals from D11:
+
+- `openspec-lite-propose` checks the size of the request when it creates the change.
+- `openspec-lite-apply` checks for signals during implementation: more than one capability, a new contract, or work across sessions.
+
+The other skills do not suggest an upgrade.
+
+**Rationale**: Scope becomes visible at these two points. Checks in the other skills would only add noise.
