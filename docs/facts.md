@@ -295,3 +295,19 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `template` resolves relative to `<schema>/templates/`. `template: templates/plan.md` fails with "Template not found: .../templates/templates/plan.md". Use `template: plan.md`. The stock schema uses `template: proposal.md`.
 - `openspec instructions plan --change <name> --json` returns the template content in `template`.
 - An extra file in the schema folder, for example `plan-hash.mjs`, causes no error.
+
+---
+
+## Microsoft APM: Versions, Updates, and User Scope
+
+**Source**: https://github.com/microsoft/apm (commit fe39119), files under `docs/src/content/docs/`
+
+- Pin a ref: `apm install owner/repo#v1.0.0`. The ref can be a tag, a branch, or a full commit SHA. A semver range also works, for example `owner/repo#^1.2.0`, resolved against the remote tags (`consumer/manage-dependencies.md:56`, `:269-277`, `:336-357`). `@` is only for marketplace refs (`reference/cli/install.md:20`).
+- `apm.lock.yaml` records the resolved commit SHA and file hashes. A plain `apm install` replays the locked commits (`consumer/manage-dependencies.md:398-405`, `consumer/install-packages.md:144-148`).
+- `apm update` moves each dependency to the newest ref that its constraint allows. It does not cross the constraint. A literal `#v1.0.0` stays. To move it, edit the ref in `apm.yml` and run `apm install` (`reference/cli/update.md`, `reference/cli/outdated.md:33`, `consumer/manage-dependencies.md:212-221`).
+- With no `--skill`, APM installs all skills of a repo: each `skills/<name>/` goes to `<target>/skills/<name>/` (`reference/cli/install.md:100`, `reference/package-types.md:131-132`).
+- User scope: `apm install -g` installs to `~/.apm/` (`reference/cli/install.md:59`). User-scope skill paths (`reference/targets-matrix.md`):
+  - `~/.agents/skills/` for copilot, cursor, windsurf
+  - `~/.claude/skills/` for claude (inferred from "project and user scope"; honors `CLAUDE_CONFIG_DIR`)
+  - `~/.config/opencode/skills/` for opencode
+  - Unverified: codex and gemini.
