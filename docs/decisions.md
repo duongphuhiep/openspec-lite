@@ -135,6 +135,8 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: The Decisions section is the key differentiator from a throwaway plan.md. Without it, the file has no long-term value and nothing worth promoting at archive time.
 
+**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional.
+
 ---
 
 ## D11: Upgrade Trigger (Round 3)
@@ -474,7 +476,7 @@ Multi-version resolution (a schema index listing multiple versions) is deferred 
 
 **Rationale**: Both fields on one line each. `version` enables the "outdated?" check. `openspec-version` enables compatibility warning. Semver is the natural choice since openspec is an npm package. YAGNI on multi-version index.
 
-**Status**: D43 replaces the fetch from `main` with a copy from skill assets. The two metadata fields stay.
+**Status**: D43 replaces the fetch from `main` with a copy from skill assets. The two metadata fields stay. D88 closes the range to `>=1.9.0 <2.0.0`.
 
 ---
 
@@ -685,7 +687,7 @@ This makes D43 and D44 more precise.
 
 **Rationale**: An old skill on a new schema, or a new skill on an old schema, can write files that the schema rejects. The fix is one command. A CLI update is silent, so a check only at install misses it. The CLI check costs one fast shell call. `git diff` replaces any custom merge logic for local edits.
 
-**Status**: D81 changes the "newer schema" message to "Run `apm update`".
+**Status**: D81 changes the "newer schema" message to "Run `apm update`". D90 replaces the `git diff` step with a backup folder and a report of written files.
 
 ---
 
@@ -804,7 +806,7 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: Six copies of one number drift. The script blocks a broken npm release. APM installs from git, so add a CI step on push when CI exists.
 
-**Status**: D70 removes `package.json` and `prepublishOnly`. Run the script by hand before each release tag. D85 adds the CI step.
+**Status**: D70 removes `package.json` and `prepublishOnly`. Run the script by hand before each release tag. D85 adds the CI step. D87 defines the version marker line.
 
 ---
 
@@ -869,6 +871,8 @@ The hash covers only `## Goal`, `## Non-Goals`, and `## Constraints`. It ignores
 This revises D51 and D65.
 
 **Rationale**: Stock `/opsx:apply` reads only `apply.instruction`, so the hash command had to exist in two places. A script in the schema gives one copy, versioned and committed with the schema. The schema is always at this path, so no search is needed. OpenSpec accepts extra files in the schema folder (`docs/facts.md`). Open Questions left the hash because D60 empties that section. With it in the hash, each resumed apply shows a false stale warning. Each answer goes to `## Decisions`, and an answer that changes the approach is a recorded deviation.
+
+**Status**: D91 makes the script fail when a heading is missing.
 
 ---
 
@@ -1024,3 +1028,85 @@ This revises D70 and D81.
 This revises D66, which deferred CI.
 
 **Rationale**: One small workflow catches a broken `plan-hash.mjs` or schema before a user installs it. The lowest supported OpenSpec version tests the bottom of the declared range.
+
+**Status**: D88 adds `latest` to CI and closes the range.
+
+---
+
+## D86: The Schema Skill Adds Archive Guidance for Stock Archive
+
+**Decision**: `openspec-lite-schema` adds this to `openspec/config.yaml` in the user's repo, only if `operations.archive.guidance` is empty:
+
+```yaml
+operations:
+  archive:
+    guidance: "If the change schema is plan-lite, stop. Run openspec-lite-archive instead."
+```
+
+If the field already has text, the skill shows the line and asks the user to add it by hand. The skill reports the line that it added.
+
+**Rationale**: Stock `/opsx:archive` on a plan-lite change skips promotion, so the `plan.md` decisions never become ADRs. The stock archive skill runs `openspec instructions archive`, which returns this guidance (`docs/facts.md`). It is the only way to reach the stock skill. The skill never overwrites existing guidance, so it does not damage the user's config.
+
+---
+
+## D87: The Version Marker Line
+
+**Decision**: Each workflow SKILL.md has this exact line in its schema-check step: `Shipped schema version: <n>`. `scripts/check-version.mjs` matches `^Shipped schema version: (\d+)$` in each workflow skill and compares the number with `version` in `schema.yaml`.
+
+This makes D66 precise.
+
+**Rationale**: The agent reads the same line that the script checks, so the marker and the rule are in one place. Frontmatter rules differ between harnesses, and the Agent Skills spec does not define such a field.
+
+---
+
+## D88: CI Tests the Lowest and the Latest OpenSpec; the Range Is Closed
+
+**Decision**: CI runs a matrix of two OpenSpec versions: the lowest version in `openspec-version`, and `latest`. The range is `>=1.9.0 <2.0.0`. When a new major version passes CI, widen the range.
+
+This revises D40 and D85.
+
+**Rationale**: `latest` finds a breaking OpenSpec release early. The upper limit stops a user on an untested major version from getting silent breakage.
+
+---
+
+## D89: MIT License Inside package/
+
+**Decision**: openspec-lite uses the MIT license. The one `LICENSE` file is `package/LICENSE`. The root README links to it.
+
+**Rationale**: A subdirectory install downloads only `package/` (D83), so the license must be there to reach users. One file cannot drift. OpenSpec is MIT too. GitHub detects a license only at the root. Add a root copy if the badge becomes important.
+
+---
+
+## D90: Schema Re-Copy Uses a Backup Folder, Not git
+
+**Decision**: When `openspec-lite-schema` replaces an older repo schema:
+
+1. It tells the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/plan-lite-v<old>/`." If the user declines, it stops.
+2. It moves the old folder to the backup path, then copies the shipped folder.
+3. It reports the copied files and the backup path. It tells the user to compare and delete the backup.
+
+On the first install, it only copies. No skill uses `git diff` or `git status` to report changes. Each skill reports the files it wrote.
+
+This revises D56 and D86.
+
+**Rationale**: `openspec/` may be untracked, and git may not be present. A delete-then-copy without git would lose local edits for good. The backup must be outside `openspec/schemas/`, because OpenSpec treats every folder there as a schema (`docs/facts.md`). The repo copy then always equals the shipped copy, with no stale files.
+
+---
+
+## D91: plan-hash.mjs Fails on a Missing Heading
+
+**Decision**: `plan-hash.mjs` exits with code 1 if `## Goal`, `## Non-Goals`, or `## Constraints` is missing. The message names each missing heading. An empty section is fine.
+
+This extends D72.
+
+**Rationale**: A misspelled heading, for example `## Non-goals`, drops out of the hash. An edit there would then never mark the preview as stale. The template creates all three headings, so a correct plan never fails.
+
+---
+
+## D92: "Rejected" Is Optional in a Decision Entry
+
+**Decision**: A decision entry is `### Decision: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative.
+
+This revises D10.
+
+**Rationale**: Apply records each answer to an open question as a decision (D73). Many answers have no rejected alternative. One form with an optional part stays simple for the agent and for archive.

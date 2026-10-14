@@ -131,9 +131,13 @@ After an upgrade, archive with stock `/opsx:archive`.
 
 Each major tag ships one schema version. Run `apm update` to get the newest release in your range.
 
-| openspec-lite major tag | OpenSpec CLI |
-| ----------------------- | ------------ |
-| (unreleased)            | `>=1.9.0`    |
+| openspec-lite major tag | OpenSpec CLI     |
+| ----------------------- | ---------------- |
+| (unreleased)            | `>=1.9.0 <2.0.0` |
+
+## License
+
+MIT. See [`package/LICENSE`](package/LICENSE).
 
 ## See Also
 

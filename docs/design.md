@@ -11,6 +11,7 @@ If this file and `decisions.md` disagree, this file is correct. Fix `decisions.m
 ```
 openspec-lite/
 ├── package/                 # the only folder that APM downloads
+│   ├── LICENSE              # MIT
 │   └── skills/
 │       ├── openspec-lite-propose/SKILL.md
 │       ├── openspec-lite-tasks-preview/SKILL.md   # holds the preview template inline
@@ -52,10 +53,11 @@ openspec-lite/
 - A change to the schema `version` is a new major tag (D81).
 - Ship skills only. Do not ship slash-command files or per-harness plugin manifests (D35, D42).
 - `schema.yaml` is the only declaration of compatible OpenSpec versions (D48).
+- The license is MIT. The one `LICENSE` file is `package/LICENSE`. The root README links to it (D89).
 - README has a compatibility table: each openspec-lite major tag with its `openspec-version` range (D67, D81).
-- CI (`.github/workflows/test.yml`) runs on push and pull request (D85):
-  - It installs `@fission-ai/openspec` at the lowest version in `openspec-version`.
-  - It runs `node scripts/check-version.mjs`. The script fails if the shipped-version constant in a workflow skill differs from `version` in `assets/plan-lite/schema.yaml` (D66).
+- CI (`.github/workflows/test.yml`) runs on push and pull request (D85, D88):
+  - It runs a matrix of two `@fission-ai/openspec` versions: the lowest version in `openspec-version`, and `latest`.
+  - It runs `node scripts/check-version.mjs`. The script reads the line `Shipped schema version: <n>` in each workflow skill. It fails if a number differs from `version` in `assets/plan-lite/schema.yaml` (D66, D87).
   - It runs `node --test tests/` (D84).
 - Before each release tag:
   - Run the scenarios in `docs/test-scenarios.md` by hand (D69).
@@ -64,7 +66,7 @@ openspec-lite/
 ## 2a. Tests (D84)
 
 - Tests live in `tests/` and run with `node --test tests/`. They have no dependencies.
-- `plan-hash.test.mjs`: CRLF, section order, Open Questions, and Decisions do not change the hash. A changed Constraint does.
+- `plan-hash.test.mjs`: CRLF, section order, Open Questions, and Decisions do not change the hash. A changed Constraint does. A missing heading exits with code 1.
 - `check-version.test.mjs`: a match passes, and a mismatch fails.
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It skips itself if `openspec` is not installed.
 
@@ -88,7 +90,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 **Schema check** (D44, D56, D81): Do this after change selection and the change schema guard, before any other step. propose has no change yet, so it starts here.
 
 1. Read `version` from `openspec/schemas/plan-lite/schema.yaml` in the target repo.
-2. Compare it with the shipped version. The shipped version is a constant in each workflow skill. It must equal `version` in `assets/plan-lite/schema.yaml` (D66).
+2. Compare it with the shipped version. Each workflow skill holds the line `Shipped schema version: <n>` (D87). The number must equal `version` in `assets/plan-lite/schema.yaml` (D66).
    - The file is missing or its version is lower: run `openspec-lite-schema`. If the user declines the copy, stop.
    - Its version is higher: stop. Tell the user: "Run `apm update`." To cross a major tag, the user edits the ref in `apm.yml` and runs `apm install`.
 3. Run `openspec --version`. If the result is outside the `openspec-version` range, warn the user. Point to the compatibility table at `https://github.com/<owner>/openspec-lite#compatibility`. The installed package has no README.
@@ -99,21 +101,29 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md
 ```
 
-### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71, D82)
+### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71, D82, D86, D90)
 
 - Find the skill's own `assets/plan-lite/` folder:
   1. Use the base directory from the harness, if it gives one.
   2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, in order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`.
   3. If no path has the folder, stop and tell the user.
-- Copy the folder to `<repo>/openspec/schemas/plan-lite/` with one command. Do not read the schema content into the conversation to install it:
+- If a repo copy exists, tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/plan-lite-v<old>/`." If the user declines, stop.
+- Copy with one command. Do not read the schema content into the conversation to install it. Give the backup path only when a repo copy exists:
 
   ```sh
-  node -e 'require("fs").cpSync(process.argv[1], "openspec/schemas/plan-lite", {recursive: true})' "<assets>/plan-lite"
+  node -e 'const fs=require("fs"),path=require("path"),[src,dst,bak]=process.argv.slice(1);if(bak){fs.mkdirSync(path.dirname(bak),{recursive:true});fs.renameSync(dst,bak)}fs.cpSync(src,dst,{recursive:true})' "<assets>/plan-lite" openspec/schemas/plan-lite [openspec/schemas-backup/plan-lite-v<old>]
   ```
 
-- After the copy, show `git diff openspec/schemas/plan-lite/`. The user can revert overwritten local edits.
+- If `operations.archive.guidance` in `openspec/config.yaml` is empty, add this. If it already has text, show the line and ask the user to add it by hand:
+
+  ```yaml
+  operations:
+    archive:
+      guidance: "If the change schema is plan-lite, stop. Run openspec-lite-archive instead."
+  ```
+
+- Report the copied files, the backup path, and the `config.yaml` line. Do not use `git diff` or `git status`. Tell the user to compare and delete the backup.
 - Tell the user to commit the schema to git.
-- If the repo copy is older than the shipped copy, offer to copy again.
 
 ### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80)
 
@@ -194,7 +204,7 @@ node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md
 ```yaml
 name: plan-lite
 version: 1
-openspec-version: ">=1.9.0"
+openspec-version: ">=1.9.0 <2.0.0"
 description: Lightweight plan — goal, constraints, decisions. No tasks. Upgradeable to spec-driven.
 artifacts:
   - id: plan
@@ -224,19 +234,25 @@ apply:
 - Suggest an upgrade when a signal from §5 appears.
 - End with the done checklist: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 
-`plan-hash.mjs` (D72):
+`plan-hash.mjs` (D72, D91):
 
 ```js
 // Usage: node plan-hash.mjs <plan.md>
 // Hashes only Goal, Non-Goals, and Constraints. Ignores line endings, whitespace, and section order.
+// Exits with code 1 if one of these headings is missing.
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 
 const KEEP = ["Goal", "Non-Goals", "Constraints"];
 const text = readFileSync(process.argv[2], "utf8").replace(/\r\n/g, "\n");
-const kept = text
-  .split(/^## /m)
-  .slice(1)
+const sections = text.split(/^## /m).slice(1);
+const titles = sections.map((s) => s.split("\n")[0].trim());
+const missing = KEEP.filter((k) => !titles.includes(k));
+if (missing.length > 0) {
+  console.error(`plan-hash: missing heading: ${missing.map((k) => `## ${k}`).join(", ")}`);
+  process.exit(1);
+}
+const kept = sections
   .filter((s) => KEEP.includes(s.split("\n")[0].trim()))
   .map((s) => s.replace(/\s+/g, " ").trim())
   .sort();
@@ -257,7 +273,7 @@ console.log(createHash("sha256").update(kept.join("\n")).digest("hex"));
 ## Decisions
 ```
 
-Decisions are append-only. Entry format: `### Decision: <title>`, then "Chose X because Y. Rejected Z because W."
+Decisions are append-only. Entry format: `### Decision: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative (D92).
 
 ## 5. Upgrade Signals (D11, D50, D54)
 
