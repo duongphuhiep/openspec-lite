@@ -277,3 +277,18 @@ const tracksFile = applyConfig?.tracks ?? null;
 | Cursor | Unverified. The source is closed and the docs were not reachable. | — |
 
 With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can report the symlink path or the real path. Both paths reach the same `assets/`. Not tested per harness.
+
+---
+
+## OpenSpec: plan-lite Flow, Tested End to End
+
+**Source**: run in an empty git repo with OpenSpec 1.9.0 and a minimal plan-lite schema (2026-10-14)
+
+- `openspec init` is not necessary. `openspec new change <name> --schema plan-lite` creates `openspec/config.yaml`, `openspec/specs/`, and the change folder.
+- `new change` writes only `.openspec.yaml` (`schema`, `created`). It does not create `plan.md`.
+- With `skip_specs: true` and no deltas, `openspec validate <name>` passes.
+- `openspec instructions apply --change <name> --json` returns `state: ready`, `progress` 0/0, `instruction` from the schema, and `contextFiles` with only `plan`. A file outside the schema, such as `tasks-preview.md`, is not in `contextFiles`.
+- `openspec archive <name> --yes` with no deltas moves the change to `changes/archive/YYYY-MM-DD-<name>/` with no prompt.
+- With a delta at `specs/<capability>/spec.md` and no `skip_specs`, `validate` passes and `archive --yes` merges it into `openspec/specs/<capability>/spec.md`.
+- Each requirement in a delta must have at least one `#### Scenario:` block. Otherwise `validate` fails.
+- After a switch to `schema: spec-driven`, `openspec status` shows `proposal` ready and the rest blocked, in graph order. `openspec instructions <artifact> --change <name> --json` returns `outputPath` and `template`. `plan.md` in the folder causes no error.
