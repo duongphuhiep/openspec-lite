@@ -311,3 +311,17 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
   - `~/.claude/skills/` for claude (inferred from "project and user scope"; honors `CLAUDE_CONFIG_DIR`)
   - `~/.config/opencode/skills/` for opencode
   - Unverified: codex and gemini.
+
+---
+
+## Microsoft APM: What a Package Install Downloads
+
+**Source**: https://github.com/microsoft/apm (commit fe39119), read from the source code, not run
+
+- APM always fetches with git. It does not download archives, so `.gitattributes` `export-ignore` has no effect (`src/apm_cli/deps/github_downloader.py:1995-2018`).
+- A full-repo install (`owner/repo#ref`) copies the whole working tree, minus `.git`, into `apm_modules/<owner>/<repo>/` (`src/apm_cli/models/dependency/materialization.py:179-180`). The persistent cache keeps a full `git clone --bare` with the blobs of all branches (`src/apm_cli/cache/git_cache.py:507-525`).
+- A subdirectory install (`owner/repo/<path>#ref`) uses a partial clone (`--filter=blob:none`) and a sparse checkout. Only the trees and the blobs under `<path>` are downloaded (`git_cache.py:267-272`, `:516-524`). Semver ranges work for subdirectory installs. A `v{version}` tag matches (`docs/.../consumer/manage-dependencies.md:345-358`).
+- Deploy: for a package with `skills/<name>/SKILL.md`, APM copies only each `skills/<name>/` folder into the harness folders (`src/apm_cli/integration/skill_integrator.py:602-605`, `:876-883`). Skill detection looks for `<package path>/skills/` (`src/apm_cli/models/format_detection.py:180-190`).
+- With `SKILL.md` at the package root, APM copies the whole package folder into the harness, including `tests/` and `docs/` (`skill_integrator.py:1199-1208`).
+- A package author has no exclude mechanism. There is no `.apmignore`. `includes:` in `apm.yml` does not filter install (`docs/.../reference/manifest-schema.md:262-285`).
+- The lockfile `content_hash` covers the whole fetched package tree. `deployed_file_hashes` covers only the deployed files (`docs/.../reference/lockfile-spec.md:215`, `:221`).
