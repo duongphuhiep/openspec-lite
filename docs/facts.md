@@ -219,3 +219,61 @@ const tracksFile = applyConfig?.tracks ?? null;
 **archive**: checks only checkbox progress. With no tracked file and no `tasks.md`, the count is 0 and there is no warning. It does not check artifacts.
 
 **validate**: raises `CHANGE_NO_DELTAS` for a change with no spec deltas. Set `skip_specs: true` in `.openspec.yaml` to prevent this. Archive skips this check.
+
+---
+
+## skillpm: Install, Placement, and One Skill per Package
+
+**Source**: skillpm 2.0.0 (`npm pack skillpm@2.0.0`, `dist/commands/publish.js`, `dist/scanner/index.js`); https://github.com/sbroenne/skillpm `README.md` lines 19-54 (commit 3a531ea)
+
+- Install: `npx skillpm install <pkg>`. It runs `npm install`, scans `node_modules/`, then links. Run `skillpm sync` after `npm install`, `npm ci`, or `npm update`.
+- skillpm delegates harness wiring to the vercel-labs `skills` tool, pinned to `skills@1.7.0` (`src/utils/exec.ts:6`). It runs `npx --yes skills@1.7.0 add <skillDir> -y --json`. skillpm has no harness list of its own.
+- The `skills` tool copies the skill into `.agents/skills/` and links harness folders to that copy. In `skills@1.7.0`, `src/agents.ts:158` maps `claude-code` to `.claude/skills`.
+- The copy keeps the whole skill folder, including `assets/`. It skips only `metadata.json`, `.git`, `__pycache__`, and `__pypackages__` (`vercel-labs/skills` v1.7.0 `src/installer.ts:458-463`, `:500-530`).
+- **One skill per package.** `publish` fails unless `skills/` holds exactly one skill: "A skillpm package must contain exactly one skill in skills/. Split multiple skills into separate npm packages." (`publish.js:44-45`). The scanner also returns only the first `skills/<name>/SKILL.md` of each package (`tryReadSkill`, `scanner/index.js:75-101`).
+- The scanner walks nested `node_modules/` folders (`scanPackage` → `scanDirectory`), so it finds skills in dependency packages too.
+- `publish` also requires `"keywords": ["agent-skill"]` in `package.json` and runs the `skills-ref validate` reference validator.
+
+---
+
+## Microsoft APM: Install and Skill Paths
+
+**Source**: https://github.com/microsoft/apm (commit fe39119), files under `docs/src/content/docs/`
+
+- Install: `apm install [PACKAGE_REF...] [-t <target>]`. With no arguments, it installs from `apm.yml`. `apm install owner/repo --skill <name>` selects one skill (`reference/cli/install.md:11-18`, `:55`).
+- Skills deploy at install time. `apm compile -t <target>` builds only context files, for example `AGENTS.md` and `CLAUDE.md` (`reference/cli/compile.md:81`, `:146`).
+- The package source is a git repo. A registry HTTP API exists, but it is experimental (`reference/registry-http-api.md`).
+- `apm.yml` accepts 13 target slugs: copilot, claude, grok-build, cursor, opencode, codex, gemini, antigravity, windsurf, kiro, agent-skills, hermes, grok-bot. Nine are auto-detected (`concepts/primitives-and-targets.md:81`, `reference/targets-matrix.md`).
+- Project skill paths (default "skills convergence", `producer/author-primitives/skills.md:96-127`):
+  - `.claude/skills/<name>/` for claude
+  - `.grok/skills/<name>/` for grok-build
+  - `.kiro/skills/<name>/` for kiro
+  - `.agents/skills/<name>/` for copilot, cursor, codex, gemini, opencode, windsurf, antigravity, hermes, agent-skills
+  - `agent-data/workflows/<name>/` for grok-bot
+  - `--legacy-skill-paths` restores the old per-target folders.
+- The whole skill folder is copied with `shutil.copytree`, so `assets/` stays next to `SKILL.md` (`skills.md:121-124`, `src/apm_cli/integration/skill_integrator.py:369`).
+- A git repo with `skills/<name>/SKILL.md` needs no root `apm.yml`. If `apm.yml` exists, `name` and `version` are required (`reference/package-types.md:14-16`, `reference/manifest-schema.md:47-48`).
+
+---
+
+## Agent Skills Spec: Name, Folders, Paths
+
+**Source**: https://agentskills.io/specification; https://github.com/agentskills/agentskills (commit 69ef37e) `docs/specification.mdx`, `docs/client-implementation/adding-skills-support.mdx`
+
+- `name`: 1-64 characters. Only `a-z`, `0-9`, and `-`. It must not start or end with `-`. It must not contain `--`. It must match the parent folder name (`specification.mdx:58-65`).
+- Optional folders are recommendations: `scripts/` (executable code), `references/` (docs loaded on demand), `assets/` (templates, images, data) (`specification.mdx:187-214`).
+- File references in a skill use relative paths from the skill root (`specification.mdx:228`). The client guide tells clients to give the model the skill's base directory, so it can resolve those paths (`adding-skills-support.mdx:157`, `:206-207`).
+
+---
+
+## Harnesses: Does the Model Get the Skill Directory?
+
+| Harness | Gets it | Source |
+| --- | --- | --- |
+| Claude Code | Yes. `${CLAUDE_SKILL_DIR}` substitution. At load, prints "Base directory for this skill: <path>". | https://code.claude.com/docs/en/skills ("Available string substitutions") |
+| OpenAI Codex CLI | Yes, as the `SKILL.md` path in the catalog. The prompt says to resolve relative paths against its folder. | `openai/codex` `codex-rs/ext/skills/src/catalog_prompt.rs:29` (commit 76ed3b4) |
+| GitHub Copilot (VS Code) | Yes. The skill tool returns `Base directory: <path>`. | `microsoft/vscode` `extensions/copilot/src/extension/tools/node/skillTool.ts:93` (commit e84d1cd) |
+| Gemini CLI | Yes. `activate_skill` returns a folder tree that starts with the absolute skill folder. | `google-gemini/gemini-cli` `packages/core/src/tools/activate-skill.ts:131-151` (commit 42c5182) |
+| Cursor | Unverified. The source is closed and the docs were not reachable. | — |
+
+With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can report the symlink path or the real path. Both paths reach the same `assets/`. Not tested per harness.
