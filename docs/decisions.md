@@ -168,7 +168,7 @@ artifacts:
 
 **Rationale**: One artifact, no dependencies, no tasks. Scratch notes stay in AI context, not a file.
 
-**Status**: Revised by D25, then D53. The schema has only the `plan` artifact, plus the `apply` block from D25.
+**Status**: Revised by D25, then D53. The schema has only the `plan` artifact, plus the `apply` block from D25. The `template` value must be `plan.md`, not `templates/plan.md`: the path is relative to `templates/` (`docs/facts.md`).
 
 ---
 

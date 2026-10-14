@@ -46,7 +46,7 @@ artifacts: # required
   - id: <string> # required
     generates: <string> # required (file glob or path)
     description: <string> # required
-    template: <string> # required (path to template file)
+    template: <string> # required, relative to <schema>/templates/
     instruction: <string> # optional
     requires: <string[]> # optional, default []
 apply: # optional
@@ -292,3 +292,6 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - With a delta at `specs/<capability>/spec.md` and no `skip_specs`, `validate` passes and `archive --yes` merges it into `openspec/specs/<capability>/spec.md`.
 - Each requirement in a delta must have at least one `#### Scenario:` block. Otherwise `validate` fails.
 - After a switch to `schema: spec-driven`, `openspec status` shows `proposal` ready and the rest blocked, in graph order. `openspec instructions <artifact> --change <name> --json` returns `outputPath` and `template`. `plan.md` in the folder causes no error.
+- `template` resolves relative to `<schema>/templates/`. `template: templates/plan.md` fails with "Template not found: .../templates/templates/plan.md". Use `template: plan.md`. The stock schema uses `template: proposal.md`.
+- `openspec instructions plan --change <name> --json` returns the template content in `template`.
+- An extra file in the schema folder, for example `plan-hash.mjs`, causes no error.

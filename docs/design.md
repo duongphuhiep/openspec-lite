@@ -162,7 +162,7 @@ artifacts:
   - id: plan
     generates: plan.md
     description: Living plan — goal, non-goals, constraints, open questions, decisions
-    template: templates/plan.md
+    template: plan.md   # relative to templates/
     requires: []
 apply:
   requires: [plan]
