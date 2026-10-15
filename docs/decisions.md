@@ -574,7 +574,7 @@ This makes D8 more precise.
 
 **Rationale**: `openspec archive` merges any delta files under `<change>/specs/`, whatever the schema (`dist/core/archive.js:1127`). But it blocks when `skip_specs` is set and `specs/` has files (`archive.js:969`). Reusing the CLI merge avoids a second, untested merge that could corrupt the main specs. The CLI has no ADR concept, so ADRs are written directly.
 
-**Status**: D58 changes the order: validate and archive first, ADRs last. D59 changes the ADR name to `YYYY-MM-DD-<slug>.md`. D93 sets `skip_specs: true` when archive writes no delta.
+**Status**: D58 changes the order: validate and archive first, ADRs last. D59 changes the ADR name to `YYYY-MM-DD-<slug>.md`. D93 sets `skip_specs: true` when archive writes no delta. D105 writes ADRs after validate and before archive.
 
 ---
 
@@ -721,7 +721,7 @@ This revises the order in D47.
 
 **Rationale**: If validation or archive fails, no orphan ADR exists. `--yes` is safe because the user approved each item in the conversation. OpenSpec requires full content for MODIFIED, and partial content loses detail at archive time (`docs/facts.md`).
 
-**Status**: Revised by D74 (scenarios, all four delta headers, draft before approval). D93 sets `skip_specs: true` when no delta is written.
+**Status**: Revised by D74 (scenarios, all four delta headers, draft before approval). D93 sets `skip_specs: true` when no delta is written. D105 changes the order: validate, ADRs, archive.
 
 ---
 
@@ -1091,6 +1091,8 @@ This revises D40 and D85.
 
 **Rationale**: A subdirectory install downloads only `package/` (D83), so the license must be there to reach users. One file cannot drift. OpenSpec is MIT too. GitHub detects a license only at the root. Add a root copy if the badge becomes important.
 
+**Status**: D100 sets the copyright holder.
+
 ---
 
 ## D90: Schema Re-Copy Uses a Backup Folder, Not git
@@ -1107,7 +1109,7 @@ This revises D56 and D86.
 
 **Rationale**: `openspec/` may be untracked, and git may not be present. A delete-then-copy without git would lose local edits for good. The backup must be outside `openspec/schemas/`, because OpenSpec treats every folder there as a schema (`docs/facts.md`). The repo copy then always equals the shipped copy, with no stale files.
 
-**Status**: D96 adds a timestamp to the backup name. D98 moves the backup and copy into `install.mjs`.
+**Status**: D96 adds a timestamp to the backup name. D98 moves the backup and copy into `install.mjs`. D102 adds a suffix on a name collision.
 
 ---
 
@@ -1139,7 +1141,7 @@ This revises D10.
 - When the repo schema is newer, the message says: "Edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`." This replaces "Run `apm update`" from D81.
 - propose asks the Level 1 question before the schema check.
 - After `openspec-lite-schema` runs, the calling skill reads the version again. If it still differs, it stops and reports both versions.
-- Run directly, `openspec-lite-schema` stops on a higher repo version. On an equal version, it says "already current", unless the user asks for a re-copy.
+- Run directly, `openspec-lite-schema` stops on a higher repo version. On an equal version, it says "already current", unless the user asks for a re-copy. (D101 drops the re-copy.)
 - If `openspec --version` fails, the skill stops and tells the user to install OpenSpec.
 - If `plan-hash.mjs` exits with code 1, the skill or `apply.instruction` shows the message and stops.
 - `check-version.mjs` normalizes CRLF and fails when a skill has no marker line.
@@ -1188,6 +1190,8 @@ This revises D90.
 
 **Rationale**: A fixed name fails when an old backup is still there. With a timestamp, the move never fails, and each backup stays until the user deletes it.
 
+**Status**: D102: two backups in the same second collide, so a suffix is added.
+
 ---
 
 ## D97: Upgrade Switches the Schema Last
@@ -1217,6 +1221,8 @@ This revises D65 and D90.
 
 **Rationale**: `node -e '...'` with inner double quotes breaks in cmd.exe and in Windows PowerShell 5.1. A script file needs no shell quoting and can be tested, as with `plan-hash.mjs` (D72).
 
+**Status**: D101 defines the full contract and drops the re-copy on an equal version. D102 adds the collision suffix.
+
 ---
 
 ## D99: Fixes From the Fifth Review
@@ -1242,3 +1248,61 @@ This revises D65 and D90.
 - `node --test tests/` fails on Node 24.
 - The stock apply template suggests `/opsx:archive` when the work is done.
 - The other items each define an input, an output, or a failure path that was undefined.
+
+---
+
+## D100: Repo Owner and Copyright Holder
+
+**Decision**: The repo is `github.com/duongphuhiep/openspec-lite`. `package/LICENSE` has the line "Copyright (c) 2026 DUONG Phu-Hiep".
+
+**Rationale**: The install command, the compatibility URL inside each shipped skill, and the LICENSE all need these values. The URL ships inside the skills, so it must be fixed before the first release. Move to an org later if others join.
+
+---
+
+## D101: No Re-Copy on an Equal Version; the install.mjs Contract
+
+**Decision**: On an equal version, `openspec-lite-schema` says "already current" and stops. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs the skill again. `install.mjs` has no `--force` flag.
+
+The `install.mjs` contract is in `design.md` §3: usage, version parsing, the action for each version case, the exit codes (0, 2, 3), and the output lines (`status:`, `backup:`, `copied:`).
+
+This revises D93 and D98.
+
+**Rationale**: A repair is rare, and a delete is clear. One less flag means one less test. The contract was undefined, so the script and its test could not be written.
+
+---
+
+## D102: A Suffix on a Backup Name Collision
+
+**Decision**: If `openspec/schemas-backup/plan-lite-v<old>-<YYYYMMDD-HHMMSS>/` exists, `install.mjs` adds `-2`, `-3`, and so on.
+
+This revises D96.
+
+**Rationale**: The timestamp has 1-second resolution, and `fs.renameSync` onto a non-empty folder fails with `ENOTEMPTY`. A test runs two backups inside one second. The suffix keeps the names readable.
+
+---
+
+## D103: README Install Command Has a Target and Requirements
+
+**Decision**: README shows `apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude` and tells the user to replace `claude` with their harness. It lists the requirements: the OpenSpec CLI in the `openspec-version` range, and `openspec init`.
+
+This revises D81 and D83.
+
+**Rationale**: With no `--target` and no harness folder in the repo, APM 0.33.0 deploys nothing. `openspec init` installs the stock `/opsx:*` skills that README tells users to run.
+
+---
+
+## D104: When the Skills Trigger
+
+**Decision**: `openspec-lite-propose` triggers on its name, on "plan-lite", and on "lightweight plan" or "medium change". The other five skills trigger only on their name or on "plan-lite".
+
+**Rationale**: propose is the entry point, so it must be easy to find. The other skills act on a plan-lite change, and the guard (D75) refuses other changes. The stock OpenSpec skills compete for general wording. For archive, the README warning and D95 handle that competition.
+
+---
+
+## D105: Archive Writes ADRs After Validate and Before Archive
+
+**Decision**: The archive order is: validate, write the ADRs to `openspec/adr/`, then run `openspec archive --yes`. If archive fails after the ADRs exist, the skill reports it and keeps the ADRs.
+
+This revises D58.
+
+**Rationale**: With ADRs last, a session that ends after `openspec archive` loses the approved ADRs, because they exist only in the conversation. Validation is the step that usually fails, so it still runs first. An orphan ADR is possible only if archive fails after `validate` passed, and the ADR is still a correct decision.

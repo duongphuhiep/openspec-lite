@@ -24,11 +24,18 @@ Level 3 ── spec-driven             (full OpenSpec)
 
 ## Install
 
+Requirements:
+
+- [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI `>=1.9.0 <2.0.0`: `npm install -g @fission-ai/openspec`.
+- Run `openspec init` in your repo. It installs the stock `/opsx:*` skills that openspec-lite uses.
+
 Install with [Microsoft APM](https://github.com/microsoft/apm):
 
 ```sh
-apm install <owner>/openspec-lite/package#^1.0.0
+apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude
 ```
+
+Replace `claude` with your harness, for example `codex` or `copilot`. Without `--target`, APM deploys only to harness folders that already exist in the repo.
 
 ## What openspec-lite Ships
 
