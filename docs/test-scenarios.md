@@ -130,3 +130,44 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - `.claude/skills/` has the six `openspec-lite-*` skills. `openspec-lite-schema/` has `scripts/install.mjs` and `assets/plan-lite/`.
 - `apm_modules/duongphuhiep/openspec-lite/` has only `package/` content: no `tests/`, `scripts/`, or `docs/`.
 - `apm.lock.yaml` has `resolved_ref: vX.Y.Z`.
+
+## 11. OpenSpec root in a subfolder
+
+**Steps**:
+
+1. In an empty git repo, create `svc/`. Run `openspec init --tools claude` in `svc/`.
+2. Run `apm install <path-to-this-repo>/package --target claude` at the git root.
+3. Start the agent at the git root. Ask: "openspec-lite-propose: add a health check to svc."
+
+**Expected**:
+
+- The agent reads `root.path` (`svc/`) and runs each command there.
+- `svc/openspec/schemas/plan-lite/` exists. The git root has no `openspec/` folder.
+- The schema skill finds itself in `.claude/skills/` at the git root, which is a parent folder of `svc/`.
+
+## 12. Propose resume
+
+**Steps**:
+
+1. Run `openspec new change resume-me --schema plan-lite`. Add `skip_specs: true` to its `.openspec.yaml`. Do not write `plan.md`.
+2. Ask: "openspec-lite-propose: resume-me."
+
+**Expected**:
+
+- The agent says that the change exists with no `plan.md`, and asks to resume.
+- After yes, `plan.md` exists, and `.openspec.yaml` has exactly one `skip_specs` line.
+- `openspec validate resume-me` passes.
+
+## 13. Archive rerun after a failed validate
+
+**Steps**:
+
+1. On a finished change, run `openspec-lite-archive`. Approve one requirement and one decision.
+2. Before step 9, break the delta: remove its `#### Scenario:` block. `validate` fails, and the skill stops.
+3. Run `openspec-lite-archive` again.
+
+**Expected**:
+
+- Before it writes, the agent shows the delta from run 1 and asks to keep or delete it.
+- The ADR has the plain lines `Status: Accepted` and `Change: <name>`.
+- Run 2 does not draft the decision again, because an ADR with `Change: <name>` exists. `openspec/adr/` has one ADR for it.

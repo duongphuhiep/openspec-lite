@@ -4,7 +4,7 @@
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { appendFileSync, cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -111,4 +111,40 @@ test("validate fails on a plan-lite change with no deltas and no skip_specs", { 
   assert.equal(os(dir, ["new", "change", "bare", "--schema", "plan-lite"]).status, 0);
   writeFileSync(join(dir, "openspec", "changes", "bare", "plan.md"), "## Goal\nX\n");
   assert.notEqual(os(dir, ["validate", "bare"]).status, 0);
+});
+
+test("CLI behavior the skills rely on", { skip }, async (t) => {
+  await t.test("state is blocked when plan.md is missing", () => {
+    const dir = repo();
+    assert.equal(os(dir, ["new", "change", "nb", "--schema", "plan-lite"]).status, 0);
+    assert.equal(json(dir, ["instructions", "apply", "--change", "nb"]).state, "blocked");
+  });
+
+  await t.test("root.path from a subfolder, and root is null above openspec/", () => {
+    const top = mkdtempSync(join(tmpRoot, "mono-"));
+    spawnSync("git", ["init", "-q"], { cwd: top });
+    const svc = join(top, "svc");
+    mkdirSync(join(svc, "src", "deep"), { recursive: true });
+    cpSync(assets, join(svc, "openspec", "schemas", "plan-lite"), { recursive: true });
+    // A schemas/ folder alone does not mark a root. changes/, specs/, or config.yaml does.
+    mkdirSync(join(svc, "openspec", "changes"));
+    assert.equal(realpathSync(json(join(svc, "src", "deep"), ["list"]).root.path), realpathSync(svc));
+    assert.equal(json(top, ["list"]).root, null);
+  });
+
+  await t.test("instructions specs with skip_specs gives skipped: true and still an instruction", () => {
+    const dir = repo();
+    assert.equal(os(dir, ["new", "change", "sk", "--schema", "plan-lite"]).status, 0);
+    appendFileSync(join(dir, "openspec", "changes", "sk", ".openspec.yaml"), "skip_specs: true\n");
+    const r = json(dir, ["instructions", "specs", "--change", "sk", "--schema", "spec-driven"]);
+    assert.equal(r.skipped, true);
+    assert.ok(r.instruction.length > 0);
+  });
+
+  await t.test("a duplicate key in .openspec.yaml breaks the change", () => {
+    const dir = repo();
+    assert.equal(os(dir, ["new", "change", "dup", "--schema", "plan-lite"]).status, 0);
+    appendFileSync(join(dir, "openspec", "changes", "dup", ".openspec.yaml"), "skip_specs: true\nskip_specs: true\n");
+    assert.match(os(dir, ["instructions", "plan", "--change", "dup", "--json"]).out, /Map keys must be unique/);
+  });
 });

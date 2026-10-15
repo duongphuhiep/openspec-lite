@@ -1444,3 +1444,27 @@ This revises D58, D61, D74, D98, D105, and D110. `apply.instruction` changed, bu
 - ADRs stay after a failed archive (D105), so a rerun wrote them again.
 - A plausible RENAMED delta failed `validate` ("no requirement entries parsed").
 - After `git push origin main v1.1.0`, `git describe HEAD` returned the new tag, so the check compared HEAD with itself.
+
+---
+
+## D112: Fixes From Review Round 4
+
+**Decision**:
+
+- propose sets `skip_specs: true` only if the line is missing. It never adds a second one.
+- Archive ignores `skipped: true` and the warning of `instructions specs`, because `skip_specs` is still set at that step. It uses SHALL or MUST, as the CLI instruction says.
+- An ADR has an exact form: `# <Title>`, then the plain lines `Status: Accepted` and `Change: <name>`, then `## Context`, `## Decision`, and `## Consequences`. The rerun check searches for the line `Change: <name>`.
+- Archive lists the deltas from an earlier run before it writes the new ones. It merges into a kept file with the same path.
+- An ADR file name that exists for another change gets `-2`, `-3`, and so on. Archive never overwrites an ADR.
+- The skill-folder search checks all project folders (the OpenSpec root and its parents, with `apm_modules/`) before the user folders.
+- `schema.test.mjs` covers `state: blocked`, `root.path` and `root: null`, `skipped: true`, and the duplicate-key failure.
+- Scenarios 11–13 cover a subfolder root, a propose resume, and an archive rerun.
+
+This revises D59, D74, D110, and D111.
+
+**Rationale**: A fresh `review-commit-range` round found each case. I reproduced two with OpenSpec 1.9.0:
+
+- Two `skip_specs` lines make each command on the change fail: "Map keys must be unique".
+- With `skip_specs` set, `instructions specs` returns `skipped: true` and "Do not create spec files", next to the format instruction.
+
+The other cases are text gaps. "Change" as a section did not match a `Change:` line search. The earlier-run check came after the write, so "delete" could remove an approved delta. A same-day slug overwrote another ADR. A user-scope copy could win over the project copy in a parent folder. The CI `latest` cell needs tests for the CLI behavior that the skills rely on.

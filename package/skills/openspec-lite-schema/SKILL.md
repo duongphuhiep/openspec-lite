@@ -16,7 +16,9 @@ Then find this skill's folder.
 Find `<skillDir>`, the folder of this `SKILL.md`. It holds `scripts/install.mjs` and `assets/plan-lite/`.
 
 1. Use the base directory that the harness gives for this skill, if it gives one.
-2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, first in `<root>`, then in each parent folder of `<root>`, in this order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`. Last, search `apm_modules/` in the same folders for `openspec-lite-schema/`.
+2. Otherwise, search for the folder `openspec-lite-schema/` with `assets/plan-lite/` in it. Use the first match:
+   1. Project folders: in `<root>`, then in each parent folder of `<root>`, check `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, and then `apm_modules/` (at any depth).
+   2. User folders, only after all project folders: `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`.
 3. If no path has the folder, stop and tell the user.
 
 ## 2. Compare the versions

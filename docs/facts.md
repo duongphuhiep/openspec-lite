@@ -445,3 +445,41 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `openspec instructions apply` on a change with no `plan.md` returns `state: blocked`, and its text tells the agent to use the `openspec-continue-change` skill.
 - A RENAMED delta written as `### Requirement: Login → Sign In` fails `validate` ("no requirement entries parsed"). REMOVED needs `**Reason**` and `**Migration**`. RENAMED needs `FROM:` and `TO:`. `openspec instructions specs --change <name> --schema spec-driven --json` gives these formats in `instruction`.
 - `apm update --help`: `-g, --global` refreshes user-scope dependencies in `~/.apm/`.
+
+---
+
+## OpenSpec: skip_specs on a Spec-Driven Change
+
+**Source**: runs in `mktemp -d` folders, OpenSpec 1.9.0, 2026-10-15 (found in review rounds 1 and 2, then re-run)
+
+- A `spec-driven` change with `proposal.md`, `design.md`, and `tasks.md`, but no `specs/` and no `skip_specs`, fails `validate`: "Change must have at least one delta … If this change intentionally modifies no specs … set "skip_specs: true"".
+- With `skip_specs: true` and no `specs/`, the same change passes `validate`. `openspec status` shows `[~] specs (skipped: change declares skip_specs)`. `openspec archive --yes` succeeds.
+- So an upgraded change with no spec delta needs `skip_specs: true` back (D108).
+
+---
+
+## OpenSpec: init Keeps an Existing config.yaml
+
+**Source**: run in a `mktemp -d` folder, OpenSpec 1.9.0, 2026-10-15
+
+- `openspec init --tools none` in a folder whose `openspec/config.yaml` holds only an `operations:` block keeps that file as it is. It does not add `schema:` or the commented examples.
+- `openspec new change` also keeps such a file.
+
+---
+
+## Microsoft APM: Skill Paths for More Targets
+
+**Source**: review round 3 install runs, APM 0.33.0, 2026-10-15
+
+- `--target codex`, `opencode`, `gemini`, `cursor`, and `windsurf` each deploy skills to `.agents/skills/<name>/` at project scope. The `openspec-lite-schema` search (D71, D111) checks `.agents/skills/` first, so it finds the skill for these targets.
+
+---
+
+## OpenSpec: Duplicate Keys and Skipped Spec Instructions
+
+**Source**: runs in `mktemp -d` folders, OpenSpec 1.9.0, 2026-10-15 (review round 4, then re-run)
+
+- Two `skip_specs: true` lines in a change's `.openspec.yaml` make each command on that change fail, for example `instructions plan`: "Invalid YAML in metadata file: Map keys must be unique".
+- With `skip_specs: true`, `openspec instructions specs --change <name> --schema spec-driven --json` returns `skipped: true`, a warning ("Do not create spec files - they will conflict with that marker"), and still the full `instruction` with the delta formats.
+- That `instruction` says to use SHALL or MUST for normative requirements. `validate` also accepts SHOULD and MAY.
+- An `openspec/` folder marks an OpenSpec root only if it holds `config.yaml`, `changes/`, or `specs/`. A folder with only `schemas/` does not: `openspec list --json` gives `root: null` and `no_openspec_root`. `openspec init` creates `config.yaml`, so an initialized repo always has a root. Tested 2026-10-15.

@@ -32,20 +32,34 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
    - **Surprising**: it would surprise a new team member.
 4. Sort each item: a requirement goes to a spec, a decision goes to an ADR.
-5. Draft the full text of each item. Before the first delta, run `openspec instructions specs --change "<name>" --schema spec-driven --json`. Follow the delta format in its `instruction`. It gives the format for each header, including the `**Reason**` and `**Migration**` lines of REMOVED and the `FROM:` and `TO:` lines of RENAMED.
+5. Draft the full text of each item. Before the first delta, run `openspec instructions specs --change "<name>" --schema spec-driven --json`. Follow the delta format in its `instruction`. It gives the format for each header, including the `**Reason**` and `**Migration**` lines of REMOVED and the `FROM:` and `TO:` lines of RENAMED. The result also has `skipped: true` and a warning, because `skip_specs` is still set. Ignore both: step 8 sets `skip_specs`.
    - **Requirement**: a delta for `<dir>/specs/<capability>/spec.md`.
      - To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches.
      - Use the headers `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`, or `## RENAMED Requirements`.
-     - Write each requirement as `### Requirement: <name>`, with SHALL, SHOULD, or MAY.
+     - Write each requirement as `### Requirement: <name>`, with SHALL or MUST, as the CLI instruction says.
      - Give each ADDED or MODIFIED requirement at least one `#### Scenario: <name>` with **WHEN** and **THEN** lines. Derive it from `plan.md` and the code.
      - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit it.
-   - **Decision**: an ADR with the sections Title, Status, Change, Context, Decision, Consequences. Status is `Accepted`. Change is the change name, `<name>`.
-   - Before you draft a decision, search `openspec/adr/` for files with `Change: <name>`. An earlier run of this archive can have written them. Show them, and do not draft a decision that already has an ADR.
+   - **Decision**: an ADR in this exact form. `Status:` and `Change:` are plain lines, not sections:
+
+     ```markdown
+     # <Title>
+
+     Status: Accepted
+     Change: <name>
+
+     ## Context
+
+     ## Decision
+
+     ## Consequences
+     ```
+
+   - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`. An earlier run of this archive can have written them. Show them, and do not draft a decision that already has an ADR.
 6. Show all drafts. The user answers yes, no, or edit for each item. Apply each edit.
-7. Write the approved deltas to `<dir>/specs/<capability>/spec.md`. If `<dir>/specs/` already holds files from an earlier run, show each one. Ask the user to keep or delete it.
+7. Before you write, list the files under `<dir>/specs/`. They are from an earlier run. Show each one, and ask the user to keep or delete it. Then write the approved deltas to `<dir>/specs/<capability>/spec.md`. If a kept file has the same path, merge the new delta into it, with no duplicate requirement.
 8. Look at the files under `<dir>/specs/` now. If any file exists, remove `skip_specs` from `<dir>/.openspec.yaml`. If none exists, make sure `skip_specs: true` is set. `validate` fails with a delta and the flag, and also with no delta and no flag.
 9. Run `openspec validate "<name>"`. If it fails, stop and report.
-10. Write each approved ADR to `openspec/adr/YYYY-MM-DD-<slug>.md`. Use today's date. Skip a decision that already has an ADR with `Change: <name>`.
+10. Write each approved ADR to `openspec/adr/YYYY-MM-DD-<slug>.md`. Use today's date. Skip a decision that already has an ADR with `Change: <name>`. If the file name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR.
 11. Run `openspec archive "<name>" --yes`. The CLI applies the deltas to `openspec/specs/` and moves the change, with `plan.md` and `tasks-preview.md`, to `openspec/changes/archive/`. If it fails, report it. Keep the ADRs: each one is still a correct decision.
 
 ## 3. End
