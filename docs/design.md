@@ -102,7 +102,7 @@ openspec-lite/
 
 ### Names
 
-- Skill descriptions (D104): `openspec-lite-propose` triggers on its name, on "plan-lite", and on "lightweight plan" or "medium change". The other five skills trigger only on their name or on "plan-lite".
+- Skill descriptions (D104): `openspec-lite-propose` triggers on its name, on "plan-lite", and on "lightweight plan" or "medium change". The other five skills trigger only on their name or on "plan-lite". `openspec-lite-archive` also says to use it instead of stock `/opsx:archive` for a change with `schema: plan-lite` (D116).
 
 - A skill name is `openspec-lite-<action>`. It uses only `a-z`, `0-9`, and `-`. It is the same as its folder name (D42).
 - Users run `/opsx:explore` (stock) for exploration. openspec-lite has no explore skill (D16).
@@ -246,7 +246,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 3. Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
    - **Surprising**: it would surprise a new team member.
-4. Sort each item: requirement → spec, decision → ADR.
+4. Sort each item: requirement → spec, decision → ADR. List each other `plan.md` item that is not drafted, including each non-goal, with a one-line reason (D116).
 5. Draft the full text of each item:
    - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93).
    - A decision becomes an ADR: a `# <Title>` heading, then the plain lines `Status: Accepted` and `Change: <name>`, then the sections `## Context`, `## Decision`, and `## Consequences` (D112). Before drafting, skip each decision that already has an ADR with `Change: <name>` in `openspec/adr/`, because an earlier run wrote it (D111).

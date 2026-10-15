@@ -1518,3 +1518,16 @@ This revises D111.
 This revises D63.
 
 **Rationale**: Upgrade moves the `plan.md` decisions to `design.md` (D62). Stock archive keeps `design.md` only in the archive folder, so a team that expects ADRs loses them with no word. The user asked for a warning in this case, as for stock `/opsx:archive` on a plan-lite change. A check for `### Decision` entries needs no record of the upgrade. For promotion, the user cares about the result in the main spec, not about the delta form.
+
+---
+
+## D116: Archive Names Each Skipped Item, and Claims /opsx:archive for plan-lite
+
+**Decision**:
+
+- Archive lists each `plan.md` item that it does not draft, including each non-goal, with a one-line reason.
+- The `openspec-lite-archive` description tells the agent to use it instead of stock `/opsx:archive` for a change whose `.openspec.yaml` has `schema: plan-lite`, before the change is archived.
+
+This revises D104 for archive.
+
+**Rationale**: In scenarios 14 and 15, archive dropped a non-goal with no word. In scenario 16b, without the `config.yaml` guidance, stock `/opsx:archive` archived first and only then said that it did not promote. The agent knew the risk from the old description, but read it as a note. Skill descriptions are always in the agent context, so a direct instruction there can reach the agent before the archive, also when `config.yaml` has no guidance. The `openspec archive` CLI stays a known gap (scenario 16c).

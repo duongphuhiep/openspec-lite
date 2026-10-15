@@ -496,3 +496,14 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `openspec new change` in a folder with no OpenSpec root creates `openspec/` and prints: "Note: no OpenSpec root was found here, so one was created at openspec/. Run `openspec init` to finish setting this project up".
 - `openspec instructions <artifact> --json` adds `planningHome`, `resolvedOutputPath`, and `existingOutputPaths`. `outputPath`, `template`, `changeDir`, and `root` are unchanged.
 - With the fixed tests, the full `node --test` suite passes on 1.9.0 and on 1.14.2.
+
+---
+
+## OpenSpec: Archive Paths for a plan-lite Change
+
+**Source**: agent scenarios 14–16 (Claude Code, Sonnet 5.5) and CLI runs, OpenSpec 1.9.0, 2026-10-15
+
+- **Stock `/opsx:archive` with the openspec-lite guidance** in `operations.archive.guidance`: in one run, the stock archive skill followed the guidance. It ran the openspec-lite promotion flow, drafted a spec delta and an ADR, asked for approval, and then archived. The guidance is still optional advice for the stock skill (see "Project Guidance for apply and archive").
+- **Stock `/opsx:archive` with no guidance**, and the old `openspec-lite-archive` description: the agent archived first. Only then did it say that stock archive does not promote `plan.md`. With the D116 description ("use this skill instead of /opsx:archive for a plan-lite change"), a rerun with no guidance drafted the promotion before any archive.
+- **`openspec archive <name> --yes` (the CLI)** on a plan-lite change with requirements and decisions in `plan.md`: it archives with exit code 0, prints no warning, and promotes nothing. `plan.md` stays only in `openspec/changes/archive/<date>-<name>/`.
+- **New capability from a delta**: when archive applies a delta for a capability that does not exist yet, the CLI creates `openspec/specs/<capability>/spec.md` with the heading `# <capability> Specification`. If the delta has a `## Purpose` section, the CLI uses it. If not, it writes "TBD - created by archiving change <name>. Update Purpose after archive."
