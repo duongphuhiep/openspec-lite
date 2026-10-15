@@ -562,6 +562,8 @@ This completes D13 and D28.
 
 **Rationale**: With the flag set, the CLI marks `specs` as skipped and forbids spec files, so an upgraded change could never get specs. A spec-driven change without specs is rare. The user can put the flag back with one edit.
 
+**Status**: D99 moves the removal to the first upgrade step. D108 puts the flag back when the plan has no requirement.
+
 ---
 
 ## D47: Archive Promotes Requirements Through the CLI Merge
@@ -1162,6 +1164,8 @@ This revises D10.
 - `validate` fails on a plan-lite change with no deltas and no `skip_specs`. A change created without propose has no flag.
 - The other items define a failure path or an input that was undefined.
 
+**Status**: D109 revises the "newer schema" message and lets any tag bump the schema. D110 revises the archive `skip_specs` rule: it decides from the files on disk. D111 adds `apm update -g` to the message.
+
 ---
 
 ## D94: package/apm.yml Holds the Name and Version
@@ -1207,6 +1211,8 @@ This revises D90.
 This revises D62.
 
 **Rationale**: If the schema switches first and a later step fails, the guard (D75) refuses the half-upgraded change, and nothing can resume it. With the switch last, a failure leaves a plan-lite change, so a new upgrade run resumes it. The `--schema` override gives spec-driven templates for a plan-lite change (`docs/facts.md`).
+
+**Status**: D99 moves the `skip_specs` removal to the first step, before the artifacts. D108 adds the three-case guard and puts `skip_specs` back when the plan has no requirement.
 
 ---
 
@@ -1393,6 +1399,8 @@ This revises D81 and D93.
 
 **Rationale**: The repo schema updates only when the shipped `version` is higher. Under D81, a fix in a patch tag had to keep the version, so it never reached `openspec/schemas/plan-lite/` in user repos. Stock `/opsx:apply` then kept the old `apply.instruction`, with no warning. With the bump in any tag, `apm update` delivers the new skills, and the workflow skills replace the old repo copy. A teammate with older skills sees "newer" and runs `apm update` inside the same range. A content hash was rejected, because each skill would then hold a hash instead of a number.
 
+**Status**: D110 runs the bump check on each pull request and push to `main`, not only on a tag push. D111 compares with the tag before HEAD when a tag points at HEAD.
+
 ---
 
 ## D110: Fixes From Review Round 2
@@ -1412,3 +1420,27 @@ This revises D93 and D109.
 - A check that runs only on a tag push finds the missing bump after the tag is public, so `apm update` already resolves the bad release.
 - The CI `sed` did not accept `version: "2"`, so a correct bump could fail.
 - A second `operations:` key disables the whole `config.yaml` (D107). The rule existed only in skill prose.
+
+---
+
+## D111: Fixes From Review Round 3
+
+**Decision**:
+
+- Each skill finds the OpenSpec root with `openspec list --json` → `root.path`. It runs each command from that folder. `install.mjs` gets that folder as its argument. The plan hash command runs from it. If `root` is `null`, the skill stops and tells the user to run `openspec init`.
+- The search for the schema skill folder looks in the OpenSpec root, then in each parent folder.
+- propose resumes a plan-lite change that exists with no `plan.md`. apply stops on `state: blocked` and points to propose.
+- Each ADR has a `Change: <name>` line. On a rerun, archive skips a decision that already has an ADR for this change.
+- Archive gets the delta format from `openspec instructions specs --change <name> --schema spec-driven --json`, as upgrade does.
+- The "newer schema" message also names `apm update -g` and `~/.apm/apm.yml` for a user-scope install.
+- The CI bump check compares with the tag before HEAD when a `v*` tag points at HEAD. The tag check reads `apm.yml` `version` with optional quotes and a comment.
+
+This revises D58, D61, D74, D98, D105, and D110. `apply.instruction` changed, but no tag exists yet, so the schema `version` stays 1 (D109).
+
+**Rationale**: A fresh `review-commit-range` round found each case:
+
+- OpenSpec walks up to the nearest `openspec/` folder (`root.source: "nearest"`). In a monorepo, "the repo root" put the schema where OpenSpec does not look. Verified: from `svc/src/deep/` the root is `svc/`, and from the git root `root` is `null`.
+- An interrupted propose left a change that no skill could resume. On `state: blocked`, the CLI text names the stock continue skill, which does not set `skip_specs`.
+- ADRs stay after a failed archive (D105), so a rerun wrote them again.
+- A plausible RENAMED delta failed `validate` ("no requirement entries parsed").
+- After `git push origin main v1.1.0`, `git describe HEAD` returned the new tag, so the check compared HEAD with itself.

@@ -90,7 +90,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**: Change `version: 1` to `version: 99` in `openspec/schemas/plan-lite/schema.yaml`. Run each workflow skill.
 
-**Expected**: Each skill stops with the message "This repo uses a newer plan-lite schema. Run `apm update`. …" No file changes.
+**Expected**: Each skill stops with the message "This repo uses a newer plan-lite schema. Run `apm update`. …". The message also names `apm update -g` for a user-scope install. No file changes.
 
 ## 9. Schema re-copy
 

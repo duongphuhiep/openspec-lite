@@ -434,3 +434,14 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 
 - If `openspec/config.yaml` has two top-level `operations:` keys, every command prints "Warning: could not parse .../openspec/config.yaml (Map keys must be unique ...); ignoring it."
 - OpenSpec then ignores the whole file, including `context` and `rules`, not only `operations`.
+
+---
+
+## OpenSpec: Root Resolution and Delta Formats
+
+**Source**: runs in `mktemp -d` folders, OpenSpec 1.9.0, 2026-10-15
+
+- OpenSpec finds its root by walking up to the nearest `openspec/` folder. Each `--json` result has `root.path` and `root.source: "nearest"`. In a git repo with `svc/openspec/`, `openspec list --json` from `svc/src/deep/` gives `root.path` = `svc/`. From the git root, `root` is `null`.
+- `openspec instructions apply` on a change with no `plan.md` returns `state: blocked`, and its text tells the agent to use the `openspec-continue-change` skill.
+- A RENAMED delta written as `### Requirement: Login → Sign In` fails `validate` ("no requirement entries parsed"). REMOVED needs `**Reason**` and `**Migration**`. RENAMED needs `FROM:` and `TO:`. `openspec instructions specs --change <name> --schema spec-driven --json` gives these formats in `instruction`.
+- `apm update --help`: `-g, --global` refreshes user-scope dependencies in `~/.apm/`.

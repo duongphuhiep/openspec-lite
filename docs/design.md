@@ -102,6 +102,8 @@ openspec-lite/
 
 The five workflow skills are propose, tasks-preview, apply, upgrade, and archive.
 
+**OpenSpec root** (D111): Each skill runs `openspec list --json` first and reads `root.path`. It runs each command from that folder, and reads each `openspec/...` path from it. OpenSpec finds the nearest `openspec/` folder, which can be a subfolder of the git root. If `root` is `null`, the skill stops and tells the user to run `openspec init --tools <harness>`.
+
 **Change selection** (D61): Use the change named in the prompt. If no name is given and only one active change exists, use it. Otherwise ask. List active changes with `openspec list --json`. It does not give the schema, so read `schema` from each change's `.openspec.yaml` (D99).
 
 **Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. A `spec-driven` change with no `plan.md` is refused, like any other schema (D108). An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106). A finished upgrade can also keep `plan.md`, so upgrade asks the user before it resumes (D107).
@@ -113,10 +115,10 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 1. Read `version` from `openspec/schemas/plan-lite/schema.yaml` in the target repo.
 2. Compare it with the shipped version. Each workflow skill holds the line `Shipped schema version: <n>` (D87). The number must equal `version` in `assets/plan-lite/schema.yaml` (D66).
    - The file is missing, its version is lower, or it has no readable `version` line: run `openspec-lite-schema` (D110). If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions (D93).
-   - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`." A minor or patch tag can bump the schema, so `apm update` usually fixes it. Only a breaking schema change needs the next major tag (D93, D109).
+   - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`." A minor or patch tag can bump the schema, so `apm update` usually fixes it. Only a breaking schema change needs the next major tag (D93, D109).
 3. Run `openspec --version`. If the command fails, stop. Tell the user to install `@fission-ai/openspec` in the `openspec-version` range (D93). If the result is outside the `openspec-version` range, warn the user. Point to the compatibility table at `https://github.com/duongphuhiep/openspec-lite#compatibility`. The installed package has no README.
 
-**Plan hash** (D72): From the repo root, run:
+**Plan hash** (D72): From the OpenSpec root, run:
 
 ```sh
 node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md
@@ -128,17 +130,17 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 - Find the skill's own folder, `<skillDir>`. It holds `scripts/` and `assets/plan-lite/`:
   1. Use the base directory from the harness, if it gives one.
-  2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, in order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`. Last, search `apm_modules/` in the repo for `openspec-lite-schema/` (D99).
+  2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, first in the OpenSpec root, then in each parent folder (D111), in order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`. Last, search `apm_modules/` in the same folders for `openspec-lite-schema/` (D99).
   3. If no path has the folder, stop and tell the user.
 - Then compare the repo version with the shipped version. Read the shipped version from `<skillDir>/assets/plan-lite/schema.yaml` (D93, D99):
   - Higher: stop, with the same message as the schema check.
   - Equal: say "already current". Skip the install, but still do the archive guidance step, which is idempotent. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs the skill again (D101, D107).
   - Lower, missing, or no readable version: continue.
 - If a repo copy exists, tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
-- Run the install script from the repo root. Do not read the schema content into the conversation (D98):
+- Run the install script with the OpenSpec root as its argument. Do not read the schema content into the conversation (D98, D111):
 
   ```sh
-  node "<skillDir>/scripts/install.mjs" .
+  node "<skillDir>/scripts/install.mjs" "<root>"
   ```
 
   `install.mjs` contract (D98, D101, D102):
@@ -174,7 +176,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 - If the request is small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop.
 - Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal.
-- Run `openspec new change "<name>" --schema plan-lite`. If it fails, for example because the change already exists, show the error and ask for another name (D99).
+- Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
 - Set `skip_specs: true` in `.openspec.yaml`.
 - Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty.
 - If an upgrade signal is present (see §5), suggest an upgrade.
@@ -211,6 +213,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 - Run `openspec instructions apply --change "<name>" --json`. Follow its `instruction`. The schema `apply.instruction` is the only copy of the plan-lite apply rules.
 - Add one rule to the CLI output: ignore checkbox and task-count text. A plan-lite change has no tracked tasks.
+- If `state` is `blocked`, `plan.md` is missing. Stop, and point to `openspec-lite-propose`. Do not follow CLI text that names another skill (D111).
 - Users try stock `/opsx:apply` first (D27).
 
 ### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97)
@@ -235,7 +238,8 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 4. Sort each item: requirement → spec, decision → ADR.
 5. Draft the full text of each item:
    - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93).
-   - A decision becomes an ADR with these sections: Title, Status, Context, Decision, Consequences.
+   - A decision becomes an ADR with these sections: Title, Status, Change, Context, Decision, Consequences. Change is the change name. Before drafting, skip each decision that already has an ADR with `Change: <name>` in `openspec/adr/`, because an earlier run wrote it (D111).
+   - Get the delta format from the `instruction` of `openspec instructions specs --change <name> --schema spec-driven --json`. It defines REMOVED (`**Reason**`, `**Migration**`) and RENAMED (`FROM:`, `TO:`) (D111).
 6. Show the drafts. The user answers yes, no, or edit for each item. Write nothing before approval.
 7. Write the approved deltas to `<change>/specs/<capability>/spec.md`. If `<change>/specs/` already holds files from an earlier run, show each one, and ask the user to keep or delete it (D110).
 8. Decide from the files on disk, not from this run. If any file exists under `<change>/specs/`, remove `skip_specs`. If none exists, set `skip_specs: true`. `validate` fails with a delta and the flag, and also with no delta and no flag (D93, D110).
@@ -275,7 +279,7 @@ apply:
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
 - Implement from plan.md. If <changeDir>/tasks-preview.md exists, use it as a guide. The CLI does not list it in contextFiles.
-- If the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the repo root. If the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. Tell the user, and offer to regenerate the preview with openspec-lite-tasks-preview.
+- If the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root, the folder that holds `openspec/`. If the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. Tell the user, and offer to regenerate the preview with openspec-lite-tasks-preview.
 - If the plan hash command exits with code 1, show its message and stop.
 - When plan.md and tasks-preview.md conflict, plan.md wins.
 - The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of plan.md, as `### Decision: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. List the deviations in the end summary.

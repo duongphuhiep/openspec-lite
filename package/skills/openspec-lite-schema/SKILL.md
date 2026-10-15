@@ -5,31 +5,35 @@ description: Install or update the plan-lite OpenSpec schema of openspec-lite in
 
 # openspec-lite-schema
 
-Install or replace `openspec/schemas/plan-lite/` in the repo. Do not read the schema content into the conversation.
+Install or replace `openspec/schemas/plan-lite/` in the OpenSpec root. Do not read the schema content into the conversation.
 
-## 1. Find this skill's folder
+## 1. Find the folders
+
+**OpenSpec root** (`<root>`): run `openspec list --json`, and read `root.path`. Run each command from that folder, and read each `openspec/...` path from it. In a monorepo, it can be a subfolder of the git root. If `root` is `null`, stop. Tell the user to run `openspec init --tools <harness>` in the project folder.
+
+Then find this skill's folder.
 
 Find `<skillDir>`, the folder of this `SKILL.md`. It holds `scripts/install.mjs` and `assets/plan-lite/`.
 
 1. Use the base directory that the harness gives for this skill, if it gives one.
-2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, in this order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`. Last, search `apm_modules/` in the repo for `openspec-lite-schema/`.
+2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, first in `<root>`, then in each parent folder of `<root>`, in this order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`. Last, search `apm_modules/` in the same folders for `openspec-lite-schema/`.
 3. If no path has the folder, stop and tell the user.
 
 ## 2. Compare the versions
 
 Read the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped) and of `openspec/schemas/plan-lite/schema.yaml` (repo).
 
-- Repo version higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."
+- Repo version higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
 - Equal: say "The plan-lite schema is already current." Skip section 3, and go to section 4. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs this skill again.
 - Repo copy exists and is lower, or has no readable version: tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
 - No repo copy: continue.
 
 ## 3. Install
 
-From the repo root, run:
+Run:
 
 ```sh
-node "<skillDir>/scripts/install.mjs" .
+node "<skillDir>/scripts/install.mjs" "<root>"
 ```
 
 The first output line is the status:

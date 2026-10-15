@@ -43,7 +43,8 @@ jobs:
       - uses: actions/checkout@v5
       - name: Check that the tag matches package/apm.yml
         run: |
-          v=$(tr -d '\r' < package/apm.yml | sed -n 's/^version: *\([^ ]*\) *$/\1/p')
+          # Accepts optional quotes and a trailing comment.
+          v=$(node -e 'const m = require("fs").readFileSync("package/apm.yml", "utf8").match(/^version:\s*["\x27]?([0-9][^\s"\x27#]*)["\x27]?\s*(?:#.*)?$/m); console.log(m ? m[1] : "")')
           test "v$v" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} does not match version $v in package/apm.yml"; exit 1; }
 
   schema-bump:
@@ -54,8 +55,8 @@ jobs:
           fetch-depth: 0
       - name: Check that a schema asset change bumps the schema version
         run: |
-          # On a tag push, compare with the tag before this one. Otherwise, compare with the latest tag.
-          if [ "$GITHUB_REF_TYPE" = "tag" ]; then ref=HEAD^; else ref=HEAD; fi
+          # If a v* tag points at HEAD (a tag push, or a push of main with its tag), compare with the tag before it.
+          if git tag --points-at HEAD --list 'v*' | grep -q .; then ref=HEAD^; else ref=HEAD; fi
           prev=$(git describe --tags --abbrev=0 --match 'v*' "$ref" 2>/dev/null) || { echo "no previous tag"; exit 0; }
           assets=package/skills/openspec-lite-schema/assets/plan-lite
           if git diff --quiet "$prev" HEAD -- "$assets"; then echo "no asset change since $prev"; exit 0; fi
