@@ -370,3 +370,23 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
   - `apm_modules/` held only `packages/apm-guide/`. Its skill deployed to `.claude/skills/`.
   - The sparse checkout (cone `packages/apm-guide`) downloaded 37 of the 3051 files at the tag: the 11 files under the subdirectory and the 26 files at the repo root. The root folders `tests/`, `src/`, and `docs/` were not downloaded.
   - This package uses `.apm/skills/<name>/`, not `skills/<name>/`. The local test above shows that `apm.yml` + `skills/<name>/` also deploys.
+
+---
+
+## Microsoft APM: Package Layouts and Consumer Side Effects (APM 0.33.0)
+
+**Source**: the `microsoft/apm` repo at tag `v0.33.0` (commit fe39119), and the test installs above, 2026-10-15
+
+- **Layouts in APM's own repo**:
+  - `packages/*/` (for example `packages/apm-guide/`): `apm.yml` plus `.apm/skills/<name>/` and `.apm/agents/`. This is the native APM package layout.
+  - `packages/pr-description-skill/`: `apm.yml` plus `SKILL.md` at the package root, with `assets/`, `scripts/`, and `evals/`. With a root `SKILL.md`, the whole package folder deploys (see "What a Package Install Downloads").
+  - Test fixtures with `skills/<name>/` (for example `tests/fixtures/agent_plugins/portable/`) also have a `plugin.json`. They are plugin packages, not plain skill collections.
+  - No package in the repo uses the plain form `apm.yml` + `skills/<name>/`. Only the local test above covers it.
+- **Release tags**: `microsoft/apm` uses `vMAJOR.MINOR.PATCH` tags, for example `v0.32.0` and `v0.33.0` (`git ls-remote --tags`).
+- **Consumer side effects of `apm install`**:
+  - It creates `apm.yml` in the consumer if it is missing. It adds the package under `dependencies.apm`, and `--target` values under `targets:`. It also writes `includes: auto`.
+  - It adds `apm_modules/` to the consumer's `.gitignore`.
+  - It writes `apm.lock.yaml`.
+  - If every package fails validation, it removes the `apm.yml` that it created ("Removed apm.yml created by the failed install").
+- **Cache layout on macOS**: `~/Library/Caches/apm/git/db_v1/<id>/` (full bare database), `db_v1/<id>__p/` (partial database for sparse installs), and `checkouts_v1/<id>/<commit>/full/` or `.../sparse-<id>/` (checkouts).
+- **CLI targets in 0.33.0**: `--target` accepts agent-skills, agents, agy, all, antigravity, claude, codex, copilot, copilot-app, copilot-cowork, cursor, gemini, grok-build, grok-cloud, hermes, intellij, kiro, openclaw, opencode, vscode, and windsurf. `all` excludes agent-skills, antigravity, hermes, intellij, and the experimental targets (`apm install --help`).
