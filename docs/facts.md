@@ -189,7 +189,7 @@ To switch a change from `plan-lite` to `spec-driven`, edit the `schema:` value i
 
 **Source**: `dist/cli/index.js` full command surface
 
-No `openspec change upgrade`, `migrate`, or schema-switching subcommand exists. To switch the schema, edit `.openspec.yaml` by hand. The CLI does not create the missing artifacts. `docs/design.md` §3 defines what the upgrade skill does (D62).
+No `openspec change upgrade`, `migrate`, or schema-switching subcommand exists. To switch the schema, edit `.openspec.yaml` by hand. The CLI does not create the missing artifacts. `docs/design.md` §3 defines what the upgrade skill does (D62, D97, D99).
 
 ---
 
@@ -295,6 +295,9 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `template` resolves relative to `<schema>/templates/`. `template: templates/plan.md` fails with "Template not found: .../templates/templates/plan.md". Use `template: plan.md`. The stock schema uses `template: proposal.md`.
 - `openspec instructions plan --change <name> --json` returns the template content in `template`.
 - An extra file in the schema folder, for example `plan-hash.mjs`, causes no error.
+- With `skip_specs: true`, `openspec instructions specs` returns `"skipped": true` and warns: "Do not create spec files - they will conflict with that marker." With the flag and a delta file, `validate` fails and `archive` refuses. Tested 2026-10-15.
+- `node --test tests/` fails on Node 24.13.0 ("Cannot find module …/tests"). `node --test` with no argument finds `tests/*.test.mjs`. Tested 2026-10-15.
+- `openspec list --json` returns `changes[]` with `name`, task counts, `lastModified`, and `status`. It does not give the schema. `openspec new change <name>` on an existing name fails: "Change '<name>' already exists". Tested 2026-10-15.
 - `openspec instructions <artifact> --change <name> --schema spec-driven --json` returns the spec-driven `outputPath` for `proposal`, `specs`, `design`, and `tasks` on a plan-lite change. `.openspec.yaml` stays `schema: plan-lite`. Tested 2026-10-15.
 
 ---

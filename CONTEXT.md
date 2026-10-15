@@ -29,8 +29,12 @@ A meaningful change of approach during apply, compared to the tasks preview. App
 _Avoid_: Drift, divergence
 
 **Promotion**:
-The move of non-obvious information from a plan into permanent specs or ADRs. It happens during archive, before the change moves to the archive.
+The move of non-obvious information from a plan into permanent specs or ADRs. It happens during archive. The CLI applies the spec deltas when the change moves to the archive.
 _Avoid_: Sync, merge, upgrade
+
+**Done check**:
+The three questions at the end of apply and the start of archive: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty?
+_Avoid_: Done checklist, definition of done
 
 **Upgrade**:
 The switch of an active change from plan-lite to spec-driven, when its scope grows.

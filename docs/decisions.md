@@ -441,7 +441,7 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 **Rationale**: This mirrors the path where the schema lands in target projects (`openspec/schemas/plan-lite/`). The copy path is a one-liner and the intent is obvious to a reader.
 
-**Status**: Revised by D43 and D44. In this repo, the schema source is `skills/openspec-lite-schema/assets/plan-lite/`. The target path in a user project is still `openspec/schemas/plan-lite/`. D83 moves the source to `package/skills/openspec-lite-schema/assets/plan-lite/`.
+**Status**: Revised by D43 and D44. In this repo, the schema source is `skills/openspec-lite-schema/assets/plan-lite/`. The target path in a user project is still `openspec/schemas/plan-lite/`. D83 moves the source to `package/skills/openspec-lite-schema/assets/plan-lite/`. D98 replaces the copy command with `install.mjs`.
 
 ---
 
@@ -535,7 +535,7 @@ This revises D16 (six skills) and removes the `--update-schema` flag from D39.
 
 **Rationale**: A teammate can clone a repo and run any skill first, so every skill must check. One owner keeps one copy of the assets. No skill depends on the folder path of another skill. Schema update is a separate job, so it is not a flag on propose.
 
-**Status**: D56 adds the mismatch rules. D57 adds the fallback when a skill cannot invoke a skill. Change selection (D61) and the change schema guard (D75) come before the schema check, so a refused change never triggers a schema install.
+**Status**: D56 adds the mismatch rules. D57 adds the fallback when a skill cannot invoke a skill. Change selection (D61) and the change schema guard (D75) come before the schema check, so a refused change never triggers a schema install. D93 moves the propose Level 1 question before the schema check.
 
 ---
 
@@ -574,7 +574,7 @@ This makes D8 more precise.
 
 **Rationale**: `openspec archive` merges any delta files under `<change>/specs/`, whatever the schema (`dist/core/archive.js:1127`). But it blocks when `skip_specs` is set and `specs/` has files (`archive.js:969`). Reusing the CLI merge avoids a second, untested merge that could corrupt the main specs. The CLI has no ADR concept, so ADRs are written directly.
 
-**Status**: D58 changes the order: validate and archive first, ADRs last. D59 changes the ADR name to `YYYY-MM-DD-<slug>.md`.
+**Status**: D58 changes the order: validate and archive first, ADRs last. D59 changes the ADR name to `YYYY-MM-DD-<slug>.md`. D93 sets `skip_specs: true` when archive writes no delta.
 
 ---
 
@@ -721,7 +721,7 @@ This revises the order in D47.
 
 **Rationale**: If validation or archive fails, no orphan ADR exists. `--yes` is safe because the user approved each item in the conversation. OpenSpec requires full content for MODIFIED, and partial content loses detail at archive time (`docs/facts.md`).
 
-**Status**: Revised by D74 (scenarios, all four delta headers, draft before approval).
+**Status**: Revised by D74 (scenarios, all four delta headers, draft before approval). D93 sets `skip_specs: true` when no delta is written.
 
 ---
 
@@ -1031,7 +1031,7 @@ This revises D70 and D81.
 
 **Rationale**: OpenSpec already requires Node `>=20.19.0`, which has a stable `node --test`. A framework would bring back the `package.json` that D70 removed. The schema test catches errors such as the wrong `template` path, which only a real CLI run shows (`docs/facts.md`).
 
-**Status**: D91 adds a missing-heading test. D93 adds missing-marker and CRLF tests for `check-version.mjs`.
+**Status**: D91 adds a missing-heading test. D93 adds missing-marker and CRLF tests for `check-version.mjs`. D96 and D98 add `install.test.mjs`. D99 changes the command to `node --test`.
 
 ---
 
@@ -1043,7 +1043,7 @@ This revises D66, which deferred CI.
 
 **Rationale**: One small workflow catches a broken `plan-hash.mjs` or schema before a user installs it. The lowest supported OpenSpec version tests the bottom of the declared range.
 
-**Status**: D88 adds `latest` to CI and closes the range.
+**Status**: D88 adds `latest` to CI and closes the range. D94 adds the tag check. D99 sets Node 20.19 and reads the lower bound from `schema.yaml`.
 
 ---
 
@@ -1061,7 +1061,7 @@ If the field already has text, the skill shows the line and asks the user to add
 
 **Rationale**: Stock `/opsx:archive` on a plan-lite change skips promotion, so the `plan.md` decisions never become ADRs. The stock archive skill runs `openspec instructions archive`, which returns this guidance (`docs/facts.md`). It is the only way to reach the stock skill. The skill never overwrites existing guidance, so it does not damage the user's config.
 
-**Status**: Revised by D95. `guidance` must be a list, and the stock skill treats it as advice.
+**Status**: Revised by D95. `guidance` must be a list, and the stock skill treats it as advice. D90 removes the reporting through git.
 
 ---
 
@@ -1216,3 +1216,29 @@ The agent still edits `openspec/config.yaml` (D95), because a script would need 
 This revises D65 and D90.
 
 **Rationale**: `node -e '...'` with inner double quotes breaks in cmd.exe and in Windows PowerShell 5.1. A script file needs no shell quoting and can be tested, as with `plan-hash.mjs` (D72).
+
+---
+
+## D99: Fixes From the Fifth Review
+
+**Decision**:
+
+- Upgrade removes `skip_specs` first, then writes the artifacts, then switches the schema. This revises D97.
+- Upgrade writes specs with the archive delta rules, and follows the `instruction` field of each `openspec instructions` result. Non-Goals go to `design.md` → `## Goals / Non-Goals`.
+- Tests run with `node --test` from the repo root. This revises D84.
+- CI uses Node 20.19. It reads the lower bound of `openspec-version` from `schema.yaml`. `schema.test.mjs` fails instead of skipping when `CI` is set.
+- `check-version.mjs` takes an optional root folder, checks the five workflow skills by name, and prints one line per skill.
+- `openspec-lite-schema` finds `<skillDir>` first, then reads the shipped version from its assets. The search ends with `apm_modules/`. It creates a missing `config.yaml`, and does not edit a plain-string `guidance`.
+- Change selection uses `openspec list --json` and reads each schema from `.openspec.yaml`.
+- propose reports a failed `openspec new change`. tasks-preview stops when `plan.md` is missing.
+- `plan-hash.mjs` strips a UTF-8 BOM and reports a file it cannot read.
+- `apply.instruction` names `openspec-lite-upgrade` and `openspec-lite-archive`, and tells the agent to ignore built-in text that suggests `/opsx:archive`.
+- "Done check" is the glossary term.
+- `docs/test-scenarios.md` has ten scenarios, listed in `design.md` §2.
+
+**Rationale**: A fresh-context review found each case, and I verified the main ones by test:
+
+- With `skip_specs` set, the CLI marks specs as skipped and refuses to validate or archive a change with spec files (`docs/facts.md`).
+- `node --test tests/` fails on Node 24.
+- The stock apply template suggests `/opsx:archive` when the work is done.
+- The other items each define an input, an output, or a failure path that was undefined.
