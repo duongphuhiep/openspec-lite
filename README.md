@@ -27,7 +27,7 @@ Level 3 ── spec-driven             (full OpenSpec)
 Requirements:
 
 - [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI `>=1.9.0 <2.0.0`: `npm install -g @fission-ai/openspec`.
-- Run `openspec init` in your repo. It installs the stock `/opsx:*` skills that openspec-lite uses.
+- Run `openspec init --tools <harness>` in your repo, for example `openspec init --tools claude`. It installs the stock OpenSpec skills and the `/opsx:*` commands that openspec-lite uses. With `--tools none`, it installs no skills.
 
 Install with [Microsoft APM](https://github.com/microsoft/apm):
 

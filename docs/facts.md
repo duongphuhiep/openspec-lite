@@ -394,3 +394,34 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - **Cache layout on macOS**: `~/Library/Caches/apm/git/db_v1/<id>/` (full bare database), `db_v1/<id>__p/` (partial database for sparse installs), and `checkouts_v1/<id>/<commit>/full/` or `.../sparse-<id>/` (checkouts).
 - **CLI targets in 0.33.0**: `--target` accepts agent-skills, agents, agy, all, antigravity, claude, codex, copilot, copilot-app, copilot-cowork, cursor, gemini, grok-build, grok-cloud, hermes, intellij, kiro, openclaw, opencode, vscode, and windsurf. `all` excludes agent-skills, antigravity, hermes, intellij, and the experimental targets (`apm install --help`).
 - **The openspec-lite package itself** (local path install of `package/`, `--target claude`, 2026-10-15): APM deployed the six `openspec-lite-*` skills to `.claude/skills/`. `openspec-lite-schema/` kept `scripts/install.mjs` and `assets/plan-lite/`. The deployed `install.mjs` installed the schema (`status: installed`), and a second run printed `status: current`. `openspec new change --schema plan-lite` accepted the installed schema.
+
+---
+
+## OpenSpec: `openspec init`
+
+**Source**: `openspec init --help` and runs in empty `git init` folders, OpenSpec 1.9.0, 2026-10-15
+
+- `--tools <tools>` sets the AI tools with no prompt. Values: `all`, `none`, or a comma-separated list, for example `claude`, `codex`, `cursor`, `github-copilot`, `gemini`, `opencode`, `kiro`, `agents`.
+- `openspec init --tools none` creates `openspec/config.yaml`, `openspec/changes/`, and `openspec/specs/`. It installs **no** stock skills and no commands.
+- `openspec init --tools claude` also installs 8 skills in `.claude/skills/` (`openspec-propose`, `openspec-explore`, `openspec-apply-change`, `openspec-archive-change`, `openspec-continue-change`, `openspec-ff-change`, `openspec-sync-specs`, `openspec-verify-change`). It also installs 8 commands in `.claude/commands/opsx/` (`apply`, `archive`, `continue`, `explore`, `ff`, `propose`, `sync`, `verify`). The `/opsx:*` commands need this step.
+- The new `config.yaml` has `schema: spec-driven` and commented examples for `context`, `rules`, and `operations`. `operations` occurs **only in a comment**, so the file has no `operations.archive.guidance` key.
+
+---
+
+## OpenSpec: Apply State Before plan.md Exists
+
+**Source**: run with the shipped plan-lite schema, OpenSpec 1.9.0, 2026-10-15
+
+- Right after `openspec new change <name> --schema plan-lite`, `openspec instructions apply --change <name> --json` returns `state: blocked`, because `plan.md` (the only entry in `apply.requires`) does not exist yet.
+- After `plan.md` is written, the state is `ready`.
+
+---
+
+## Tools Used by the Scripts and Skill Files
+
+**Source**: runs on macOS, Node 24.13.0, 2026-10-15
+
+- **Markdown lists**: an unindented line inside a nested numbered list ends the list. markdown-it rendered the bullets after it as a code block (`<pre><code>`), and restarted the outer list with `<ol start="3">`. With the line indented to the content column of its list item, the list renders correctly. This is why the `Shipped schema version` marker is indented in each SKILL.md (D106).
+- **Node child processes**: `spawnSync(cmd, [args], { shell: true })` prints `[DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities`. Without `shell: true`, Node does not find a Windows `.cmd` shim such as `openspec.cmd`.
+- **`fs.renameSync`** onto an existing non-empty folder fails with `ENOTEMPTY` (D102).
+- **`fs.readdirSync(dir, { recursive: true, withFileTypes: true })`** gives entries with `parentPath`. `install.mjs` uses it to list the copied files.

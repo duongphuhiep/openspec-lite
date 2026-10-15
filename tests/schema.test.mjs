@@ -60,3 +60,13 @@ test("plan-hash.mjs runs from the installed schema folder", () => {
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout.trim(), /^[0-9a-f]{64}$/);
 });
+
+test("design.md holds the exact shipped apply.instruction text", () => {
+  const read = (p) => readFileSync(fileURLToPath(new URL(p, import.meta.url)), "utf8").replace(/\r\n/g, "\n");
+  const shipped = read("../package/skills/openspec-lite-schema/assets/plan-lite/schema.yaml")
+    .split("  instruction: |\n")[1]
+    .replace(/^    /gm, "")
+    .trimEnd();
+  const design = read("../docs/design.md").split("This is the exact text in `schema.yaml`:\n\n```text\n")[1]?.split("\n```")[0];
+  assert.equal(design, shipped);
+});

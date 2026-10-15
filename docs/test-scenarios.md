@@ -5,8 +5,8 @@ Run these scenarios by hand before each release tag (D69). The automated tests (
 Setup for each scenario, unless it says otherwise:
 
 1. Create an empty folder and run `git init`.
-2. Run `openspec init`.
-3. Install the release candidate: `apm install <path-to-this-repo>/package --target claude` (or your harness).
+2. Run `openspec init --tools claude` (or your harness).
+3. Install the release candidate: `apm install <path-to-this-repo>/package --target claude` (or your harness). Use the same harness as in step 2.
 4. Start a new agent session in the folder.
 
 Record the agent, the model, the OpenSpec version, and the result of each scenario.
