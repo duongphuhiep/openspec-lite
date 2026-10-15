@@ -1,6 +1,6 @@
 # Test Scenarios
 
-Run scenarios 1–9 and 11–13 by hand before each release tag (D69). Run scenario 10 right after the tag push, because it needs the published tag. The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
+Run scenarios 1–9 and 11–19 by hand before each release tag (D69). Run scenario 10 right after the tag push, because it needs the published tag. The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
 
 Setup for each scenario, unless it says otherwise:
 
@@ -188,6 +188,181 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - Run 1 reports the archive failure and keeps the ADR.
 - Run 2 finds the ADR with `Change: <name>`, shows it, and does not draft that decision again.
 - After run 2, `openspec/adr/` has one ADR for the decision, and the change is in `openspec/changes/archive/`.
+
+## 14. Promotion into an existing capability
+
+This scenario checks that archive puts the knowledge of `plan.md` into the right capability spec, and does not make a new capability next to an existing one.
+
+**Steps**:
+
+1. Create `openspec/specs/auth/spec.md` with this content:
+
+   ```markdown
+   ## Purpose
+
+   Login for the web client.
+
+   ## Requirements
+
+   ### Requirement: Password login
+   The system SHALL log in a user with a valid email and password.
+
+   #### Scenario: Valid password
+   - **WHEN** the email and the password are valid
+   - **THEN** the user is logged in
+   ```
+
+2. Create a plan-lite change `lockout` with this `plan.md`:
+
+   ```markdown
+   ## Goal
+   Lock an account after repeated failed logins.
+
+   ## Non-Goals
+   - No CAPTCHA.
+
+   ## Constraints
+   - After 5 failed logins in 15 minutes, the system SHALL lock the account for 30 minutes.
+   - A locked account SHALL NOT log in, also with a valid password.
+
+   ## Open Questions
+
+   ## Decisions
+   ### Decision: Count failures per account, not per IP
+   Chose per account because attackers rotate IP addresses. Rejected per IP because it also locks out users behind one office NAT.
+   ```
+
+3. Run `openspec-lite-archive lockout`. Approve each draft.
+
+**Expected**:
+
+- The requirement drafts use the existing capability `auth`. The agent does not create a new capability such as `lockout` or `account-lockout`.
+- Each new rule has at least one `#### Scenario:`.
+- The delta form is free. "A locked account SHALL NOT log in, also with a valid password" can be a MODIFIED "Password login" (with its full text) or an ADDED requirement. Both pass if the main spec below ends up correct.
+- The decision becomes an ADR with `Change: lockout`.
+- After the archive, `openspec/specs/auth/spec.md` has:
+  - the "Password login" requirement, with its first scenario and the new locked-account rule;
+  - the new lockout requirement.
+- The Non-Goal "No CAPTCHA" is either in the ADR, or the agent says why it skipped it.
+
+## 15. Promotion keeps each non-obvious item
+
+This scenario checks that no non-obvious knowledge of `plan.md` is lost at archive time.
+
+**Steps**:
+
+1. Create a plan-lite change `export-csv` with this `plan.md`. Each line has a tag in brackets that the agent does not see in a real repo. Remove the tags before the run, and keep this list as your answer key:
+
+   ```markdown
+   ## Goal
+   Export the report table as CSV.
+
+   ## Non-Goals
+   - No Excel export. [obvious: skip]
+
+   ## Constraints
+   - The CSV SHALL use a semicolon separator, because the users open it in a French Excel. [non-obvious: spec]
+   - The export SHALL include only the rows that match the active filters. [non-obvious: spec]
+   - The export button is in the toolbar. [obvious: skip]
+
+   ## Open Questions
+
+   ## Decisions
+   ### Decision: Build the CSV in the browser
+   Chose the browser because the table already has all rows in memory. Rejected a server endpoint because it adds an API for one button. [non-obvious: ADR]
+   ### Decision: Use the date in the file name
+   Chose `report-YYYY-MM-DD.csv`. [obvious: skip]
+   ```
+
+2. Run `openspec-lite-archive export-csv`. Approve each draft. Do not edit a draft.
+
+**Expected**:
+
+- Each item tagged `spec` is in a requirement draft. Each item tagged `ADR` is in an ADR draft.
+- For each item that the agent does not draft, it names the item and says why it skips it. No item disappears with no word.
+- The reason for the semicolon (French Excel) stays in the spec or in the ADR. It is the non-obvious part.
+- After the archive, `openspec/specs/<capability>/spec.md` has the two `spec` items, and `openspec/adr/` has the `ADR` item.
+
+Record each mismatch with the answer key. A tagged `spec` or `ADR` item that is not promoted, and not named as skipped, is a failure.
+
+## 16. Stock `/opsx:archive` on a plan-lite change
+
+This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does not promote `plan.md`. openspec-lite adds a hint to `openspec/config.yaml` (D95), but the hint is best effort.
+
+### 16a. With the archive guidance in `config.yaml`
+
+**Steps**:
+
+1. Run scenario 1, so that `openspec/config.yaml` has the openspec-lite archive guidance item.
+2. Add one non-obvious constraint and one decision to `plan.md`.
+3. Run stock `/opsx:archive <name>`.
+
+**Expected** (at least one of these):
+
+- The agent runs `openspec-lite-archive` instead, or tells the user to run it, before it archives.
+- The agent warns that `plan.md` has decisions and requirements that this archive does not promote, and asks before it continues.
+
+**Failure**: the agent archives the change and does not mention promotion or `openspec-lite-archive`. Then the knowledge of `plan.md` stays only in `openspec/changes/archive/`. Record the exact reply, because this result decides if openspec-lite needs a stronger guard.
+
+### 16b. Without the archive guidance
+
+**Steps**:
+
+1. Repeat 16a, but first delete the openspec-lite item from `operations.archive.guidance` in `openspec/config.yaml`.
+2. Run stock `/opsx:archive <name>`.
+
+**Expected**: this is the known gap. No openspec-lite rule reaches the stock skill, so the agent can archive with no warning. Record what it does. If it warns anyway, record why, for example because it read the `apply.instruction` text.
+
+### 16c. The `openspec archive` CLI directly
+
+**Steps**: In a terminal, run `openspec archive <name> --yes` on a plan-lite change with decisions in `plan.md`.
+
+**Expected**: the CLI never reads the guidance (`docs/facts.md`), so it archives with no warning. This is a known gap, not a failure. Record it, so that README can warn users.
+
+## 17. `openspec-lite-apply` after an upgrade
+
+**Steps**:
+
+1. Run scenario 7 to its end. The change is `spec-driven`, with `tasks.md`, and has no `plan.md`.
+2. Run `openspec-lite-apply <name>`.
+
+**Expected**:
+
+- The agent stops at the change schema guard. It writes no code and changes no file.
+- It tells the user to run stock `/opsx:apply`, because the change is spec-driven now.
+
+**Variant 17b**: before step 2, put back a `plan.md` with only an open question, as an upgrade keeps it when a section has no slot. Expected: `openspec-lite-apply` still refuses. Only `openspec-lite-upgrade` has the resume exception (D106).
+
+## 18. `openspec-lite-archive` after an upgrade
+
+**Steps**:
+
+1. Run scenario 7 to its end. Mark each task in `tasks.md` as done (`- [x]`).
+2. Run `openspec-lite-archive <name>`.
+
+**Expected**:
+
+- The agent stops at the change schema guard. It drafts nothing and writes no spec and no ADR.
+- It tells the user to run stock `/opsx:archive`.
+- The decisions from `plan.md` are in `design.md` → `## Decisions` (upgrade moved them, D62).
+- The agent warns that stock `/opsx:archive` does not turn these decisions into ADRs, and says to copy them to `openspec/adr/` first to keep them (D115).
+- The upgrade summary from scenario 7 already gave the same warning.
+
+## 19. Other openspec-lite skills after an upgrade
+
+**Steps**: On the change from scenario 7, run each of these:
+
+1. `openspec-lite-tasks-preview <name>`
+2. `openspec-lite-upgrade <name>` (the change has no `plan.md`)
+3. `openspec-lite-upgrade <name>`, after you put back a `plan.md` with only an open question
+
+**Expected**:
+
+1. tasks-preview stops and points to stock `/opsx:continue`. It does not write `tasks-preview.md`.
+2. upgrade stops. It points to the stock skills `/opsx:apply` and `/opsx:archive`.
+3. upgrade asks: "Resume the upgrade of <name> at step 4?" Answer no. Then it stops with no file change.
+
+In each case, `.openspec.yaml`, `tasks.md`, and the other artifacts do not change.
 
 ---
 

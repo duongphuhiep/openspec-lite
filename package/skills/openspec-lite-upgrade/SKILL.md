@@ -53,3 +53,4 @@ In the summary:
 - Ask for an extra review of `tasks.md`, because it is a contract, not a reference.
 - Say if `skip_specs` was removed, or put back because the change has no spec delta.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
+- If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs. To keep them as ADRs, copy them to `openspec/adr/` before the archive.

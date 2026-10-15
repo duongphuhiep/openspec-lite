@@ -68,7 +68,7 @@ openspec-lite/
   - It runs `node --test` from the repo root. Node finds `tests/*.test.mjs`. `node --test tests/` fails on Node 24 (D84, D99).
   - On a tag push, it fails if the tag is not `v` + `version` from `package/apm.yml`. It reads the line `^version:` with no YAML library (D94).
 - Before each release tag:
-  - Run scenarios 1–9 and 11–13 in `docs/test-scenarios.md` by hand (D69, D113). Each scenario has steps and an expected result. The list (D99):
+  - Run scenarios 1–9 and 11–19 in `docs/test-scenarios.md` by hand (D69, D113, D115). Each scenario has steps and an expected result. The list (D99):
     1. Fresh repo: propose installs the schema, creates the change, writes `plan.md`.
     2. Small request: propose offers Level 1 and stops on yes, with no files written.
     3. Tasks preview, then edit a Constraint: apply warns that the preview is stale.
@@ -82,6 +82,12 @@ openspec-lite/
     11. OpenSpec root in a subfolder of the git root: the skills run from `root.path`, and the skill-folder search finds the skill in a parent folder (D111).
     12. propose resume: a plan-lite change with no `plan.md` resumes with one `skip_specs` line (D111, D112).
     13. archive rerun: (a) after a failed validate, the agent shows earlier deltas before the write and drafts the decision again; (b) after a failed `openspec archive`, it skips the ADRs with `Change: <name>` (D111, D112, D113).
+    14. Promotion into an existing capability: archive reuses the capability, and the main spec ends up correct (D115).
+    15. Promotion keeps each non-obvious item of `plan.md`, or names it as skipped (D115).
+    16. Stock `/opsx:archive` on a plan-lite change: (a) with the guidance, the agent warns or runs `openspec-lite-archive`; (b) without the guidance, and (c) the CLI directly, are known gaps that the run records (D95, D115).
+    17. `openspec-lite-apply` after an upgrade refuses and points to `/opsx:apply` (D75).
+    18. `openspec-lite-archive` after an upgrade refuses, points to `/opsx:archive`, and warns about the decisions in `design.md` (D115).
+    19. tasks-preview and upgrade after an upgrade: refuse, or ask to resume when `plan.md` exists (D107, D108).
   - Right after the tag push, install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83, D107).
 
 ## 2a. Tests (D84)
@@ -109,7 +115,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 **Change selection** (D61): Use the change named in the prompt. If no name is given and only one active change exists, use it. Otherwise ask. List active changes with `openspec list --json`. It does not give the schema, so read `schema` from each change's `.openspec.yaml` (D99).
 
-**Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. A `spec-driven` change with no `plan.md` is refused, like any other schema (D108). An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106). A finished upgrade can also keep `plan.md`, so upgrade asks the user before it resumes (D107).
+**Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. When archive refuses a change whose `design.md` has `### Decision` entries, it also warns: stock `/opsx:archive` does not turn them into ADRs, so copy them to `openspec/adr/` first to keep them (D115). One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. A `spec-driven` change with no `plan.md` is refused, like any other schema (D108). An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106). A finished upgrade can also keep `plan.md`, so upgrade asks the user before it resumes (D107).
 
 **Skill chaining** (D57): To run another skill, invoke it if the harness can. If the harness cannot, tell the user which skill to run, and stop.
 
@@ -231,7 +237,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 3. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
 4. Delete each `plan.md` section whose content moved. Keep a section that has no slot, for example open questions that are still open. If no section is left, delete `plan.md`.
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
-6. In the summary, ask the user to review all artifacts. Ask for an extra review of `tasks.md`, because it is a contract. Say that `skip_specs` was removed.
+6. In the summary, ask the user to review all artifacts. Ask for an extra review of `tasks.md`, because it is a contract. Say that `skip_specs` was removed. If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs (D115).
 
 ### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105)
 

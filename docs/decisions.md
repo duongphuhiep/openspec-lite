@@ -1503,3 +1503,18 @@ This revises D111.
 - A Sonnet 4.6 run stopped after the schema install and never created the change.
 - Scenario 3: stock `/opsx:apply` found the stale preview, but reported it after it wrote the code.
 - A Sonnet 4.6 run of scenario 1 added two non-goals that the prompt did not state.
+
+---
+
+## D115: Warn About Decisions in design.md After an Upgrade; More Promotion Scenarios
+
+**Decision**:
+
+- When `openspec-lite-archive` refuses a change whose `design.md` has `### Decision` entries, it warns: stock `/opsx:archive` does not turn them into ADRs. To keep them, copy them to `openspec/adr/` before the archive.
+- The upgrade summary gives the same warning.
+- Scenarios 14–19 test promotion (14–16) and the openspec-lite skills after an upgrade (17–19).
+- In scenario 14, the delta form is free (ADDED or MODIFIED). The scenario passes when the main spec ends up correct.
+
+This revises D63.
+
+**Rationale**: Upgrade moves the `plan.md` decisions to `design.md` (D62). Stock archive keeps `design.md` only in the archive folder, so a team that expects ADRs loses them with no word. The user asked for a warning in this case, as for stock `/opsx:archive` on a plan-lite change. A check for `### Decision` entries needs no record of the upgrade. For promotion, the user cares about the result in the main spec, not about the delta form.
