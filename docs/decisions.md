@@ -1017,7 +1017,7 @@ This revises D70 and D81.
 
 **Rationale**: A full-repo install clones the whole repo into `apm_modules/`, and APM has no exclude mechanism (`docs/facts.md`). A subdirectory install uses a sparse partial clone, so APM downloads only the files under `package/`. Users then never download tests, scripts, or design docs. The name `package/` is used because `dist/` suggests generated output. The real-install check exists because this fact comes from code reading, not from a run.
 
-**Status**: A test with APM 0.33.0 confirms the subdirectory install (`docs/facts.md`). One correction: git cone mode also downloads the files at the repo root, for example `README.md`, into the APM cache. Root folders such as `tests/` are not downloaded. Also, a local folder with only `skills/` needs an `apm.yml` (see D94).
+**Status**: A test with APM 0.33.0 confirms the subdirectory install (`docs/facts.md`). One correction: git cone mode also downloads the files at the repo root, for example `README.md`, into the APM cache. Root folders such as `tests/` are not downloaded. Also, a local folder with only `skills/` needs an `apm.yml` (see D94). A remote subdirectory install with a semver range is also confirmed on `microsoft/apm/packages/apm-guide#^0.33.0`: only the subdirectory and the root files were downloaded.
 
 ---
 

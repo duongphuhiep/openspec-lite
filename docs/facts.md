@@ -365,3 +365,8 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
   - The cache kept a partial database (`db_v1/<id>__p`, `.promisor` packs, 0 blobs) and a sparse checkout with cone `skills/xlsx`.
   - The sparse checkout downloaded 56 blobs: the 53 files under `skills/xlsx/` and the 3 files at the repo root (`.gitignore`, `README.md`, `THIRD_PARTY_NOTICES.md`). Git cone mode always includes root-level files. Other root folders were not downloaded.
 - **Cache location on macOS**: `~/Library/Caches/apm/git/`.
+- **Remote subdirectory install with a semver range** (`microsoft/apm/packages/apm-guide#^0.33.0`, a published package with `apm.yml`, tested 2026-10-15):
+  - The range resolved to tag `v0.33.0`. `apm.lock.yaml` records `constraint: ^0.33.0`, `resolved_ref: v0.33.0`, and the commit SHA.
+  - `apm_modules/` held only `packages/apm-guide/`. Its skill deployed to `.claude/skills/`.
+  - The sparse checkout (cone `packages/apm-guide`) downloaded 37 of the 3051 files at the tag: the 11 files under the subdirectory and the 26 files at the repo root. The root folders `tests/`, `src/`, and `docs/` were not downloaded.
+  - This package uses `.apm/skills/<name>/`, not `skills/<name>/`. The local test above shows that `apm.yml` + `skills/<name>/` also deploys.
