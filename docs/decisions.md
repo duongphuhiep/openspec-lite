@@ -1482,3 +1482,24 @@ The other cases are text gaps. "Change" as a section did not match a `Change:` l
 This revises D111.
 
 **Rationale**: A fresh `review-commit-range` round found each case. OpenSpec searches only up from the current folder. An agent that starts at the git root of a monorepo got `root: null`. The old stop message then sent the user to `openspec init` at the git root, which makes a second, wrong root. In scenario 13, the ADRs are written after validate (D105), so a failed validate can not leave an ADR. Creating the archive target folder first makes `openspec archive` fail after the ADRs exist (verified).
+
+---
+
+## D114: Fixes From the First Agent Scenario Run
+
+**Decision**:
+
+- `openspec-lite-schema` asks before it replaces an older repo schema, ends its turn, and waits for the answer. It does not run `install.mjs` before a yes.
+- After `openspec-lite-schema` finishes, each workflow skill continues with its next step in the same turn.
+- `apply.instruction` runs the stale-preview check before any code. On a stale preview, the agent stops and asks: regenerate the preview, or continue from `plan.md`.
+- propose does not invent non-goals, constraints, or decisions.
+- `docs/test-scenarios.md` describes how to run the scenarios headless with `claude -p`.
+
+`apply.instruction` changed, but no tag exists yet, so the schema `version` stays 1 (D109).
+
+**Rationale**: The first headless run of the agent scenarios (Claude Code, Sonnet 5.5, 2026-10-15) passed 11 of 13 and found these gaps:
+
+- Scenario 9: the agent replaced schema v0 with v1 without asking. It read "tell the user … If the user declines, stop" as information, not as a question.
+- A Sonnet 4.6 run stopped after the schema install and never created the change.
+- Scenario 3: stock `/opsx:apply` found the stale preview, but reported it after it wrote the code.
+- A Sonnet 4.6 run of scenario 1 added two non-goals that the prompt did not state.

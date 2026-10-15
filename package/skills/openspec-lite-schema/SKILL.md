@@ -27,7 +27,7 @@ Read the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped) a
 
 - Repo version higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
 - Equal: say "The plan-lite schema is already current." Skip section 3, and go to section 4. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs this skill again.
-- Repo copy exists and is lower, or has no readable version: tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
+- Repo copy exists and is lower, or has no readable version: ask the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`. Proceed?" End your turn, and wait for the answer. Do not run the install script before the user says yes. On no, stop.
 - No repo copy: continue.
 
 ## 3. Install

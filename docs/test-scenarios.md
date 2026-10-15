@@ -188,3 +188,28 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - Run 1 reports the archive failure and keeps the ADR.
 - Run 2 finds the ADR with `Change: <name>`, shows it, and does not draft that decision again.
 - After run 2, `openspec/adr/` has one ADR for the decision, and the change is in `openspec/changes/archive/`.
+
+---
+
+## Running the Scenarios Headless
+
+You can run each scenario without a person at the keyboard, with Claude Code in print mode. This is how the scenarios ran on 2026-10-15.
+
+1. Build the start state of the scenario in a temp folder (see each scenario's Steps).
+2. Run the first prompt from inside that folder:
+
+   ```sh
+   claude -p "<prompt>" --model <full model id> --output-format json \
+     --permission-mode acceptEdits \
+     --allowedTools "Bash(openspec:*)" "Bash(node:*)" "Bash(git:*)" "Bash(ls:*)" "Bash(cat:*)" "Bash(mkdir:*)"
+   ```
+
+3. Read `result` and `session_id` from the JSON. When the skill asks a question, answer with the same command plus `--resume <session_id>`.
+4. Check the expected results on disk, not only in the agent's reply.
+
+Notes:
+
+- Pin the full model ID, for example `eu.anthropic.claude-sonnet-5-5`. On a Bedrock setup, the alias `sonnet` resolved to `claude-sonnet-4-6`. Check `modelUsage` in the JSON.
+- A scenario that needs an interrupt (7, 13) starts from a hand-built state, because a print-mode run cannot stop at an exact step.
+- The session also loads your user setup in `~/.claude`, for example global skills. The results reflect that setup.
+- Permission denials in the JSON (`permission_denials`) mostly come from compound shell commands outside the allowlist. The agent then retries with allowed commands.
