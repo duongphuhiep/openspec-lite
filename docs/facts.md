@@ -485,3 +485,14 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - An `openspec/` folder marks an OpenSpec root only if it holds `config.yaml`, `changes/`, or `specs/`. A folder with only `schemas/` does not: `openspec list --json` gives `root: null` and `no_openspec_root`. `openspec init` creates `config.yaml`, so an initialized repo always has a root. Tested 2026-10-15.
 - `openspec list --json` searches only up from the current folder, never down. From the git root of a repo whose only root is `svc/openspec/`, it gives `root: null` with code `no_openspec_root` and the fix text "Run openspec init to create a root here". Tested 2026-10-15.
 - `openspec archive <name> --yes` fails (exit code 1) when `openspec/changes/archive/<YYYY-MM-DD>-<name>/` already exists: "Archive '<YYYY-MM-DD>-<name>' already exists." The change stays in `openspec/changes/`. Tested 2026-10-15.
+
+---
+
+## OpenSpec 1.14.2: Differences From 1.9.0
+
+**Source**: CI run 38712388632 (`latest` = 1.14.2), then runs with `npm install --prefix <tmp> @fission-ai/openspec@1.14.2`, 2026-10-15
+
+- `openspec new change <name> --schema plan-lite` writes `skip_specs: true` into `.openspec.yaml` by itself. 1.9.0 does not. A spec-driven change gets no flag in either version. So a skill that appends the flag makes a duplicate key on 1.14.2. The rule "set it only if the line is missing" (D112) works on both.
+- `openspec new change` in a folder with no OpenSpec root creates `openspec/` and prints: "Note: no OpenSpec root was found here, so one was created at openspec/. Run `openspec init` to finish setting this project up".
+- `openspec instructions <artifact> --json` adds `planningHome`, `resolvedOutputPath`, and `existingOutputPaths`. `outputPath`, `template`, `changeDir`, and `root` are unchanged.
+- With the fixed tests, the full `node --test` suite passes on 1.9.0 and on 1.14.2.

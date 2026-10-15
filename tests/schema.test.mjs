@@ -29,11 +29,20 @@ const os = (dir, args) => {
 };
 const json = (dir, args) => JSON.parse(os(dir, [...args, "--json"]).stdout);
 
+// OpenSpec 1.14 writes skip_specs: true on a new plan-lite change, and 1.9 does not.
+// Set or remove the flag the same way on each version, with no duplicate key.
+function setSkipSpecs(dir, change, on) {
+  const file = join(dir, "openspec", "changes", change, ".openspec.yaml");
+  const lines = readFileSync(file, "utf8").split("\n").filter((l) => !/^skip_specs:/.test(l));
+  if (on) lines.splice(lines.length - 1, 0, "skip_specs: true");
+  writeFileSync(file, lines.join("\n"));
+}
+
 test("plan-lite flow: new change, plan template, validate, apply instructions, archive", { skip }, () => {
   const dir = repo();
   assert.equal(os(dir, ["new", "change", "demo", "--schema", "plan-lite"]).status, 0);
   const change = join(dir, "openspec", "changes", "demo");
-  appendFileSync(join(change, ".openspec.yaml"), "skip_specs: true\n");
+  setSkipSpecs(dir, "demo", true);
 
   const plan = json(dir, ["instructions", "plan", "--change", "demo"]);
   assert.equal(plan.outputPath, "plan.md");
@@ -93,6 +102,7 @@ test("archive path: a plan-lite change with a delta validates and merges", { ski
   const dir = repo();
   assert.equal(os(dir, ["new", "change", "promo", "--schema", "plan-lite"]).status, 0);
   const change = join(dir, "openspec", "changes", "promo");
+  setSkipSpecs(dir, "promo", false); // as archive step 8 does when a delta exists
   writeFileSync(join(change, "plan.md"), "## Goal\nX\n## Non-Goals\n## Constraints\n## Open Questions\n## Decisions\n");
   mkdirSync(join(change, "specs", "auth"), { recursive: true });
   writeFileSync(
@@ -110,6 +120,7 @@ test("validate fails on a plan-lite change with no deltas and no skip_specs", { 
   const dir = repo();
   assert.equal(os(dir, ["new", "change", "bare", "--schema", "plan-lite"]).status, 0);
   writeFileSync(join(dir, "openspec", "changes", "bare", "plan.md"), "## Goal\nX\n");
+  setSkipSpecs(dir, "bare", false);
   assert.notEqual(os(dir, ["validate", "bare"]).status, 0);
 });
 
@@ -135,7 +146,7 @@ test("CLI behavior the skills rely on", { skip }, async (t) => {
   await t.test("instructions specs with skip_specs gives skipped: true and still an instruction", () => {
     const dir = repo();
     assert.equal(os(dir, ["new", "change", "sk", "--schema", "plan-lite"]).status, 0);
-    appendFileSync(join(dir, "openspec", "changes", "sk", ".openspec.yaml"), "skip_specs: true\n");
+    setSkipSpecs(dir, "sk", true);
     const r = json(dir, ["instructions", "specs", "--change", "sk", "--schema", "spec-driven"]);
     assert.equal(r.skipped, true);
     assert.ok(r.instruction.length > 0);
@@ -144,7 +155,8 @@ test("CLI behavior the skills rely on", { skip }, async (t) => {
   await t.test("a duplicate key in .openspec.yaml breaks the change", () => {
     const dir = repo();
     assert.equal(os(dir, ["new", "change", "dup", "--schema", "plan-lite"]).status, 0);
-    appendFileSync(join(dir, "openspec", "changes", "dup", ".openspec.yaml"), "skip_specs: true\nskip_specs: true\n");
+    setSkipSpecs(dir, "dup", true);
+    appendFileSync(join(dir, "openspec", "changes", "dup", ".openspec.yaml"), "skip_specs: true\n");
     assert.match(os(dir, ["instructions", "plan", "--change", "dup", "--json"]).out, /Map keys must be unique/);
   });
 });
