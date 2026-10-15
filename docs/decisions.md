@@ -1531,3 +1531,11 @@ This revises D63.
 This revises D104 for archive.
 
 **Rationale**: In scenarios 14 and 15, archive dropped a non-goal with no word. In scenario 16b, without the `config.yaml` guidance, stock `/opsx:archive` archived first and only then said that it did not promote. The agent knew the risk from the old description, but read it as a note. Skill descriptions are always in the agent context, so a direct instruction there can reach the agent before the archive, also when `config.yaml` has no guidance. The `openspec archive` CLI stays a known gap (scenario 16c).
+
+---
+
+## D117: A Delta for a New Capability Starts With a Purpose
+
+**Decision**: When archive or upgrade writes a delta for a capability that does not exist in `openspec/specs/`, the delta starts with a `## Purpose` section of one or two sentences.
+
+**Rationale**: For a new capability, the CLI creates the main spec from the delta. It uses the delta `## Purpose` if there is one. Otherwise it writes "TBD - created by archiving change <name>. Update Purpose after archive." (`docs/facts.md`). A TBD Purpose is a task that nobody does, so the spec starts incomplete.

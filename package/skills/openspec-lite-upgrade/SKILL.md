@@ -33,7 +33,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch is the last write, 
 2. Write the four artifacts in this order: `proposal`, `specs`, `design`, `tasks`. For each one, run `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. Use its `template` and follow its `instruction`. If an artifact already exists from an earlier run, keep it and go to the next one. If a kept artifact looks incomplete, for example a template section that is still empty, tell the user and offer to complete it.
    1. `proposal.md`: from the Goal and the scope in `plan.md`.
    2. `specs/<capability>/spec.md`: one delta per capability, for the requirements in `plan.md`.
-      - To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches.
+      - To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches. For a new capability, start the delta with a `## Purpose` section of one or two sentences on what the capability covers. Without it, the CLI writes "TBD" as the Purpose of the new main spec.
       - Use the headers `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`, or `## RENAMED Requirements`.
       - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
       - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit it.
