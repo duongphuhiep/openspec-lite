@@ -1392,3 +1392,23 @@ This revises D46, D97, and D99 for upgrade.
 This revises D81 and D93.
 
 **Rationale**: The repo schema updates only when the shipped `version` is higher. Under D81, a fix in a patch tag had to keep the version, so it never reached `openspec/schemas/plan-lite/` in user repos. Stock `/opsx:apply` then kept the old `apply.instruction`, with no warning. With the bump in any tag, `apm update` delivers the new skills, and the workflow skills replace the old repo copy. A teammate with older skills sees "newer" and runs `apm update` inside the same range. A content hash was rejected, because each skill would then hold a hash instead of a number.
+
+---
+
+## D110: Fixes From Review Round 2
+
+**Decision**:
+
+- Archive decides `skip_specs` from the files under `<change>/specs/`, not from the work of this run. It shows each delta file from an earlier run, and the user keeps or deletes it.
+- In the workflow-skill schema check, a repo `schema.yaml` with no readable `version` line counts as lower, as in `openspec-lite-schema` (D106).
+- The schema bump check (D109) is its own CI job. It runs on each pull request, on a push to `main`, and on a tag push. It reads `version` with the same rule as `install.mjs`.
+- Scenario 9 also checks a `config.yaml` that already has `operations.archive.guidance`.
+
+This revises D93 and D109.
+
+**Rationale**: A fresh `review-commit-range` round found each case:
+
+- After a failed validate, a rerun with no new delta set `skip_specs: true` while the old delta stayed. `validate` then fails: "skip_specs is set in .openspec.yaml but spec files exist under specs/" (`docs/facts.md`).
+- A check that runs only on a tag push finds the missing bump after the tag is public, so `apm update` already resolves the bad release.
+- The CI `sed` did not accept `version: "2"`, so a correct bump could fail.
+- A second `operations:` key disables the whole `config.yaml` (D107). The rule existed only in skill prose.

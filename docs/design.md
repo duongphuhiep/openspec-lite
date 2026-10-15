@@ -56,7 +56,7 @@ openspec-lite/
 - The repo has no `package.json`. `package/apm.yml` holds only `name: openspec-lite` and `version`. APM rejects a folder with only `skills/` and no `apm.yml` (D94).
 - A release is a git tag named `vMAJOR.MINOR.PATCH`, for example `v1.0.0`. APM range matching recognizes this form. The tag selects the schema version (D43, D70, D93).
 - Each change to a file under `assets/plan-lite/` bumps the schema `version` by 1. Any tag can ship the bump. Only a breaking schema change needs a new major tag (D109).
-- On a tag push, CI fails if a file under `assets/plan-lite/` changed since the previous tag but `version` did not (D109).
+- CI fails if a file under `assets/plan-lite/` changed since the latest `v*` tag but `version` did not. The check runs on each pull request, on a push to `main`, and on a tag push, so a missing bump stops before the release (D109, D110).
 - Ship skills only. Do not ship slash-command files or per-harness plugin manifests (D35, D42).
 - `schema.yaml` is the only declaration of compatible OpenSpec versions (D48).
 - The license is MIT. The one `LICENSE` file is `package/LICENSE`, with the line "Copyright (c) 2026 DUONG Phu-Hiep". The root README links to it (D89, D100).
@@ -77,7 +77,7 @@ openspec-lite/
     6. Archive with nothing promoted: `skip_specs` is set, archive succeeds.
     7. Upgrade with a preview, interrupted after it writes `proposal.md`, then run again: it resumes and validates.
     8. Newer repo schema: each workflow skill stops with the "Run `apm update`" message.
-    9. Schema re-copy: the old folder moves to `openspec/schemas-backup/`.
+    9. Schema re-copy: the old folder moves to `openspec/schemas-backup/`. An existing `operations.archive.guidance` list keeps its items and gets the openspec-lite item, with one `operations:` key (D110).
     10. Real APM install from the tag (D83). Run this one right after the tag push (D107).
   - Right after the tag push, install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83, D107).
 
@@ -112,7 +112,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 1. Read `version` from `openspec/schemas/plan-lite/schema.yaml` in the target repo.
 2. Compare it with the shipped version. Each workflow skill holds the line `Shipped schema version: <n>` (D87). The number must equal `version` in `assets/plan-lite/schema.yaml` (D66).
-   - The file is missing or its version is lower: run `openspec-lite-schema`. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions (D93).
+   - The file is missing, its version is lower, or it has no readable `version` line: run `openspec-lite-schema` (D110). If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions (D93).
    - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`." A minor or patch tag can bump the schema, so `apm update` usually fixes it. Only a breaking schema change needs the next major tag (D93, D109).
 3. Run `openspec --version`. If the command fails, stop. Tell the user to install `@fission-ai/openspec` in the `openspec-version` range (D93). If the result is outside the `openspec-version` range, warn the user. Point to the compatibility table at `https://github.com/duongphuhiep/openspec-lite#compatibility`. The installed package has no README.
 
@@ -237,8 +237,8 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
    - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93).
    - A decision becomes an ADR with these sections: Title, Status, Context, Decision, Consequences.
 6. Show the drafts. The user answers yes, no, or edit for each item. Write nothing before approval.
-7. Write the approved deltas to `<change>/specs/<capability>/spec.md`.
-8. If step 7 wrote files, remove `skip_specs` from `.openspec.yaml`. Otherwise, set `skip_specs: true`, because `validate` fails on a plan-lite change with no deltas and no `skip_specs` (D93).
+7. Write the approved deltas to `<change>/specs/<capability>/spec.md`. If `<change>/specs/` already holds files from an earlier run, show each one, and ask the user to keep or delete it (D110).
+8. Decide from the files on disk, not from this run. If any file exists under `<change>/specs/`, remove `skip_specs`. If none exists, set `skip_specs: true`. `validate` fails with a delta and the flag, and also with no delta and no flag (D93, D110).
 9. Run `openspec validate "<name>"`. If it fails, stop and report.
 10. Write the approved ADRs to `openspec/adr/YYYY-MM-DD-<slug>.md`. Use the archive date. Set Status to `Accepted` (D93, D105).
 11. Run `openspec archive "<name>" --yes`. The CLI applies the deltas and moves the change (with `plan.md` and `tasks-preview.md`) to the archive. If it fails after step 10, report it. The ADRs stay, because each one is still a correct decision (D105).

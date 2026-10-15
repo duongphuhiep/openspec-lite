@@ -98,7 +98,16 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. Change `version: 1` to `version: 0` in `openspec/schemas/plan-lite/schema.yaml`.
 2. Add a file `openspec/schemas/plan-lite/local-note.txt`.
-3. Run `openspec-lite-propose`.
+3. Replace the `operations` comment in `openspec/config.yaml` with a real key:
+
+   ```yaml
+   operations:
+     archive:
+       guidance:
+         - "keep me"
+   ```
+
+4. Run `openspec-lite-propose`.
 
 **Expected**:
 
@@ -106,6 +115,8 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - After yes, `openspec/schemas-backup/plan-lite-v0-<timestamp>/` holds the old folder with `local-note.txt`.
 - `openspec/schemas/plan-lite/` has no `local-note.txt`.
 - The agent reports the backup path and the copied files.
+- `openspec/config.yaml` has one `operations:` key. Its `archive.guidance` list has "keep me" and the openspec-lite item.
+- `openspec list` prints no "could not parse" warning.
 
 ## 10. Real APM install from the tag
 

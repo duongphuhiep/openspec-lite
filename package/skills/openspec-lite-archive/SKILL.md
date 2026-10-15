@@ -17,7 +17,7 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
 
       Shipped schema version: 1
 
-      - The file is missing or its version is lower: run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions.
+      - The file is missing, its version is lower, or it has no readable `version` line: run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions.
       - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."
    3. Run `openspec --version`. If the command fails, stop. Tell the user to install `@fission-ai/openspec` in the range of `openspec-version` in the repo `schema.yaml`. If the version is outside that range, warn the user. Point to https://github.com/duongphuhiep/openspec-lite#compatibility.
 
@@ -40,8 +40,8 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
      - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit it.
    - **Decision**: an ADR with the sections Title, Status, Context, Decision, Consequences. Status is `Accepted`.
 6. Show all drafts. The user answers yes, no, or edit for each item. Apply each edit.
-7. Write the approved deltas to `<dir>/specs/<capability>/spec.md`.
-8. If step 7 wrote files, remove `skip_specs` from `<dir>/.openspec.yaml`. Otherwise, make sure `skip_specs: true` is set. Without deltas and without the flag, `validate` fails.
+7. Write the approved deltas to `<dir>/specs/<capability>/spec.md`. If `<dir>/specs/` already holds files from an earlier run, show each one. Ask the user to keep or delete it.
+8. Look at the files under `<dir>/specs/` now. If any file exists, remove `skip_specs` from `<dir>/.openspec.yaml`. If none exists, make sure `skip_specs: true` is set. `validate` fails with a delta and the flag, and also with no delta and no flag.
 9. Run `openspec validate "<name>"`. If it fails, stop and report.
 10. Write each approved ADR to `openspec/adr/YYYY-MM-DD-<slug>.md`. Use today's date.
 11. Run `openspec archive "<name>" --yes`. The CLI applies the deltas to `openspec/specs/` and moves the change, with `plan.md` and `tasks-preview.md`, to `openspec/changes/archive/`. If it fails, report it. Keep the ADRs: each one is still a correct decision.
