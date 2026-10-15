@@ -26,16 +26,36 @@ Level 3 ── spec-driven             (full OpenSpec)
 
 Requirements:
 
-- [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI `>=1.9.0 <2.0.0`: `npm install -g @fission-ai/openspec`.
-- Run `openspec init --tools <harness>` in your repo, for example `openspec init --tools claude`. It installs the stock OpenSpec skills and the `/opsx:*` commands that openspec-lite uses. With `--tools none`, it installs no skills.
+- [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI `>=1.9.0 <2.0.0`. The `@1` keeps npm inside that range:
 
-Install with [Microsoft APM](https://github.com/microsoft/apm):
+  ```sh
+  npm install -g @fission-ai/openspec@1
+  ```
+
+- [Microsoft APM](https://github.com/microsoft/apm) CLI.
+
+In your repo, run these two commands. Use the same harness in both:
 
 ```sh
+openspec init --tools claude
 apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude
 ```
 
-Replace `claude` with your harness, for example `codex` or `copilot`. Without `--target`, APM deploys only to harness folders that already exist in the repo.
+- `openspec init` installs the stock OpenSpec skills and the `/opsx:*` commands that openspec-lite uses. With `--tools none`, it installs no skills.
+- `apm install` installs the six openspec-lite skills. `#^1.0.0` lets `apm update` move to each newer 1.x release.
+- Always pass `--target`. Without it, APM deploys only to harness folders that it detects. For example, `openspec init --tools codex` writes only `.agents/skills/`, which APM does not detect, so `apm install` with no `--target` installs nothing for Codex.
+
+The two tools use the same harness name, except for GitHub Copilot:
+
+| Harness | `openspec init --tools` | `apm install --target` |
+| ------- | ----------------------- | ---------------------- |
+| Claude Code | `claude` | `claude` |
+| Codex | `codex` | `codex` |
+| Cursor | `cursor` | `cursor` |
+| Gemini CLI | `gemini` | `gemini` |
+| OpenCode | `opencode` | `opencode` |
+| Kiro | `kiro` | `kiro` |
+| GitHub Copilot | `github-copilot` | `copilot` |
 
 ## What openspec-lite Ships
 

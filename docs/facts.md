@@ -507,3 +507,15 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - **Stock `/opsx:archive` with no guidance**, and the old `openspec-lite-archive` description: the agent archived first. Only then did it say that stock archive does not promote `plan.md`. With the D116 description ("use this skill instead of /opsx:archive for a plan-lite change"), a rerun with no guidance drafted the promotion before any archive.
 - **`openspec archive <name> --yes` (the CLI)** on a plan-lite change with requirements and decisions in `plan.md`: it archives with exit code 0, prints no warning, and promotes nothing. `plan.md` stays only in `openspec/changes/archive/<date>-<name>/`.
 - **New capability from a delta**: when archive applies a delta for a capability that does not exist yet, the CLI creates `openspec/specs/<capability>/spec.md` with the heading `# <capability> Specification`. If the delta has a `## Purpose` section, the CLI uses it. If not, it writes "TBD - created by archiving change <name>. Update Purpose after archive."
+
+---
+
+## Install Flow on the Published v1.0.0 Tag
+
+**Source**: scenario 10, run 2026-10-15 in empty `git init` folders, OpenSpec 1.9.0 and 1.14.2, APM 0.33.0
+
+- `apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude` deployed the six skills to `.claude/skills/`. `apm.lock.yaml` has `constraint: ^1.0.0`, `resolved_ref: v1.0.0`, and commit `39c7517`. `apm_modules/duongphuhiep/openspec-lite/` holds only `package/` content.
+- The APM cache sparse checkout holds `package/` (12 files) and the 4 root files (`.gitignore`, `CLAUDE.md`, `CONTEXT.md`, `README.md`). It has no `tests/`, `scripts/`, or `docs/`.
+- With no `--target`, `apm install` auto-detects the harness from marker folders. After `openspec init --tools claude`, it prints "Targets: claude (source: auto-detect from .claude/)". After `--tools github-copilot`, it detects `copilot` from `.github/prompts/`. After `--tools codex`, OpenSpec writes only `.agents/skills/` (no `.codex/`), so APM prints "found none in this project" and deploys nothing.
+- `openspec init --tools copilot` fails (exit code 1). The OpenSpec name is `github-copilot`. The APM name is `copilot`, which deploys to `.agents/skills/`. The names `claude`, `codex`, `cursor`, `gemini`, `opencode`, and `kiro` are the same in both tools.
+- `npm view @fission-ai/openspec@1 version` gives 1.14.2.

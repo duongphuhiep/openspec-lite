@@ -52,7 +52,8 @@ openspec-lite/
 - Ship through Microsoft APM only. The git repo is the package (D70).
 - The repo is `github.com/duongphuhiep/openspec-lite` (D100).
 - README tells users to install the `package/` subfolder with a semver range and a target: `apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude`. The user replaces `claude` with their harness. With no target and no harness folder, APM deploys nothing (D81, D83, D103).
-- README lists the requirements: `@fission-ai/openspec` in the `openspec-version` range, and `openspec init --tools <harness>`, which installs the stock OpenSpec skills and `/opsx:*` commands. `--tools none` installs none (D103, D106).
+- README lists the requirements: `npm install -g @fission-ai/openspec@1` (inside the `openspec-version` range), the APM CLI, and `openspec init --tools <harness>`, which installs the stock OpenSpec skills and `/opsx:*` commands. `--tools none` installs none (D103, D106, D118).
+- README has a table of harness names for `openspec init --tools` and `apm install --target`. They are the same, except GitHub Copilot: `github-copilot` and `copilot` (D118).
 - The repo has no `package.json`. `package/apm.yml` holds only `name: openspec-lite` and `version`. APM rejects a folder with only `skills/` and no `apm.yml` (D94).
 - A release is a git tag named `vMAJOR.MINOR.PATCH`, for example `v1.0.0`. APM range matching recognizes this form. The tag selects the schema version (D43, D70, D93).
 - Each change to a file under `assets/plan-lite/` bumps the schema `version` by 1. Any tag can ship the bump. Only a breaking schema change needs a new major tag (D109).

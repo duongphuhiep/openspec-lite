@@ -1539,3 +1539,23 @@ This revises D104 for archive.
 **Decision**: When archive or upgrade writes a delta for a capability that does not exist in `openspec/specs/`, the delta starts with a `## Purpose` section of one or two sentences.
 
 **Rationale**: For a new capability, the CLI creates the main spec from the delta. It uses the delta `## Purpose` if there is one. Otherwise it writes "TBD - created by archiving change <name>. Update Purpose after archive." (`docs/facts.md`). A TBD Purpose is a task that nobody does, so the spec starts incomplete.
+
+---
+
+## D118: README Install Steps Checked Against the v1.0.0 Release
+
+**Decision**:
+
+- README installs OpenSpec with `npm install -g @fission-ai/openspec@1`, so that npm stays inside `>=1.9.0 <2.0.0`.
+- README lists the APM CLI as a requirement.
+- README shows `openspec init` and `apm install` together, with the same harness, and says to always pass `--target`.
+- README has a table of harness names. They are the same in both tools, except GitHub Copilot: `openspec init --tools github-copilot` and `apm install --target copilot`.
+
+This revises D103.
+
+**Rationale**: Scenario 10 ran the README steps word for word on the published `v1.0.0` tag:
+
+- The install worked, and APM downloaded only `package/` and the root files.
+- `openspec init --tools copilot` failed with exit code 1, but README suggested "copilot" for both tools.
+- With no `--target`, APM auto-detected `.claude/` after `openspec init --tools claude`, and `.github/prompts/` after `--tools github-copilot`. After `--tools codex`, it found no harness marker and deployed nothing, because OpenSpec writes only `.agents/skills/` for Codex.
+- A plain `npm install -g @fission-ai/openspec` installs `latest`, which a future 2.x can put outside the range. `@1` resolved to 1.14.2.
