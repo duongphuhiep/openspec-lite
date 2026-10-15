@@ -1,0 +1,46 @@
+name: test
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        openspec: [lowest, latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.19"
+      - name: Resolve the OpenSpec version
+        id: openspec
+        run: |
+          if [ "${{ matrix.openspec }}" = "lowest" ]; then
+            v=$(sed -n 's/^openspec-version: *">=\([0-9.]*\).*/\1/p' package/skills/openspec-lite-schema/assets/plan-lite/schema.yaml)
+            test -n "$v" || { echo "cannot read the lower bound of openspec-version"; exit 1; }
+          else
+            v=latest
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+      - run: npm install -g "@fission-ai/openspec@$OPENSPEC_VERSION"
+        env:
+          OPENSPEC_VERSION: ${{ steps.openspec.outputs.version }}
+      - run: openspec --version
+      - run: node scripts/check-version.mjs
+      - run: node --test
+
+  tag:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check that the tag matches package/apm.yml
+        run: |
+          v=$(sed -n 's/^version: *\([^ ]*\) *$/\1/p' package/apm.yml)
+          test "v$v" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} does not match version $v in package/apm.yml"; exit 1; }

@@ -1,0 +1,25 @@
+name: plan-lite
+version: 1
+openspec-version: ">=1.9.0 <2.0.0"
+description: Lightweight plan — goal, constraints, decisions. No tasks. Upgradeable to spec-driven.
+artifacts:
+  - id: plan
+    generates: plan.md
+    description: Living plan — goal, non-goals, constraints, open questions, decisions
+    template: plan.md
+    requires: []
+apply:
+  requires: [plan]
+  # no `tracks`: plan-lite has no tracked tasks file
+  instruction: |
+    This is a plan-lite change. It has no tasks.md and no checkboxes.
+    - Implement from plan.md. If <changeDir>/tasks-preview.md exists, use it as a guide. The CLI does not list it in contextFiles.
+    - If the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the repo root. If the result differs from `plan-sha256` in the preview header, or the header is missing, tell the user and offer to regenerate the preview with openspec-lite-tasks-preview.
+    - If the plan hash command exits with code 1, show its message and stop.
+    - When plan.md and tasks-preview.md conflict, plan.md wins.
+    - The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of plan.md, as `### Decision: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. List the deviations in the end summary.
+    - Record the answer to each open question in `## Decisions`, and remove the question.
+    - Do not edit tasks-preview.md.
+    - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
+    - End with the done check: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty?
+    - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
