@@ -1,7 +1,8 @@
 // Usage: node install.mjs <repoRoot>
 // Installs or replaces openspec/schemas/plan-lite/ in <repoRoot> from this skill's assets/plan-lite/.
 // Output: "status: installed|replaced|current|newer", then "backup: <path>" and "copied: <path>" lines.
-// Exit codes: 0 installed, replaced, or current. 2 the repo version is higher. 3 the shipped assets are bad.
+// Exit codes: 0 installed, replaced, or current. 1 a file system error ("install: <message>").
+// 2 the repo version is higher. 3 the shipped assets are bad.
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,9 +11,10 @@ const shipped = fileURLToPath(new URL("../assets/plan-lite/", import.meta.url));
 const repoRoot = process.argv[2] ?? ".";
 const target = join(repoRoot, "openspec", "schemas", "plan-lite");
 
+// Accepts `version: 1`, `version: "1"`, and a trailing `# comment`.
 function readVersion(dir) {
   try {
-    const m = readFileSync(join(dir, "schema.yaml"), "utf8").match(/^version:\s*(\d+)\s*$/m);
+    const m = readFileSync(join(dir, "schema.yaml"), "utf8").match(/^version:\s*["']?(\d+)["']?\s*(?:#.*)?$/m);
     return m ? Number(m[1]) : null;
   } catch {
     return null;
@@ -54,14 +56,21 @@ if (exists && oldVersion === newVersion) {
 }
 
 let backup = null;
-if (exists) {
-  const base = join(repoRoot, "openspec", "schemas-backup", `plan-lite-v${oldVersion ?? "unknown"}-${timestamp()}`);
-  backup = base;
-  for (let i = 2; existsSync(backup); i++) backup = `${base}-${i}`;
-  mkdirSync(join(repoRoot, "openspec", "schemas-backup"), { recursive: true });
-  renameSync(target, backup);
+try {
+  if (exists) {
+    const backupDir = join(repoRoot, "openspec", "schemas-backup");
+    const base = join(backupDir, `plan-lite-v${oldVersion ?? "unknown"}-${timestamp()}`);
+    backup = base;
+    for (let i = 2; existsSync(backup); i++) backup = `${base}-${i}`;
+    mkdirSync(backupDir, { recursive: true });
+    renameSync(target, backup);
+  }
+  cpSync(shipped, target, { recursive: true });
+} catch (e) {
+  console.error(`install: ${e.message}`);
+  if (backup && existsSync(backup)) console.error(`install: the old schema is in ${relative(repoRoot, backup)}`);
+  process.exit(1);
 }
-cpSync(shipped, target, { recursive: true });
 
 console.log(`status: ${exists ? "replaced" : "installed"}`);
 if (backup) console.log(`backup: ${relative(repoRoot, backup)}`);

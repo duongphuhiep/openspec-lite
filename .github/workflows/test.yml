@@ -14,15 +14,15 @@ jobs:
       matrix:
         openspec: [lowest, latest]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: "20.19"
       - name: Resolve the OpenSpec version
         id: openspec
         run: |
           if [ "${{ matrix.openspec }}" = "lowest" ]; then
-            v=$(sed -n 's/^openspec-version: *">=\([0-9.]*\).*/\1/p' package/skills/openspec-lite-schema/assets/plan-lite/schema.yaml)
+            v=$(tr -d '\r' < package/skills/openspec-lite-schema/assets/plan-lite/schema.yaml | sed -n 's/^openspec-version: *">=\([0-9.]*\).*/\1/p')
             test -n "$v" || { echo "cannot read the lower bound of openspec-version"; exit 1; }
           else
             v=latest
@@ -39,8 +39,8 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check that the tag matches package/apm.yml
         run: |
-          v=$(sed -n 's/^version: *\([^ ]*\) *$/\1/p' package/apm.yml)
+          v=$(tr -d '\r' < package/apm.yml | sed -n 's/^version: *\([^ ]*\) *$/\1/p')
           test "v$v" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} does not match version $v in package/apm.yml"; exit 1; }

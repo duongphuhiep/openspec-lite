@@ -28,7 +28,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**: Ask: "openspec-lite-propose: fix the typo 'recieve' in README.md."
 
-**Expected**: The agent asks: "This looks small. Implement directly with no change?" Answer yes. No file under `openspec/` is created.
+**Expected**: The agent asks: "This looks small. Implement directly with no change?" Answer yes. The agent creates no file under `openspec/`.
 
 ## 3. Stale preview
 
@@ -70,7 +70,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**: Remove `skip_specs` from `.openspec.yaml` of a finished change. Run `openspec-lite-archive`, and reject each draft.
 
-**Expected**: The agent sets `skip_specs: true`. `openspec validate` passes, and the archive succeeds. No ADR and no spec is written.
+**Expected**: The agent sets `skip_specs: true`. `openspec validate` passes, and the archive succeeds. The agent writes no ADR and no spec.
 
 ## 7. Interrupted upgrade
 
@@ -83,7 +83,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected**:
 
 - After step 2, `.openspec.yaml` still has `schema: plan-lite`, and `skip_specs` is gone.
-- After step 3, the agent keeps `proposal.md` and writes the rest. `tasks.md` has `- [ ]` tasks seeded from the preview. `tasks-preview.md` is deleted.
+- After step 3, the agent keeps `proposal.md` and writes the rest. `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
 
 ## 8. Newer repo schema
@@ -94,11 +94,15 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 ## 9. Schema re-copy
 
-**Steps**: Change `version: 1` to `version: 0` in `openspec/schemas/plan-lite/schema.yaml`. Add a file `openspec/schemas/plan-lite/local-note.txt`. Run `openspec-lite-propose`.
+**Steps**:
+
+1. Change `version: 1` to `version: 0` in `openspec/schemas/plan-lite/schema.yaml`.
+2. Add a file `openspec/schemas/plan-lite/local-note.txt`.
+3. Run `openspec-lite-propose`.
 
 **Expected**:
 
-- The agent tells the user that the schema is replaced (v0 → v1) and asks first.
+- The agent says that it will replace the schema (v0 → v1), and asks first.
 - After yes, `openspec/schemas-backup/plan-lite-v0-<timestamp>/` holds the old folder with `local-note.txt`.
 - `openspec/schemas/plan-lite/` has no `local-note.txt`.
 - The agent reports the backup path and the copied files.

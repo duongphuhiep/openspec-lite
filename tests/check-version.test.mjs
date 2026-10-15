@@ -57,3 +57,26 @@ test("a skill with CRLF line endings passes", () => {
   const r = run(fixture(1, { ...all(marker(1)), "openspec-lite-propose": marker(1).replace(/\n/g, "\r\n") }));
   assert.equal(r.status, 0, r.stdout);
 });
+
+test("an indented marker inside a list passes", () => {
+  const text = "---\nname: x\n---\n\n1. Step\n   2. Compare:\n\n      Shipped schema version: 1\n\n      - more\n";
+  const r = run(fixture(1, all(text)));
+  assert.equal(r.status, 0, r.stdout);
+});
+
+test("a second marker with a wrong number fails", () => {
+  const r = run(fixture(1, { ...all(marker(1)), "openspec-lite-archive": marker(1) + "\nShipped schema version: 2\n" }));
+  assert.equal(r.status, 1);
+  assert.match(r.stdout, /^FAIL openspec-lite-archive: has 2, schema\.yaml has 1$/m);
+});
+
+test("versions compare as numbers", () => {
+  const r = run(fixture("01", all(marker(1))));
+  assert.equal(r.status, 0, r.stdout);
+});
+
+test("a root with no package/ prints one schema.yaml failure", () => {
+  const r = run(mkdtempSync(join(tmpdir(), "empty-")));
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), "FAIL schema.yaml: missing file or version line");
+});

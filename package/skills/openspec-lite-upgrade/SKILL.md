@@ -9,13 +9,13 @@ Upgrade a plan-lite change to spec-driven. The schema switch is the last write, 
 
 ## 1. Common checks
 
-1. **Change selection**: use the change named in the prompt. If no name is given, run `openspec list --json`. If only one active change exists, use it. Otherwise ask.
-2. **Guard**: read `schema` from `openspec/changes/<name>/.openspec.yaml`. If it is not `plan-lite`, stop. The change is already upgraded or is not a plan-lite change.
+1. **Change selection**: use the change named in the prompt. If no name is given, run `openspec list --json`. It does not give the schema, so read `schema` from each change's `.openspec.yaml`. If only one active change exists, use it. Otherwise ask.
+2. **Guard**: read `schema` from `openspec/changes/<name>/.openspec.yaml`. If it is `spec-driven` and `plan.md` still exists, an earlier run stopped after step 3. Do the schema check, then go to step 4 of the upgrade. If it is any other schema that is not `plan-lite`, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
 3. **Schema check**:
    1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml` in the repo.
    2. Compare it with the shipped version:
 
-Shipped schema version: 1
+      Shipped schema version: 1
 
       - The file is missing or its version is lower: run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions.
       - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."

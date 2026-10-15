@@ -107,3 +107,19 @@ test("missing shipped assets exit with code 3", () => {
   const r = install(makeSkill(), makeRepo());
   assert.equal(r.status, 3);
 });
+
+test("a quoted higher repo version still exits with code 2", () => {
+  const repo = makeRepo('"3" # pinned');
+  const r = install(makeSkill(2), repo);
+  assert.equal(r.status, 2);
+  assert.match(r.stdout, /^status: newer$/m);
+});
+
+test("a file system error exits with code 1 and an install: message", () => {
+  const file = join(mkdtempSync(join(tmpdir(), "notdir-")), "repo");
+  writeFileSync(file, "I am a file");
+  const r = install(makeSkill(1), file);
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /^install: /m);
+  assert.doesNotMatch(r.stderr, /at .*install\.mjs/, "no stack trace");
+});

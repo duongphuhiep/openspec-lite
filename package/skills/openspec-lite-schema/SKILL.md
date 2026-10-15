@@ -21,7 +21,7 @@ Read the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped) a
 
 - Repo version higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."
 - Equal: say "The plan-lite schema is already current." and stop. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs this skill again.
-- Repo copy exists and is lower: tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
+- Repo copy exists and is lower, or has no readable version: tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
 - No repo copy: continue.
 
 ## 3. Install
@@ -38,6 +38,7 @@ The first output line is the status:
 - `status: current`: nothing to do.
 - `status: newer` (exit code 2): stop, with the "newer schema" message above.
 - Exit code 3: the shipped assets are damaged. Stop and tell the user to reinstall openspec-lite.
+- Exit code 1, with a line `install: <message>`: a file system error. Stop and show the message. If the output names the old schema folder, tell the user where it is.
 
 ## 4. Archive guidance
 
@@ -53,6 +54,7 @@ operations:
 ```
 
 - If `openspec/config.yaml` is missing, create it with only this block.
+- If the file has no `operations.archive.guidance` key, add the block. `openspec init` writes `operations` only in a comment, so this is the usual case. Keep the other keys and the comments.
 - If `operations.archive.guidance` is a list, add the item if the list does not have it yet. Keep the other items and keys.
 - If `guidance` is a plain string, OpenSpec ignores it. Do not edit it. Show the user how to change it to a list.
 
@@ -62,5 +64,7 @@ Report:
 
 - the status, the copied files, and the backup path, from the script output;
 - the `config.yaml` line that you added, or why you did not add it.
+
+Do not use `git diff` or `git status` to report changes. The repo may not use git.
 
 If there is a backup, tell the user to compare it with the new schema and then delete it. Tell the user to commit `openspec/schemas/plan-lite/` and `openspec/config.yaml` to git.

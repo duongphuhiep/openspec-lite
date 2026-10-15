@@ -915,6 +915,8 @@ This supersedes D63.
 
 **Rationale**: A preview or an upgrade on a spec-driven change would damage it. One common rule replaces four separate rules.
 
+**Status**: D106 lets upgrade resume a spec-driven change that still has `plan.md`.
+
 ---
 
 ## D76: The Tasks Preview Template
@@ -1073,6 +1075,8 @@ This makes D66 precise.
 
 **Rationale**: The agent reads the same line that the script checks, so the marker and the rule are in one place. Frontmatter rules differ between harnesses, and the Agent Skills spec does not define such a field.
 
+**Status**: D106 allows an indented marker, checks every marker in a file, and compares numbers.
+
 ---
 
 ## D88: CI Tests the Lowest and the Latest OpenSpec; the Range Is Closed
@@ -1221,7 +1225,7 @@ This revises D65 and D90.
 
 **Rationale**: `node -e '...'` with inner double quotes breaks in cmd.exe and in Windows PowerShell 5.1. A script file needs no shell quoting and can be tested, as with `plan-hash.mjs` (D72).
 
-**Status**: D101 defines the full contract and drops the re-copy on an equal version. D102 adds the collision suffix.
+**Status**: D101 defines the full contract and drops the re-copy on an equal version. D102 adds the collision suffix. D106 adds exit code 1 and allows a quoted version.
 
 ---
 
@@ -1306,3 +1310,26 @@ This revises D81 and D83.
 This revises D58.
 
 **Rationale**: With ADRs last, a session that ends after `openspec archive` loses the approved ADRs, because they exist only in the conversation. Validation is the step that usually fails, so it still runs first. An orphan ADR is possible only if archive fails after `validate` passed, and the ADR is still a correct decision.
+
+---
+
+## D106: Fixes From the Implementation Review
+
+**Decision**:
+
+- The `Shipped schema version: <n>` marker is indented, so that it stays inside its Markdown list. `check-version.mjs` accepts an indented marker, checks every marker in a file, and compares numbers. If `schema.yaml` has no readable version, it prints one `FAIL schema.yaml` line.
+- `install.mjs` and `check-version.mjs` read `version` with optional quotes and an optional trailing comment.
+- `install.mjs` exits with code 1 on a file system error. It prints `install: <message>` with no stack trace. If the old schema already moved, it names the backup folder.
+- `openspec-lite-schema` adds the archive guidance when `config.yaml` has no `operations.archive.guidance` key. A repo copy with no readable version counts as lower in the skill too, so the user confirms the replace.
+- Upgrade resumes a `spec-driven` change that still has `plan.md`, at the step after the schema switch. This is the one exception to the guard (D75).
+- `apply.instruction` in `design.md` §4 is now a copy of the shipped text. The shipped text adds the decision entry format and the skill name for a preview regeneration.
+- Change selection in each skill reads `schema` from each `.openspec.yaml`.
+- CI uses `actions/checkout@v5` and `actions/setup-node@v5`, and strips CR before it parses `schema.yaml` and `apm.yml`.
+- `schema.test.mjs` runs `openspec` with no shell, and its `plan-hash.mjs` test never skips.
+
+**Rationale**: A fresh-context review of the implementation found each case, and I reproduced the main ones:
+
+- An unindented marker ends the nested list. markdown-it rendered the next two bullets as a code block.
+- A fresh `openspec init` writes `operations` only in a comment, so the skill had no rule for the usual case.
+- A file as repo root crashed `install.mjs` with a stack trace.
+- `version: "3"` was read as no version, so a newer repo copy was replaced instead of refused.

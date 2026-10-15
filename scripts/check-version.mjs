@@ -1,6 +1,7 @@
 // Usage: node scripts/check-version.mjs [root]
-// Checks that each workflow skill holds "Shipped schema version: <n>" and that <n> equals the schema version.
-// Prints "ok <skill> <n>" or "FAIL <skill>: <reason>" per skill. Exits with code 1 on any failure.
+// Checks that each workflow skill holds "Shipped schema version: <n>" and that each <n> equals the schema version.
+// Prints "ok <skill> <n>" or "FAIL <skill>: <reason>" per skill. If schema.yaml has no readable version, it prints
+// "FAIL schema.yaml: missing file or version line" only. Exits with code 1 on any failure.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -21,22 +22,26 @@ function read(path) {
   }
 }
 
+// Same version rule as install.mjs: optional quotes and an optional trailing comment.
 const schema = read(join(skillsDir, "openspec-lite-schema", "assets", "plan-lite", "schema.yaml"));
-const schemaVersion = schema?.match(/^version:\s*(\d+)\s*$/m)?.[1];
+const schemaVersion = schema?.match(/^version:\s*["']?(\d+)["']?\s*(?:#.*)?$/m)?.[1];
 if (!schemaVersion) {
   console.log("FAIL schema.yaml: missing file or version line");
   process.exit(1);
 }
+const expected = Number(schemaVersion);
 
 let failed = false;
 for (const skill of SKILLS) {
   const text = read(join(skillsDir, skill, "SKILL.md"));
-  const n = text?.match(/^Shipped schema version: (\d+)$/m)?.[1];
+  // The marker can be indented, so that it stays inside a Markdown list.
+  const found = text === null ? [] : [...text.matchAll(/^\s*Shipped schema version: (\d+)\s*$/gm)].map((m) => Number(m[1]));
+  const wrong = found.filter((n) => n !== expected);
   if (text === null) console.log(`FAIL ${skill}: SKILL.md not found`);
-  else if (!n) console.log(`FAIL ${skill}: no "Shipped schema version" line`);
-  else if (n !== schemaVersion) console.log(`FAIL ${skill}: has ${n}, schema.yaml has ${schemaVersion}`);
+  else if (found.length === 0) console.log(`FAIL ${skill}: no "Shipped schema version" line`);
+  else if (wrong.length > 0) console.log(`FAIL ${skill}: has ${wrong[0]}, schema.yaml has ${expected}`);
   else {
-    console.log(`ok ${skill} ${n}`);
+    console.log(`ok ${skill} ${expected}`);
     continue;
   }
   failed = true;
