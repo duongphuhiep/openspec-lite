@@ -4,7 +4,7 @@
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { appendFileSync, cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -72,4 +72,43 @@ test("design.md holds the exact shipped apply.instruction text", () => {
     .trimEnd();
   const design = read("../docs/design.md").split("This is the exact text in `schema.yaml`:\n\n```text\n")[1]?.split("\n```")[0];
   assert.equal(design, shipped);
+});
+
+test("upgrade path: spec-driven instructions on a plan-lite change", { skip }, () => {
+  const dir = repo();
+  assert.equal(os(dir, ["new", "change", "up", "--schema", "plan-lite"]).status, 0);
+  for (const [artifact, outputPath] of [
+    ["proposal", "proposal.md"],
+    ["specs", "specs/**/*.md"],
+    ["design", "design.md"],
+    ["tasks", "tasks.md"],
+  ]) {
+    const r = json(dir, ["instructions", artifact, "--change", "up", "--schema", "spec-driven"]);
+    assert.equal(r.outputPath, outputPath, artifact);
+  }
+  assert.match(readFileSync(join(dir, "openspec", "changes", "up", ".openspec.yaml"), "utf8"), /^schema: plan-lite$/m);
+});
+
+test("archive path: a plan-lite change with a delta validates and merges", { skip }, () => {
+  const dir = repo();
+  assert.equal(os(dir, ["new", "change", "promo", "--schema", "plan-lite"]).status, 0);
+  const change = join(dir, "openspec", "changes", "promo");
+  writeFileSync(join(change, "plan.md"), "## Goal\nX\n## Non-Goals\n## Constraints\n## Open Questions\n## Decisions\n");
+  mkdirSync(join(change, "specs", "auth"), { recursive: true });
+  writeFileSync(
+    join(change, "specs", "auth", "spec.md"),
+    "## ADDED Requirements\n\n### Requirement: Login\nThe system SHALL log in users.\n\n#### Scenario: valid login\n- **WHEN** the password is valid\n- **THEN** the user is logged in\n",
+  );
+  const v = os(dir, ["validate", "promo"]);
+  assert.equal(v.status, 0, v.out);
+  const a = os(dir, ["archive", "promo", "--yes"]);
+  assert.equal(a.status, 0, a.out);
+  assert.match(readFileSync(join(dir, "openspec", "specs", "auth", "spec.md"), "utf8"), /Requirement: Login/);
+});
+
+test("validate fails on a plan-lite change with no deltas and no skip_specs", { skip }, () => {
+  const dir = repo();
+  assert.equal(os(dir, ["new", "change", "bare", "--schema", "plan-lite"]).status, 0);
+  writeFileSync(join(dir, "openspec", "changes", "bare", "plan.md"), "## Goal\nX\n");
+  assert.notEqual(os(dir, ["validate", "bare"]).status, 0);
 });

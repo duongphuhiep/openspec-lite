@@ -10,7 +10,10 @@ Upgrade a plan-lite change to spec-driven. The schema switch is the last write, 
 ## 1. Common checks
 
 1. **Change selection**: use the change named in the prompt. If no name is given, run `openspec list --json`. It does not give the schema, so read `schema` from each change's `.openspec.yaml`. If only one active change exists, use it. Otherwise ask.
-2. **Guard**: read `schema` from `openspec/changes/<name>/.openspec.yaml`. If it is `spec-driven` and `plan.md` still exists, an earlier run may have stopped after step 3. A finished upgrade can also keep `plan.md`. Ask the user: "Resume the upgrade of <name> at step 4?" On no, stop. On yes, do the schema check, then go to step 4 of the upgrade. If it is any other schema that is not `plan-lite`, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
+2. **Guard**: read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cases:
+   - `plan-lite`: continue.
+   - `spec-driven`, and `plan.md` still exists: an earlier run may have stopped after step 3. A finished upgrade can also keep `plan.md`. Ask the user: "Resume the upgrade of <name> at step 4?" On no, stop. On yes, do the schema check, then go to step 4 of the upgrade.
+   - Any other case, including `spec-driven` with no `plan.md`: stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
 3. **Schema check**:
    1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml` in the repo.
    2. Compare it with the shipped version:
@@ -33,6 +36,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch is the last write, 
       - Use the headers `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`, or `## RENAMED Requirements`.
       - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
       - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit it.
+      - If `plan.md` has no requirement for a spec, ask the user for at least one. If the user has none, add `skip_specs: true` back to `<dir>/.openspec.yaml`, and say so in the summary. Without a delta and without the flag, `validate` fails.
    3. `design.md`: Non-Goals go to `## Goals / Non-Goals`. Each `### Decision:` entry of `plan.md` goes to `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
    4. `tasks.md`: if `<dir>/tasks-preview.md` exists, use it as the seed. Remove its two header comment lines. Add `[ ]` to each task line, for example `- [ ] 1.1 <task>`. Then delete `tasks-preview.md`. If no preview exists, write `tasks.md` from the template. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here. Keep `tasks.md`, and delete `tasks-preview.md`.
 3. Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
@@ -46,5 +50,5 @@ In the summary:
 - List the files that you wrote and deleted.
 - Ask the user to review all artifacts.
 - Ask for an extra review of `tasks.md`, because it is a contract, not a reference.
-- Say that `skip_specs` was removed.
+- Say if `skip_specs` was removed, or put back because the change has no spec delta.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.

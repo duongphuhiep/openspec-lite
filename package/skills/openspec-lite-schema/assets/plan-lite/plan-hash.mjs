@@ -15,14 +15,19 @@ try {
 }
 text = text.replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
 
-// Split into { title, body } sections at "## " lines outside ``` or ~~~ fences.
+// Split into { title, body } sections at "## " lines outside fenced code blocks.
+// As in CommonMark, a fence closes only with the same character, at least the same length, and no info string.
 const sections = [];
 let fence = null;
 for (const line of text.split("\n")) {
-  const f = line.match(/^\s*(`{3,}|~{3,})/);
-  if (f && (fence === null || f[1][0] === fence[0])) fence = fence === null ? f[1] : null;
-  if (fence === null && !f && line.startsWith("## ")) sections.push({ title: line.slice(3).trim(), body: [] });
-  else sections.at(-1)?.body.push(line);
+  const f = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+  if (fence === null && f) fence = f[1];
+  else if (fence !== null && f && f[1][0] === fence[0] && f[1].length >= fence.length && f[2].trim() === "") fence = null;
+  else if (fence === null && line.startsWith("## ")) {
+    sections.push({ title: line.slice(3).trim(), body: [] });
+    continue;
+  }
+  sections.at(-1)?.body.push(line);
 }
 
 const titles = sections.map((s) => s.title);

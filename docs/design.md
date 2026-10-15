@@ -86,7 +86,7 @@ openspec-lite/
 - `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, and Decisions do not change the hash. A changed Constraint does. A missing heading or a missing file exits with code 1.
 - `check-version.test.mjs`: runs the script on fixture folders. A match passes. A mismatch fails. A missing marker line fails. A missing skill fails. A skill with CRLF line endings passes. An indented marker passes. A second marker with a wrong number fails. `01` equals `1`. A root with no `package/` prints one `schema.yaml` failure (D106).
 - `install.test.mjs`: a first install copies. A lower repo version moves to a timestamped backup, then copies. An equal version prints `status: current`. A higher version exits with code 2. Missing shipped assets exit with code 3. A second backup with the same timestamp gets a `-2` suffix. A quoted higher version with a comment exits with code 2. A file system error exits with code 1, with an `install:` message and no stack trace (D96, D98, D102, D106).
-- `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
+- `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It also tests the upgrade path (`instructions <artifact> --schema spec-driven` on a plan-lite change), an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs` (D108). The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
 
 ## 3. Skill Rules
 
@@ -103,7 +103,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 **Change selection** (D61): Use the change named in the prompt. If no name is given and only one active change exists, use it. Otherwise ask. List active changes with `openspec list --json`. It does not give the schema, so read `schema` from each change's `.openspec.yaml` (D99).
 
-**Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106). A finished upgrade can also keep `plan.md`, so upgrade asks the user before it resumes (D107).
+**Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. A `spec-driven` change with no `plan.md` is refused, like any other schema (D108). An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106). A finished upgrade can also keep `plan.md`, so upgrade asks the user before it resumes (D107).
 
 **Skill chaining** (D57): To run another skill, invoke it if the harness can. If the harness cannot, tell the user which skill to run, and stop.
 
@@ -217,7 +217,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 1. Remove `skip_specs: true` from `.openspec.yaml`. While it is set, the CLI forbids spec files (D99).
 2. Write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. On a resumed run, keep each artifact that already exists, and write only the missing ones. Follow the `instruction` field of each result.
    1. `proposal.md`: from Goal and the scope. Non-Goals go to `design.md` → `## Goals / Non-Goals`.
-   2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
+   2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. If `plan.md` has no requirement, ask the user for one. If the user has none, put `skip_specs: true` back and say so in the summary (D108). Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
    3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. Then delete `tasks-preview.md`. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here: keep `tasks.md`, and delete `tasks-preview.md` (D107).
 3. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
 4. Delete each `plan.md` section whose content moved. Keep a section that has no slot, for example open questions that are still open. If no section is left, delete `plan.md`.
@@ -289,7 +289,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 
 - Usage: `node plan-hash.mjs <plan.md>`. It prints a 64-character hex SHA-256.
 - It strips a UTF-8 BOM and changes CRLF to LF.
-- A `## ` line outside a ``` or ~~~ fence starts a section. A `## ` line inside a fence is content.
+- A `## ` line outside a ``` or ~~~ fence starts a section. A `## ` line inside a fence is content. As in CommonMark, a fence closes only with the same character, at least the same length, and no info string (D108).
 - It hashes only the `Goal`, `Non-Goals`, and `Constraints` sections. It collapses whitespace and sorts the sections, so whitespace and section order do not change the hash.
 - It exits with code 1 if the file cannot be read, or if one of the three headings is missing. The message names each missing heading.
 - `tests/plan-hash.test.mjs` covers each rule.

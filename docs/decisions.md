@@ -1355,3 +1355,23 @@ This revises D58.
 - A fenced `## Constraints` passed the heading check.
 
 Node 20 reached end of life on 2026-04-30, and development uses Node 24.
+
+---
+
+## D108: Fixes From Review Round 1
+
+**Decision**:
+
+- The upgrade guard has three explicit cases: `plan-lite` continues; `spec-driven` with `plan.md` asks to resume; any other case stops, including `spec-driven` with no `plan.md`.
+- When `plan.md` has no requirement, upgrade asks the user for one. If the user has none, upgrade puts `skip_specs: true` back and says so.
+- `plan-hash.mjs` closes a fence only as CommonMark does: the same character, at least the same length, and no info string.
+- `schema.test.mjs` covers the upgrade CLI path, an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs`.
+
+This revises D46, D97, and D99 for upgrade.
+
+**Rationale**: A fresh `review-commit-range` round found each case:
+
+- `validate` fails on a spec-driven change with no delta and no `skip_specs` ("Change must have at least one delta"). Some upgrade signals, for example a handoff, give no requirement.
+- "Any other schema" could be read to let a finished upgrade continue.
+- A nested fence or a fence with an info string closed the block early. A `## Constraints` line inside the block then counted as a heading. Verified by test.
+- CI runs `latest` OpenSpec, so the upgrade and merge paths need automated tests, not only a manual scenario.

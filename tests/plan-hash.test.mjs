@@ -67,3 +67,13 @@ test("a heading inside a fenced code block is content, not a heading", () => {
   const withBlock = (inner) => hash(base.replace("Keep Z", "Keep Z\n~~~\n## " + inner + "\n~~~")).stdout;
   assert.notEqual(withBlock("A"), withBlock("B"), "fenced content in Constraints is hashed");
 });
+
+test("a fence closes only with the same character, at least the same length, and no info string", () => {
+  const nested = "## Goal\nX\n## Non-Goals\n````md\n```\n## Constraints\n```\n````\n";
+  const infoString = "## Goal\nX\n## Non-Goals\n```\n```js\n## Constraints\n```\n";
+  for (const plan of [nested, infoString]) {
+    const r = hash(plan);
+    assert.equal(r.status, 1, plan);
+    assert.match(r.stderr, /missing heading: ## Constraints/);
+  }
+});
