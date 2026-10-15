@@ -41,7 +41,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - name: Check that the tag matches package/apm.yml
         run: |
           v=$(tr -d '\r' < package/apm.yml | sed -n 's/^version: *\([^ ]*\) *$/\1/p')
           test "v$v" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} does not match version $v in package/apm.yml"; exit 1; }
+      - name: Check that a schema asset change bumps the schema version
+        run: |
+          prev=$(git describe --tags --abbrev=0 --match 'v*' HEAD^ 2>/dev/null) || { echo "no previous tag"; exit 0; }
+          assets=package/skills/openspec-lite-schema/assets/plan-lite
+          if git diff --quiet "$prev" HEAD -- "$assets"; then echo "no asset change since $prev"; exit 0; fi
+          old=$(git show "$prev:$assets/schema.yaml" | tr -d '\r' | sed -n 's/^version: *\([0-9]*\).*/\1/p')
+          new=$(tr -d '\r' < "$assets/schema.yaml" | sed -n 's/^version: *\([0-9]*\).*/\1/p')
+          test "$new" -gt "$old" || { echo "files under $assets changed since $prev, but version stayed $old"; exit 1; }

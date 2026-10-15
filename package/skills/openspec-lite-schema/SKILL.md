@@ -19,7 +19,7 @@ Find `<skillDir>`, the folder of this `SKILL.md`. It holds `scripts/install.mjs`
 
 Read the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped) and of `openspec/schemas/plan-lite/schema.yaml` (repo).
 
-- Repo version higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."
+- Repo version higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."
 - Equal: say "The plan-lite schema is already current." Skip section 3, and go to section 4. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs this skill again.
 - Repo copy exists and is lower, or has no readable version: tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
 - No repo copy: continue.

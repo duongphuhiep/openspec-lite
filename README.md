@@ -138,7 +138,7 @@ After an upgrade, archive with stock `/opsx:archive`.
 
 ## Compatibility
 
-Each major tag ships one schema version. Run `apm update` to get the newest release in your range.
+Run `apm update` to get the newest release in your range. A minor or patch release can update the plan-lite schema. The skills then replace the copy in your repo, after they ask you. Only a breaking schema change needs a new major tag.
 
 | openspec-lite major tag | OpenSpec CLI     |
 | ----------------------- | ---------------- |

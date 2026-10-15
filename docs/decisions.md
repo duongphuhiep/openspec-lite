@@ -993,6 +993,8 @@ This revises D56, D67, and D70.
 
 **Rationale**: `apm update` moves inside the range with one command (`docs/facts.md`). Major tags carry the breaking signal, so one schema version maps to one major tag.
 
+**Status**: D109 lets any tag bump the schema version. Only a breaking schema change needs a new major tag.
+
 **Status**: D93: `apm update` cannot cross a major tag, so the "newer schema" message tells the user to edit the ref instead.
 
 **Status**: D83 changes the install path to `<owner>/openspec-lite/package#^1.0.0`.
@@ -1375,3 +1377,18 @@ This revises D46, D97, and D99 for upgrade.
 - "Any other schema" could be read to let a finished upgrade continue.
 - A nested fence or a fence with an info string closed the block early. A `## Constraints` line inside the block then counted as a heading. Verified by test.
 - CI runs `latest` OpenSpec, so the upgrade and merge paths need automated tests, not only a manual scenario.
+
+---
+
+## D109: Each Schema Asset Change Bumps the Schema Version, in Any Tag
+
+**Decision**:
+
+- Each change to a file under `assets/plan-lite/` bumps the schema `version` by 1. This includes `plan-hash.mjs`, `apply.instruction`, and `templates/plan.md`.
+- Any tag can ship the bump: major, minor, or patch. Only a breaking schema change needs a new major tag.
+- The "newer schema" message says: "Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."
+- On a tag push, CI fails if a file under `assets/plan-lite/` changed since the previous tag but `version` did not.
+
+This revises D81 and D93.
+
+**Rationale**: The repo schema updates only when the shipped `version` is higher. Under D81, a fix in a patch tag had to keep the version, so it never reached `openspec/schemas/plan-lite/` in user repos. Stock `/opsx:apply` then kept the old `apply.instruction`, with no warning. With the bump in any tag, `apm update` delivers the new skills, and the workflow skills replace the old repo copy. A teammate with older skills sees "newer" and runs `apm update` inside the same range. A content hash was rejected, because each skill would then hold a hash instead of a number.
