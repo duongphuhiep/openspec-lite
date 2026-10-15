@@ -252,7 +252,7 @@ const tracksFile = applyConfig?.tracks ?? null;
   - `agent-data/workflows/<name>/` for grok-bot
   - `--legacy-skill-paths` restores the old per-target folders.
 - The whole skill folder is copied with `shutil.copytree`, so `assets/` stays next to `SKILL.md` (`skills.md:121-124`, `src/apm_cli/integration/skill_integrator.py:369`).
-- A git repo with `skills/<name>/SKILL.md` needs no root `apm.yml`. If `apm.yml` exists, `name` and `version` are required (`reference/package-types.md:14-16`, `reference/manifest-schema.md:47-48`).
+- The docs say a git repo with `skills/<name>/SKILL.md` needs no root `apm.yml`. If `apm.yml` exists, `name` and `version` are required (`reference/package-types.md:14-16`, `reference/manifest-schema.md:47-48`). **But see "Tested Installs" below:** a local folder with only `skills/<name>/` is rejected without `apm.yml`.
 
 ---
 
@@ -348,3 +348,19 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - The project schema folder is exactly `<projectRoot>/openspec/schemas/`.
 - `isSchemaDir` treats every folder (or folder symlink) in it as a schema. It skips only the names of its own fork temp folders: `.fork-staging-*` and `*.fork-backup-*`.
 - So a backup folder inside `openspec/schemas/` appears as a schema. A folder outside it, for example `openspec/schemas-backup/`, is not scanned.
+
+---
+
+## Microsoft APM: Tested Installs (APM 0.33.0)
+
+**Source**: runs on macOS with `apm` 0.33.0, 2026-10-15. Consumers were empty `git init` folders in `mktemp -d`.
+
+- **A local folder with only `skills/<name>/SKILL.md` is rejected**: "no apm.yml, SKILL.md, or plugin.json found". With a minimal `apm.yml` (`name`, `version`) in that folder, the install works. Not tested for a remote git subdirectory, because that needs a published repo.
+- **Deploy paths**: `--target claude,copilot` deployed each skill to `.claude/skills/<name>/` and `.agents/skills/<name>/`. `assets/` stayed next to `SKILL.md`. `LICENSE` and `apm.yml` reached `apm_modules/` but were not deployed.
+- **`file://` URLs do not parse**: `file:///…/repo.git/package#^1.0.0` failed with "Invalid shorthand port". Local paths (`./path`, `/abs/path`) work but skip git.
+- **Full-repo install** (`anthropics/skills`): `apm_modules/anthropics/skills/` held the whole tree, including `README.md`, `spec/`, and `template/` (887 files).
+- **Subdirectory install** (`anthropics/skills/skills/xlsx`):
+  - `apm_modules/` held only `skills/xlsx/`.
+  - The cache kept a partial database (`db_v1/<id>__p`, `.promisor` packs, 0 blobs) and a sparse checkout with cone `skills/xlsx`.
+  - The sparse checkout downloaded 56 blobs: the 53 files under `skills/xlsx/` and the 3 files at the repo root (`.gitignore`, `README.md`, `THIRD_PARTY_NOTICES.md`). Git cone mode always includes root-level files. Other root folders were not downloaded.
+- **Cache location on macOS**: `~/Library/Caches/apm/git/`.
