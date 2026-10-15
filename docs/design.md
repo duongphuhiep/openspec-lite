@@ -60,8 +60,8 @@ openspec-lite/
 - `schema.yaml` is the only declaration of compatible OpenSpec versions (D48).
 - The license is MIT. The one `LICENSE` file is `package/LICENSE`, with the line "Copyright (c) 2026 DUONG Phu-Hiep". The root README links to it (D89, D100).
 - README has a compatibility table: each openspec-lite major tag with its `openspec-version` range (D67, D81).
-- CI (`.github/workflows/test.yml`) runs on push and pull request (D85, D88):
-  - It uses Node 20.19, the OpenSpec minimum.
+- CI (`.github/workflows/test.yml`) runs on a push to `main`, on a `v*` tag push, and on each pull request (D85, D88, D107):
+  - It runs a Node matrix: 20.19 (the OpenSpec minimum) and 24 (D107).
   - It runs a matrix of two `@fission-ai/openspec` versions: the lower bound of `openspec-version` in `schema.yaml`, read by a CI step, and `latest`.
   - It runs `node scripts/check-version.mjs`. Contract: `node scripts/check-version.mjs [root]`, default `.`. It checks the five workflow skills by name under `<root>/package/skills/`. It prints `ok <skill> <n>` or `FAIL <skill>: <reason>` per skill, and exits with code 1 on any failure (D99). If `schema.yaml` has no readable version, it prints only `FAIL schema.yaml: missing file or version line`. The script reads each line `Shipped schema version: <n>` in each workflow skill. The line can be indented. It normalizes CRLF to LF first. It compares numbers. It fails if a workflow skill has no marker line, or if any number differs from `version` in `assets/plan-lite/schema.yaml` (D66, D87, D93, D106).
   - It runs `node --test` from the repo root. Node finds `tests/*.test.mjs`. `node --test tests/` fails on Node 24 (D84, D99).
@@ -77,8 +77,8 @@ openspec-lite/
     7. Upgrade with a preview, interrupted after it writes `proposal.md`, then run again: it resumes and validates.
     8. Newer repo schema: each workflow skill stops with the "edit the ref" message.
     9. Schema re-copy: the old folder moves to `openspec/schemas-backup/`.
-    10. Real APM install from the tag (D83).
-  - Install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83).
+    10. Real APM install from the tag (D83). Run this one right after the tag push (D107).
+  - Right after the tag push, install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83, D107).
 
 ## 2a. Tests (D84)
 
@@ -103,7 +103,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 **Change selection** (D61): Use the change named in the prompt. If no name is given and only one active change exists, use it. Otherwise ask. List active changes with `openspec list --json`. It does not give the schema, so read `schema` from each change's `.openspec.yaml` (D99).
 
-**Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106).
+**Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106). A finished upgrade can also keep `plan.md`, so upgrade asks the user before it resumes (D107).
 
 **Skill chaining** (D57): To run another skill, invoke it if the harness can. If the harness cannot, tell the user which skill to run, and stop.
 
@@ -131,7 +131,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
   3. If no path has the folder, stop and tell the user.
 - Then compare the repo version with the shipped version. Read the shipped version from `<skillDir>/assets/plan-lite/schema.yaml` (D93, D99):
   - Higher: stop, with the same message as the schema check.
-  - Equal: say "already current" and stop. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs the skill again (D101).
+  - Equal: say "already current". Skip the install, but still do the archive guidance step, which is idempotent. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs the skill again (D101, D107).
   - Lower, missing, or no readable version: continue.
 - If a repo copy exists, tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
 - Run the install script from the repo root. Do not read the schema content into the conversation (D98):
@@ -162,7 +162,8 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
   This guard is best effort. The stock archive skill treats guidance as optional advice.
 
   - If `openspec/config.yaml` is missing, create it with only this block. `openspec new change` keeps such a file.
-  - If the file has no `operations.archive.guidance` key, add the block, and keep the other keys and comments. `openspec init` writes `operations` only in a comment, so this is the usual case (D106).
+  - If the file has no `operations` key, add the whole block, and keep the other keys and comments. `openspec init` writes `operations` only in a comment, so this is the usual case (D106).
+  - If `operations` exists without `archive`, or `operations.archive` exists without `guidance`, add only the missing part under the existing key. Never add a second `operations:` key: OpenSpec then ignores the whole file (D107).
   - If `guidance` is a plain string, OpenSpec ignores it. Do not edit it. Show the user how to change it to a list (D99).
 
 - Report the copied files, the backup path, and the `config.yaml` line. Do not use `git diff` or `git status`. Tell the user to compare and delete the backup.
@@ -217,7 +218,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 2. Write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. On a resumed run, keep each artifact that already exists, and write only the missing ones. Follow the `instruction` field of each result.
    1. `proposal.md`: from Goal and the scope. Non-Goals go to `design.md` → `## Goals / Non-Goals`.
    2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
-   3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. Then delete `tasks-preview.md`.
+   3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. Then delete `tasks-preview.md`. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here: keep `tasks.md`, and delete `tasks-preview.md` (D107).
 3. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
 4. Delete each `plan.md` section whose content moved. Keep a section that has no slot, for example open questions that are still open. If no section is left, delete `plan.md`.
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
@@ -284,38 +285,14 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 ```
 
-`plan-hash.mjs` (D72, D91):
+`plan-hash.mjs` (D72, D91, D107) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:
 
-```js
-// Usage: node plan-hash.mjs <plan.md>
-// Hashes only Goal, Non-Goals, and Constraints. Ignores line endings, whitespace, and section order.
-// Exits with code 1 if the file cannot be read or one of these headings is missing.
-import { readFileSync } from "node:fs";
-import { createHash } from "node:crypto";
-
-const KEEP = ["Goal", "Non-Goals", "Constraints"];
-let text;
-try {
-  text = readFileSync(process.argv[2], "utf8");
-} catch {
-  console.error(`plan-hash: cannot read ${process.argv[2]}`);
-  process.exit(1);
-}
-text = text.replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
-const sections = text.split(/^## /m).slice(1);
-const titles = sections.map((s) => s.split("\n")[0].trim());
-const missing = KEEP.filter((k) => !titles.includes(k));
-if (missing.length > 0) {
-  console.error(`plan-hash: missing heading: ${missing.map((k) => `## ${k}`).join(", ")}`);
-  process.exit(1);
-}
-const kept = sections
-  .filter((s) => KEEP.includes(s.split("\n")[0].trim()))
-  .map((s) => s.replace(/\s+/g, " ").trim())
-  .sort();
-console.log(createHash("sha256").update(kept.join("\n")).digest("hex"));
-```
-
+- Usage: `node plan-hash.mjs <plan.md>`. It prints a 64-character hex SHA-256.
+- It strips a UTF-8 BOM and changes CRLF to LF.
+- A `## ` line outside a ``` or ~~~ fence starts a section. A `## ` line inside a fence is content.
+- It hashes only the `Goal`, `Non-Goals`, and `Constraints` sections. It collapses whitespace and sorts the sections, so whitespace and section order do not change the hash.
+- It exits with code 1 if the file cannot be read, or if one of the three headings is missing. The message names each missing heading.
+- `tests/plan-hash.test.mjs` covers each rule.
 `templates/plan.md` (D10):
 
 ```markdown

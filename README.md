@@ -142,7 +142,7 @@ Each major tag ships one schema version. Run `apm update` to get the newest rele
 
 | openspec-lite major tag | OpenSpec CLI     |
 | ----------------------- | ---------------- |
-| (unreleased)            | `>=1.9.0 <2.0.0` |
+| v1                      | `>=1.9.0 <2.0.0` |
 
 ## Development
 

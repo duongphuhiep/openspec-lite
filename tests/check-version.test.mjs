@@ -1,17 +1,20 @@
-import { test } from "node:test";
+import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+const tmpRoot = mkdtempSync(join(tmpdir(), "openspec-lite-test-"));
+after(() => rmSync(tmpRoot, { recursive: true, force: true }));
 
 const script = fileURLToPath(new URL("../scripts/check-version.mjs", import.meta.url));
 const WORKFLOW = ["propose", "tasks-preview", "apply", "upgrade", "archive"].map((a) => `openspec-lite-${a}`);
 
 // A fixture root with package/skills/. `skills` maps a skill name to its SKILL.md text.
 function fixture(schemaVersion, skills) {
-  const root = mkdtempSync(join(tmpdir(), "check-version-"));
+  const root = mkdtempSync(join(tmpRoot, "check-version-"));
   const assets = join(root, "package", "skills", "openspec-lite-schema", "assets", "plan-lite");
   mkdirSync(assets, { recursive: true });
   writeFileSync(join(assets, "schema.yaml"), `name: plan-lite\nversion: ${schemaVersion}\n`);
@@ -76,7 +79,7 @@ test("versions compare as numbers", () => {
 });
 
 test("a root with no package/ prints one schema.yaml failure", () => {
-  const r = run(mkdtempSync(join(tmpdir(), "empty-")));
+  const r = run(mkdtempSync(join(tmpRoot, "empty-")));
   assert.equal(r.status, 1);
   assert.equal(r.stdout.trim(), "FAIL schema.yaml: missing file or version line");
 });

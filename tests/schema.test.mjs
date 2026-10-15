@@ -1,20 +1,23 @@
 // Runs the real openspec CLI on the shipped plan-lite schema in a temp repo.
 // The CLI test skips when openspec is not installed, but fails when the CI environment variable is set.
 // ponytail: no shell, so on Windows the openspec .cmd shim is not found. CI runs on Linux.
-import { test } from "node:test";
+import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { appendFileSync, cpSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { appendFileSync, cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+const tmpRoot = mkdtempSync(join(tmpdir(), "openspec-lite-test-"));
+after(() => rmSync(tmpRoot, { recursive: true, force: true }));
 
 const assets = fileURLToPath(new URL("../package/skills/openspec-lite-schema/assets/plan-lite/", import.meta.url));
 const hasOpenspec = spawnSync("openspec", ["--version"]).status === 0;
 const skip = !hasOpenspec && !process.env.CI ? "openspec CLI not installed" : false;
 
 function repo() {
-  const dir = mkdtempSync(join(tmpdir(), "schema-test-"));
+  const dir = mkdtempSync(join(tmpRoot, "schema-test-"));
   spawnSync("git", ["init", "-q"], { cwd: dir });
   cpSync(assets, join(dir, "openspec", "schemas", "plan-lite"), { recursive: true });
   return dir;

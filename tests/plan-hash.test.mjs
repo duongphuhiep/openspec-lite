@@ -1,15 +1,18 @@
-import { test } from "node:test";
+import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+const tmpRoot = mkdtempSync(join(tmpdir(), "openspec-lite-test-"));
+after(() => rmSync(tmpRoot, { recursive: true, force: true }));
+
 const script = fileURLToPath(
   new URL("../package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs", import.meta.url),
 );
-const dir = mkdtempSync(join(tmpdir(), "plan-hash-"));
+const dir = mkdtempSync(join(tmpRoot, "plan-hash-"));
 let n = 0;
 
 function hash(content) {
@@ -54,4 +57,13 @@ test("a missing file exits with code 1", () => {
   const r = spawnSync(process.execPath, [script, join(dir, "nope.md")], { encoding: "utf8" });
   assert.equal(r.status, 1);
   assert.match(r.stderr, /cannot read/);
+});
+
+test("a heading inside a fenced code block is content, not a heading", () => {
+  const fenced = "## Goal\nX\n## Non-Goals\n```md\n## Constraints\n```\n";
+  const r = hash(fenced);
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /missing heading: ## Constraints/);
+  const withBlock = (inner) => hash(base.replace("Keep Z", "Keep Z\n~~~\n## " + inner + "\n~~~")).stdout;
+  assert.notEqual(withBlock("A"), withBlock("B"), "fenced content in Constraints is hashed");
 });

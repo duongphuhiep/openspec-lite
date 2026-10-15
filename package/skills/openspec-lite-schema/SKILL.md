@@ -20,7 +20,7 @@ Find `<skillDir>`, the folder of this `SKILL.md`. It holds `scripts/install.mjs`
 Read the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped) and of `openspec/schemas/plan-lite/schema.yaml` (repo).
 
 - Repo version higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."
-- Equal: say "The plan-lite schema is already current." and stop. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs this skill again.
+- Equal: say "The plan-lite schema is already current." Skip section 3, and go to section 4. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs this skill again.
 - Repo copy exists and is lower, or has no readable version: tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
 - No repo copy: continue.
 
@@ -54,7 +54,10 @@ operations:
 ```
 
 - If `openspec/config.yaml` is missing, create it with only this block.
-- If the file has no `operations.archive.guidance` key, add the block. `openspec init` writes `operations` only in a comment, so this is the usual case. Keep the other keys and the comments.
+- If the file has no `operations` key, add the whole block at the end. `openspec init` writes `operations` only in a comment, so this is the usual case. Keep the other keys and the comments.
+- If `operations` exists but has no `archive` key, add `archive:` and its `guidance:` list under the existing `operations`.
+- If `operations.archive` exists but has no `guidance` key, add `guidance:` and the item under it.
+- Never add a second `operations:` key. OpenSpec then ignores the whole `config.yaml`.
 - If `operations.archive.guidance` is a list, add the item if the list does not have it yet. Keep the other items and keys.
 - If `guidance` is a plain string, OpenSpec ignores it. Do not edit it. Show the user how to change it to a list.
 

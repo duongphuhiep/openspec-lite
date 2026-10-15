@@ -2,7 +2,7 @@ name: test
 
 on:
   push:
-    branches: ["**"]
+    branches: [main]
     tags: ["v*"]
   pull_request:
 
@@ -12,12 +12,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        node: ["20.19", "24"]
         openspec: [lowest, latest]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: "20.19"
+          node-version: ${{ matrix.node }}
       - name: Resolve the OpenSpec version
         id: openspec
         run: |

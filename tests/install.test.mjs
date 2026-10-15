@@ -1,10 +1,13 @@
-import { test } from "node:test";
+import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+const tmpRoot = mkdtempSync(join(tmpdir(), "openspec-lite-test-"));
+after(() => rmSync(tmpRoot, { recursive: true, force: true }));
 
 const realScript = fileURLToPath(
   new URL("../package/skills/openspec-lite-schema/scripts/install.mjs", import.meta.url),
@@ -12,7 +15,7 @@ const realScript = fileURLToPath(
 
 // A fake skill folder with scripts/install.mjs and assets/plan-lite/ at the given version.
 function makeSkill(version) {
-  const skill = mkdtempSync(join(tmpdir(), "skill-"));
+  const skill = mkdtempSync(join(tmpRoot, "skill-"));
   mkdirSync(join(skill, "scripts"));
   copyFileSync(realScript, join(skill, "scripts", "install.mjs"));
   if (version !== undefined) {
@@ -24,7 +27,7 @@ function makeSkill(version) {
 }
 
 function makeRepo(version) {
-  const repo = mkdtempSync(join(tmpdir(), "repo-"));
+  const repo = mkdtempSync(join(tmpRoot, "repo-"));
   if (version !== undefined) {
     const dir = join(repo, "openspec", "schemas", "plan-lite");
     mkdirSync(dir, { recursive: true });
@@ -116,10 +119,26 @@ test("a quoted higher repo version still exits with code 2", () => {
 });
 
 test("a file system error exits with code 1 and an install: message", () => {
-  const file = join(mkdtempSync(join(tmpdir(), "notdir-")), "repo");
+  const file = join(mkdtempSync(join(tmpRoot, "notdir-")), "repo");
   writeFileSync(file, "I am a file");
   const r = install(makeSkill(1), file);
   assert.equal(r.status, 1);
   assert.match(r.stderr, /^install: /m);
   assert.doesNotMatch(r.stderr, /at .*install\.mjs/, "no stack trace");
+});
+
+test("when the copy fails after the move, stderr names the backup folder", { skip: process.platform === "win32" || process.getuid?.() === 0 }, () => {
+  const repo = makeRepo(1);
+  const skill = makeSkill(2);
+  const blocked = join(skill, "assets", "plan-lite", "unreadable.txt");
+  writeFileSync(blocked, "x");
+  chmodSync(blocked, 0o000);
+  try {
+    const r = install(skill, repo, { OPENSPEC_LITE_TIMESTAMP: "20261015-074500" });
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /^install: /m);
+    assert.match(r.stderr, /^install: the old schema is in openspec[\\/]schemas-backup[\\/]plan-lite-v1-20261015-074500$/m);
+  } finally {
+    chmodSync(blocked, 0o644);
+  }
 });

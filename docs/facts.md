@@ -425,3 +425,12 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - **Node child processes**: `spawnSync(cmd, [args], { shell: true })` prints `[DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities`. Without `shell: true`, Node does not find a Windows `.cmd` shim such as `openspec.cmd`.
 - **`fs.renameSync`** onto an existing non-empty folder fails with `ENOTEMPTY` (D102).
 - **`fs.readdirSync(dir, { recursive: true, withFileTypes: true })`** gives entries with `parentPath`. `install.mjs` uses it to list the copied files.
+
+---
+
+## OpenSpec: A Duplicate Key Disables config.yaml
+
+**Source**: `review-commit-range` run, OpenSpec 1.9.0, 2026-10-15
+
+- If `openspec/config.yaml` has two top-level `operations:` keys, every command prints "Warning: could not parse .../openspec/config.yaml (Map keys must be unique ...); ignoring it."
+- OpenSpec then ignores the whole file, including `context` and `rules`, not only `operations`.

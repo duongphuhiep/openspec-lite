@@ -915,7 +915,7 @@ This supersedes D63.
 
 **Rationale**: A preview or an upgrade on a spec-driven change would damage it. One common rule replaces four separate rules.
 
-**Status**: D106 lets upgrade resume a spec-driven change that still has `plan.md`.
+**Status**: D106 lets upgrade resume a spec-driven change that still has `plan.md`. D107 asks the user first.
 
 ---
 
@@ -1333,3 +1333,25 @@ This revises D58.
 - A fresh `openspec init` writes `operations` only in a comment, so the skill had no rule for the usual case.
 - A file as repo root crashed `install.mjs` with a stack trace.
 - `version: "3"` was read as no version, so a newer repo copy was replaced instead of refused.
+
+---
+
+## D107: Fixes From the Commit-Range Review
+
+**Decision**:
+
+- `openspec-lite-schema` adds only the missing part of `operations.archive.guidance` under an existing key. It never adds a second `operations:` key.
+- On an equal schema version, `openspec-lite-schema` skips the install but still does the archive guidance step.
+- On the upgrade resume path, the skill asks the user before step 4. A finished upgrade can also keep `plan.md`.
+- On a resumed upgrade, a leftover `tasks-preview.md` next to an existing `tasks.md` is deleted. A kept artifact that looks incomplete is reported.
+- `plan-hash.mjs` treats a `## ` line inside a ``` or ~~~ fence as content. `design.md` describes its behavior and no longer holds a copy of the code.
+- CI runs a Node matrix of 20.19 and 24. It runs on a push to `main`, on a `v*` tag push, and on each pull request.
+- Scenario 10 and the real-install check run right after the tag push. The README compatibility row is `v1`.
+- Each test file deletes its temp folders after the run. A new test covers a copy failure after the move.
+
+**Rationale**: A fresh-context `review-commit-range` review found each case. Two were verified by test:
+
+- A second `operations:` key makes OpenSpec 1.9.0 ignore the whole `config.yaml`: "Map keys must be unique".
+- A fenced `## Constraints` passed the heading check.
+
+Node 20 reached end of life on 2026-04-30, and development uses Node 24.
