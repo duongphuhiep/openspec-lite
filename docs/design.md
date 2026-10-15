@@ -184,7 +184,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix the head
 
 ### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97)
 
-1. Write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`.
+1. Write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. On a resumed run, keep each artifact that already exists, and write only the missing ones.
    1. `proposal.md`: from Goal and Non-Goals.
    2. `specs/` and `design.md`: from `plan.md`. Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
    3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. Then delete `tasks-preview.md`.
