@@ -49,7 +49,7 @@ openspec-lite/
 - Ship through Microsoft APM only. The git repo is the package (D70).
 - README tells users to install the `package/` subfolder with a semver range: `apm install <owner>/openspec-lite/package#^1.0.0` (D81, D83).
 - The repo has no `package.json` and no `apm.yml`. APM finds `package/skills/<name>/SKILL.md` without a manifest (D70, D83).
-- A release is a git tag. The tag selects the schema version (D43, D70).
+- A release is a git tag named `vMAJOR.MINOR.PATCH`, for example `v1.0.0`. APM range matching recognizes this form. The tag selects the schema version (D43, D70, D93).
 - A change to the schema `version` is a new major tag (D81).
 - Ship skills only. Do not ship slash-command files or per-harness plugin manifests (D35, D42).
 - `schema.yaml` is the only declaration of compatible OpenSpec versions (D48).
@@ -57,7 +57,7 @@ openspec-lite/
 - README has a compatibility table: each openspec-lite major tag with its `openspec-version` range (D67, D81).
 - CI (`.github/workflows/test.yml`) runs on push and pull request (D85, D88):
   - It runs a matrix of two `@fission-ai/openspec` versions: the lowest version in `openspec-version`, and `latest`.
-  - It runs `node scripts/check-version.mjs`. The script reads the line `Shipped schema version: <n>` in each workflow skill. It fails if a number differs from `version` in `assets/plan-lite/schema.yaml` (D66, D87).
+  - It runs `node scripts/check-version.mjs`. The script reads the line `Shipped schema version: <n>` in each workflow skill. It normalizes CRLF to LF first. It fails if a workflow skill has no marker line, or if a number differs from `version` in `assets/plan-lite/schema.yaml` (D66, D87, D93).
   - It runs `node --test tests/` (D84).
 - Before each release tag:
   - Run the scenarios in `docs/test-scenarios.md` by hand (D69).
@@ -67,7 +67,7 @@ openspec-lite/
 
 - Tests live in `tests/` and run with `node --test tests/`. They have no dependencies.
 - `plan-hash.test.mjs`: CRLF, section order, Open Questions, and Decisions do not change the hash. A changed Constraint does. A missing heading exits with code 1.
-- `check-version.test.mjs`: a match passes, and a mismatch fails.
+- `check-version.test.mjs`: a match passes. A mismatch fails. A missing marker line fails. A skill with CRLF line endings passes.
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It skips itself if `openspec` is not installed.
 
 ## 3. Skill Rules
@@ -87,13 +87,13 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 **Skill chaining** (D57): To run another skill, invoke it if the harness can. If the harness cannot, tell the user which skill to run, and stop.
 
-**Schema check** (D44, D56, D81): Do this after change selection and the change schema guard, before any other step. propose has no change yet, so it starts here.
+**Schema check** (D44, D56, D81): Do this after change selection and the change schema guard, before any other step. propose has no change yet. It first asks the Level 1 question (see openspec-lite-propose), then starts here (D93).
 
 1. Read `version` from `openspec/schemas/plan-lite/schema.yaml` in the target repo.
 2. Compare it with the shipped version. Each workflow skill holds the line `Shipped schema version: <n>` (D87). The number must equal `version` in `assets/plan-lite/schema.yaml` (D66).
-   - The file is missing or its version is lower: run `openspec-lite-schema`. If the user declines the copy, stop.
-   - Its version is higher: stop. Tell the user: "Run `apm update`." To cross a major tag, the user edits the ref in `apm.yml` and runs `apm install`.
-3. Run `openspec --version`. If the result is outside the `openspec-version` range, warn the user. Point to the compatibility table at `https://github.com/<owner>/openspec-lite#compatibility`. The installed package has no README.
+   - The file is missing or its version is lower: run `openspec-lite-schema`. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions (D93).
+   - Its version is higher: stop. A schema version change is a new major tag, so `apm update` cannot reach it. Tell the user: "Edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`." (D93)
+3. Run `openspec --version`. If the command fails, stop. Tell the user to install `@fission-ai/openspec` in the `openspec-version` range (D93). If the result is outside the `openspec-version` range, warn the user. Point to the compatibility table at `https://github.com/<owner>/openspec-lite#compatibility`. The installed package has no README.
 
 **Plan hash** (D72): From the repo root, run:
 
@@ -101,8 +101,14 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md
 ```
 
+If it exits with code 1, show its message and stop. Ask the user to fix the headings in `plan.md` (D93).
+
 ### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71, D82, D86, D90)
 
+- First compare the repo version with the shipped version (D93):
+  - Higher: stop, with the same message as the schema check.
+  - Equal: say "already current" and stop, unless the user asks for a re-copy.
+  - Lower or missing: continue.
 - Find the skill's own `assets/plan-lite/` folder:
   1. Use the base directory from the harness, if it gives one.
   2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, in order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`.
@@ -188,14 +194,14 @@ node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md
    - **Surprising**: it would surprise a new team member.
 4. Sort each item: requirement → spec, decision → ADR.
 5. Draft the full text of each item:
-   - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it.
+   - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93).
    - A decision becomes an ADR with these sections: Title, Status, Context, Decision, Consequences.
 6. Show the drafts. The user answers yes, no, or edit for each item. Write nothing before approval.
 7. Write the approved deltas to `<change>/specs/<capability>/spec.md`.
-8. If step 7 wrote files, remove `skip_specs` from `.openspec.yaml`.
+8. If step 7 wrote files, remove `skip_specs` from `.openspec.yaml`. Otherwise, set `skip_specs: true`, because `validate` fails on a plan-lite change with no deltas and no `skip_specs` (D93).
 9. Run `openspec validate "<name>"`. If it fails, stop and report.
 10. Run `openspec archive "<name>" --yes`. The CLI merges the deltas and moves the change (with `plan.md` and `tasks-preview.md`) to the archive.
-11. Write the approved ADRs to `openspec/adr/YYYY-MM-DD-<slug>.md`.
+11. Write the approved ADRs to `openspec/adr/YYYY-MM-DD-<slug>.md`. Use the archive date. Set Status to `Accepted` (D93).
 
 ## 4. plan-lite Schema
 
@@ -215,7 +221,8 @@ artifacts:
 apply:
   requires: [plan]
   # no `tracks`: plan-lite has no tracked tasks file
-  instruction: <the plan-lite apply rules, see below>
+  instruction: |
+    <the exact text of the apply rules below>
 ```
 
 - Do not add `tasks-preview` as an artifact. Stock `/opsx:continue` and `/opsx:ff` would generate it (D53).
@@ -223,7 +230,7 @@ apply:
 - OpenSpec ignores the `openspec-version` key. Only the skills read it (D48).
 - `version` is an integer. A change to it is a schema **update** (D45).
 
-`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73):
+`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73). The list below is the exact text. It ships in the user's repo, so it must not refer to this file:
 
 - Implement from `plan.md`. If `<changeDir>/tasks-preview.md` exists, use it as a guide. The CLI does not list it in `contextFiles`.
 - If the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the repo root. If the result differs from `plan-sha256` in the preview header, or the header is missing, tell the user and offer to regenerate the preview.
@@ -231,7 +238,8 @@ apply:
 - The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of `plan.md`. List the deviations in the end summary.
 - Record the answer to each open question in `## Decisions`, and remove the question.
 - Do not edit `tasks-preview.md`.
-- Suggest an upgrade when a signal from §5 appears.
+- Suggest an upgrade to spec-driven when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
+- If the plan hash command exits with code 1, show its message and stop.
 - End with the done checklist: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 
 `plan-hash.mjs` (D72, D91):

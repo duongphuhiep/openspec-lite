@@ -335,6 +335,8 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `openspec/config.yaml` can hold `operations.<id>.guidance`. The only operation IDs are `apply` and `archive`.
 - `openspec instructions archive --change <name> --json` returns this text as `operationGuidance`. The stock archive skill runs this command, so stock `/opsx:archive` sees the guidance.
 - The guidance is per project, not per schema.
+- `guidance` must be a YAML list of strings (`OperationConfigSchema`, `project-config.js:6-8`). A plain string is ignored, and every CLI command prints: "Guidance for operation 'archive' must be an array of strings, ignoring this operation's guidance". Tested.
+- The stock archive skill treats guidance as optional advice: "follow entries that are applicable and compatible with the built-in archive workflow" and "If guidance is inapplicable or conflicts with a controlling input, do not follow it" (`openspec-archive-change/SKILL.md:47-56`). It treats `context` as "a required prompt-level input". `openspec archive` (the CLI) never reads guidance.
 - A schema has no `archive` block. `SchemaYamlSchema` defines only `apply` (`dist/core/artifact-graph/types.js:30-46`).
 
 ---

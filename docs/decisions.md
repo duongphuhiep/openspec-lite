@@ -89,6 +89,8 @@ User reviews and approves the proposed list before promotion happens.
 
 **Rationale**: Changes often grow in scope mid-flight. Rewriting from scratch is wasteful. Upgrade path avoids the "this got more complex than expected" problem.
 
+**Status**: D13 and D62 make the upgrade a skill, not a command.
+
 ---
 
 ## D8: Promotion Targets (Round 2)
@@ -240,6 +242,8 @@ artifacts:
 
 **Rationale**: Lowest friction. Keeps the workflow fast for the common case.
 
+**Status**: D74: archive drafts the full text of each item before approval.
+
 ---
 
 ## D19: Tasks Preview Is AI-Generated (Tasks Round 1)
@@ -275,6 +279,8 @@ artifacts:
 - The apply skill can use it as a guide. The apply skill can change the approach during implementation. For example, it can make the implementation simpler.
 
 **Rationale**: A file survives a context clear. It also works in tools that have no native plan mode.
+
+**Status**: D53: the preview is a file, but not a schema artifact.
 
 ---
 
@@ -435,7 +441,7 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 
 **Rationale**: This mirrors the path where the schema lands in target projects (`openspec/schemas/plan-lite/`). The copy path is a one-liner and the intent is obvious to a reader.
 
-**Status**: Revised by D43 and D44. In this repo, the schema source is `skills/openspec-lite-schema/assets/plan-lite/`. The target path in a user project is still `openspec/schemas/plan-lite/`.
+**Status**: Revised by D43 and D44. In this repo, the schema source is `skills/openspec-lite-schema/assets/plan-lite/`. The target path in a user project is still `openspec/schemas/plan-lite/`. D83 moves the source to `package/skills/openspec-lite-schema/assets/plan-lite/`.
 
 ---
 
@@ -444,6 +450,8 @@ Both use the same SKILL.md files. No per-harness plugin manifests (`.claude-plug
 **Decision**: This repo (`openspec-lite`) holds both design documents (`docs/`, `CONTEXT.md`, `README.md`) and the installable deliverable (skills, schema, package manifests).
 
 **Rationale**: Simpler than a separate dist repo. No sync problem between two repos. The design docs become the project's own documentation.
+
+**Status**: D70 removes the package manifests. D83 puts the deliverable in `package/`.
 
 ---
 
@@ -566,7 +574,7 @@ This makes D8 more precise.
 
 **Rationale**: `openspec archive` merges any delta files under `<change>/specs/`, whatever the schema (`dist/core/archive.js:1127`). But it blocks when `skip_specs` is set and `specs/` has files (`archive.js:969`). Reusing the CLI merge avoids a second, untested merge that could corrupt the main specs. The CLI has no ADR concept, so ADRs are written directly.
 
-**Status**: D58 changes the order: validate and archive first, ADRs last.
+**Status**: D58 changes the order: validate and archive first, ADRs last. D59 changes the ADR name to `YYYY-MM-DD-<slug>.md`.
 
 ---
 
@@ -834,7 +842,7 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: The scenarios also give the evidence for the D27 review trigger. Add automated evals when a regression happens.
 
-**Status**: D70 adds the version script run to the release scenarios. D83 adds a real-install check. D84 adds automated tests for the scripts.
+**Status**: D66 adds the version script, and D85 runs it in CI. D83 adds a real-install check. D84 adds automated tests for the scripts.
 
 ---
 
@@ -983,6 +991,8 @@ This revises D56, D67, and D70.
 
 **Rationale**: `apm update` moves inside the range with one command (`docs/facts.md`). Major tags carry the breaking signal, so one schema version maps to one major tag.
 
+**Status**: D93: `apm update` cannot cross a major tag, so the "newer schema" message tells the user to edit the ref instead.
+
 **Status**: D83 changes the install path to `<owner>/openspec-lite/package#^1.0.0`.
 
 ---
@@ -1018,6 +1028,8 @@ This revises D70 and D81.
 - `tests/schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It skips itself if `openspec` is not installed.
 
 **Rationale**: OpenSpec already requires Node `>=20.19.0`, which has a stable `node --test`. A framework would bring back the `package.json` that D70 removed. The schema test catches errors such as the wrong `template` path, which only a real CLI run shows (`docs/facts.md`).
+
+**Status**: D91 adds a missing-heading test. D93 adds missing-marker and CRLF tests for `check-version.mjs`.
 
 ---
 
@@ -1110,3 +1122,28 @@ This extends D72.
 This revises D10.
 
 **Rationale**: Apply records each answer to an open question as a decision (D73). Many answers have no rejected alternative. One form with an optional part stays simple for the agent and for archive.
+
+---
+
+## D93: Failure Cases and Order Fixes From the Fourth Review
+
+**Decision**:
+
+- Release tags are `vMAJOR.MINOR.PATCH`.
+- When the repo schema is newer, the message says: "Edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`." This replaces "Run `apm update`" from D81.
+- propose asks the Level 1 question before the schema check.
+- After `openspec-lite-schema` runs, the calling skill reads the version again. If it still differs, it stops and reports both versions.
+- Run directly, `openspec-lite-schema` stops on a higher repo version. On an equal version, it says "already current", unless the user asks for a re-copy.
+- If `openspec --version` fails, the skill stops and tells the user to install OpenSpec.
+- If `plan-hash.mjs` exits with code 1, the skill or `apply.instruction` shows the message and stops.
+- `check-version.mjs` normalizes CRLF and fails when a skill has no marker line.
+- Archive sets `skip_specs: true` when it writes no delta.
+- Archive picks `<capability>` from `openspec/specs/` first, and names a new one only when none matches.
+- ADRs use the archive date and Status `Accepted`.
+- `apply.instruction` is exact text that ships in the user's repo. It lists the upgrade signals inline, with no reference to `design.md`.
+
+**Rationale**: A fresh-context review found each case. Each one has a single clear fix:
+
+- `apm update` does not cross the constraint (`docs/facts.md`), and a schema change is always a major tag (D81).
+- `validate` fails on a plan-lite change with no deltas and no `skip_specs`. A change created without propose has no flag.
+- The other items define a failure path or an input that was undefined.

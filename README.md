@@ -38,7 +38,7 @@ apm install <owner>/openspec-lite/package#^1.0.0
 - **`openspec-lite-apply`**: implements from `plan.md`. It uses `tasks-preview.md` as a guide.
 - **`openspec-lite-upgrade`**: upgrades a plan-lite change to spec-driven when the scope grows.
 - **`openspec-lite-archive`**: archives the change. It promotes selected items to specs and ADRs.
-- **`openspec-lite-schema`**: installs the plan-lite schema into the repo and checks its version. The other skills run it when necessary.
+- **`openspec-lite-schema`**: installs or replaces the plan-lite schema in the repo. It moves an old copy to `openspec/schemas-backup/`. The other skills check the schema version and run it when necessary.
 
 Try stock `/opsx:apply` first. If it does not work well, use `openspec-lite-apply`.
 
