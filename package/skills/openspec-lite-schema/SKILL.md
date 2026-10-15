@@ -9,7 +9,7 @@ Install or replace `openspec/schemas/plan-lite/` in the OpenSpec root. Do not re
 
 ## 1. Find the folders
 
-**OpenSpec root** (`<root>`): run `openspec list --json`, and read `root.path`. Run each command from that folder, and read each `openspec/...` path from it. In a monorepo, it can be a subfolder of the git root. If `root` is `null`, stop. Tell the user to run `openspec init --tools <harness>` in the project folder.
+**OpenSpec root** (`<root>`): run `openspec list --json`, and read `root.path`. Run each command from that folder, and read each `openspec/...` path from it. In a monorepo, it can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down. If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`. If one folder matches, ask the user to confirm it as the root. If more than one matches, ask the user to pick one. Only if none matches, stop, and tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`. Do not run `openspec init` in a parent of an existing root.
 
 Then find this skill's folder.
 

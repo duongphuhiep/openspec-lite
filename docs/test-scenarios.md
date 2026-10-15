@@ -1,6 +1,6 @@
 # Test Scenarios
 
-Run scenarios 1–9 by hand before each release tag (D69). Run scenario 10 right after the tag push, because it needs the published tag. The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
+Run scenarios 1–9 and 11–13 by hand before each release tag (D69). Run scenario 10 right after the tag push, because it needs the published tag. The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
 
 Setup for each scenario, unless it says otherwise:
 
@@ -141,7 +141,8 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected**:
 
-- The agent reads `root.path` (`svc/`) and runs each command there.
+- At the git root, `openspec list --json` gives `root: null`. The agent finds `svc/openspec/` in a subfolder and asks you to confirm it as the root. It does not suggest `openspec init` at the git root.
+- After you confirm, the agent runs each command in `svc/`.
 - `svc/openspec/schemas/plan-lite/` exists. The git root has no `openspec/` folder.
 - The schema skill finds itself in `.claude/skills/` at the git root, which is a parent folder of `svc/`.
 
@@ -158,16 +159,32 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - After yes, `plan.md` exists, and `.openspec.yaml` has exactly one `skip_specs` line.
 - `openspec validate resume-me` passes.
 
-## 13. Archive rerun after a failed validate
+## 13. Archive reruns
+
+### 13a. After a failed validate
 
 **Steps**:
 
 1. On a finished change, run `openspec-lite-archive`. Approve one requirement and one decision.
-2. Before step 9, break the delta: remove its `#### Scenario:` block. `validate` fails, and the skill stops.
+2. Before step 9, break the delta: remove its `#### Scenario:` block. `validate` fails, and the skill stops before it writes any ADR.
 3. Run `openspec-lite-archive` again.
 
 **Expected**:
 
 - Before it writes, the agent shows the delta from run 1 and asks to keep or delete it.
-- The ADR has the plain lines `Status: Accepted` and `Change: <name>`.
-- Run 2 does not draft the decision again, because an ADR with `Change: <name>` exists. `openspec/adr/` has one ADR for it.
+- The agent drafts the decision again, because no ADR exists yet.
+- After run 2, `openspec/adr/` has one ADR for the decision, with the plain lines `Status: Accepted` and `Change: <name>`.
+
+### 13b. After a failed `openspec archive`
+
+**Steps**:
+
+1. Before the run, create the archive target folder `openspec/changes/archive/<today>-<name>/`. `openspec archive` then fails with "Archive '<today>-<name>' already exists".
+2. Run `openspec-lite-archive`. Approve one decision. The ADR is written at step 10, and step 11 fails.
+3. Delete the folder from step 1. Run `openspec-lite-archive` again.
+
+**Expected**:
+
+- Run 1 reports the archive failure and keeps the ADR.
+- Run 2 finds the ADR with `Change: <name>`, shows it, and does not draft that decision again.
+- After run 2, `openspec/adr/` has one ADR for the decision, and the change is in `openspec/changes/archive/`.

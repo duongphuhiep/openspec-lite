@@ -1468,3 +1468,17 @@ This revises D59, D74, D110, and D111.
 - With `skip_specs` set, `instructions specs` returns `skipped: true` and "Do not create spec files", next to the format instruction.
 
 The other cases are text gaps. "Change" as a section did not match a `Change:` line search. The earlier-run check came after the write, so "delete" could remove an approved delta. A same-day slug overwrote another ADR. A user-scope copy could win over the project copy in a parent folder. The CI `latest` cell needs tests for the CLI behavior that the skills rely on.
+
+---
+
+## D113: Fixes From Review Round 5
+
+**Decision**:
+
+- When `openspec list --json` gives `root: null`, each skill searches the subfolders for an initialized `openspec/` folder, and skips `.git/`, `node_modules/`, and `apm_modules/`. It asks the user to confirm one match, or to pick one of several. Only with no match does it tell the user to run `openspec init`, in the folder that must hold `openspec/`.
+- Scenario 13 has two cases: (a) a failed validate, where no ADR exists yet and the decision is drafted again; (b) a failed `openspec archive`, where the existing ADR is skipped.
+- Scenarios 1–9 and 11–13 run before each release tag. Scenario 10 runs after the tag push.
+
+This revises D111.
+
+**Rationale**: A fresh `review-commit-range` round found each case. OpenSpec searches only up from the current folder. An agent that starts at the git root of a monorepo got `root: null`. The old stop message then sent the user to `openspec init` at the git root, which makes a second, wrong root. In scenario 13, the ADRs are written after validate (D105), so a failed validate can not leave an ADR. Creating the archive target folder first makes `openspec archive` fail after the ADRs exist (verified).

@@ -13,7 +13,7 @@ If the request is small (one obvious fix, no constraints or open questions worth
 
 ## 2. Schema check
 
-**OpenSpec root**: run `openspec list --json`, and read `root.path`. Run each command from that folder, and read each `openspec/...` path from it. In a monorepo, it can be a subfolder of the git root. If `root` is `null`, stop. Tell the user to run `openspec init --tools <harness>` in the project folder.
+**OpenSpec root**: run `openspec list --json`, and read `root.path`. Run each command from that folder, and read each `openspec/...` path from it. In a monorepo, it can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down. If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`. If one folder matches, ask the user to confirm it as the root. If more than one matches, ask the user to pick one. Only if none matches, stop, and tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`. Do not run `openspec init` in a parent of an existing root.
 
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare it with the shipped version:

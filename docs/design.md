@@ -68,7 +68,7 @@ openspec-lite/
   - It runs `node --test` from the repo root. Node finds `tests/*.test.mjs`. `node --test tests/` fails on Node 24 (D84, D99).
   - On a tag push, it fails if the tag is not `v` + `version` from `package/apm.yml`. It reads the line `^version:` with no YAML library (D94).
 - Before each release tag:
-  - Run the scenarios in `docs/test-scenarios.md` by hand (D69). Each scenario has steps and an expected result. The list (D99):
+  - Run scenarios 1–9 and 11–13 in `docs/test-scenarios.md` by hand (D69, D113). Each scenario has steps and an expected result. The list (D99):
     1. Fresh repo: propose installs the schema, creates the change, writes `plan.md`.
     2. Small request: propose offers Level 1 and stops on yes, with no files written.
     3. Tasks preview, then edit a Constraint: apply warns that the preview is stale.
@@ -81,7 +81,7 @@ openspec-lite/
     10. Real APM install from the tag (D83). Run this one right after the tag push (D107).
     11. OpenSpec root in a subfolder of the git root: the skills run from `root.path`, and the skill-folder search finds the skill in a parent folder (D111).
     12. propose resume: a plan-lite change with no `plan.md` resumes with one `skip_specs` line (D111, D112).
-    13. archive rerun after a failed validate: the agent shows earlier deltas before the write, and skips ADRs with `Change: <name>` (D111, D112).
+    13. archive rerun: (a) after a failed validate, the agent shows earlier deltas before the write and drafts the decision again; (b) after a failed `openspec archive`, it skips the ADRs with `Change: <name>` (D111, D112, D113).
   - Right after the tag push, install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83, D107).
 
 ## 2a. Tests (D84)
@@ -105,7 +105,7 @@ openspec-lite/
 
 The five workflow skills are propose, tasks-preview, apply, upgrade, and archive.
 
-**OpenSpec root** (D111): Each skill runs `openspec list --json` first and reads `root.path`. It runs each command from that folder, and reads each `openspec/...` path from it. OpenSpec finds the nearest `openspec/` folder, which can be a subfolder of the git root. If `root` is `null`, the skill stops and tells the user to run `openspec init --tools <harness>`.
+**OpenSpec root** (D111): Each skill runs `openspec list --json` first and reads `root.path`. It runs each command from that folder, and reads each `openspec/...` path from it. OpenSpec finds the nearest `openspec/` folder, which can be a subfolder of the git root. OpenSpec searches only up from the current folder, so an agent that starts at the git root of a monorepo gets `root: null`. Then the skill searches the subfolders for an initialized `openspec/` (with `config.yaml`, `changes/`, or `specs/`), and skips `.git/`, `node_modules/`, and `apm_modules/`. It asks the user to confirm one match, or to pick one of several. Only with no match does it stop and tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/` (D113).
 
 **Change selection** (D61): Use the change named in the prompt. If no name is given and only one active change exists, use it. Otherwise ask. List active changes with `openspec list --json`. It does not give the schema, so read `schema` from each change's `.openspec.yaml` (D99).
 
