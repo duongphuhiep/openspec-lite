@@ -295,6 +295,7 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `template` resolves relative to `<schema>/templates/`. `template: templates/plan.md` fails with "Template not found: .../templates/templates/plan.md". Use `template: plan.md`. The stock schema uses `template: proposal.md`.
 - `openspec instructions plan --change <name> --json` returns the template content in `template`.
 - An extra file in the schema folder, for example `plan-hash.mjs`, causes no error.
+- `openspec instructions <artifact> --change <name> --schema spec-driven --json` returns the spec-driven `outputPath` for `proposal`, `specs`, `design`, and `tasks` on a plan-lite change. `.openspec.yaml` stays `schema: plan-lite`. Tested 2026-10-15.
 
 ---
 

@@ -42,6 +42,8 @@ apm install <owner>/openspec-lite/package#^1.0.0
 
 Try stock `/opsx:apply` first. If it does not work well, use `openspec-lite-apply`.
 
+Do not run stock `/opsx:archive` on a plan-lite change. It skips promotion, so the `plan.md` decisions never become specs or ADRs. Use `openspec-lite-archive`.
+
 Use stock `/opsx:explore` before you propose. openspec-lite has no explore skill.
 
 ## plan.md Structure

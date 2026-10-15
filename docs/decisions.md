@@ -770,7 +770,7 @@ This revises D13 and D31.
 
 **Rationale**: The spec-driven graph requires `specs` and `design` before `tasks`. Upgrade is the only step that knows both `plan.md` and the preview, so a split would lose context. `design.md` is where stock tools look for decisions. A preview or a plan next to the new artifacts is a stale second source of truth.
 
-**Status**: D79 adds `openspec validate` at the end.
+**Status**: D79 adds `openspec validate` at the end. D97 switches the schema last.
 
 ---
 
@@ -804,7 +804,7 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 **Rationale**: OpenSpec is an npm package and requires Node `>=20.19.0`, so `node` is always present. One command works on macOS, Linux, and Windows. `sha256sum`, `shasum`, and `cp -r` do not. Not every harness gives a skill its base directory.
 
-**Status**: D71 sets the fallback search paths. D72 replaces the hash one-liner with `plan-hash.mjs`.
+**Status**: D71 sets the fallback search paths. D72 replaces the hash one-liner with `plan-hash.mjs`. D98 replaces the copy one-liner with `install.mjs`.
 
 ---
 
@@ -854,7 +854,7 @@ This supersedes D34 and revises D35, D36, D43, D48, D66, and D67.
 
 **Rationale**: skillpm installs only one skill per package. `publish` rejects a package with more than one skill, and the scanner reads only the first skill (`docs/facts.md`). The fix is seven npm packages that must change version together. APM installs all skills from one repo, covers 13 targets, and keeps `assets/`. A repo with `skills/<name>/SKILL.md` needs no `apm.yml`. The only loss is npm discovery. Add per-skill npm packages when a user asks for npm.
 
-**Status**: D81 sets the install ref and the tag rule. D83 moves the deliverable to `package/` and changes the install path.
+**Status**: D81 sets the install ref and the tag rule. D83 moves the deliverable to `package/` and changes the install path. D94 adds `package/apm.yml`.
 
 ---
 
@@ -1061,6 +1061,8 @@ If the field already has text, the skill shows the line and asks the user to add
 
 **Rationale**: Stock `/opsx:archive` on a plan-lite change skips promotion, so the `plan.md` decisions never become ADRs. The stock archive skill runs `openspec instructions archive`, which returns this guidance (`docs/facts.md`). It is the only way to reach the stock skill. The skill never overwrites existing guidance, so it does not damage the user's config.
 
+**Status**: Revised by D95. `guidance` must be a list, and the stock skill treats it as advice.
+
 ---
 
 ## D87: The Version Marker Line
@@ -1104,6 +1106,8 @@ On the first install, it only copies. No skill uses `git diff` or `git status` t
 This revises D56 and D86.
 
 **Rationale**: `openspec/` may be untracked, and git may not be present. A delete-then-copy without git would lose local edits for good. The backup must be outside `openspec/schemas/`, because OpenSpec treats every folder there as a schema (`docs/facts.md`). The repo copy then always equals the shipped copy, with no stale files.
+
+**Status**: D96 adds a timestamp to the backup name. D98 moves the backup and copy into `install.mjs`.
 
 ---
 
@@ -1149,3 +1153,66 @@ This revises D10.
 - `apm update` does not cross the constraint (`docs/facts.md`), and a schema change is always a major tag (D81).
 - `validate` fails on a plan-lite change with no deltas and no `skip_specs`. A change created without propose has no flag.
 - The other items define a failure path or an input that was undefined.
+
+---
+
+## D94: package/apm.yml Holds the Name and Version
+
+**Decision**: `package/apm.yml` has two fields: `name: openspec-lite` and `version: <semver>`. On a tag push, CI fails if the tag is not `v` + `version`.
+
+This revises D70, which said the repo has no `apm.yml`.
+
+**Rationale**: APM 0.33.0 rejects a folder with only `skills/<name>/SKILL.md` and no `apm.yml` (`docs/facts.md`). With the two fields, the install works. The CI check stops the version from drifting from the tag.
+
+---
+
+## D95: Archive Guidance Is a List Item and a Best-Effort Guard
+
+**Decision**: `openspec-lite-schema` appends one item to `operations.archive.guidance` in `openspec/config.yaml`, if the list does not have it yet:
+
+"For a plan-lite change, run openspec-lite-archive first. It promotes plan.md decisions to specs and ADRs, then archives."
+
+README warns users not to run stock `/opsx:archive` on a plan-lite change.
+
+This revises D86.
+
+**Rationale**: `guidance` must be a list of strings. OpenSpec ignores a string and prints a warning on every command (`docs/facts.md`). The stock archive skill follows only guidance that is compatible with its own steps. A "stop" can conflict with them, but advice to run a step first does not. The guard is still best effort, so README covers users who bypass it. `context` was rejected, because it holds the user's project description and goes to every operation.
+
+---
+
+## D96: Backup Folders Have a Timestamp
+
+**Decision**: The backup path is `openspec/schemas-backup/plan-lite-v<old>-<YYYYMMDD-HHMMSS>/`.
+
+This revises D90.
+
+**Rationale**: A fixed name fails when an old backup is still there. With a timestamp, the move never fails, and each backup stays until the user deletes it.
+
+---
+
+## D97: Upgrade Switches the Schema Last
+
+**Decision**: `openspec-lite-upgrade` writes all artifacts while the change is still plan-lite. It gets each template with `openspec instructions <artifact> --change <name> --schema spec-driven --json`. Then it switches `schema` to `spec-driven` and removes `skip_specs`. Then it deletes the moved `plan.md` sections and validates.
+
+This revises D62.
+
+**Rationale**: If the schema switches first and a later step fails, the guard (D75) refuses the half-upgraded change, and nothing can resume it. With the switch last, a failure leaves a plan-lite change, so a new upgrade run resumes it. The `--schema` override gives spec-driven templates for a plan-lite change (`docs/facts.md`).
+
+---
+
+## D98: install.mjs Does the Backup and the Copy
+
+**Decision**: `openspec-lite-schema` ships `scripts/install.mjs`, outside `assets/plan-lite/`, so it is not copied into the user repo. The agent runs `node "<skillDir>/scripts/install.mjs" .` from the repo root. The script:
+
+- compares the repo and shipped versions,
+- exits with code 2 if the repo version is higher,
+- reports "already current" on an equal version,
+- moves an old repo copy to the timestamped backup (D96),
+- copies `assets/plan-lite/` to `openspec/schemas/plan-lite/`,
+- prints the copied files and the backup path.
+
+The agent still edits `openspec/config.yaml` (D95), because a script would need a YAML library. `tests/install.test.mjs` covers the script.
+
+This revises D65 and D90.
+
+**Rationale**: `node -e '...'` with inner double quotes breaks in cmd.exe and in Windows PowerShell 5.1. A script file needs no shell quoting and can be tested, as with `plan-hash.mjs` (D72).

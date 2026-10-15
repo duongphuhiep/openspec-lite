@@ -12,6 +12,7 @@ If this file and `decisions.md` disagree, this file is correct. Fix `decisions.m
 openspec-lite/
 ├── package/                 # the only folder that APM downloads
 │   ├── LICENSE              # MIT
+│   ├── apm.yml              # name and version, for APM
 │   └── skills/
 │       ├── openspec-lite-propose/SKILL.md
 │       ├── openspec-lite-tasks-preview/SKILL.md   # holds the preview template inline
@@ -20,6 +21,7 @@ openspec-lite/
 │       ├── openspec-lite-archive/SKILL.md
 │       └── openspec-lite-schema/
 │           ├── SKILL.md
+│           ├── scripts/install.mjs    # backup and copy, not copied to the user repo
 │           └── assets/plan-lite/
 │               ├── schema.yaml
 │               ├── plan-hash.mjs
@@ -30,6 +32,7 @@ openspec-lite/
 ├── tests/
 │   ├── plan-hash.test.mjs
 │   ├── check-version.test.mjs
+│   ├── install.test.mjs
 │   └── schema.test.mjs
 ├── .github/workflows/
 │   └── test.yml
@@ -48,7 +51,7 @@ openspec-lite/
 
 - Ship through Microsoft APM only. The git repo is the package (D70).
 - README tells users to install the `package/` subfolder with a semver range: `apm install <owner>/openspec-lite/package#^1.0.0` (D81, D83).
-- The repo has no `package.json` and no `apm.yml`. APM finds `package/skills/<name>/SKILL.md` without a manifest (D70, D83).
+- The repo has no `package.json`. `package/apm.yml` holds only `name: openspec-lite` and `version`. APM rejects a folder with only `skills/` and no `apm.yml` (D94).
 - A release is a git tag named `vMAJOR.MINOR.PATCH`, for example `v1.0.0`. APM range matching recognizes this form. The tag selects the schema version (D43, D70, D93).
 - A change to the schema `version` is a new major tag (D81).
 - Ship skills only. Do not ship slash-command files or per-harness plugin manifests (D35, D42).
@@ -59,6 +62,7 @@ openspec-lite/
   - It runs a matrix of two `@fission-ai/openspec` versions: the lowest version in `openspec-version`, and `latest`.
   - It runs `node scripts/check-version.mjs`. The script reads the line `Shipped schema version: <n>` in each workflow skill. It normalizes CRLF to LF first. It fails if a workflow skill has no marker line, or if a number differs from `version` in `assets/plan-lite/schema.yaml` (D66, D87, D93).
   - It runs `node --test tests/` (D84).
+  - On a tag push, it fails if the tag is not `v` + `version` from `package/apm.yml` (D94).
 - Before each release tag:
   - Run the scenarios in `docs/test-scenarios.md` by hand (D69).
   - Install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83).
@@ -68,6 +72,7 @@ openspec-lite/
 - Tests live in `tests/` and run with `node --test tests/`. They have no dependencies.
 - `plan-hash.test.mjs`: CRLF, section order, Open Questions, and Decisions do not change the hash. A changed Constraint does. A missing heading exits with code 1.
 - `check-version.test.mjs`: a match passes. A mismatch fails. A missing marker line fails. A skill with CRLF line endings passes.
+- `install.test.mjs`: a first install copies. A lower repo version moves to a timestamped backup, then copies. An equal version reports "already current". A higher version exits with code 2. A second backup in the same repo does not fail (D96, D98).
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It skips itself if `openspec` is not installed.
 
 ## 3. Skill Rules
@@ -103,30 +108,34 @@ node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md
 
 If it exits with code 1, show its message and stop. Ask the user to fix the headings in `plan.md` (D93).
 
-### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71, D82, D86, D90)
+### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71, D82, D86, D90, D95, D96, D98)
 
 - First compare the repo version with the shipped version (D93):
   - Higher: stop, with the same message as the schema check.
   - Equal: say "already current" and stop, unless the user asks for a re-copy.
   - Lower or missing: continue.
-- Find the skill's own `assets/plan-lite/` folder:
+- Find the skill's own folder, `<skillDir>`. It holds `scripts/` and `assets/plan-lite/`:
   1. Use the base directory from the harness, if it gives one.
   2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, in order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`.
   3. If no path has the folder, stop and tell the user.
-- If a repo copy exists, tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/plan-lite-v<old>/`." If the user declines, stop.
-- Copy with one command. Do not read the schema content into the conversation to install it. Give the backup path only when a repo copy exists:
+- If a repo copy exists, tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
+- Run the install script from the repo root. Do not read the schema content into the conversation (D98):
 
   ```sh
-  node -e 'const fs=require("fs"),path=require("path"),[src,dst,bak]=process.argv.slice(1);if(bak){fs.mkdirSync(path.dirname(bak),{recursive:true});fs.renameSync(dst,bak)}fs.cpSync(src,dst,{recursive:true})' "<assets>/plan-lite" openspec/schemas/plan-lite [openspec/schemas-backup/plan-lite-v<old>]
+  node "<skillDir>/scripts/install.mjs" .
   ```
 
-- If `operations.archive.guidance` in `openspec/config.yaml` is empty, add this. If it already has text, show the line and ask the user to add it by hand:
+  The script compares versions and copies `assets/plan-lite/` to `openspec/schemas/plan-lite/`. If a repo copy exists, it first moves it to `openspec/schemas-backup/plan-lite-v<old>-<YYYYMMDD-HHMMSS>/` (D96). It prints the copied files and the backup path. It exits with code 2 if the repo version is higher.
+- Add this item to `operations.archive.guidance` in `openspec/config.yaml`, if the list does not have it yet. `guidance` must be a YAML list (D95):
 
   ```yaml
   operations:
     archive:
-      guidance: "If the change schema is plan-lite, stop. Run openspec-lite-archive instead."
+      guidance:
+        - "For a plan-lite change, run openspec-lite-archive first. It promotes plan.md decisions to specs and ADRs, then archives."
   ```
+
+  This guard is best effort. The stock archive skill treats guidance as optional advice.
 
 - Report the copied files, the backup path, and the `config.yaml` line. Do not use `git diff` or `git status`. Tell the user to compare and delete the backup.
 - Tell the user to commit the schema to git.
@@ -173,17 +182,16 @@ If it exits with code 1, show its message and stop. Ask the user to fix the head
 - Add one rule to the CLI output: ignore checkbox and task-count text. A plan-lite change has no tracked tasks.
 - Users try stock `/opsx:apply` first (D27).
 
-### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79)
+### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97)
 
-1. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`.
-2. Remove `skip_specs: true`.
-3. Write the four artifacts in dependency order. Get each template from `openspec instructions <artifact> --change "<name>" --json`.
+1. Write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`.
    1. `proposal.md`: from Goal and Non-Goals.
    2. `specs/` and `design.md`: from `plan.md`. Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
    3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. Then delete `tasks-preview.md`.
-4. Delete each `plan.md` section whose content moved. Keep a section that has no slot, for example open questions that are still open. If no section is left, delete `plan.md`.
-5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
-6. In the summary, ask the user to review all artifacts. Ask for an extra review of `tasks.md`, because it is a contract. Say that `skip_specs` was removed.
+2. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`, and remove `skip_specs: true`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
+3. Delete each `plan.md` section whose content moved. Keep a section that has no slot, for example open questions that are still open. If no section is left, delete `plan.md`.
+4. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
+5. In the summary, ask the user to review all artifacts. Ask for an extra review of `tasks.md`, because it is a contract. Say that `skip_specs` was removed.
 
 ### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77)
 
