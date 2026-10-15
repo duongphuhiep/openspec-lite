@@ -144,6 +144,12 @@ Each major tag ships one schema version. Run `apm update` to get the newest rele
 | ----------------------- | ---------------- |
 | (unreleased)            | `>=1.9.0 <2.0.0` |
 
+## Development
+
+- `node --test` runs the tests in `tests/`. The schema test needs the `openspec` CLI.
+- `node scripts/check-version.mjs` checks the shipped schema version in each workflow skill.
+- Before a release, run the scenarios in [`docs/test-scenarios.md`](docs/test-scenarios.md).
+
 ## License
 
 MIT. See [`package/LICENSE`](package/LICENSE).

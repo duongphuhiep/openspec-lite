@@ -1,0 +1,66 @@
+---
+name: openspec-lite-schema
+description: Install or update the plan-lite OpenSpec schema of openspec-lite in openspec/schemas/plan-lite/ of the repo. Use only when the user asks for openspec-lite-schema, or when another openspec-lite skill asks you to run it.
+---
+
+# openspec-lite-schema
+
+Install or replace `openspec/schemas/plan-lite/` in the repo. Do not read the schema content into the conversation.
+
+## 1. Find this skill's folder
+
+Find `<skillDir>`, the folder of this `SKILL.md`. It holds `scripts/install.mjs` and `assets/plan-lite/`.
+
+1. Use the base directory that the harness gives for this skill, if it gives one.
+2. Otherwise, search for `openspec-lite-schema/assets/plan-lite/` under these folders, in this order: `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`. Last, search `apm_modules/` in the repo for `openspec-lite-schema/`.
+3. If no path has the folder, stop and tell the user.
+
+## 2. Compare the versions
+
+Read the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped) and of `openspec/schemas/plan-lite/schema.yaml` (repo).
+
+- Repo version higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`."
+- Equal: say "The plan-lite schema is already current." and stop. To repair a damaged schema, the user deletes `openspec/schemas/plan-lite/` and runs this skill again.
+- Repo copy exists and is lower: tell the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`." If the user declines, stop.
+- No repo copy: continue.
+
+## 3. Install
+
+From the repo root, run:
+
+```sh
+node "<skillDir>/scripts/install.mjs" .
+```
+
+The first output line is the status:
+
+- `status: installed` or `status: replaced`: success. The next lines are `backup: <path>` (only on replace) and `copied: <path>`.
+- `status: current`: nothing to do.
+- `status: newer` (exit code 2): stop, with the "newer schema" message above.
+- Exit code 3: the shipped assets are damaged. Stop and tell the user to reinstall openspec-lite.
+
+## 4. Archive guidance
+
+Stock `/opsx:archive` skips promotion on a plan-lite change. Add a hint for it in `openspec/config.yaml`. This is best effort: the stock skill treats guidance as optional advice.
+
+The item:
+
+```yaml
+operations:
+  archive:
+    guidance:
+      - "For a plan-lite change, run openspec-lite-archive first. It promotes plan.md decisions to specs and ADRs, then archives."
+```
+
+- If `openspec/config.yaml` is missing, create it with only this block.
+- If `operations.archive.guidance` is a list, add the item if the list does not have it yet. Keep the other items and keys.
+- If `guidance` is a plain string, OpenSpec ignores it. Do not edit it. Show the user how to change it to a list.
+
+## 5. End
+
+Report:
+
+- the status, the copied files, and the backup path, from the script output;
+- the `config.yaml` line that you added, or why you did not add it.
+
+If there is a backup, tell the user to compare it with the new schema and then delete it. Tell the user to commit `openspec/schemas/plan-lite/` and `openspec/config.yaml` to git.
