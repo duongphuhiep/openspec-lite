@@ -3,7 +3,7 @@
 Discovered facts about OpenSpec and this project's context.
 Add evidence/source so we don't re-discover the same thing.
 
-All OpenSpec facts come from `@fission-ai/openspec` **1.9.0**, unless an entry states a different version.
+The OpenSpec facts come from `@fission-ai/openspec` **1.9.0**. On 2026-10-16, we checked them again on **1.14.2**. All `dist/` and `schemas/` line references are for 1.14.2. If a fact is different in the two versions, the entry says so.
 
 ---
 
@@ -57,23 +57,33 @@ apply: # optional
 
 Validation rules: no duplicate ids, no cycles, all `requires` entries must reference existing artifact ids.
 
+**New rules in 1.14.2** (`dist/core/artifact-graph/types.js:3-18`, `:21-55`, `schema.js:83-88`, `:102`):
+
+- Each `apply.requires` id must be an existing artifact. If not, the load fails with "Invalid apply.requires reference".
+- `apply.requires` must have at least one entry.
+- `generates`, `template`, and `apply.tracks` must be relative paths. They must not contain `..`, an absolute path, or a NUL character.
+- `version` must be a positive integer. A schema can have 1000 artifacts at most.
+- If `apply.tracks` matches no `generates` value, `openspec schema validate` gives a warning (`findApplyTracksWarning`).
+
 **To omit an artifact**: just remove it from the `artifacts` array. No `optional` flag exists.
 
 **Only skip escape hatch**: `skip_specs: true` in a change's `.openspec.yaml` (allows zero spec deltas).
 
-**Unknown keys are dropped**: `SchemaYamlSchema` in `dist/core/artifact-graph/types.js:39` is a plain `z.object`, not `.strict()`. Zod removes unknown keys, so a key such as `openspec-version` causes no error. OpenSpec does not read it.
+**Unknown keys are dropped**: `SchemaYamlSchema` in `dist/core/artifact-graph/types.js:42` is a plain `z.object`, not `.strict()`. Zod removes unknown keys, so a key such as `openspec-version` causes no error. OpenSpec does not read it.
 
 ---
 
 ## OpenSpec: Schema Resolution Order
 
-**Source**: `dist/core/artifact-graph/resolver.js:107-119`
+**Source**: `dist/core/artifact-graph/resolver.js:113-116`, `:125-153`
 
 The CLI looks for `<name>/schema.yaml` in this order:
 
 1. Project-local: `<projectRoot>/openspec/schemas/<name>/`
 2. User override: `${XDG_DATA_HOME}/openspec/schemas/<name>/`
 3. Package built-in: `<package>/schemas/<name>/`
+
+In 1.14.2, a schema name with `/`, `\`, `.`, `..`, a drive letter, or an absolute path resolves to null.
 
 ---
 
@@ -99,7 +109,9 @@ The CLI looks for `<name>/schema.yaml` in this order:
 
 ## OpenSpec: Spec Delta Format
 
-**Source**: `schemas/spec-driven/templates/spec.md`
+**Source**: `schemas/spec-driven/schema.yaml` (`specs` instruction)
+
+`templates/spec.md` has only `## Purpose` and `## ADDED Requirements`. In 1.14.2, it also has a `# Spec Delta` title. The `specs` instruction in `schema.yaml` gives the full delta format:
 
 ```markdown
 ## ADDED Requirements
@@ -118,7 +130,9 @@ The CLI looks for `<name>/schema.yaml` in this order:
 ## REMOVED Requirements
 ```
 
-**MODIFIED needs full content** (source: `schemas/spec-driven/schema.yaml:75`, `:96-102`): a MODIFIED requirement must hold the full updated requirement. Copy it from `openspec/specs/<capability>/spec.md`, then edit it. Partial content loses detail at archive time.
+**MODIFIED needs full content** (source: `schemas/spec-driven/schema.yaml:98`, `:126-132`): a MODIFIED requirement must hold the full updated requirement. Copy it from `openspec/specs/<capability>/spec.md`, then edit it. Partial content loses detail at archive time.
+
+**Requirement length** (source: `schemas/spec-driven/schema.yaml:108`, 1.14.2): a requirement description has a limit of 500 characters. Above the limit, `validate` gives a warning and `validate --strict` fails.
 
 **Spec-driven template sections** (source: `schemas/spec-driven/templates/`): `proposal.md` has Why, What Changes, Capabilities, Impact. `design.md` has Context, Goals / Non-Goals, Decisions, Risks / Trade-offs. Neither has a section for constraints or open questions.
 
@@ -137,7 +151,7 @@ Still in beta. Used when planning spans multiple repos or teams.
 
 ## OpenSpec: Archive Behavior With No Specs
 
-**Source**: `dist/core/archive.js` lines 1115-1567
+**Source**: `dist/core/archive.js` lines 1185-1600 (merge skip at `:1361`)
 
 When a change has no `specs/` directory or empty delta, `openspec archive` works fine:
 
@@ -145,13 +159,18 @@ When a change has no `specs/` directory or empty delta, `openspec archive` works
 - Goes straight to moving the change directory to archive
 - No error thrown, no special flag needed
 
-An unmarked zero-delta change archives with only non-blocking proposal warnings.
+An unmarked zero-delta change archives with only non-blocking proposal warnings (`:1209-1213`).
+
+New in 1.14.2:
+
+- Archive validates a `skip_specs` change that has files under `specs/`, or a marker that is not valid (`:1203-1228`).
+- If a change name already starts with a date, archive keeps that name and adds no second date (`:1330-1333`).
 
 ---
 
 ## OpenSpec: Archive Confirmation Prompts
 
-**Source**: `dist/core/archive.js:1047`, `:1076`, `:1183`
+**Source**: `dist/core/archive.js:1282`, `:1311`, `:1418`
 
 `openspec archive` asks for confirmation in three cases. `--yes` skips each prompt:
 
@@ -159,7 +178,7 @@ An unmarked zero-delta change archives with only non-blocking proposal warnings.
 - The tracked tasks file has unchecked tasks: "N incomplete task(s) found."
 - The change has spec deltas: "Proceed with spec updates?"
 
-If the CLI cannot read an answer from stdin, it blocks with `archive_confirmation_required`.
+If the CLI cannot read an answer from stdin, it blocks. For incomplete tasks, the code is `archive_tasks_incomplete`. For the other two prompts, the code is `archive_confirmation_required`. This is the same in 1.9.0.
 
 ---
 
@@ -189,13 +208,13 @@ To switch a change from `plan-lite` to `spec-driven`, edit the `schema:` value i
 
 **Source**: `dist/cli/index.js` full command surface
 
-No `openspec change upgrade`, `migrate`, or schema-switching subcommand exists. To switch the schema, edit `.openspec.yaml` by hand. The CLI does not create the missing artifacts. `docs/design.md` §3 defines what the upgrade skill does (D62, D97, D99).
+No `openspec change upgrade`, `migrate`, or schema-switching subcommand exists. In 1.14.2, the only new top-level command is `version`. To switch the schema, edit `.openspec.yaml` by hand. The CLI does not create the missing artifacts. `docs/design.md` §3 defines what the upgrade skill does (D62, D97, D99).
 
 ---
 
 ## OpenSpec: apply Without tasks.md
 
-**Source**: read from code, not run. `dist/commands/workflow/instructions.js` lines 253–327, `dist/core/artifact-graph/graph.js:140`, `dist/core/archive.js:1062`, `dist/core/validation/validator.js:391`, `~/.claude/skills/openspec-apply-change/SKILL.md`.
+**Source**: read from code, not run. `dist/commands/workflow/instructions.js` lines 380–500, `dist/core/artifact-graph/graph.js:140`, `dist/utils/task-progress.js:87-93`, `dist/core/validation/validator.js:477`, `~/.claude/skills/openspec-apply-change/SKILL.md`.
 
 `openspec instructions apply` works with no `tasks.md` if the schema has `apply.requires: [plan]` and no `apply.tracks`.
 
@@ -208,11 +227,12 @@ const tracksFile = applyConfig?.tracks ?? null;
 - Apply is `blocked` only when an artifact in `requires` has no output file.
 - With no `tracks`, the state is `ready` with 0/0 tasks. There is no error.
 - **Trap 1**: with no `apply` block, `requires` defaults to all artifacts. A missing opt-in artifact then blocks apply.
-- **Trap 2**: with `tracks: tasks-preview.md`, apply is `blocked` when the file is missing or has no checkboxes.
+- **Trap 2**: with `tracks: tasks-preview.md`, apply is `blocked` when the file is missing or has no checkboxes. In 1.14.2, checkboxes with no text also block (`:472`).
+- **1.14.2**: an artifact that `skip_specs` skips counts as present for `apply.requires` (`:388-392`).
 
 **Stock apply skill**: it mostly follows the CLI output (`contextFiles`, `state`, `instruction`). But its text assumes tasks: "Mark task complete `- [ ]` → `- [x]`", "Progress: N/M tasks complete". With zero tasks, the agent depends on `apply.instruction`.
 
-**Done signal**: `all_done` needs `tracksFile && remaining === 0 && total > 0`. With no `tracks`, the state stays `ready`. The CLI never reports a plan-lite change as done.
+**Done signal**: `all_done` needs `tracksFile && remaining === 0 && total > 0` (`:481-485`). In 1.14.2, it also needs no unreadable tracked files. With no `tracks`, the state stays `ready`. The CLI never reports a plan-lite change as done.
 
 **status**: an artifact that nothing depends on shows as not done. "All planning artifacts complete!" does not print until every artifact exists. This does not block apply.
 
@@ -285,13 +305,13 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 **Source**: run in an empty git repo with OpenSpec 1.9.0 and a minimal plan-lite schema (2026-10-14)
 
 - `openspec init` is not necessary. `openspec new change <name> --schema plan-lite` creates `openspec/config.yaml`, `openspec/specs/`, and the change folder.
-- `new change` writes only `.openspec.yaml` (`schema`, `created`). It does not create `plan.md`.
+- `new change` writes only `.openspec.yaml` (`schema`, `created`). It does not create `plan.md`. In 1.14.2, it also writes `skip_specs: true` for plan-lite (see "OpenSpec 1.14.2: Differences From 1.9.0").
 - With `skip_specs: true` and no deltas, `openspec validate <name>` passes.
 - `openspec instructions apply --change <name> --json` returns `state: ready`, `progress` 0/0, `instruction` from the schema, and `contextFiles` with only `plan`. A file outside the schema, such as `tasks-preview.md`, is not in `contextFiles`.
 - `openspec archive <name> --yes` with no deltas moves the change to `changes/archive/YYYY-MM-DD-<name>/` with no prompt.
 - With a delta at `specs/<capability>/spec.md` and no `skip_specs`, `validate` passes and `archive --yes` merges it into `openspec/specs/<capability>/spec.md`.
 - Each requirement in a delta must have at least one `#### Scenario:` block. Otherwise `validate` fails.
-- After a switch to `schema: spec-driven`, `openspec status` shows `proposal` ready and the rest blocked, in graph order. `openspec instructions <artifact> --change <name> --json` returns `outputPath` and `template`. `plan.md` in the folder causes no error.
+- After a switch to `schema: spec-driven`, `openspec status` shows `proposal` ready and the rest blocked, in graph order. In 1.14.2, `skip_specs: true` stays in the file after the switch. So `status` shows `[~] specs (skipped: change declares skip_specs)` and "Progress: 0/3 artifacts complete (1 skipped)". Tested 2026-10-16. `openspec instructions <artifact> --change <name> --json` returns `outputPath` and `template`. `plan.md` in the folder causes no error.
 - `template` resolves relative to `<schema>/templates/`. `template: templates/plan.md` fails with "Template not found: .../templates/templates/plan.md". Use `template: plan.md`. The stock schema uses `template: proposal.md`.
 - `openspec instructions plan --change <name> --json` returns the template content in `template`.
 - An extra file in the schema folder, for example `plan-hash.mjs`, causes no error.
@@ -334,23 +354,23 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 
 ## OpenSpec: Project Guidance for apply and archive
 
-**Source**: `dist/core/project-config.js:5`, `:70-80`; `dist/commands/workflow/instructions.js:434`; stock skill `openspec-archive-change/SKILL.md:39`
+**Source**: `dist/core/project-config.js:6`, `:75`, `:112`; `dist/commands/workflow/instructions.js:672`; stock skill `openspec-archive-change/SKILL.md:50`
 
 - `openspec/config.yaml` can hold `operations.<id>.guidance`. The only operation IDs are `apply` and `archive`.
 - `openspec instructions archive --change <name> --json` returns this text as `operationGuidance`. The stock archive skill runs this command, so stock `/opsx:archive` sees the guidance.
 - The guidance is per project, not per schema.
-- `guidance` must be a YAML list of strings (`OperationConfigSchema`, `project-config.js:6-8`). A plain string is ignored, and every CLI command prints: "Guidance for operation 'archive' must be an array of strings, ignoring this operation's guidance". Tested.
-- The stock archive skill treats guidance as optional advice: "follow entries that are applicable and compatible with the built-in archive workflow" and "If guidance is inapplicable or conflicts with a controlling input, do not follow it" (`openspec-archive-change/SKILL.md:47-56`). It treats `context` as "a required prompt-level input". `openspec archive` (the CLI) never reads guidance.
-- A schema has no `archive` block. `SchemaYamlSchema` defines only `apply` (`dist/core/artifact-graph/types.js:30-46`).
+- `guidance` must be a YAML list of strings (`OperationConfigSchema`, `project-config.js:7-9`). A plain string is ignored, and the `openspec instructions` commands print: "Guidance for operation 'archive' must be an array of strings, ignoring this operation's guidance". `openspec list` prints no warning, in 1.9.0 and 1.14.2. Tested 2026-10-16.
+- The stock archive skill treats guidance as optional advice: "follow entries that are applicable and compatible with the built-in archive workflow" and "If guidance is inapplicable or conflicts with a controlling input, do not follow it" (`openspec-archive-change/SKILL.md:58-67`). It treats `context` as "a required prompt-level input". `openspec archive` (the CLI) never reads guidance.
+- A schema has no `archive` block. `SchemaYamlSchema` defines only `apply` (`dist/core/artifact-graph/types.js:42`).
 
 ---
 
 ## OpenSpec: Every Folder in schemas/ Is a Schema
 
-**Source**: `dist/core/artifact-graph/resolver.js:40-41`, `:56-72`
+**Source**: `dist/core/artifact-graph/resolver.js:40-42`, `:55-91`
 
 - The project schema folder is exactly `<projectRoot>/openspec/schemas/`.
-- `isSchemaDir` treats every folder (or folder symlink) in it as a schema. It skips only the names of its own fork temp folders: `.fork-staging-*` and `*.fork-backup-*`.
+- `isSchemaDir` treats every folder (or folder symlink) in it as a schema. It skips only the names of its own temp folders: `.fork-staging-*` and `*.fork-backup-*`. In 1.14.2, it also skips `.init-staging-*` and `*.init-backup-*`, which `openspec schema init` creates.
 - So a backup folder inside `openspec/schemas/` appears as a schema. A folder outside it, for example `openspec/schemas-backup/`, is not scanned.
 
 ---
@@ -432,8 +452,9 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 
 **Source**: `review-commit-range` run, OpenSpec 1.9.0, 2026-10-15
 
-- If `openspec/config.yaml` has two top-level `operations:` keys, every command prints "Warning: could not parse .../openspec/config.yaml (Map keys must be unique ...); ignoring it."
+- If `openspec/config.yaml` has two top-level `operations:` keys, the `openspec instructions` commands print "Warning: could not parse .../openspec/config.yaml (Map keys must be unique ...); ignoring it."
 - OpenSpec then ignores the whole file, including `context` and `rules`, not only `operations`.
+- `openspec list` prints no warning, in 1.9.0 and 1.14.2. Tested 2026-10-16.
 
 ---
 
@@ -442,8 +463,8 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 **Source**: runs in `mktemp -d` folders, OpenSpec 1.9.0, 2026-10-15
 
 - OpenSpec finds its root by walking up to the nearest `openspec/` folder. Each `--json` result has `root.path` and `root.source: "nearest"`. In a git repo with `svc/openspec/`, `openspec list --json` from `svc/src/deep/` gives `root.path` = `svc/`. From the git root, `root` is `null`.
-- `openspec instructions apply` on a change with no `plan.md` returns `state: blocked`, and its text tells the agent to use the `openspec-continue-change` skill.
-- A RENAMED delta written as `### Requirement: Login → Sign In` fails `validate` ("no requirement entries parsed"). REMOVED needs `**Reason**` and `**Migration**`. RENAMED needs `FROM:` and `TO:`. `openspec instructions specs --change <name> --schema spec-driven --json` gives these formats in `instruction`.
+- `openspec instructions apply` on a change with no `plan.md` returns `state: blocked`. In 1.9.0, its text tells the agent to use the `openspec-continue-change` skill. In 1.14.2, the text is: "Cannot apply this change yet. Missing artifacts: plan. Create it with `openspec instructions plan --change <name>` (`openspec status --change <name>` shows what is left)." The 1.14.2 JSON also has `missingArtifacts`, `missingPrerequisites`, `taskTrackingConfigured`, and `tasks`.
+- A RENAMED delta written as `### Requirement: Login → Sign In` fails `validate` ("no requirement entries parsed"). RENAMED needs `FROM:` and `TO:`. The instruction asks for `**Reason**` and `**Migration**` in a REMOVED requirement, but `validate` accepts a REMOVED requirement with neither field (1.9.0 and 1.14.2, tested 2026-10-16). `openspec instructions specs --change <name> --schema spec-driven --json` gives these formats in `instruction`.
 - `apm update --help`: `-g, --global` refreshes user-scope dependencies in `~/.apm/`.
 
 ---
@@ -493,7 +514,7 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 **Source**: CI run 38712388632 (`latest` = 1.14.2), then runs with `npm install --prefix <tmp> @fission-ai/openspec@1.14.2`, 2026-10-15
 
 - `openspec new change <name> --schema plan-lite` writes `skip_specs: true` into `.openspec.yaml` by itself. 1.9.0 does not. A spec-driven change gets no flag in either version. So a skill that appends the flag makes a duplicate key on 1.14.2. The rule "set it only if the line is missing" (D112) works on both.
-- `openspec new change` in a folder with no OpenSpec root creates `openspec/` and prints: "Note: no OpenSpec root was found here, so one was created at openspec/. Run `openspec init` to finish setting this project up".
+- `openspec new change` in a folder with no OpenSpec root creates `openspec/` and prints: "Note: no OpenSpec root was found here, so one was created at openspec/. Run `openspec init` to finish setting this project up, or delete that directory if you meant a different project."
 - `openspec instructions <artifact> --json` adds `planningHome`, `resolvedOutputPath`, and `existingOutputPaths`. `outputPath`, `template`, `changeDir`, and `root` are unchanged.
 - With the fixed tests, the full `node --test` suite passes on 1.9.0 and on 1.14.2.
 
@@ -518,4 +539,4 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - The APM cache sparse checkout holds `package/` (12 files) and the 4 root files (`.gitignore`, `CLAUDE.md`, `CONTEXT.md`, `README.md`). It has no `tests/`, `scripts/`, or `docs/`.
 - With no `--target`, `apm install` auto-detects the harness from marker folders. After `openspec init --tools claude`, it prints "Targets: claude (source: auto-detect from .claude/)". After `--tools github-copilot`, it detects `copilot` from `.github/prompts/`. After `--tools codex`, OpenSpec writes only `.agents/skills/` (no `.codex/`), so APM prints "found none in this project" and deploys nothing.
 - `openspec init --tools copilot` fails (exit code 1). The OpenSpec name is `github-copilot`. The APM name is `copilot`, which deploys to `.agents/skills/`. The names `claude`, `codex`, `cursor`, `gemini`, `opencode`, and `kiro` are the same in both tools.
-- `npm view @fission-ai/openspec@1 version` gives 1.14.2.
+- `npm view @fission-ai/openspec@1 version` lists every 1.x version, one line each. The highest is 1.14.2. Tested 2026-10-16.
