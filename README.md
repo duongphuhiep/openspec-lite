@@ -7,8 +7,8 @@ A lightweight workflow extension for [OpenSpec](https://github.com/Fission-AI/Op
 The OpenSpec workflow has four artifacts: `proposal → specs → design → tasks`.
 
 1. This workflow is too heavy for medium changes. A `plan.md` is sufficient for medium changes.
-2. The artifacts repeat information. Proposal covers WHY, design covers HOW, and specs cover WHAT. The boundary between them is fuzzy. A good proposal needs scope, feasibility, and trade-offs, which belong to design.
-3. `tasks.md` is pseudo-code close to real code. It also needs review, which is redundant. It is useful only when a large model writes it to guide a small model.
+2. The artifacts overlap. Proposal covers WHY, design covers HOW, and specs cover WHAT. The boundary between them is fuzzy. A good proposal needs scope, feasibility, and trade-offs, which belong to design.
+3. `tasks.md` can become pseudo-code close to real code. The AI writes it before it reads the code, so it locks in the approach too early. It goes stale when the AI finds a simpler approach during coding. It is useful mainly when a large model writes it to guide a small model.
 
 ## The Solution: `openspec-lite`
 
@@ -17,6 +17,10 @@ The OpenSpec workflow has four artifacts: `proposal → specs → design → tas
 - plan: `openspec-lite-propose` creates `plan.md` in `openspec/changes/<name>/`. Add any context the AI needs to implement correctly.
 - implement: `openspec-lite-apply` implements from `plan.md`.
 - doc: `openspec-lite-archive` promotes non-obvious information from `plan.md` to `openspec/specs/` and ADRs. Then it moves the change to the archive.
+
+`plan.md` keeps WHY, WHAT, and HOW together during the work. At archive time, the AI separates the items that last: requirements go to specs, and decisions go to ADRs.
+
+An OpenSpec custom schema alone can give you a one-artifact workflow. openspec-lite adds the upgrade, promotion, and preview workflow around it.
 
 **To review the AI's plan before it writes code:** Use `tasks-preview.md`. See the Tasks Preview section.
 

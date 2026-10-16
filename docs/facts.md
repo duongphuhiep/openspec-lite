@@ -19,7 +19,7 @@ proposal → specs + design → tasks
 
 | Artifact | File                       | Purpose                                     |
 | -------- | -------------------------- | ------------------------------------------- |
-| proposal | proposal.md                | WHY (motivation, scope, non-goals)          |
+| proposal | proposal.md                | WHY (motivation, what changes, impact)      |
 | specs    | specs/<capability>/spec.md | WHAT (requirements + scenarios, delta only) |
 | design   | design.md                  | HOW (architecture, decisions, tradeoffs)    |
 | tasks    | tasks.md                   | STEPS (implementation checklist)            |
