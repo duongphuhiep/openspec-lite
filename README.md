@@ -4,23 +4,28 @@ A lightweight workflow extension for [OpenSpec](https://github.com/Fission-AI/Op
 
 ## The Problem
 
-The OpenSpec workflow has four artifacts: `proposal → specs → design → tasks`. This is too heavy for a medium change. `tasks.md` is the main problem. It forces implementation details before you explore the code.
+The OpenSpec workflow has four artifacts: `proposal → specs → design → tasks`.
 
-## The Solution: Three Levels
+1. This workflow is too heavy for a medium changes.
+   - For medium changes, we usually make a plan in a `plan.md` then implement.
+2. Redundancy: Information are often repeated / redundance between openspec's artifacts.
+   - The "Proposal" focus on the "WHY", the "Design" focus on the "HOW", other artifact defines the "WHAT".
+   - However the boundary is inherently fuzzy between them. For example a good Proposal often needs to explain enough to have clear Scope, feasability, trade-off.
+   - But these aspects usually requires elements from "Design" (.aka "HOW").
+3. `tasks.md` is often pseudo codes which are very close to the real codes => this pseudo codes also need to be reviewed, so it feels redudant => why not just write real codes directly? In fact, the `tasks.md` is useful only if it is write by Expensive/inteligent/big models, to instruct Cheap/Small models how to codes.
+  
+## The Solution: `openspec-lite`
 
-```
-Level 1 ── Direct implementation   (no artifacts)
-Level 2 ── openspec-lite           (plan.md + optional tasks-preview.md)
-Level 3 ── spec-driven             (full OpenSpec)
-                ↑
-                upgrade path when scope grows
-```
+- `openspec-lite` targets medium changes. The workflow is as simple as "plan -> implement -> export-spec".
+- `/openspec-lite-propose` generate the `plan.md` in `openspec/changes/<capability>/`
+  - in this `plan.md` you can collect whatever "Why", "What", "How", "Decisions", "Contraints", "Dicovery", "Facts" => give everything neccesary so that AI can implement the changes you wanted.
+- `/openspec-lite-apply`: implements the `plan.md`.
+- `/openspec-lite-archive`: Dev finished, **Promote** some information from `plan.md` to the main `openspec/specs` before throwing it away (to `openspec/changes/archive`)
 
-| Level | When to use                                              | Artifacts                               |
-| ----- | -------------------------------------------------------- | --------------------------------------- |
-| 1     | Bug fix, isolated refactor, obvious feature              | None                                    |
-| 2     | Medium change: needs planning, one person or agent       | `plan.md` + optional `tasks-preview.md` |
-| 3     | Handoff, multi-capability, cross-repo, contract needed   | `proposal + specs + design + tasks`     |
+Q1: I'm afraid that AI didn't understand well my `plan.md`, and mess up the codes:
+  => in `openspec` we can peek at the `task.md` before apply changes. `openspec-lite` offer `tasks-preview.md` (see "Tasks Preview" section below)
+Q2: My changes and so my `plan.md` grown too big: 
+  => `/openspec-lite-upgrade` convert `openspec-lite` to usual `openspec` for your big changes.
 
 ## Install
 
@@ -47,15 +52,15 @@ apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude
 
 The two tools use the same harness name, except for GitHub Copilot:
 
-| Harness | `openspec init --tools` | `apm install --target` |
-| ------- | ----------------------- | ---------------------- |
-| Claude Code | `claude` | `claude` |
-| Codex | `codex` | `codex` |
-| Cursor | `cursor` | `cursor` |
-| Gemini CLI | `gemini` | `gemini` |
-| OpenCode | `opencode` | `opencode` |
-| Kiro | `kiro` | `kiro` |
-| GitHub Copilot | `github-copilot` | `copilot` |
+| Harness        | `openspec init --tools` | `apm install --target` |
+| -------------- | ----------------------- | ---------------------- |
+| Claude Code    | `claude`                | `claude`               |
+| Codex          | `codex`                 | `codex`                |
+| Cursor         | `cursor`                | `cursor`               |
+| Gemini CLI     | `gemini`                | `gemini`               |
+| OpenCode       | `opencode`              | `opencode`             |
+| Kiro           | `kiro`                  | `kiro`                 |
+| GitHub Copilot | `github-copilot`        | `copilot`              |
 
 ## What openspec-lite Ships
 
@@ -72,31 +77,6 @@ Try stock `/opsx:apply` first. If it does not work well, use `openspec-lite-appl
 Do not run stock `/opsx:archive` on a plan-lite change. It skips promotion, so the `plan.md` decisions never become specs or ADRs. Use `openspec-lite-archive`.
 
 Use stock `/opsx:explore` before you propose. openspec-lite has no explore skill.
-
-## plan.md Structure
-
-`plan.md` is a living document. It starts small. It grows when you make decisions during the work.
-
-```markdown
-## Goal
-
-## Non-Goals
-
-## Constraints
-
-## Open Questions
-
-## Decisions
-```
-
-The **Decisions** section is append-only. Record each decision when you make it, during exploration or implementation:
-
-```markdown
-### Decision: Use optimistic locking
-
-Chose optimistic locking over pessimistic because contention is low.
-Rejected row-level locks because they add too much overhead for a read-heavy workload.
-```
 
 ## Tasks Preview
 
