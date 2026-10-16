@@ -2,7 +2,10 @@
 
 Write all prose in ASD-STE100 Simplified Technical Language.
 
-- Keep sentences to 20 words or fewer.
+- Keep procedural sentences (steps) to 20 words or fewer.
+- Keep descriptive sentences to 25 words or fewer.
+- Do not put more than 3 nouns in a row.
+- Put the "If..." clause at the start of the sentence.
 - Use active voice and simple tenses.
 - Use one word for one meaning.
 - Write one instruction per sentence.
