@@ -6,26 +6,21 @@ A lightweight workflow extension for [OpenSpec](https://github.com/Fission-AI/Op
 
 The OpenSpec workflow has four artifacts: `proposal → specs → design → tasks`.
 
-1. This workflow is too heavy for a medium changes.
-   - For medium changes, we usually make a plan in a `plan.md` then implement.
-2. Redundancy: Information are often repeated / redundance between openspec's artifacts.
-   - The "Proposal" focus on the "WHY", the "Design" focus on the "HOW", other artifact defines the "WHAT".
-   - However the boundary is inherently fuzzy between them. For example a good Proposal often needs to explain enough to have clear Scope, feasability, trade-off.
-   - But these aspects usually requires elements from "Design" (.aka "HOW").
-3. `tasks.md` is often pseudo codes which are very close to the real codes => this pseudo codes also need to be reviewed, so it feels redudant => why not just write real codes directly? In fact, the `tasks.md` is useful only if it is write by Expensive/inteligent/big models, to instruct Cheap/Small models how to codes.
-  
+1. This workflow is too heavy for medium changes. A `plan.md` is sufficient for medium changes.
+2. The artifacts repeat information. Proposal covers WHY, design covers HOW, and specs cover WHAT. The boundary between them is fuzzy. A good proposal needs scope, feasibility, and trade-offs, which belong to design.
+3. `tasks.md` is pseudo-code close to real code. It also needs review, which is redundant. It is useful only when a large model writes it to guide a small model.
+
 ## The Solution: `openspec-lite`
 
-- `openspec-lite` targets medium changes. The workflow is as simple as "plan -> implement -> export-spec".
-- `/openspec-lite-propose` generate the `plan.md` in `openspec/changes/<capability>/`
-  - in this `plan.md` you can collect whatever "Why", "What", "How", "Decisions", "Contraints", "Dicovery", "Facts" => give everything neccesary so that AI can implement the changes you wanted.
-- `/openspec-lite-apply`: implements the `plan.md`.
-- `/openspec-lite-archive`: Dev finished, **Promote** some information from `plan.md` to the main `openspec/specs` before throwing it away (to `openspec/changes/archive`)
+`openspec-lite` targets medium changes. The workflow is: plan → implement (→ doc).
 
-Q1: I'm afraid that AI didn't understand well my `plan.md`, and mess up the codes:
-  => in `openspec` we can peek at the `task.md` before apply changes. `openspec-lite` offer `tasks-preview.md` (see "Tasks Preview" section below)
-Q2: My changes and so my `plan.md` grown too big: 
-  => `/openspec-lite-upgrade` convert `openspec-lite` to usual `openspec` for your big changes.
+- plan: `openspec-lite-propose` creates `plan.md` in `openspec/changes/<name>/`. Add any context the AI needs to implement correctly.
+- implement: `openspec-lite-apply` implements from `plan.md`.
+- doc: `openspec-lite-archive` promotes non-obvious information from `plan.md` to `openspec/specs/` and ADRs. Then it moves the change to the archive.
+
+**To review the AI's plan before it writes code:** Use `tasks-preview.md`. See the Tasks Preview section.
+
+**If the change grows too large:** Run `openspec-lite-upgrade`. It converts the plan-lite change to a spec-driven change.
 
 ## Install
 
