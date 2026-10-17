@@ -531,6 +531,19 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 
 ---
 
+## Scenario Run on v1.2.0
+
+**Source**: agent scenarios 1–20 (Claude Code 2.1.302, `eu.anthropic.claude-sonnet-5-5`, print mode), OpenSpec 1.14.2, APM 0.33.0, 2026-10-17
+
+- 22 of 24 runs passed. Scenarios 11 and 20a passed in part.
+- **Scenario 20a**: on the first upgrade run, the agent asked the prune question with no list of section destinations. On the resume run, it showed the list.
+- **Scenarios 5 and 13a**: archive wrote the ADR before `openspec validate`, once in the same shell command. `validate` passed, so the result was correct.
+- **Scenario 16b**: with no openspec-lite guidance in `config.yaml`, stock `/opsx:archive` still ran `openspec-lite-archive` first. The skill description (D116) caused this.
+- **Scenario 11**: after the user confirmed `svc/` as the root, the agent ran one `openspec new change` at the git root. It failed with "Schema 'plan-lite' not found", and a retry in `svc/` worked.
+- **Done check**: archive ran `git ls-files | head -30`. Files under `.claude/` and `apm_modules/` filled the 30 lines, so the agent said the repo had no source code.
+
+---
+
 ## Install Flow on the Published v1.0.0 Tag
 
 **Source**: scenario 10, run 2026-10-15 in empty `git init` folders, OpenSpec 1.9.0 and 1.14.2, APM 0.33.0

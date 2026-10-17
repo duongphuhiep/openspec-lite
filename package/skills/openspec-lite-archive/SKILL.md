@@ -60,7 +60,7 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
 7. Before you write, list the files under `<dir>/specs/`. They are from an earlier run. Show each one, and ask the user to keep or delete it. Then write the approved deltas to `<dir>/specs/<capability>/spec.md`. If a kept file has the same path, merge the new delta into it, with no duplicate requirement.
 8. Look at the files under `<dir>/specs/` now. If any file exists, remove `skip_specs` from `<dir>/.openspec.yaml`. If none exists, make sure `skip_specs: true` is set. `validate` fails with a delta and the flag, and also with no delta and no flag.
 9. Run `openspec validate "<name>"`. If it fails, stop and report.
-10. Write each approved ADR to `openspec/adr/YYYY-MM-DD-<slug>.md`. Use today's date. Skip a decision that already has an ADR with `Change: <name>`. If the file name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR.
+10. Only after `validate` passes in step 9, write each approved ADR to `openspec/adr/YYYY-MM-DD-<slug>.md`. Do not write an ADR in the same command as `validate`. Use today's date. Skip a decision that already has an ADR with `Change: <name>`. If the file name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR.
 11. Run `openspec archive "<name>" --yes`. The CLI applies the deltas to `openspec/specs/` and moves the change, with `plan.md` and `tasks-preview.md`, to `openspec/changes/archive/`. If it fails, report it. Keep the ADRs: each one is still a correct decision.
 
 ## 3. End

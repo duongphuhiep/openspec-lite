@@ -469,3 +469,4 @@ build/
 .plan/
 .tmp/
 .review-reports/
+.scenario-runs/
