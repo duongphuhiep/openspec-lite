@@ -1591,3 +1591,17 @@ The upgrade signal "a contract (spec) becomes necessary" stays. It means a contr
 This revises D62 for upgrade, and D18 for archive.
 
 **Rationale**: A review of the promotion and upgrade rules found two gaps. Archive names each item that it does not promote (D116), but upgrade deleted `plan.md` sections with no check. If the agent dropped a detail when it wrote `design.md`, the delete removed the only copy, and `validate` checks structure, not content. At archive, the user could approve, reject, or edit a draft, but the skill gave no step to promote an item that the filters skipped. The filters stay the default. The user only adds to them. In scenario 20a, the agent moved an open question that changes the specs to `design.md` → `## Open Questions`. The old example "open questions that are still open" did not stop it, because the OpenSpec `design` instruction has that section. The same instruction tells the agent to ask the user about such a question (`docs/facts.md`), so upgrade asks first.
+
+---
+
+## D121: Skill Wording From the v1.2.0 Scenario Run
+
+**Decision**:
+
+- If the OpenSpec root is not the current folder, each `openspec` command starts with `cd <root> && `. This also applies to the first command after the user confirms a root.
+- When a workflow skill runs `openspec-lite-schema`, its end summary includes the schema report: the status, the copied files, and the backup path.
+- The archive done check finds the code with a search for what the Goal names, for example `git grep`. It does not judge from the first lines of `git ls-files`.
+
+This extends D111, D93, and D114.
+
+**Rationale**: The v1.2.0 scenario run found three gaps (`docs/facts.md`). In scenario 11, the agent ran `openspec new change` at the git root after the user confirmed `svc/`, and the command failed. In scenario 9, propose ran the schema skill but did not pass on its list of copied files. In archive runs, `git ls-files | head -30` showed only `.claude/` and `apm_modules/` files, so the agent said that the repo had no source code.
