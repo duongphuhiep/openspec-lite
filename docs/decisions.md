@@ -1559,3 +1559,17 @@ This revises D103.
 - `openspec init --tools copilot` failed with exit code 1, but README suggested "copilot" for both tools.
 - With no `--target`, APM auto-detected `.claude/` after `openspec init --tools claude`, and `.github/prompts/` after `--tools github-copilot`. After `--tools codex`, it found no harness marker and deployed nothing, because OpenSpec writes only `.agents/skills/` for Codex.
 - A plain `npm install -g @fission-ai/openspec` installs `latest`, which a future 2.x can put outside the range. `@1` resolved to 1.14.2.
+
+---
+
+## D119: A Contract Goes to a Spec Even If It Is Obvious
+
+**Decision**: At archive, a third filter selects requirements:
+
+- **Contract**: externally observable behavior that a client, another team, or a later change depends on.
+
+An item that passes this filter goes to a spec, even if a reader can deduce it from the code. The non-obvious and surprising filters stay as they are, for requirements and decisions. One filter is still sufficient (D55).
+
+This revises D6 and D55.
+
+**Rationale**: A review of the promotion rules found this gap. The non-obvious filter assumes that the reader has the code. A client or another team reads the spec, not the code. With only D6, an obvious API rule never gets into `openspec/specs/`. Then the main specs are incomplete, and a later spec-driven change has no requirement to copy for a MODIFIED delta. An upgraded change already writes a delta for each requirement, so this also makes the two paths more alike. The user still approves each item (D18), so the user removes the noise.
