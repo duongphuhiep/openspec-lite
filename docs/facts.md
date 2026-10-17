@@ -561,5 +561,5 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 
 - The `template` of `design` has no `## Open Questions` heading. Its headings are `## Context`, `## Goals / Non-Goals`, `## Decisions`, and `## Risks / Trade-offs`.
 - The `instruction` lists **Open Questions** as an optional section: "Unknowns that can safely be answered later without changing the specs, the approach, or the task breakdown. Omit if none."
-- The `instruction` also says: "If a question would change the specs, the chosen approach, or the task breakdown", it is not an open question for `design.md`.
+- The `instruction` also says: "Open questions are for genuinely deferrable unknowns, not decisions you skipped. If a question would change the specs, the chosen approach, or the task breakdown, resolve it now - ask the user instead of guessing."
 - In scenario 20a, an agent moved such a question to `design.md` → `## Open Questions` during an upgrade.

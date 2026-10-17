@@ -774,7 +774,7 @@ This revises D13 and D31.
 
 **Rationale**: The spec-driven graph requires `specs` and `design` before `tasks`. Upgrade is the only step that knows both `plan.md` and the preview, so a split would lose context. `design.md` is where stock tools look for decisions. A preview or a plan next to the new artifacts is a stale second source of truth.
 
-**Status**: D79 adds `openspec validate` at the end. D97 switches the schema last. Revised by D120: upgrade lists the destination of each section and asks before step 4. An open question that changes the specs stays in `plan.md`.
+**Status**: D79 adds `openspec validate` at the end. D97 switches the schema last. Revised by D120: upgrade lists the destination of each section and asks before step 4. Upgrade asks the user to answer an open question that changes the specs. If the user cannot answer, it stays in `plan.md`.
 
 ---
 
@@ -1585,9 +1585,9 @@ The upgrade signal "a contract (spec) becomes necessary" stays. It means a contr
 **Decision**:
 
 - Before upgrade deletes a `plan.md` section, it lists each section with its destination: the artifact and the heading that now hold its content, or "kept". It asks the user before the delete. On no, it keeps `plan.md` as it is.
-- An open question that changes the specs, the approach, or the tasks stays in `plan.md`. An open question that is safe to answer later goes to `design.md` → `## Open Questions`.
+- Upgrade asks the user to answer each open question that changes the specs, the approach, or the tasks. The answer goes to the specs or to `design.md` → `## Decisions`. If the user cannot answer now, the question stays in `plan.md`. An open question that is safe to answer later goes to `design.md` → `## Open Questions`.
 - At archive, the user can pick an item from the list of items that are not drafted. The agent then drafts that item, and the user approves it like the other drafts.
 
 This revises D62 for upgrade, and D18 for archive.
 
-**Rationale**: A review of the promotion and upgrade rules found two gaps. Archive names each item that it does not promote (D116), but upgrade deleted `plan.md` sections with no check. If the agent dropped a detail when it wrote `design.md`, the delete removed the only copy, and `validate` checks structure, not content. At archive, the user could approve, reject, or edit a draft, but the skill gave no step to promote an item that the filters skipped. The filters stay the default. The user only adds to them. In scenario 20a, the agent moved an open question that changes the specs to `design.md` → `## Open Questions`. The old example "open questions that are still open" did not stop it, because the OpenSpec `design` instruction has that section (`docs/facts.md`).
+**Rationale**: A review of the promotion and upgrade rules found two gaps. Archive names each item that it does not promote (D116), but upgrade deleted `plan.md` sections with no check. If the agent dropped a detail when it wrote `design.md`, the delete removed the only copy, and `validate` checks structure, not content. At archive, the user could approve, reject, or edit a draft, but the skill gave no step to promote an item that the filters skipped. The filters stay the default. The user only adds to them. In scenario 20a, the agent moved an open question that changes the specs to `design.md` → `## Open Questions`. The old example "open questions that are still open" did not stop it, because the OpenSpec `design` instruction has that section. The same instruction tells the agent to ask the user about such a question (`docs/facts.md`), so upgrade asks first.
