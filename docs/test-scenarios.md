@@ -116,7 +116,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - `openspec/schemas/plan-lite/` has no `local-note.txt`.
 - The agent reports the backup path and the copied files.
 - `openspec/config.yaml` has one `operations:` key. Its `archive.guidance` list has "keep me" and the openspec-lite item.
-- `openspec list` prints no "could not parse" warning.
+- `openspec instructions plan --change <name> --json`, for the change that propose made, prints no "could not parse" warning. `openspec list` never prints it (`docs/facts.md`).
 
 ## 10. Real APM install from the tag
 
