@@ -143,7 +143,7 @@ One filter is sufficient. The AI shows the list. You approve, reject, or edit ea
 
 ## Upgrade Path
 
-When a Level 2 change grows past its original scope, `openspec-lite-upgrade` does these steps:
+When a plan-lite change grows past its original scope, `openspec-lite-upgrade` does these steps:
 
 1. It removes `skip_specs: true` from `.openspec.yaml`.
 2. It asks you to answer each open question that changes the specs, the approach, or the tasks. Then it writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. The `plan.md` decisions go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.

@@ -1301,6 +1301,8 @@ This revises D96.
 
 This revises D81 and D83.
 
+**Status**: Revised by D118. README installs OpenSpec with `@1`, lists the APM CLI, and has a table of harness names.
+
 **Rationale**: With no `--target` and no harness folder in the repo, APM 0.33.0 deploys nothing. `openspec init` installs the stock `/opsx:*` skills that README tells users to run.
 
 ---
@@ -1604,4 +1606,4 @@ This revises D62 for upgrade, and D18 for archive.
 
 This extends D111, D93, and D114.
 
-**Rationale**: The v1.2.0 scenario run found three gaps (`docs/facts.md`). In scenario 11, the agent ran `openspec new change` at the git root after the user confirmed `svc/`, and the command failed. In scenario 9, propose ran the schema skill but did not pass on its list of copied files. In archive runs, `git ls-files | head -30` showed only `.claude/` and `apm_modules/` files, so the agent said that the repo had no source code.
+**Rationale**: The v1.2.0 scenario run found three gaps (`docs/facts.md`). In scenario 11, the agent ran `openspec new change` at the git root after the user confirmed `svc/`, and the command failed. In scenario 9, propose ran the schema skill but did not pass on its list of copied files. In archive runs, `git ls-files | head -30` showed only `.claude/` and `apm_modules/` files, so the agent said that the repo had no source code. A stricter root wording was tested and reverted: "start every command with `cd <absolute root path> && `". It failed 2 of 2 scenario 11 runs: the agent added the prefix to one command only, and skipped the confirm question.
