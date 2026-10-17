@@ -78,13 +78,14 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. Create a change with a tasks preview (scenario 3, steps 1–2).
 2. Run `openspec-lite-upgrade`. Stop the agent after it writes `proposal.md`.
-3. Run `openspec-lite-upgrade` again.
+3. Run `openspec-lite-upgrade` again. Answer each open question. At the prune question, answer yes.
 
 **Expected**:
 
 - After step 2, `.openspec.yaml` still has `schema: plan-lite`, and `skip_specs` is gone.
 - After step 3, the agent keeps `proposal.md` and writes the rest. `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
+- The agent shows the list of `plan.md` destinations before the prune question. After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
 
 ## 8. Newer repo schema
 

@@ -5,7 +5,7 @@ description: Upgrade a plan-lite change to a full spec-driven OpenSpec change wh
 
 # openspec-lite-upgrade
 
-Upgrade a plan-lite change to spec-driven. The schema switch comes after all artifact writes, so an interrupted run can run again and resume.
+Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 writes the four artifacts, so an interrupted run can run again and resume.
 
 ## 1. Common checks
 
