@@ -1214,7 +1214,7 @@ This revises D62.
 
 **Rationale**: If the schema switches first and a later step fails, the guard (D75) refuses the half-upgraded change, and nothing can resume it. With the switch last, a failure leaves a plan-lite change, so a new upgrade run resumes it. The `--schema` override gives spec-driven templates for a plan-lite change (`docs/facts.md`).
 
-**Status**: D99 moves the `skip_specs` removal to the first step, before the artifacts. D108 adds the three-case guard and puts `skip_specs` back when the plan has no requirement.
+**Status**: D99 moves the `skip_specs` removal to the first step, before the artifacts. D108 adds the three-case guard and puts `skip_specs` back when the plan has no requirement. Revised by D120: upgrade lists the destination of each `plan.md` section and asks before it deletes the moved sections.
 
 ---
 
@@ -1590,7 +1590,7 @@ The upgrade signal "a contract (spec) becomes necessary" stays. It means a contr
 - Before upgrade writes an artifact, it asks the user to answer each open question that changes the specs, the approach, or the tasks. The answer goes to the specs, to `design.md` → `## Decisions`, or to `tasks.md`. If the user cannot answer now, the question stays in `plan.md`. An open question that is safe to answer later goes to `design.md` → `## Open Questions`.
 - At archive, the user can pick an item from the list of items that are not drafted. The agent then drafts that item, and the user approves it like the other drafts.
 
-This revises D62 for upgrade, and D18 for archive.
+This revises D62 and D97 for upgrade, and D18 for archive.
 
 **Rationale**: A review of the promotion and upgrade rules found two gaps. Archive names each item that it does not promote (D116), but upgrade deleted `plan.md` sections with no check. If the agent dropped a detail when it wrote `design.md`, the delete removed the only copy, and `validate` checks structure, not content. At archive, the user could approve, reject, or edit a draft, but the skill gave no step to promote an item that the filters skipped. The filters stay the default. The user only adds to them. In scenario 20a, the agent moved an open question that changes the specs to `design.md` → `## Open Questions`. The old example "open questions that are still open" did not stop it, because the OpenSpec `design` instruction has that section. The same instruction tells the agent to ask the user about such a question (`docs/facts.md`), so upgrade asks first.
 
