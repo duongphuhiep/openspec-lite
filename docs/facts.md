@@ -540,6 +540,7 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - **Scenarios 5 and 13a**: archive wrote the ADR before `openspec validate`, once in the same shell command. `validate` passed, so the result was correct.
 - **Scenario 16b**: with no openspec-lite guidance in `config.yaml`, stock `/opsx:archive` still ran `openspec-lite-archive` first. The skill description (D116) caused this.
 - **Scenario 11**: after the user confirmed `svc/` as the root, the agent ran one `openspec new change` at the git root. It failed with "Schema 'plan-lite' not found", and a retry in `svc/` worked.
+- **Root prefix, two wordings** (scenario 11 reruns): with "If that folder is not the current folder, start each `openspec` command with `cd <root> && `", the agent asked to confirm `svc/` and ran each command in `svc/` (2 of 2 runs). Later commands had no prefix and relied on the shell folder. A stricter wording ("start every command with `cd <absolute root path> && `, do not rely on the shell folder") failed 2 of 2 runs: the agent added the prefix to one command only, and skipped the confirm question. The first wording stays (D121).
 - **Done check**: archive ran `git ls-files | head -30`. Files under `.claude/` and `apm_modules/` filled the 30 lines, so the agent said the repo had no source code.
 
 ---
