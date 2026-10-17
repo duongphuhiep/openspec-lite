@@ -61,7 +61,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected**:
 
-- The agent asks the done check first.
+- The agent does the done check first. It asks "Archive anyway?" only if an answer is "no".
 - The requirement draft has at least one `#### Scenario:`.
 - `openspec validate` passes. `openspec/adr/YYYY-MM-DD-<slug>.md` exists with Status `Accepted`.
 - `openspec/specs/<capability>/spec.md` holds the requirement. The change is in `openspec/changes/archive/`.
