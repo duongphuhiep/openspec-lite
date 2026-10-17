@@ -42,10 +42,10 @@ Upgrade a plan-lite change to spec-driven. The schema switch is the last write, 
    4. `tasks.md`: if `<dir>/tasks-preview.md` exists, use it as the seed. Remove its two header comment lines. Add `[ ]` to each task line, for example `- [ ] 1.1 <task>`. Then delete `tasks-preview.md`. If no preview exists, write `tasks.md` from the template. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here. Keep `tasks.md`, and delete `tasks-preview.md`.
 3. Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
 4. Prune `plan.md`:
-   1. List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept". Keep a section that has no slot, for example an open question that changes the specs, the approach, or the tasks (step 2.3).
+   1. List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept". If the items of one section go to different destinations, list each item. Keep a section that has no slot, for example an open question that changes the specs, the approach, or the tasks (step 2.3).
    2. If a section has content that is in no artifact, say so. Offer to add it to an artifact first.
    3. Ask the user: "Delete the moved sections from `plan.md`?" On no, keep `plan.md` as it is, and go to step 5.
-   4. Delete each section whose content moved. If no section is left, delete `plan.md`.
+   4. Delete each section or item whose content moved. Keep each kept item. If no section is left, delete `plan.md`.
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 
 ## 3. End
@@ -57,4 +57,5 @@ In the summary:
 - Ask for an extra review of `tasks.md`, because it is a contract, not a reference.
 - Say if `skip_specs` was removed, or put back because the change has no spec delta.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
+- If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`.
 - If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs. To keep them as ADRs, copy them to `openspec/adr/` before the archive.

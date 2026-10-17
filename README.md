@@ -139,7 +139,7 @@ At archive time, the AI uses three filters to select what to promote:
 - **Surprising**: it would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code.
 
-One filter is sufficient. The AI shows the list. You approve, reject, or edit each item in the conversation. The AI writes nothing before your approval.
+One filter is sufficient. The AI shows the list. You approve, reject, or edit each item in the conversation. You can also pick a skipped item, and the AI drafts it. The AI writes nothing before your approval.
 
 ## Upgrade Path
 
