@@ -32,6 +32,10 @@ _Avoid_: Drift, divergence
 The move of non-obvious information and contracts from a plan into permanent specs or ADRs. It happens during archive. The CLI applies the spec deltas when the change moves to the archive.
 _Avoid_: Sync, merge, upgrade
 
+**Contract**:
+Externally observable behavior that a client or another team depends on. Promotion writes it to a spec, even if it is obvious from the code. Three other uses of the word are different. "`tasks.md` is a contract" means that apply must follow its steps. The upgrade signal "a contract (spec) becomes necessary" means a spec that others must agree on before the work. In `docs/design.md`, "contract" also names the command-line interface of a script, for example `install.mjs`.
+_Avoid_: Interface, API (for this meaning)
+
 **Done check**:
 The three questions at the end of apply and the start of archive: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 _Avoid_: Done checklist, definition of done

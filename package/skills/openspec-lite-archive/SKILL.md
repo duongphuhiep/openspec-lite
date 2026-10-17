@@ -31,8 +31,8 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
 3. Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
    - **Surprising**: it would surprise a new team member.
-   - **Contract**: externally observable behavior that a client, another team, or a later change depends on. It is a requirement, even if it is obvious from the code.
-4. Sort each item: a requirement goes to a spec, a decision goes to an ADR. List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
+   - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It is a requirement, even if it is obvious from the code.
+4. Sort each item: a requirement goes to a spec, a decision goes to an ADR. If a decision is also a contract, draft the contract as a requirement. Its rationale can also go to an ADR. List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
 5. Draft the full text of each item. Before the first delta, run `openspec instructions specs --change "<name>" --schema spec-driven --json`. Follow the delta format in its `instruction`. It gives the format for each header, including the `**Reason**` and `**Migration**` lines of REMOVED and the `FROM:` and `TO:` lines of RENAMED. The result also has `skipped: true` and a warning, because `skip_specs` is still set. Ignore both: step 8 sets `skip_specs`.
    - **Requirement**: a delta for `<dir>/specs/<capability>/spec.md`.
      - To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches. For a new capability, start the delta with a `## Purpose` section of one or two sentences on what the capability covers. Without it, the CLI writes "TBD" as the Purpose of the new main spec.

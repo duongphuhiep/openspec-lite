@@ -84,7 +84,7 @@ openspec-lite/
     12. propose resume: a plan-lite change with no `plan.md` resumes with one `skip_specs` line (D111, D112).
     13. archive rerun: (a) after a failed validate, the agent shows earlier deltas before the write and drafts the decision again; (b) after a failed `openspec archive`, it skips the ADRs with `Change: <name>` (D111, D112, D113).
     14. Promotion into an existing capability: archive reuses the capability, and the main spec ends up correct (D115).
-    15. Promotion keeps each non-obvious item of `plan.md`, or names it as skipped (D115).
+    15. Promotion keeps each non-obvious item and each contract of `plan.md`, or names it as skipped (D115, D119).
     16. Stock `/opsx:archive` on a plan-lite change: (a) with the guidance, the agent warns or runs `openspec-lite-archive`; (b) without the guidance, and (c) the CLI directly, are known gaps that the run records (D95, D115).
     17. `openspec-lite-apply` after an upgrade refuses and points to `/opsx:apply` (D75).
     18. `openspec-lite-archive` after an upgrade refuses, points to `/opsx:archive`, and warns about the decisions in `design.md` (D115).
@@ -247,8 +247,8 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 3. Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
    - **Surprising**: it would surprise a new team member.
-   - **Contract**: externally observable behavior that a client, another team, or a later change depends on. It goes to a spec, even if it is obvious from the code (D119).
-4. Sort each item: requirement → spec, decision → ADR. List each other `plan.md` item that is not drafted, including each non-goal, with a one-line reason (D116).
+   - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code (D119).
+4. Sort each item: requirement → spec, decision → ADR. If a decision is also a contract, draft the contract as a requirement. Its rationale can also go to an ADR (D119). List each other `plan.md` item that is not drafted, including each non-goal, with a one-line reason (D116).
 5. Draft the full text of each item:
    - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93). For a new capability, start the delta with a `## Purpose` section, because the CLI otherwise writes "TBD" as the Purpose of the new main spec (D117).
    - A decision becomes an ADR: a `# <Title>` heading, then the plain lines `Status: Accepted` and `Change: <name>`, then the sections `## Context`, `## Decision`, and `## Consequences` (D112). Before drafting, skip each decision that already has an ADR with `Change: <name>` in `openspec/adr/`, because an earlier run wrote it (D111).

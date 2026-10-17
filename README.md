@@ -25,7 +25,7 @@ The OpenSpec workflow has four artifacts: `proposal → specs → design → tas
 - implement: `openspec-lite-apply` implements from `plan.md`.
 - doc: `openspec-lite-archive` promotes non-obvious information and contracts from `plan.md` to `openspec/specs/` and ADRs. Then it moves the change to the archive.
 
-`plan.md` keeps WHY, WHAT, and HOW together during the work. At archive time, the AI separates the items that last: requirements go to specs, and decisions go to ADRs.
+`plan.md` keeps WHY, WHAT, and HOW together during the work. At archive time, the AI separates the items that last: requirements and contracts go to specs, and decisions go to ADRs.
 
 An OpenSpec custom schema alone can give you a one-artifact workflow. openspec-lite adds the upgrade, promotion, and preview workflow around it.
 
@@ -125,7 +125,7 @@ At archive time, the AI uses three filters to select what to promote:
 
 - **Non-obvious**: a future reader cannot deduce it from the code in 5 minutes.
 - **Surprising**: it would surprise a new team member.
-- **Contract**: externally observable behavior that a client, another team, or a later change depends on. It goes to a spec, even if it is obvious from the code.
+- **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code.
 
 One filter is sufficient. The AI shows the list. You approve, reject, or edit each item in the conversation. The AI writes nothing before your approval.
 

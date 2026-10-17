@@ -245,9 +245,9 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
   - the new lockout requirement.
 - The Non-Goal "No CAPTCHA" is either in the ADR, or the agent says why it skipped it.
 
-## 15. Promotion keeps each non-obvious item
+## 15. Promotion keeps each non-obvious item and each contract
 
-This scenario checks that no non-obvious knowledge of `plan.md` is lost at archive time.
+This scenario checks that no non-obvious knowledge and no contract of `plan.md` is lost at archive time (D119).
 
 **Steps**:
 
@@ -263,7 +263,8 @@ This scenario checks that no non-obvious knowledge of `plan.md` is lost at archi
    ## Constraints
    - The CSV SHALL use a semicolon separator, because the users open it in a French Excel. [non-obvious: spec]
    - The export SHALL include only the rows that match the active filters. [non-obvious: spec]
-   - The export button is in the toolbar. [obvious: skip]
+   - The CSV SHALL start with a header row of the column names. The import script of the finance team reads them. [obvious contract: spec]
+   - The export button is in the toolbar. [obvious, UI layout: skip]
 
    ## Open Questions
 
@@ -271,17 +272,17 @@ This scenario checks that no non-obvious knowledge of `plan.md` is lost at archi
    ### Decision: Build the CSV in the browser
    Chose the browser because the table already has all rows in memory. Rejected a server endpoint because it adds an API for one button. [non-obvious: ADR]
    ### Decision: Use the date in the file name
-   Chose `report-YYYY-MM-DD.csv`. [obvious: skip]
+   Chose `report-YYYY-MM-DD.csv`. The import script of the finance team finds the file by this name. [obvious decision, contract: spec]
    ```
 
 2. Run `openspec-lite-archive export-csv`. Approve each draft. Do not edit a draft.
 
 **Expected**:
 
-- Each item tagged `spec` is in a requirement draft. Each item tagged `ADR` is in an ADR draft.
+- Each item tagged `spec` is in a requirement draft. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. Each item tagged `ADR` is in an ADR draft.
 - For each item that the agent does not draft, it names the item and says why it skips it. No item disappears with no word.
 - The reason for the semicolon (French Excel) stays in the spec or in the ADR. It is the non-obvious part.
-- After the archive, `openspec/specs/<capability>/spec.md` has the two `spec` items, and `openspec/adr/` has the `ADR` item.
+- After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items, and `openspec/adr/` has the `ADR` item.
 
 Record each mismatch with the answer key. A tagged `spec` or `ADR` item that is not promoted, and not named as skipped, is a failure.
 

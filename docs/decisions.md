@@ -79,7 +79,7 @@ User reviews and approves the proposed list before promotion happens.
 
 **Rationale**: Keeps permanent specs lean. Avoids both losing important context and polluting specs with noise.
 
-**Status**: D55 states that the two filters combine with OR.
+**Status**: D55 states that the two filters combine with OR. Revised by D119, which adds a third filter, Contract, for requirements.
 
 ---
 
@@ -680,6 +680,8 @@ This revises D11 and D50.
 **Decision**: An item is a promotion candidate if it is non-obvious OR surprising (D6).
 
 **Rationale**: This matches the wording of D6. The user approves each item (D18), so the user removes the noise.
+
+**Status**: Revised by D119. The OR rule now covers three filters.
 
 ---
 
@@ -1566,10 +1568,12 @@ This revises D103.
 
 **Decision**: At archive, a third filter selects requirements:
 
-- **Contract**: externally observable behavior that a client, another team, or a later change depends on.
+- **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts.
 
-An item that passes this filter goes to a spec, even if a reader can deduce it from the code. The non-obvious and surprising filters stay as they are, for requirements and decisions. One filter is still sufficient (D55).
+An item that passes this filter goes to a spec, even if a reader can deduce it from the code. The non-obvious and surprising filters stay as they are, for requirements and decisions. One filter is still sufficient (D55). If a `### Decision:` entry is also a contract, the contract becomes a requirement. Its rationale can also go to an ADR.
 
 This revises D6 and D55.
 
-**Rationale**: A review of the promotion rules found this gap. The non-obvious filter assumes that the reader has the code. A client or another team reads the spec, not the code. With only D6, an obvious API rule never gets into `openspec/specs/`. Then the main specs are incomplete, and a later spec-driven change has no requirement to copy for a MODIFIED delta. An upgraded change already writes a delta for each requirement, so this also makes the two paths more alike. The user still approves each item (D18), so the user removes the noise.
+The upgrade signal "a contract (spec) becomes necessary" stays. It means a contract that others must agree on before the work. The Contract filter writes a contract to a spec only at archive.
+
+**Rationale**: A review of the promotion rules found this gap. The non-obvious filter assumes that the reader has the code. A client or another team reads the spec, not the code. With only D6, an obvious contract never gets into `openspec/specs/`. Then the main specs are incomplete, and a later spec-driven change has no requirement to copy for a MODIFIED delta. An upgraded change already writes a delta for each requirement, so this also makes the two paths more alike. The user still approves each item (D18), so the user removes the noise.
