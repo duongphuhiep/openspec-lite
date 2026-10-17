@@ -1585,7 +1585,7 @@ The upgrade signal "a contract (spec) becomes necessary" stays. It means a contr
 **Decision**:
 
 - Before upgrade deletes a `plan.md` section, it lists each section with its destination: the artifact and the heading that now hold its content, or "kept". It asks the user before the delete. On no, it keeps `plan.md` as it is.
-- Upgrade asks the user to answer each open question that changes the specs, the approach, or the tasks. The answer goes to the specs or to `design.md` → `## Decisions`. If the user cannot answer now, the question stays in `plan.md`. An open question that is safe to answer later goes to `design.md` → `## Open Questions`.
+- Before upgrade writes an artifact, it asks the user to answer each open question that changes the specs, the approach, or the tasks. The answer goes to the specs or to `design.md` → `## Decisions`. If the user cannot answer now, the question stays in `plan.md`. An open question that is safe to answer later goes to `design.md` → `## Open Questions`.
 - At archive, the user can pick an item from the list of items that are not drafted. The agent then drafts that item, and the user approves it like the other drafts.
 
 This revises D62 for upgrade, and D18 for archive.
