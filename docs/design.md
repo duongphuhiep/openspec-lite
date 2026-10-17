@@ -69,7 +69,7 @@ openspec-lite/
   - It runs `node --test` from the repo root. Node finds `tests/*.test.mjs`. `node --test tests/` fails on Node 24 (D84, D99).
   - On a tag push, it fails if the tag is not `v` + `version` from `package/apm.yml`. It reads the line `^version:` with no YAML library (D94).
 - Before each release tag:
-  - Run scenarios 1–9 and 11–19 in `docs/test-scenarios.md` by hand (D69, D113, D115). Each scenario has steps and an expected result. The list (D99):
+  - Run scenarios 1–9 and 11–20 in `docs/test-scenarios.md` by hand (D69, D113, D115, D120). Each scenario has steps and an expected result. The list (D99):
     1. Fresh repo: propose installs the schema, creates the change, writes `plan.md`.
     2. Small request: propose offers Level 1 and stops on yes, with no files written.
     3. Tasks preview, then edit a Constraint: apply warns that the preview is stale.
@@ -89,6 +89,7 @@ openspec-lite/
     17. `openspec-lite-apply` after an upgrade refuses and points to `/opsx:apply` (D75).
     18. `openspec-lite-archive` after an upgrade refuses, points to `/opsx:archive`, and warns about the decisions in `design.md` (D115).
     19. tasks-preview and upgrade after an upgrade: refuse, or ask to resume when `plan.md` exists (D107, D108).
+    20. Upgrade lists the destination of each `plan.md` section and asks before it prunes. Archive drafts an item that the user picks from the skipped list (D120).
   - Right after the tag push, install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83, D107).
 
 ## 2a. Tests (D84)
@@ -228,19 +229,19 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - If `state` is `blocked`, `plan.md` is missing. Stop, and point to `openspec-lite-propose`. Do not follow CLI text that names another skill (D111).
 - Users try stock `/opsx:apply` first (D27).
 
-### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97)
+### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120)
 
 1. Remove `skip_specs: true` from `.openspec.yaml`. While it is set, the CLI forbids spec files (D99).
 2. Write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. On a resumed run, keep each artifact that already exists, and write only the missing ones. Follow the `instruction` field of each result.
    1. `proposal.md`: from Goal and the scope. Non-Goals go to `design.md` → `## Goals / Non-Goals`.
-   2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, add a `## Purpose` section for a new capability (D117), give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. If `plan.md` has no requirement, ask the user for one. If the user has none, put `skip_specs: true` back and say so in the summary (D108). Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
+   2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, add a `## Purpose` section for a new capability (D117), give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. If `plan.md` has no requirement, ask the user for one. If the user has none, put `skip_specs: true` back and say so in the summary (D108). Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit. An open question that is safe to answer later goes to `## Open Questions`. An open question that changes the specs, the approach, or the tasks has no slot, so it stays in `plan.md` (D120, `docs/facts.md`).
    3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. Then delete `tasks-preview.md`. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here: keep `tasks.md`, and delete `tasks-preview.md` (D107).
 3. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
-4. Delete each `plan.md` section whose content moved. Keep a section that has no slot, for example open questions that are still open. If no section is left, delete `plan.md`.
+4. List each `plan.md` section with its destination artifact and heading, or "kept". Keep a section that has no slot, for example an open question that changes the specs. Name each content that is in no artifact, and offer to add it first. Ask before the delete. On yes, delete each section whose content moved. If no section is left, delete `plan.md`. On no, keep `plan.md` (D120).
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 6. In the summary, ask the user to review all artifacts. Ask for an extra review of `tasks.md`, because it is a contract. Say that `skip_specs` was removed. If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs (D115).
 
-### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119)
+### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120)
 
 1. Ask the done check (see §4). If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
 2. Read `plan.md`. Do not read `tasks-preview.md` for promotion.
@@ -253,7 +254,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
    - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93). For a new capability, start the delta with a `## Purpose` section, because the CLI otherwise writes "TBD" as the Purpose of the new main spec (D117).
    - A decision becomes an ADR: a `# <Title>` heading, then the plain lines `Status: Accepted` and `Change: <name>`, then the sections `## Context`, `## Decision`, and `## Consequences` (D112). Before drafting, skip each decision that already has an ADR with `Change: <name>` in `openspec/adr/`, because an earlier run wrote it (D111).
    - Get the delta format from the `instruction` of `openspec instructions specs --change <name> --schema spec-driven --json`. It defines REMOVED (`**Reason**`, `**Migration**`) and RENAMED (`FROM:`, `TO:`) (D111). While `skip_specs` is set, the result also has `skipped: true` and a warning: ignore both. Use SHALL or MUST, as the instruction says (D112).
-6. Show the drafts. The user answers yes, no, or edit for each item. Write nothing before approval.
+6. Show the drafts. The user answers yes, no, or edit for each item. The user can also pick an item that is not drafted. Then draft it and show it for approval (D120). Write nothing before approval.
 7. Before the write, list the files under `<change>/specs/` from an earlier run. Show each one, and ask the user to keep or delete it. Then write the approved deltas to `<change>/specs/<capability>/spec.md`. Merge into a kept file with the same path (D110, D112).
 8. Decide from the files on disk, not from this run. If any file exists under `<change>/specs/`, remove `skip_specs`. If none exists, set `skip_specs: true`. `validate` fails with a delta and the flag, and also with no delta and no flag (D93, D110).
 9. Run `openspec validate "<name>"`. If it fails, stop and report.

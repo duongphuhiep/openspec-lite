@@ -552,3 +552,14 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `#*` and `#latest` fail: "all probes failed". APM has no `latest` keyword.
 - `#>=1.0.0` is accepted (`--dry-run`). It has no upper limit, so it can install a future 2.x.
 - `#^1.0.0` resolves to the highest `v1.x.y` tag. The `1.0.0` is only the floor.
+
+---
+
+## OpenSpec: Open Questions in design.md
+
+**Source**: `openspec instructions design --change <name> --json`, OpenSpec 1.14.2, 2026-10-17
+
+- The `template` of `design` has no `## Open Questions` heading. Its headings are `## Context`, `## Goals / Non-Goals`, `## Decisions`, and `## Risks / Trade-offs`.
+- The `instruction` lists **Open Questions** as an optional section: "Unknowns that can safely be answered later without changing the specs, the approach, or the task breakdown. Omit if none."
+- The `instruction` also says: "If a question would change the specs, the chosen approach, or the task breakdown", it is not an open question for `design.md`.
+- In scenario 20a, an agent moved such a question to `design.md` → `## Open Questions` during an upgrade.

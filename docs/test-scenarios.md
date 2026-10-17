@@ -1,6 +1,6 @@
 # Test Scenarios
 
-Run scenarios 1–9 and 11–19 by hand before each release tag (D69). Run scenario 10 right after the tag push, because it needs the published tag. The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
+Run scenarios 1–9 and 11–20 by hand before each release tag (D69). Run scenario 10 right after the tag push, because it needs the published tag. The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
 
 Setup for each scenario, unless it says otherwise:
 
@@ -364,6 +364,30 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 3. upgrade asks: "Resume the upgrade of <name> at step 4?" Answer no. Then it stops with no file change.
 
 In each case, `.openspec.yaml`, `tasks.md`, and the other artifacts do not change.
+
+## 20. Checks before a delete or a skip
+
+This scenario checks that upgrade does not prune `plan.md` with no check, and that the user can promote a skipped item (D120).
+
+### 20a. Upgrade asks before it prunes
+
+**Steps**:
+
+1. Create a plan-lite change with a Goal, two Constraints, one `### Decision:` entry, and one open question in `plan.md`. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change.
+2. Run `openspec-lite-upgrade`. At the prune question, answer no.
+3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question.
+
+**Expected**:
+
+- Before the prune question, the agent lists each `plan.md` section with its artifact and heading. The open question is "kept".
+- After step 2, `plan.md` is the same as in step 1.
+- After step 3, `plan.md` has only the open question. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
+
+### 20b. Archive drafts an item that the user picks
+
+**Steps**: Run scenario 15 again. In the reply to the drafts, pick the toolbar item from the skipped list.
+
+**Expected**: the agent drafts the toolbar item and shows it for approval. It writes nothing before the approval.
 
 ---
 

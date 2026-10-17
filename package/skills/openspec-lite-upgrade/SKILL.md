@@ -38,10 +38,14 @@ Upgrade a plan-lite change to spec-driven. The schema switch is the last write, 
       - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
       - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit it.
       - If `plan.md` has no requirement for a spec, ask the user for at least one. If the user has none, add `skip_specs: true` back to `<dir>/.openspec.yaml`, and say so in the summary. Without a delta and without the flag, `validate` fails.
-   3. `design.md`: Non-Goals go to `## Goals / Non-Goals`. Each `### Decision:` entry of `plan.md` goes to `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
+   3. `design.md`: Non-Goals go to `## Goals / Non-Goals`. Each `### Decision:` entry of `plan.md` goes to `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit. An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says. An open question that changes the specs, the approach, or the tasks has no slot. Do not put it in `design.md`.
    4. `tasks.md`: if `<dir>/tasks-preview.md` exists, use it as the seed. Remove its two header comment lines. Add `[ ]` to each task line, for example `- [ ] 1.1 <task>`. Then delete `tasks-preview.md`. If no preview exists, write `tasks.md` from the template. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here. Keep `tasks.md`, and delete `tasks-preview.md`.
 3. Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
-4. Delete each `plan.md` section whose content moved. Keep a section that has no slot, for example open questions that are still open. If no section is left, delete `plan.md`.
+4. Prune `plan.md`:
+   1. List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept". Keep a section that has no slot, for example an open question that changes the specs, the approach, or the tasks (step 2.3).
+   2. If a section has content that is in no artifact, say so. Offer to add it to an artifact first.
+   3. Ask the user: "Delete the moved sections from `plan.md`?" On no, keep `plan.md` as it is, and go to step 5.
+   4. Delete each section whose content moved. If no section is left, delete `plan.md`.
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 
 ## 3. End

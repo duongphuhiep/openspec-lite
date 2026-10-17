@@ -148,7 +148,7 @@ When a Level 2 change grows past its original scope, `openspec-lite-upgrade` doe
 1. It removes `skip_specs: true` from `.openspec.yaml`.
 2. It writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. The `plan.md` decisions go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.
 3. It changes `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. This is the last switch, so an interrupted upgrade can run again.
-4. It deletes each `plan.md` section whose content moved. If nothing is left, it deletes `plan.md`.
+4. It lists where each `plan.md` section moved, and asks before it deletes the moved sections. If nothing is left, it deletes `plan.md`.
 5. It runs `openspec validate`.
 
 Review all artifacts after the upgrade. Review `tasks.md` carefully, because it is a contract.

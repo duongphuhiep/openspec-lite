@@ -1577,3 +1577,17 @@ This revises D6 and D55.
 The upgrade signal "a contract (spec) becomes necessary" stays. It means a contract that others must agree on before the work. The Contract filter writes a contract to a spec only at archive.
 
 **Rationale**: A review of the promotion rules found this gap. The non-obvious filter assumes that the reader has the code. A client or another team reads the spec, not the code. With only D6, an obvious contract never gets into `openspec/specs/`. Then the main specs are incomplete, and a later spec-driven change has no requirement to copy for a MODIFIED delta. An upgraded change already writes a delta for each requirement, so this also makes the two paths more alike. The user still approves each item (D18), so the user removes the noise.
+
+---
+
+## D120: Upgrade Asks Before It Prunes plan.md, and Archive Lets the User Add an Item
+
+**Decision**:
+
+- Before upgrade deletes a `plan.md` section, it lists each section with its destination: the artifact and the heading that now hold its content, or "kept". It asks the user before the delete. On no, it keeps `plan.md` as it is.
+- An open question that changes the specs, the approach, or the tasks stays in `plan.md`. An open question that is safe to answer later goes to `design.md` → `## Open Questions`.
+- At archive, the user can pick an item from the list of items that are not drafted. The agent then drafts that item, and the user approves it like the other drafts.
+
+This revises D116 for upgrade, and D18 for archive.
+
+**Rationale**: A review of the promotion and upgrade rules found two gaps. Archive names each item that it does not promote (D116), but upgrade deleted `plan.md` sections with no check. If the agent dropped a detail when it wrote `design.md`, the delete removed the only copy, and `validate` checks structure, not content. At archive, the user could approve, reject, or edit a draft, but the skill gave no step to promote an item that the filters skipped. The filters stay the default. The user only adds to them. In scenario 20a, the agent moved an open question that changes the specs to `design.md` → `## Open Questions`. The old example "open questions that are still open" did not stop it, because the OpenSpec `design` instruction has that section (`docs/facts.md`).
