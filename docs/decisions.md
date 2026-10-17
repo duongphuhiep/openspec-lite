@@ -774,7 +774,7 @@ This revises D13 and D31.
 
 **Rationale**: The spec-driven graph requires `specs` and `design` before `tasks`. Upgrade is the only step that knows both `plan.md` and the preview, so a split would lose context. `design.md` is where stock tools look for decisions. A preview or a plan next to the new artifacts is a stale second source of truth.
 
-**Status**: D79 adds `openspec validate` at the end. D97 switches the schema last. Revised by D120: upgrade lists the destination of each section and asks before step 4. Upgrade asks the user to answer an open question that changes the specs. If the user cannot answer, it stays in `plan.md`.
+**Status**: D79 adds `openspec validate` at the end. D97 switches the schema last. Revised by D120: upgrade lists the destination of each section and asks before step 4. Upgrade asks the user to answer an open question that changes the specs, the approach, or the tasks. If the user cannot answer, it stays in `plan.md`.
 
 ---
 
