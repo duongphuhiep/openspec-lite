@@ -379,7 +379,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 **Expected**:
 
-- The agent asks the user to answer the open question before it writes `design.md`.
+- The agent asks the user to answer the open question before it writes `specs/`.
 - Before the prune question, the agent lists each `plan.md` section with its artifact and heading. The open question is "kept".
 - After step 2, `plan.md` is the same as in step 1.
 - After step 3, `plan.md` has only the open question. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
