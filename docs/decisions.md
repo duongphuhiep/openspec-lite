@@ -1598,7 +1598,7 @@ This revises D62 for upgrade, and D18 for archive.
 
 **Decision**:
 
-- If the OpenSpec root is not the folder where the session started, each `openspec` command starts with `cd <absolute root path> && `. This also applies to the first command after the user confirms a root. A skill does not rely on the shell folder of an earlier command, because a failed command or another harness can change it.
+- If the OpenSpec root is not the current folder, each `openspec` command starts with `cd <root> && `. This also applies to the first command after the user confirms a root.
 - When a workflow skill runs `openspec-lite-schema`, its end summary includes the schema report: the status, the copied files, and the backup path.
 - The archive done check finds the code with a search for what the Goal names, for example `git grep`. It does not judge from the first lines of `git ls-files`.
 
