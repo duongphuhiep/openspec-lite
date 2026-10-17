@@ -1603,7 +1603,9 @@ This revises D62 for upgrade, and D18 for archive.
 - If the OpenSpec root is not the current folder, each `openspec` command starts with `cd <root> && `. This also applies to the first command after the user confirms a root.
 - When a workflow skill runs `openspec-lite-schema`, its end summary includes the schema report: the status, the copied files, and the backup path.
 - The archive done check finds the code with a search for what the Goal names, for example `git grep`. It does not judge from the first lines of `git ls-files`.
+- Archive writes an ADR only after `validate` passes, never in the same command as `validate`.
+- Upgrade shows the list of `plan.md` destinations in the same reply as the prune question.
 
-This extends D111, D93, and D114.
+This extends D111, D93, D114, D105, and D120.
 
-**Rationale**: The v1.2.0 scenario run found three gaps (`docs/facts.md`). In scenario 11, the agent ran `openspec new change` at the git root after the user confirmed `svc/`, and the command failed. In scenario 9, propose ran the schema skill but did not pass on its list of copied files. In archive runs, `git ls-files | head -30` showed only `.claude/` and `apm_modules/` files, so the agent said that the repo had no source code. A stricter root wording was tested and reverted: "start every command with `cd <absolute root path> && `". It failed 2 of 2 scenario 11 runs: the agent added the prefix to one command only, and skipped the confirm question.
+**Rationale**: The v1.2.0 scenario run found five gaps (`docs/facts.md`). In scenario 11, the agent ran `openspec new change` at the git root after the user confirmed `svc/`, and the command failed. In scenario 9, propose ran the schema skill but did not pass on its list of copied files. In archive runs, `git ls-files | head -30` showed only `.claude/` and `apm_modules/` files, so the agent said that the repo had no source code. In scenarios 5 and 13a, archive wrote the ADR before `validate`, once in the same command. In scenario 20a, upgrade asked the prune question with no list. A stricter root wording was tested and reverted: "start every command with `cd <absolute root path> && `". It failed 2 of 2 scenario 11 runs: the agent added the prefix to one command only, and skipped the confirm question.
