@@ -8,7 +8,14 @@ The OpenSpec workflow has four artifacts: `proposal → specs → design → tas
 
 1. This workflow is too heavy for medium changes. A `plan.md` is sufficient for medium changes.
 2. The artifacts overlap. Proposal covers WHY, design covers HOW, and specs cover WHAT. The boundary between them is fuzzy. A good proposal needs scope, feasibility, and trade-offs, which belong to design.
-3. `tasks.md` can become pseudo-code close to real code. The AI writes it before it reads the code, so it locks in the approach too early. It goes stale when the AI finds a simpler approach during coding. It is useful mainly when a large model writes it to guide a small model.
+3. `tasks.md` often adds little value for a medium change.
+   - It can become pseudo-code that is almost real code. Then the AI can write the real code directly.
+   - The AI writes `tasks.md` before implementation, so it locks in the approach too early. `tasks.md` is a contract. When the AI finds a better approach during implementation, `tasks.md` either restricts the AI or becomes out of date.
+   - `tasks.md` is useful mainly for three purposes:
+     - To guide a small model when a large model writes it.
+     - To track implementation progress.
+     - To preview the implementation.
+   - For a medium change, the same model usually plans and codes, and we do not need to track progress. So we often read `tasks.md` only to preview what the AI will do to the code.
 
 ## The Solution: `openspec-lite`
 
