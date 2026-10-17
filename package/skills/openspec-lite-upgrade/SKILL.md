@@ -60,4 +60,5 @@ In the summary:
 - Say if `skip_specs` was removed, or put back because the change has no spec delta.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
 - If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`.
+- If the user said no at step 4.3, say that the moved sections in `plan.md` are old copies. The artifacts are the source of truth.
 - If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs. To keep them as ADRs, copy them to `openspec/adr/` before the archive.

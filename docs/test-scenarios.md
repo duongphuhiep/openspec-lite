@@ -367,7 +367,7 @@ In each case, `.openspec.yaml`, `tasks.md`, and the other artifacts do not chang
 
 ## 20. Checks before a delete or a skip
 
-This scenario checks that upgrade does not prune `plan.md` with no check, and that the user can promote a skipped item (D120).
+This scenario checks that upgrade does not prune `plan.md` with no check, and that the user can promote a skipped item (D120). It also checks that upgrade with no requirement puts `skip_specs: true` back (D108).
 
 ### 20a. Upgrade asks before it prunes
 
@@ -382,6 +382,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - The agent asks the user to answer the open question before it writes an artifact.
 - Before the prune question, the agent lists each `plan.md` section with its artifact and heading. The open question is "kept".
 - After step 2, `plan.md` is the same as in step 1.
+- At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
 - After step 3, `plan.md` has only the open question. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
 
 ### 20b. Archive drafts an item that the user picks
@@ -389,6 +390,20 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 **Steps**: Run scenario 15 again. In the reply to the drafts, pick the toolbar item from the skipped list. When the agent shows the toolbar draft, reject it. Approve the other drafts.
 
 **Expected**: the agent drafts the toolbar item and shows it for approval. It writes nothing before the approval. After the archive, the result is the same as in scenario 15.
+
+### 20c. Upgrade with no requirement
+
+**Steps**:
+
+1. Create a plan-lite change with a Goal and one `### Decision:` entry in `plan.md`. Do not write a requirement.
+2. Run `openspec-lite-upgrade`. When the agent asks for a requirement, answer "none".
+
+**Expected**:
+
+- The agent writes no file under `<change>/specs/`.
+- `.openspec.yaml` has `schema: spec-driven` and `skip_specs: true`.
+- `openspec validate` passes.
+- The summary says that `skip_specs` was put back, because the change has no spec delta.
 
 ---
 
