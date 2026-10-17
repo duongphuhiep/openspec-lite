@@ -56,7 +56,7 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
      ```
 
    - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`. An earlier run of this archive can have written them. Show them, and do not draft a decision that already has an ADR.
-6. Show all drafts. The user answers yes, no, or edit for each item. Apply each edit. The user can also pick an item from the list of items that you did not draft. Draft it, and show it for approval.
+6. Show all drafts. The user answers yes, no, or edit for each item. Apply each edit. Tell the user that they can pick a skipped item to draft. The user can also pick an item from the list of items that you did not draft. Draft it, and show it for approval.
 7. Before you write, list the files under `<dir>/specs/`. They are from an earlier run. Show each one, and ask the user to keep or delete it. Then write the approved deltas to `<dir>/specs/<capability>/spec.md`. If a kept file has the same path, merge the new delta into it, with no duplicate requirement.
 8. Look at the files under `<dir>/specs/` now. If any file exists, remove `skip_specs` from `<dir>/.openspec.yaml`. If none exists, make sure `skip_specs: true` is set. `validate` fails with a delta and the flag, and also with no delta and no flag.
 9. Run `openspec validate "<name>"`. If it fails, stop and report.
