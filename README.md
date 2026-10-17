@@ -68,6 +68,18 @@ The two tools use the same harness name, except for GitHub Copilot:
 | Kiro           | `kiro`                  | `kiro`                 |
 | GitHub Copilot | `github-copilot`        | `copilot`              |
 
+### Update
+
+To get the newest 1.x release, run this command in your repo:
+
+```sh
+apm update
+```
+
+- `apm update` stays inside the range in `apm.yml`, for example `^1.0.0`. It does not install a new major version.
+- If you installed openspec-lite with `apm install -g`, run `apm update -g`.
+- To move to a new major version, edit the openspec-lite ref in `apm.yml`, for example to `#^2.0.0`. Then run `apm install`.
+
 ## What openspec-lite Ships
 
 - **`plan-lite` schema**: one artifact, `plan.md`. It has no design and no `tasks.md`. The opt-in `tasks-preview.md` is outside the schema.

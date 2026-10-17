@@ -540,3 +540,15 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - With no `--target`, `apm install` auto-detects the harness from marker folders. After `openspec init --tools claude`, it prints "Targets: claude (source: auto-detect from .claude/)". After `--tools github-copilot`, it detects `copilot` from `.github/prompts/`. After `--tools codex`, OpenSpec writes only `.agents/skills/` (no `.codex/`), so APM prints "found none in this project" and deploys nothing.
 - `openspec init --tools copilot` fails (exit code 1). The OpenSpec name is `github-copilot`. The APM name is `copilot`, which deploys to `.agents/skills/`. The names `claude`, `codex`, `cursor`, `gemini`, `opencode`, and `kiro` are the same in both tools.
 - `npm view @fission-ai/openspec@1 version` lists every 1.x version, one line each. The highest is 1.14.2. Tested 2026-10-16.
+
+---
+
+## Microsoft APM: Refs for "Latest" (APM 0.33.0)
+
+**Source**: runs in `mktemp -d` + `git init` folders, APM 0.33.0, 2026-10-17
+
+- With no ref, `apm install duongphuhiep/openspec-lite/package --target claude` installs the HEAD of the default branch, not a release tag. The lockfile has only `resolved_commit` (here `33a8070`, the pushed `main`).
+- `#^1` and `#^1.0` fail: "Invalid semver range in ref". A range needs a full `MAJOR.MINOR.PATCH`.
+- `#*` and `#latest` fail: "all probes failed". APM has no `latest` keyword.
+- `#>=1.0.0` is accepted (`--dry-run`). It has no upper limit, so it can install a future 2.x.
+- `#^1.0.0` resolves to the highest `v1.x.y` tag. The `1.0.0` is only the floor.
