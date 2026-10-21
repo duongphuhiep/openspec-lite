@@ -578,3 +578,24 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - The `template` of `design` has no `## Open Questions` heading. Its headings are `## Context`, `## Goals / Non-Goals`, `## Decisions`, and `## Risks / Trade-offs`.
 - The `instruction` lists **Open Questions** as an optional section: "Unknowns that can safely be answered later without changing the specs, the approach, or the task breakdown. Omit if none."
 - The `instruction` also says: "Open questions are for genuinely deferrable unknowns, not decisions you skipped. If a question would change the specs, the chosen approach, or the task breakdown, resolve it now - ask the user instead of guessing."
+
+---
+
+## ADR Guidance: Old ADRs
+
+**Source**: `https://github.com/architecture-decision-record/architecture-decision-record` README, "Suggestions for writing good ADRs", read 2026-10-21
+
+- The README says: "Don't alter existing information in an ADR. Instead, amend the ADR by adding new information, or supersede the ADR by creating a new ADR."
+- It also says: "In practice, mutability has worked better for our teams." Those teams add new information to the existing ADR, with a date stamp.
+- The README does not list status values such as Proposed, Accepted, Superseded, or Deprecated.
+
+---
+
+## Scenario 21 Run (D122)
+
+**Source**: agent scenarios 21a and 21b (Claude Code print mode, `eu.anthropic.claude-sonnet-5-5`), OpenSpec 1.14.2, skills from the working tree, 2026-10-21
+
+- 21a passed, 1 run. The ADR draft had `Supersedes: 2026-01-10-fixed-window-rate-limit.md`. Before the approval, the agent named the old ADR and its `Status` change. After the archive, the diff of the old ADR was only the `Status:` line.
+- 21b passed, 1 run. The agent did not draft the decision again. It found the old ADR that was not marked, asked before the edit, and changed only the `Status:` line. Then it archived the change.
+- In 21a, the agent did not tell the user that they can pick a skipped item to draft (D120). It listed the Goal as not promoted, with a reason.
+- A fixture script that appends `skip_specs: true` after `openspec new change --schema plan-lite` makes a duplicate key. `validate` then reports ".openspec.yaml is not valid change metadata". This confirms "OpenSpec 1.14.2: Differences From 1.9.0".

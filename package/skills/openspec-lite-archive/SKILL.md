@@ -56,13 +56,16 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
      ```
 
    - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`. An earlier run of this archive can have written them. Show them, and do not draft a decision that already has an ADR.
-6. Show all drafts. The user answers yes, no, or edit for each item. Apply each edit. Tell the user that they can pick a skipped item to draft. If the user picks one, draft it and show it for approval.
+   - **Superseded ADR**: read the title and `## Decision` of each ADR in `openspec/adr/` with the line `Status: Accepted`. If a new decision fully replaces one of them, add the line `Supersedes: <old file name>` after the `Change:` line of the draft. If it changes only part of an old decision, add no line, and tell the user that both ADRs stay `Accepted`.
+6. Show all drafts. For each draft with a `Supersedes:` line, name the old ADR and say that its `Status` line changes. The user answers yes, no, or edit for each item. Apply each edit. Tell the user that they can pick a skipped item to draft. If the user picks one, draft it and show it for approval.
 7. Before you write, list the files under `<dir>/specs/`. They are from an earlier run. Show each one, and ask the user to keep or delete it. Then write the approved deltas to `<dir>/specs/<capability>/spec.md`. If a kept file has the same path, merge the new delta into it, with no duplicate requirement.
 8. Look at the files under `<dir>/specs/` now. If any file exists, remove `skip_specs` from `<dir>/.openspec.yaml`. If none exists, make sure `skip_specs: true` is set. `validate` fails with a delta and the flag, and also with no delta and no flag.
 9. Run `openspec validate "<name>"`. If it fails, stop and report.
 10. Only after `validate` passes in step 9, write each approved ADR to `openspec/adr/YYYY-MM-DD-<slug>.md`. Do not write an ADR in the same command as `validate`. Use today's date. Skip a decision that already has an ADR with `Change: <name>`. If the file name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR.
+    - After you write a new ADR with a `Supersedes:` line, edit the old ADR. Change only its `Status:` line to `Status: Superseded by <new file name>`. Do not change any other line of the old ADR.
+    - Then check each ADR with `Change: <name>` and a `Supersedes:` line, also the ADRs of an earlier run. If its old ADR does not have `Status: Superseded by`, edit that line now.
 11. Run `openspec archive "<name>" --yes`. The CLI applies the deltas to `openspec/specs/` and moves the change, with `plan.md` and `tasks-preview.md`, to `openspec/changes/archive/`. If it fails, report it. Keep the ADRs: each one is still a correct decision.
 
 ## 3. End
 
-List the specs that changed, the ADRs that you wrote, and the archive path.
+List the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.

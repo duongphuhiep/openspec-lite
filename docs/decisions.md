@@ -1609,3 +1609,19 @@ This revises D62 and D97 for upgrade, and D18 for archive.
 This extends D111, D93, D114, D105, and D120.
 
 **Rationale**: The v1.2.0 scenario run found five gaps (`docs/facts.md`). In scenario 11, the agent ran `openspec new change` at the git root after the user confirmed `svc/`, and the command failed. In scenario 9, propose ran the schema skill but did not pass on its list of copied files. In archive runs, `git ls-files | head -30` showed only `.claude/` and `apm_modules/` files, so the agent said that the repo had no source code. In scenarios 5 and 13a, archive wrote the ADR before `validate`, once in the same command. In scenario 20a, upgrade asked the prune question with no list. A stricter root wording was tested and reverted: "start every command with `cd <absolute root path> && `". It failed 2 of 2 scenario 11 runs: the agent added the prefix to one command only, and skipped the confirm question.
+
+---
+
+## D122: Archive Marks a Replaced ADR as Superseded
+
+**Decision**:
+
+- Archive keeps each old ADR. It never deletes one.
+- When archive drafts a decision, it compares it with each `Status: Accepted` ADR in `openspec/adr/`. If the new decision fully replaces an old one, the draft gets the line `Supersedes: <old file name>` after `Change:`. The user approves it with the draft.
+- After archive writes the new ADR, it changes only the `Status:` line of the old ADR to `Status: Superseded by <new file name>`. It changes no other line.
+- If a new decision changes only part of an old decision, archive adds no link. It tells the user that both ADRs stay `Accepted`.
+- A rerun checks each ADR with `Change: <name>` and a `Supersedes:` line. If its old ADR is not marked yet, the rerun marks it.
+
+This extends D105, D111, and D112.
+
+**Rationale**: An exploration of business rules in changes found this gap. Archive wrote each ADR with `Status: Accepted` (D112). If a later change reversed a decision, both ADRs showed `Accepted`, and a reader could not tell which one applies. The ADR guidance (`docs/facts.md`) says to keep the old text and to supersede with a new ADR. The `Status:` line is metadata, not decision text, so archive edits only that line. The new ADR is written first, so the `Superseded by` link never names a missing file. The rerun check covers a run that stops between the two writes. A partial change gets no link, because a reader of a `Superseded` ADR skips it, and the part that still applies would be lost. Rejected: an `Amends:` link for a partial change, because no real archive needs it yet.

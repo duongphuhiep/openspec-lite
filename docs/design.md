@@ -69,7 +69,7 @@ openspec-lite/
   - It runs `node --test` from the repo root. Node finds `tests/*.test.mjs`. `node --test tests/` fails on Node 24 (D84, D99).
   - On a tag push, it fails if the tag is not `v` + `version` from `package/apm.yml`. It reads the line `^version:` with no YAML library (D94).
 - Before each release tag:
-  - Run scenarios 1–9 and 11–20 in `docs/test-scenarios.md` by hand (D69, D113, D115, D120). Each scenario has steps and an expected result. The list (D99):
+  - Run scenarios 1–9 and 11–21 in `docs/test-scenarios.md` by hand (D69, D113, D115, D120, D122). Each scenario has steps and an expected result. The list (D99):
     1. Fresh repo: propose installs the schema, creates the change, writes `plan.md`.
     2. Small request: propose offers Level 1 and stops on yes, with no files written.
     3. Tasks preview, then edit a Constraint: apply warns that the preview is stale.
@@ -90,6 +90,7 @@ openspec-lite/
     18. `openspec-lite-archive` after an upgrade refuses, points to `/opsx:archive`, and warns about the decisions in `design.md` (D115).
     19. tasks-preview and upgrade after an upgrade: refuse, or ask to resume when `plan.md` exists (D107, D108).
     20. Upgrade lists the destination of each `plan.md` section and asks before it prunes. Archive drafts an item that the user picks from the skipped list. Upgrade with no requirement puts `skip_specs: true` back (D108, D120).
+    21. Archive with a decision that replaces an `Accepted` ADR: the new ADR has `Supersedes:`, and only the `Status:` line of the old ADR changes. A rerun fixes an old ADR that an earlier run did not mark (D122).
   - Right after the tag push, install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83, D107).
 
 ## 2a. Tests (D84)
@@ -241,7 +242,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 6. In the summary, ask the user to review all artifacts. Ask for an extra review of `tasks.md`, because it is a contract. Say if `skip_specs` was removed, or put back because the change has no spec delta. If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`. If the user said no to the delete, say that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth (D120). If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs (D115).
 
-### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121)
+### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122)
 
 1. Ask the done check (see §4). To find the code, search for what the Goal names, for example with `git grep`. Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
 2. Read `plan.md`. Do not read `tasks-preview.md` for promotion.
@@ -253,12 +254,13 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 5. Draft the full text of each item:
    - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93). For a new capability, start the delta with a `## Purpose` section, because the CLI otherwise writes "TBD" as the Purpose of the new main spec (D117).
    - A decision becomes an ADR: a `# <Title>` heading, then the plain lines `Status: Accepted` and `Change: <name>`, then the sections `## Context`, `## Decision`, and `## Consequences` (D112). Before drafting, skip each decision that already has an ADR with `Change: <name>` in `openspec/adr/`, because an earlier run wrote it (D111).
+   - Superseded ADR (D122): compare each new decision with each `Status: Accepted` ADR in `openspec/adr/`. If the new decision fully replaces an old one, the draft gets the line `Supersedes: <old file name>` after `Change:`. If it changes only part of an old decision, the draft gets no such line, and the agent tells the user that both ADRs stay `Accepted`.
    - Get the delta format from the `instruction` of `openspec instructions specs --change <name> --schema spec-driven --json`. It defines REMOVED (`**Reason**`, `**Migration**`) and RENAMED (`FROM:`, `TO:`) (D111). While `skip_specs` is set, the result also has `skipped: true` and a warning: ignore both. Use SHALL or MUST, as the instruction says (D112).
-6. Show the drafts. The user answers yes, no, or edit for each item. Tell the user that they can pick a skipped item to draft. If the user picks one, draft it and show it for approval (D120). Write nothing before approval.
+6. Show the drafts. For each draft with a `Supersedes:` line, name the old ADR and say that its `Status` line changes (D122). The user answers yes, no, or edit for each item. Tell the user that they can pick a skipped item to draft. If the user picks one, draft it and show it for approval (D120). Write nothing before approval.
 7. Before the write, list the files under `<change>/specs/` from an earlier run. Show each one, and ask the user to keep or delete it. Then write the approved deltas to `<change>/specs/<capability>/spec.md`. Merge into a kept file with the same path (D110, D112).
 8. Decide from the files on disk, not from this run. If any file exists under `<change>/specs/`, remove `skip_specs`. If none exists, set `skip_specs: true`. `validate` fails with a delta and the flag, and also with no delta and no flag (D93, D110).
 9. Run `openspec validate "<name>"`. If it fails, stop and report.
-10. Only after `validate` passes, write the approved ADRs to `openspec/adr/YYYY-MM-DD-<slug>.md`. Use the archive date. Set Status to `Accepted` (D93, D105, D121). If the name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR (D112).
+10. Only after `validate` passes, write the approved ADRs to `openspec/adr/YYYY-MM-DD-<slug>.md`. Use the archive date. Set Status to `Accepted` (D93, D105, D121). If the name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR (D112). After each new ADR with a `Supersedes:` line, change only the `Status:` line of the old ADR to `Status: Superseded by <new file name>`. Then check each ADR with `Change: <name>` and a `Supersedes:` line, also from an earlier run, and fix its old ADR the same way (D122).
 11. Run `openspec archive "<name>" --yes`. The CLI applies the deltas and moves the change (with `plan.md` and `tasks-preview.md`) to the archive. If it fails after step 10, report it. The ADRs stay, because each one is still a correct decision (D105).
 
 ## 4. plan-lite Schema

@@ -406,6 +406,35 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - `openspec validate` passes.
 - The summary says that `skip_specs` was put back, because the change has no spec delta.
 
+## 21. Archive supersedes an old ADR
+
+This scenario checks that archive links a new ADR to the old ADR that it replaces (D122).
+
+### 21a. Full replacement
+
+**Steps**:
+
+1. Write `openspec/adr/2026-01-10-fixed-window-rate-limit.md` with `# Fixed Window Rate Limit`, `Status: Accepted`, `Change: add-rate-limit`, and the three sections. Its `## Decision` says: "Use a fixed 60-second window per API key."
+2. Create a plan-lite change `sliding-rate-limit`. Its `plan.md` has a Goal and one `### Decision: Use a sliding window` entry: "Chose a sliding 60-second window because the fixed window allows bursts at the window edge. Rejected the fixed window."
+3. Run `openspec-lite-archive`. Approve each draft.
+
+**Expected**:
+
+- The ADR draft has `Supersedes: 2026-01-10-fixed-window-rate-limit.md` after `Change: sliding-rate-limit`.
+- Before the approval, the agent names the old ADR and says that its `Status` line changes.
+- The new ADR is in `openspec/adr/`, with the `Supersedes:` line.
+- The old ADR has `Status: Superseded by <new file name>`. Each other line of the old ADR is the same as in step 1.
+- The summary lists the old ADR as superseded.
+
+### 21b. Rerun after a stop between the two writes
+
+**Steps**:
+
+1. Build the state after step 10 of 21a, but before the old ADR changed: the new ADR exists with `Supersedes:`, the old ADR still has `Status: Accepted`, and the change is not archived. `validate` passes.
+2. Run `openspec-lite-archive`.
+
+**Expected**: the agent does not draft the decision again. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
+
 ---
 
 ## Running the Scenarios Headless
