@@ -568,6 +568,7 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `#*` and `#latest` fail: "all probes failed". APM has no `latest` keyword.
 - `#>=1.0.0` is accepted (`--dry-run`). It has no upper limit, so it can install a future 2.x.
 - `#^1.0.0` resolves to the highest `v1.x.y` tag. The `1.0.0` is only the floor.
+- `apm install -g duongphuhiep/openspec-lite/package#^1.0.0 --target claude,copilot` resolved `v1.3.0` and wrote the 6 skills to `~/.claude/skills/` only. No `openspec-lite-*` folder was in `~/.copilot/skills/`, `~/.github/skills/`, or `~/.agents/skills/`. A package that was already installed with `targets: [copilot]` in `~/.apm/apm.yml` had no files in `~/.copilot/skills/` either. Tested 2026-10-21.
 
 ---
 
