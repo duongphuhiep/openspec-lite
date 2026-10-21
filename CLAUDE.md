@@ -30,3 +30,12 @@ Rules:
 - When you make a new decision, add it to `decisions.md`. Then update `design.md` in the same commit.
 - When you find a new fact about OpenSpec or another tool, add it to `facts.md` with its source.
 - Use the terms in `CONTEXT.md`. Do not use the words in its _Avoid_ lists.
+
+## After Each Review, Grilling Round, or Scenario Run
+
+After every grilling round, review round, or test scenario run, you MUST do both steps:
+
+1. Record all new decisions in `docs/decisions.md`.
+2. Record all facts discovered about OpenSpec, apm, or other tools in `docs/facts.md` with their sources.
+
+Do not mark the work complete until both files are updated.
