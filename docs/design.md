@@ -38,7 +38,7 @@ openspec-lite/
 │   └── test.yml
 ├── docs/
 │   └── test-scenarios.md
-├── CONTEXT.md
+├── GLOSSARY.md
 └── README.md
 ```
 

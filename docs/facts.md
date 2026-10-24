@@ -600,3 +600,13 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - 21b passed, 1 run. The agent did not draft the decision again. It found the old ADR that was not marked, asked before the edit, and changed only the `Status:` line. Then it archived the change.
 - In 21a, the agent did not tell the user that they can pick a skipped item to draft (D120). It listed the Goal as not promoted, with a reason.
 - A fixture script that appends `skip_specs: true` after `openspec new change --schema plan-lite` makes a duplicate key. `validate` then reports ".openspec.yaml is not valid change metadata". This confirms "OpenSpec 1.14.2: Differences From 1.9.0".
+
+---
+
+## mattpocock-skills: Glossary File Name
+
+**Source**: `~/.claude/plugins/cache/claude-plugins-official/mattpocock-skills/1.3.1/CHANGELOG.md` (PR #1120, commit `006a52b`), read 2026-10-24
+
+- Version 1.3.1 renames the `CONTEXT.md` / `CONTEXT-MAP.md` convention to `GLOSSARY.md` / `GLOSSARY-MAP.md`. This applies in `domain-modeling`, `grill-with-docs`, `tdd`, `triage`, and other skills.
+- The changelog says: "the skills only look for `GLOSSARY.md`/`GLOSSARY-MAP.md` going forward." It tells users to `git mv` an old `CONTEXT.md`.
+- Version 1.2.3 still uses `CONTEXT.md`.

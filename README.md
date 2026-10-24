@@ -178,6 +178,6 @@ MIT. See [`package/LICENSE`](package/LICENSE).
 ## See Also
 
 - [`docs/design.md`](docs/design.md): current rules for skills, schema, and delivery
-- [`CONTEXT.md`](CONTEXT.md): glossary of project terms
+- [`GLOSSARY.md`](GLOSSARY.md): glossary of project terms
 - [`docs/facts.md`](docs/facts.md): verified facts about OpenSpec internals
 - [`docs/decisions.md`](docs/decisions.md): design decisions with rationale

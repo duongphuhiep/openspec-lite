@@ -1625,3 +1625,11 @@ This extends D111, D93, D114, D105, and D120.
 This extends D105, D111, and D112.
 
 **Rationale**: An exploration of business rules in changes found this gap. Archive wrote each ADR with `Status: Accepted` (D112). If a later change reversed a decision, both ADRs showed `Accepted`, and a reader could not tell which one applies. The ADR guidance (`docs/facts.md`) says to keep the old text and to supersede with a new ADR. The `Status:` line is metadata, not decision text, so archive edits only that line. The new ADR is written first, so the `Superseded by` link never names a missing file. The rerun check covers a run that stops between the two writes. A partial change gets no link, because a reader of a `Superseded` ADR skips it, and the part that still applies would be lost. Rejected: an `Amends:` link for a partial change, because no real archive needs it yet.
+
+---
+
+## D123: The Glossary File Is GLOSSARY.md
+
+**Decision**: The glossary of project terms is `GLOSSARY.md` at the repo root. It was `CONTEXT.md`. Older entries that name `CONTEXT.md` mean this file.
+
+**Rationale**: The file holds only a glossary, so the name `CONTEXT.md` did not tell its purpose. It also collides with the `## Context` section of a spec-driven `design.md`. mattpocock-skills 1.3.1 reads and writes only `GLOSSARY.md` (`docs/facts.md`). With the old name, `grill-with-docs` and `domain-modeling` would not find the glossary and would start a new file.
