@@ -1740,4 +1740,6 @@ This revises D107 for scenario 10.
 
 **Status**: Scenario 10 is removed from `docs/test-scenarios.md`. The number 10 stays unused, because other entries refer to scenarios 11–21 by number. The workflow is the only description of the check.
 
+**Status**: The workflow sets `apm-version: latest`. Without it, the action installs its pinned default APM 0.14.0, and the first run failed (`docs/facts.md`).
+
 **Rationale**: Several published releases installed with no fault. Scenario 10 checks the package layout and the APM resolution, not the skill text. So a text-only release cannot break it. A manual run each time cost a step for little value. A workflow removes the manual steps, and a manual trigger keeps it out of each push. Rejected: a run on each tag push, because the user wants it optional. Rejected: an input for the tag, because the `^<major>.0.0` range always resolves to the latest tag of that major.

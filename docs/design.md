@@ -70,7 +70,7 @@ openspec-lite/
   - It runs `node --test` from the repo root. Node finds `tests/*.test.mjs`. `node --test tests/` fails on Node 24 (D84, D99).
   - On a tag push, it fails if the tag is not `v` + `version` from `package/apm.yml`. It reads the line `^version:` with no YAML library (D94).
 - The `apm-install` workflow (`.github/workflows/apm-install.yml`) does the real APM install from the tag. It runs only by hand, from the Actions tab (`workflow_dispatch`) (D130):
-  - It installs the latest APM with `microsoft/apm-action@v1` in `setup-only` mode.
+  - It installs the latest APM with `microsoft/apm-action@v1` in `setup-only` mode, with `apm-version: latest`.
   - It reads the latest `v*` tag. In an empty `git init` folder, it runs `apm install duongphuhiep/openspec-lite/package#^<major>.0.0 --target claude`.
   - It checks that `.claude/skills/` has the six `openspec-lite-*` skills, with `scripts/install.mjs` and `assets/plan-lite/` in `openspec-lite-schema/`. It checks that `apm_modules/duongphuhiep/openspec-lite/` holds only `package/`, and that `apm.lock.yaml` has `resolved_ref: <tag>`.
 - Before each release tag:
