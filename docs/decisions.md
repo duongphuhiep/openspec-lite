@@ -1743,3 +1743,18 @@ This revises D107 for scenario 10.
 **Status**: The workflow sets `apm-version: latest`. Without it, the action installs its pinned default APM 0.14.0, and the first run failed (`docs/facts.md`).
 
 **Rationale**: Several published releases installed with no fault. Scenario 10 checks the package layout and the APM resolution, not the skill text. So a text-only release cannot break it. A manual run each time cost a step for little value. A workflow removes the manual steps, and a manual trigger keeps it out of each push. Rejected: a run on each tag push, because the user wants it optional. Rejected: an input for the tag, because the `^<major>.0.0` range always resolves to the latest tag of that major.
+
+---
+
+## D131: Fixes From the Scenario Run on d05538c
+
+**Decision**:
+
+- Propose step 5 says: "Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment."
+- Upgrade says: "The Goal alone is not a requirement. You can suggest one from it, but ask before you write it."
+- A headless scenario run uses `claude -p --setting-sources project,local`, with `< /dev/null`. On Bedrock, the shell sets `CLAUDE_CODE_USE_BEDROCK=1`. The tester checks that the skill base folder is the temp folder.
+- Scenario 9 expects "(v0 → v2, the shipped version)".
+
+This extends D127, D108, and D114.
+
+**Rationale**: In 6 of 6 propose runs, the agent removed the comment of each section that it filled. "Keep each guidance comment" did not say that a filled section keeps its comment. In 1 of 2 runs of scenario 20c, upgrade turned a Goal that names a behavior into a requirement in its own words. It did not ask, which D114 forbids. A global v1.3.0 install in `~/.claude/skills/` hid the release candidate in each group, until the runs used the flag (`docs/facts.md`).

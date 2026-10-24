@@ -112,7 +112,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected**:
 
-- The agent says that it will replace the schema (v0 → v1), and asks first.
+- The agent says that it will replace the schema (v0 → v2, the shipped version), and asks first.
 - After yes, `openspec/schemas-backup/plan-lite-v0-<timestamp>/` holds the old folder with `local-note.txt`.
 - `openspec/schemas/plan-lite/` has no `local-note.txt`.
 - The agent reports the backup path and the copied files.
@@ -434,8 +434,10 @@ You can run each scenario without a person at the keyboard, with Claude Code in 
 
    ```sh
    claude -p "<prompt>" --model <full model id> --output-format json \
+     --setting-sources project,local \
      --permission-mode acceptEdits \
-     --allowedTools "Bash(openspec:*)" "Bash(node:*)" "Bash(git:*)" "Bash(ls:*)" "Bash(cat:*)" "Bash(mkdir:*)"
+     --allowedTools "Bash(openspec:*)" "Bash(node:*)" "Bash(git:*)" "Bash(ls:*)" "Bash(cat:*)" "Bash(mkdir:*)" \
+     < /dev/null
    ```
 
 3. Read `result` and `session_id` from the JSON. When the skill asks a question, answer with the same command plus `--resume <session_id>`.
@@ -445,5 +447,8 @@ Notes:
 
 - Pin the full model ID, for example `eu.anthropic.claude-sonnet-5-5`. On a Bedrock setup, the alias `sonnet` resolved to `claude-sonnet-4-6`. Check `modelUsage` in the JSON.
 - A scenario that needs an interrupt (7, 13) starts from a hand-built state, because a print-mode run cannot stop at an exact step.
-- The session also loads your user setup in `~/.claude`, for example global skills. The results reflect that setup.
+- Use `--setting-sources project,local`. Without it, a skill in `~/.claude/skills/` wins over the project copy with the same name. A global openspec-lite install then hides the release candidate (D131).
+- Check the line `Base directory for this skill:` in the session log. It must name the temp folder, not `~/.claude/skills/`.
+- The flag also skips `~/.claude/settings.json`. On Bedrock, set `CLAUDE_CODE_USE_BEDROCK=1` in the shell.
+- `< /dev/null` stops the 3-second wait for stdin.
 - Permission denials in the JSON (`permission_denials`) mostly come from compound shell commands outside the allowlist. The agent then retries with allowed commands.

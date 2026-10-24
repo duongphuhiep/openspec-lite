@@ -632,3 +632,20 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - With `apm-version: latest`, the action installed APM 0.35.0. The install resolved `#^1.0.0` to `v1.3.0` (`@2dd711e8`), and each check of the `apm-install` workflow passed. Source: GitHub Actions run 40135803923, 2026-10-24.
 - On Linux without Homebrew, the README install is `curl -sSL https://aka.ms/apm-unix | sh`. Release assets include `apm-linux-x86_64.tar.gz`. The latest APM release on 2026-10-24 is v0.35.0.
 - `apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude` resolved to `v1.3.0` (`@2dd711e8`). `apm_modules/duongphuhiep/openspec-lite/` holds only one folder: `package`.
+
+---
+
+## Scenario Run on d05538c (Schema v2)
+
+**Source**: agent scenarios 1–9 and 11–21, Claude Code 2.1.310 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261024-d05538c/`, 2026-10-24
+
+- If a skill has the same name in `~/.claude/skills/` and in the project `.claude/skills/`, Claude Code loads the user copy. The log line `Base directory for this skill:` shows the path. This occurred in each of the 7 groups.
+- `claude -p --setting-sources project,local` does not load `~/.claude/skills/`, so the project copy loads. The flag also skips `~/.claude/settings.json`, its hooks and plugins, and the user `CLAUDE.md`. Bedrock auth works when the shell sets `CLAUDE_CODE_USE_BEDROCK=1`.
+- `CLAUDE_CONFIG_DIR=<empty folder>` also isolates a run from user skills, hooks, and plugins. `--resume` then needs the same variable, because sessions are saved in `<dir>/projects/`.
+- With no stdin, `claude -p` prints "Warning: no stdin data received in 3s, proceeding without it." `< /dev/null` skips the wait.
+- The Bash tool keeps the working folder after `cd svc && …`. With the scenario allowlist, a compound command that starts with `cd <subfolder>; …` is denied.
+- `apm install -g` put openspec-lite v1.3.0 in `~/.claude/skills/` on 2026-10-21 11:53. A later local `apm install <path>/package --target claude` does not hide it.
+- The v1.3.0 skills stop on a repo with schema version 2. They show the "newer plan-lite schema" message and write nothing.
+- OpenSpec 1.14.2: in a subfolder root, `openspec list --json` gives `"root": {"path": "<abs>/svc", "source": "nearest"}`. At the git root above it, it gives `root: null` and code `no_openspec_root`.
+- OpenSpec 1.14.2: `openspec archive <name> --yes` on a plan-lite change prints "Task status: No tasks", exits with code 0, and keeps the HTML comments of `plan.md`.
+- In 16a and 16b, Sonnet 5.5 switched from `/opsx:archive` to `openspec-lite-archive` because of the skill description. It did this before it read the `config.yaml` guidance.
