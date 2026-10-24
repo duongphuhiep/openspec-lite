@@ -1,5 +1,5 @@
 name: plan-lite
-version: 1
+version: 2
 openspec-version: ">=1.9.0 <2.0.0"
 description: Lightweight plan — goal, constraints, decisions. No tasks. Upgradeable to spec-driven.
 artifacts:

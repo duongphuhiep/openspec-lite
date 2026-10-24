@@ -1,11 +1,12 @@
 // Usage: node plan-hash.mjs <plan.md>
-// Hashes only Goal, Non-Goals, and Constraints. Ignores line endings, whitespace, and section order.
+// Hashes Goal, Non-Goals, Constraints, and Background (optional). Ignores line endings, whitespace, section order, and HTML comments.
 // A "## " line inside a fenced code block is content, not a heading.
-// Exits with code 1 if the file cannot be read or one of these headings is missing.
+// Exits with code 1 if the file cannot be read or one of the required headings is missing.
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 
-const KEEP = ["Goal", "Non-Goals", "Constraints"];
+const KEEP = ["Goal", "Non-Goals", "Constraints", "Background"];
+const REQUIRED = ["Goal", "Non-Goals", "Constraints"];
 let text;
 try {
   text = readFileSync(process.argv[2], "utf8");
@@ -13,7 +14,9 @@ try {
   console.error(`plan-hash: cannot read ${process.argv[2]}`);
   process.exit(1);
 }
-text = text.replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
+text = text.replace(/^﻿/, "").replace(/\r\n/g, "\n");
+// Strip HTML comments before parsing or hashing.
+text = text.replace(/<!--[\s\S]*?-->/g, "");
 
 // Split into { title, body } sections at "## " lines outside fenced code blocks.
 // As in CommonMark, a fence closes only with the same character, at least the same length, and no info string.
@@ -31,7 +34,7 @@ for (const line of text.split("\n")) {
 }
 
 const titles = sections.map((s) => s.title);
-const missing = KEEP.filter((k) => !titles.includes(k));
+const missing = REQUIRED.filter((k) => !titles.includes(k));
 if (missing.length > 0) {
   console.error(`plan-hash: missing heading: ${missing.map((k) => `## ${k}`).join(", ")}`);
   process.exit(1);

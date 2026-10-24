@@ -1633,3 +1633,32 @@ This extends D105, D111, and D112.
 **Decision**: The glossary of project terms is `GLOSSARY.md` at the repo root. It was `CONTEXT.md`. Older entries that name `CONTEXT.md` mean this file.
 
 **Rationale**: The file holds only a glossary, so the name `CONTEXT.md` did not tell its purpose. It also collides with the `## Context` section of a spec-driven `design.md`. mattpocock-skills 1.3.1 reads and writes only `GLOSSARY.md` (`docs/facts.md`). With the old name, `grill-with-docs` and `domain-modeling` would not find the glossary and would start a new file.
+
+---
+
+## D124: Template Guidance Comments and Comment Stripping in plan-hash.mjs
+
+**Decision**:
+
+- `templates/plan.md` gets a one-line `<!-- ... -->` guidance comment under each heading. The comment tells an agent or a person what content belongs in that section.
+- `plan-hash.mjs` strips all `<!-- ... -->` blocks before hashing. Stripping happens after BOM and CRLF normalization, before section parsing.
+- This keeps all five hashed and unhashed sections safe for comments. A user who deletes a comment in `## Goal`, `## Non-Goals`, or `## Constraints` does not change the hash.
+
+This revises D10 (template structure) and D72 (hash behavior). It requires a schema `version` bump per D109.
+
+**Rationale**: The decision format (`### Decision: <title>`, then "Chose X because Y.") lives only in `openspec-lite-propose` and `apply.instruction`. An agent or person editing `plan.md` without those skills does not see the format. Option (a) — comments only in unhashed sections — leaves `## Constraints` bare, the section most likely to be hand-edited. Option (b) strips comments before hashing, so all sections stay safe. Both options cost a version bump (D109 covers any change under `assets/plan-lite/`), so option (b) has no extra release cost.
+
+---
+
+## D125: Optional ## Background Section in plan.md
+
+**Decision**:
+
+- `templates/plan.md` adds a `## Background` section after `## Constraints` and before `## Open Questions`.
+- The section is optional. `plan-hash.mjs` adds `Background` to `KEEP` but does not exit with code 1 when the heading is absent.
+- `openspec-lite-upgrade` reads the scope and source links from `## Background` when writing `proposal.md`.
+- `openspec-lite-propose` leaves the section empty. The user or agent fills it when needed.
+
+This extends D10 (template structure). It requires a schema `version` bump per D109.
+
+**Rationale**: In a large change, the scope list and links to source documents had no home except `## Goal`. Goal then grew long and stopped being one outcome sentence. A dedicated section keeps Goal one sentence. The name `## Background` covers both scope items and source links without collision: `design.md` has `## Context`, `## Decisions`, `## Goals / Non-Goals`, and `## Risks / Trade-offs` — none named `Background`. Adding it to `KEEP` catches the most common reason a tasks preview goes stale (a scope change). Making it optional means `plan-hash.mjs` does not break on existing `plan.md` files that lack it. Rejected: `## Context` (collides with `design.md`). Rejected: `## Scope` and `## References` (each covers only half the content).

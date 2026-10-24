@@ -96,7 +96,7 @@ openspec-lite/
 ## 2a. Tests (D84)
 
 - Tests live in `tests/` and run with `node --test` from the repo root. They have no dependencies.
-- `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, and Decisions do not change the hash. A changed Constraint does. A missing heading or a missing file exits with code 1.
+- `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, Decisions, and HTML comments do not change the hash. A changed Constraint or Background does. Background absent does not exit with code 1. A missing required heading or a missing file exits with code 1.
 - `check-version.test.mjs`: runs the script on fixture folders. A match passes. A mismatch fails. A missing marker line fails. A missing skill fails. A skill with CRLF line endings passes. An indented marker passes. A second marker with a wrong number fails. `01` equals `1`. A root with no `package/` prints one `schema.yaml` failure (D106).
 - `install.test.mjs`: a first install copies. A lower repo version moves to a timestamped backup, then copies. An equal version prints `status: current`. A higher version exits with code 2. Missing shipped assets exit with code 3. A second backup with the same timestamp gets a `-2` suffix. A quoted higher version with a comment exits with code 2. A file system error exits with code 1, with an `install:` message and no stack trace (D96, D98, D102, D106).
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It also tests the upgrade path (`instructions <artifact> --schema spec-driven` on a plan-lite change), an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs` (D108). It also tests the CLI behavior that the skills rely on: `state: blocked` with no `plan.md`, `root.path` from a subfolder and `root: null` above it, `skipped: true` on `instructions specs` with `skip_specs`, and the failure on a duplicate key in `.openspec.yaml` (D112). The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
@@ -306,26 +306,36 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 ```
 
-`plan-hash.mjs` (D72, D91, D107) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:
+`plan-hash.mjs` (D72, D91, D107, D124, D125) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:
 
 - Usage: `node plan-hash.mjs <plan.md>`. It prints a 64-character hex SHA-256.
 - It strips a UTF-8 BOM and changes CRLF to LF.
+- It strips all `<!-- ... -->` HTML comments before parsing or hashing (D124).
 - A `## ` line outside a ``` or ~~~ fence starts a section. A `## ` line inside a fence is content. As in CommonMark, a fence closes only with the same character, at least the same length, and no info string (D108).
-- It hashes only the `Goal`, `Non-Goals`, and `Constraints` sections. It collapses whitespace and sorts the sections, so whitespace and section order do not change the hash.
-- It exits with code 1 if the file cannot be read, or if one of the three headings is missing. The message names each missing heading.
+- It hashes `Goal`, `Non-Goals`, `Constraints`, and `Background` (optional). It collapses whitespace and sorts the sections, so whitespace and section order do not change the hash.
+- It exits with code 1 if the file cannot be read, or if `Goal`, `Non-Goals`, or `Constraints` is missing. `Background` is optional: no error if absent (D125).
 - `tests/plan-hash.test.mjs` covers each rule.
-`templates/plan.md` (D10):
+`templates/plan.md` (D10, D124, D125):
 
 ```markdown
 ## Goal
+<!-- One sentence: the outcome this change delivers. -->
+
+## Background
+<!-- Optional. List scope items and link to source documents that set the context. -->
 
 ## Non-Goals
+<!-- What this change will not do. One item per line. -->
 
 ## Constraints
+<!-- Rules the implementation must follow. One item per line. -->
 
 ## Open Questions
+<!-- Unresolved questions. Remove each question when its answer goes to ## Decisions. -->
 
 ## Decisions
+<!-- ### Decision: <title>
+Chose X because Y. Rejected Z because W. -->
 ```
 
 Decisions are append-only. Entry format: `### Decision: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative (D92).

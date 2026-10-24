@@ -22,6 +22,7 @@ function hash(content) {
 }
 
 const base = "## Goal\nShip X\n\n## Non-Goals\nNo Y\n\n## Constraints\nKeep Z\n\n## Open Questions\nQ1?\n\n## Decisions\n";
+const baseWithBackground = "## Goal\nShip X\n\n## Background\nScope: A, B\n\n## Non-Goals\nNo Y\n\n## Constraints\nKeep Z\n\n## Open Questions\nQ1?\n\n## Decisions\n";
 
 test("same plan gives a 64-char hex hash", () => {
   const r = hash(base);
@@ -45,6 +46,25 @@ test("CRLF, BOM, section order, Open Questions, and Decisions do not change the 
 
 test("a changed Constraint changes the hash", () => {
   assert.notEqual(hash(base.replace("Keep Z", "Keep W")).stdout, hash(base).stdout);
+});
+
+test("HTML comments do not change the hash", () => {
+  const ref = hash(base).stdout;
+  assert.equal(hash(base.replace("Ship X", "<!-- intent --> Ship X")).stdout, ref, "inline comment");
+  assert.equal(hash(base.replace("## Goal\nShip X", "## Goal\n<!-- one-line comment -->\nShip X")).stdout, ref, "comment line");
+});
+
+test("Background is optional: adding Background changes the hash", () => {
+  assert.notEqual(hash(baseWithBackground).stdout, hash(base).stdout);
+});
+
+test("a changed Background changes the hash", () => {
+  assert.notEqual(hash(baseWithBackground).stdout, hash(base).stdout);
+});
+
+test("Background absent does not exit with code 1", () => {
+  const r = hash(base);
+  assert.equal(r.status, 0);
 });
 
 test("a missing heading exits with code 1 and names it", () => {
