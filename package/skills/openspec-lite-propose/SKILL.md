@@ -1,6 +1,6 @@
 ---
 name: openspec-lite-propose
-description: Create a plan-lite change with openspec-lite. It writes a lightweight plan.md with goal, non-goals, constraints, open questions, and decisions. It does not write the full spec-driven artifacts. Use when the user asks for openspec-lite-propose or a plan-lite change. Also use it for a lightweight plan, or for a medium change that needs a plan but not a full OpenSpec change.
+description: Create a plan-lite change with openspec-lite. It writes a lightweight plan.md with goal, an optional background, non-goals, constraints, open questions, and decisions. It does not write the full spec-driven artifacts. Use when the user asks for openspec-lite-propose or a plan-lite change. Also use it for a lightweight plan, or for a medium change that needs a plan but not a full OpenSpec change.
 ---
 
 # openspec-lite-propose

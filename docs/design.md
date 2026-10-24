@@ -275,7 +275,7 @@ description: Lightweight plan — goal, constraints, decisions. No tasks. Upgrad
 artifacts:
   - id: plan
     generates: plan.md
-    description: Living plan — goal, non-goals, constraints, open questions, decisions
+    description: Living plan — goal, background, non-goals, constraints, open questions, decisions
     template: plan.md   # relative to templates/
     requires: []
 apply:
@@ -306,7 +306,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 ```
 
-`plan-hash.mjs` (D72, D91, D107, D124, D125, D126) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:
+`plan-hash.mjs` (D72, D91, D107, D124, D125, D126, D128) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:
 
 - Usage: `node plan-hash.mjs <plan.md>`. It prints a 64-character hex SHA-256.
 - It strips a UTF-8 BOM and changes CRLF to LF.
@@ -316,6 +316,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - It exits with code 1 if a heading differs from a hashed title only in letter case, for example `## background` (D128).
 - It exits with code 1 if the file cannot be read, or if `Goal`, `Non-Goals`, or `Constraints` is missing. `Background` is optional: no error if absent (D125).
 - `tests/plan-hash.test.mjs` covers each rule.
+
 `templates/plan.md` (D10, D124, D125):
 
 ```markdown

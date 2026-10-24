@@ -1663,6 +1663,8 @@ This revises D10 (template structure) and D72 (hash behavior). It requires a sch
 
 This extends D10 (template structure). It requires a schema `version` bump per D109.
 
+**Status**: The fourth bullet is revised. Propose fills `## Background` when the prompt gives scope items or sources, as for each other section ("Fill only what is known"). Otherwise it leaves the section empty.
+
 **Rationale**: In a large change, the scope list and links to source documents had no home except `## Goal`. Goal then grew long and stopped being one outcome sentence. A dedicated section keeps Goal one sentence. The name `## Background` covers both scope items and source links. No section in `design.md` has this name. A scope change is the most common reason for a stale tasks preview, so `Background` is in `KEEP`. The section is optional, so `plan-hash.mjs` does not fail on an old `plan.md` with no `## Background`. Rejected: `## Context`, because `design.md` has a section with this name. Rejected: `## Scope` and `## References`, because each name covers only half the content.
 
 ---

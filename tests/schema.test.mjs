@@ -48,6 +48,7 @@ test("plan-lite flow: new change, plan template, validate, apply instructions, a
   assert.equal(plan.outputPath, "plan.md");
   assert.match(plan.template, /## Goal/);
   assert.match(plan.template, /## Decisions/);
+  assert.match(plan.template, /<!-- One sentence: the outcome this change delivers\. -->/, "the CLI keeps the guidance comments");
   writeFileSync(join(change, "plan.md"), plan.template.replace("## Goal", "## Goal\nShip the demo."));
 
   assert.equal(os(dir, ["validate", "demo"]).status, 0);

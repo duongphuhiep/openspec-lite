@@ -610,3 +610,12 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Version 1.3.1 renames the `CONTEXT.md` / `CONTEXT-MAP.md` convention to `GLOSSARY.md` / `GLOSSARY-MAP.md`. This applies in `domain-modeling`, `grill-with-docs`, `tdd`, `triage`, and other skills.
 - The changelog says: "the skills only look for `GLOSSARY.md`/`GLOSSARY-MAP.md` going forward." It tells users to `git mv` an old `CONTEXT.md`.
 - Version 1.2.3 still uses `CONTEXT.md`.
+
+---
+
+## OpenSpec: HTML Comments in a Schema Template
+
+**Source**: `openspec instructions plan --change <name> --json` on the plan-lite v2 template, OpenSpec 1.14.2, `tests/schema.test.mjs`, 2026-10-24
+
+- The `template` field returns the template file with its `<!-- ... -->` comments unchanged. The CLI does not strip or render them.
+- `openspec validate` passes on a `plan.md` that keeps the comments.
