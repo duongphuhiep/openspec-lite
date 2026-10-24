@@ -1663,7 +1663,7 @@ This revises D10 (template structure) and D72 (hash behavior). It requires a sch
 
 This extends D10 (template structure). It requires a schema `version` bump per D109.
 
-**Status**: The fourth bullet is revised. Propose fills `## Background` when the prompt gives scope items or sources, as for each other section ("Fill only what is known"). Otherwise it leaves the section empty.
+**Status**: D129 revises the fourth bullet: propose fills `## Background` when the prompt gives scope items or sources.
 
 **Rationale**: In a large change, the scope list and links to source documents had no home except `## Goal`. Goal then grew long and stopped being one outcome sentence. A dedicated section keeps Goal one sentence. The name `## Background` covers both scope items and source links. No section in `design.md` has this name. A scope change is the most common reason for a stale tasks preview, so `Background` is in `KEEP`. The section is optional, so `plan-hash.mjs` does not fail on an old `plan.md` with no `## Background`. Rejected: `## Context`, because `design.md` has a section with this name. Rejected: `## Scope` and `## References`, because each name covers only half the content.
 
@@ -1710,3 +1710,16 @@ This extends D124 and D120.
 This extends D91 and D125.
 
 **Rationale**: A review of D127 found that `## Background` is optional. A heading such as `## background` then dropped out of the hash with no error, so a scope change did not make the tasks preview stale. D91 closed this gap for the required headings. A check on letter case only is simple and catches the usual typo. Rejected: a fuzzy match on other spellings, because it adds code for rare cases. The `GLOSSARY.md` "Done check" entry does not get the comment rule, because the glossary holds no implementation details.
+
+---
+
+## D129: Fenced Comments Stay in the Hash, and Propose Fills Background
+
+**Decision**:
+
+- `plan-hash.mjs` strips an HTML comment only outside a ``` or ~~~ fence. A comment inside a fence is content, and it stays in the hash.
+- Propose fills `## Background` when the prompt gives scope items or sources. Otherwise it leaves the section empty. This revises the fourth bullet of D125.
+
+This revises D126 and D125.
+
+**Rationale**: A review found that the strip ignored fences, but D108 treats fenced text as content. So an edit to a comment in a code example under a hashed section did not make the tasks preview stale. Round 1 accepted this gap, but the stale check is the purpose of the hash. For propose, the D125 text "leaves the section empty" conflicted with "Fill only what is known". If the prompt gave a scope list, the rule sent it back into `## Goal`, which is the problem of issue #1.

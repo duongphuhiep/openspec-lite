@@ -59,6 +59,11 @@ test("HTML comments do not change the hash", () => {
   assert.equal(hash(base.replace("Keep Z", "Keep Z\n<!-- two\nlines -->")).stdout, ref, "multi-line comment");
 });
 
+test("a comment inside a fence is content", () => {
+  const fenced = (c) => hash(base.replace("Keep Z", "Keep Z\n```html\n<!-- " + c + " -->\n```")).stdout;
+  assert.notEqual(fenced("a"), fenced("b"));
+});
+
 test("a stray <!-- cannot hide a heading", () => {
   const r = hash(base.replace("Ship X", "Ship <!-- X").replace("Keep Z", "Keep Z -->"));
   assert.equal(r.status, 0, r.stderr);
