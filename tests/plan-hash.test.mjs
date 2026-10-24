@@ -52,19 +52,26 @@ test("HTML comments do not change the hash", () => {
   const ref = hash(base).stdout;
   assert.equal(hash(base.replace("Ship X", "<!-- intent --> Ship X")).stdout, ref, "inline comment");
   assert.equal(hash(base.replace("## Goal\nShip X", "## Goal\n<!-- one-line comment -->\nShip X")).stdout, ref, "comment line");
+  assert.equal(hash(base.replace("Keep Z", "Keep Z\n<!-- two\nlines -->")).stdout, ref, "multi-line comment");
 });
 
-test("Background is optional: adding Background changes the hash", () => {
-  assert.notEqual(hash(baseWithBackground).stdout, hash(base).stdout);
+test("a stray <!-- cannot hide a heading", () => {
+  const r = hash(base.replace("Ship X", "Ship <!-- X").replace("Keep Z", "Keep Z -->"));
+  assert.equal(r.status, 0, r.stderr);
 });
 
-test("a changed Background changes the hash", () => {
-  assert.notEqual(hash(baseWithBackground).stdout, hash(base).stdout);
+test("Background: absent and empty give the same hash, content changes it", () => {
+  const ref = hash(base);
+  assert.equal(ref.status, 0, "absent is not an error");
+  assert.equal(hash(base.replace("## Non-Goals", "## Background\n<!-- hint -->\n\n## Non-Goals")).stdout, ref.stdout, "empty");
+  assert.notEqual(hash(baseWithBackground).stdout, ref.stdout, "added");
+  assert.notEqual(hash(baseWithBackground.replace("Scope: A, B", "Scope: A, C")).stdout, hash(baseWithBackground).stdout, "changed");
 });
 
-test("Background absent does not exit with code 1", () => {
-  const r = hash(base);
-  assert.equal(r.status, 0);
+test("the shipped template hashes with no error", () => {
+  const template = fileURLToPath(new URL("../package/skills/openspec-lite-schema/assets/plan-lite/templates/plan.md", import.meta.url));
+  const r = spawnSync(process.execPath, [script, template], { encoding: "utf8" });
+  assert.equal(r.status, 0, r.stderr);
 });
 
 test("a missing heading exits with code 1 and names it", () => {

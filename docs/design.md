@@ -96,7 +96,7 @@ openspec-lite/
 ## 2a. Tests (D84)
 
 - Tests live in `tests/` and run with `node --test` from the repo root. They have no dependencies.
-- `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, Decisions, and HTML comments do not change the hash. A changed Constraint or Background does. Background absent does not exit with code 1. A missing required heading or a missing file exits with code 1.
+- `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, Decisions, and HTML comments do not change the hash. A stray `<!--` does not hide a heading. An absent and an empty `## Background` give the same hash. A changed Constraint or Background changes it. The shipped template hashes with no error. A missing required heading or a missing file exits with code 1.
 - `check-version.test.mjs`: runs the script on fixture folders. A match passes. A mismatch fails. A missing marker line fails. A missing skill fails. A skill with CRLF line endings passes. An indented marker passes. A second marker with a wrong number fails. `01` equals `1`. A root with no `package/` prints one `schema.yaml` failure (D106).
 - `install.test.mjs`: a first install copies. A lower repo version moves to a timestamped backup, then copies. An equal version prints `status: current`. A higher version exits with code 2. Missing shipped assets exit with code 3. A second backup with the same timestamp gets a `-2` suffix. A quoted higher version with a comment exits with code 2. A file system error exits with code 1, with an `install:` message and no stack trace (D96, D98, D102, D106).
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It also tests the upgrade path (`instructions <artifact> --schema spec-driven` on a plan-lite change), an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs` (D108). It also tests the CLI behavior that the skills rely on: `state: blocked` with no `plan.md`, `root.path` from a subfolder and `root: null` above it, `skipped: true` on `instructions specs` with `skip_specs`, and the failure on a duplicate key in `.openspec.yaml` (D112). The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
@@ -234,7 +234,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 1. Remove `skip_specs: true` from `.openspec.yaml`. While it is set, the CLI forbids spec files (D99).
 2. Ask the user to answer each open question that changes the specs, the approach, or the tasks. Do this before you write an artifact. If the user cannot answer now, the question stays in `plan.md` (D120, `docs/facts.md`). Then write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. On a resumed run, keep each artifact that already exists, and write only the missing ones. Follow the `instruction` field of each result.
-   1. `proposal.md`: from Goal and the scope. Non-Goals go to `design.md` → `## Goals / Non-Goals`.
+   1. `proposal.md`: from Goal and the scope. If `## Background` exists, use its scope items and source links (D125). Non-Goals go to `design.md` → `## Goals / Non-Goals`.
    2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, add a `## Purpose` section for a new capability (D117), give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. If `plan.md` has no requirement, ask the user for one. If the user has none, put `skip_specs: true` back and say so in the summary (D108). Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit. An open question that is safe to answer later goes to `## Open Questions`. An open question that changes the specs, the approach, or the tasks has no slot. Its answer goes to the specs or to `## Decisions`.
    3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. If an answer from step 2 changes the tasks, edit the seed to match it, and say so in the summary. Then delete `tasks-preview.md`. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here: keep `tasks.md`, and delete `tasks-preview.md` (D107).
 3. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
@@ -269,7 +269,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 ```yaml
 name: plan-lite
-version: 1
+version: 2
 openspec-version: ">=1.9.0 <2.0.0"
 description: Lightweight plan — goal, constraints, decisions. No tasks. Upgradeable to spec-driven.
 artifacts:
@@ -302,17 +302,17 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - Record the answer to each open question in `## Decisions`, and remove the question.
 - Do not edit tasks-preview.md.
 - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
-- End with the done check: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty?
+- End with the done check: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
 - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 ```
 
-`plan-hash.mjs` (D72, D91, D107, D124, D125) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:
+`plan-hash.mjs` (D72, D91, D107, D124, D125, D126) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:
 
 - Usage: `node plan-hash.mjs <plan.md>`. It prints a 64-character hex SHA-256.
 - It strips a UTF-8 BOM and changes CRLF to LF.
-- It strips all `<!-- ... -->` HTML comments before parsing or hashing (D124).
 - A `## ` line outside a ``` or ~~~ fence starts a section. A `## ` line inside a fence is content. As in CommonMark, a fence closes only with the same character, at least the same length, and no info string (D108).
-- It hashes `Goal`, `Non-Goals`, `Constraints`, and `Background` (optional). It collapses whitespace and sorts the sections, so whitespace and section order do not change the hash.
+- It hashes `Goal`, `Non-Goals`, `Constraints`, and `Background` (optional). It strips each `<!-- ... -->` HTML comment inside a section body, so a stray `<!--` cannot hide a heading (D124, D126). It collapses whitespace and sorts the sections, so whitespace and section order do not change the hash.
+- An empty `## Background` hashes the same as a missing one (D126).
 - It exits with code 1 if the file cannot be read, or if `Goal`, `Non-Goals`, or `Constraints` is missing. `Background` is optional: no error if absent (D125).
 - `tests/plan-hash.test.mjs` covers each rule.
 `templates/plan.md` (D10, D124, D125):

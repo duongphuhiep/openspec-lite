@@ -108,7 +108,7 @@ Use stock `/opsx:explore` before you propose. openspec-lite has no explore skill
 During apply:
 
 - When the two files conflict, `plan.md` wins.
-- If `plan.md` changed after the preview was generated, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Non-Goals, and Constraints, because apply adds to the other sections.
+- If `plan.md` changed after the preview was generated, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply adds to the other sections. It ignores HTML comments.
 - Apply records each meaningful deviation in the `plan.md` decisions.
 
 ## Lifecycle

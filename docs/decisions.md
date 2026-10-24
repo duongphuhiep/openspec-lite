@@ -137,7 +137,7 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: The Decisions section is the key differentiator from a throwaway plan.md. Without it, the file has no long-term value and nothing worth promoting at archive time.
 
-**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional.
+**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`.
 
 ---
 
@@ -745,7 +745,7 @@ This revises the `NNNN-<slug>.md` name in D8 and D9.
 
 **Rationale**: The CLI never reports a plan-lite change as done, and archive does not check (`docs/facts.md`). Open questions that are still open are the real "not done" marker.
 
-**Status**: D73 moves the checklist into `apply.instruction`. D77 adds "Archive anyway?" to archive.
+**Status**: D73 moves the checklist into `apply.instruction`. D77 adds "Archive anyway?" to archive. D126 says that an HTML comment in `## Open Questions` does not count.
 
 ---
 
@@ -884,7 +884,7 @@ This revises D51 and D65.
 
 **Rationale**: Stock `/opsx:apply` reads only `apply.instruction`, so the hash command had to exist in two places. A script in the schema gives one copy, versioned and committed with the schema. The schema is always at this path, so no search is needed. OpenSpec accepts extra files in the schema folder (`docs/facts.md`). Open Questions left the hash because D60 empties that section. With it in the hash, each resumed apply shows a false stale warning. Each answer goes to `## Decisions`, and an answer that changes the approach is a recorded deviation.
 
-**Status**: D91 makes the script fail when a heading is missing.
+**Status**: D91 makes the script fail when a heading is missing. D124 and D126 make it ignore HTML comments. D125 adds the optional `## Background` to the hash.
 
 ---
 
@@ -1642,9 +1642,11 @@ This extends D105, D111, and D112.
 
 - `templates/plan.md` gets a one-line `<!-- ... -->` guidance comment under each heading. The comment tells an agent or a person what content belongs in that section.
 - `plan-hash.mjs` strips all `<!-- ... -->` blocks before hashing. Stripping happens after BOM and CRLF normalization, before section parsing.
-- This keeps all five hashed and unhashed sections safe for comments. A user who deletes a comment in `## Goal`, `## Non-Goals`, or `## Constraints` does not change the hash.
+- This keeps all six sections safe for comments. A user who deletes a comment in `## Goal`, `## Non-Goals`, or `## Constraints` does not change the hash.
 
 This revises D10 (template structure) and D72 (hash behavior). It requires a schema `version` bump per D109.
+
+**Status**: D126 moves the strip into each section body, after section parsing.
 
 **Rationale**: The decision format (`### Decision: <title>`, then "Chose X because Y.") lives only in `openspec-lite-propose` and `apply.instruction`. An agent or person editing `plan.md` without those skills does not see the format. Option (a) — comments only in unhashed sections — leaves `## Constraints` bare, the section most likely to be hand-edited. Option (b) strips comments before hashing, so all sections stay safe. Both options cost a version bump (D109 covers any change under `assets/plan-lite/`), so option (b) has no extra release cost.
 
@@ -1654,7 +1656,7 @@ This revises D10 (template structure) and D72 (hash behavior). It requires a sch
 
 **Decision**:
 
-- `templates/plan.md` adds a `## Background` section after `## Constraints` and before `## Open Questions`.
+- `templates/plan.md` adds a `## Background` section after `## Goal` and before `## Non-Goals`.
 - The section is optional. `plan-hash.mjs` adds `Background` to `KEEP` but does not exit with code 1 when the heading is absent.
 - `openspec-lite-upgrade` reads the scope and source links from `## Background` when writing `proposal.md`.
 - `openspec-lite-propose` leaves the section empty. The user or agent fills it when needed.
@@ -1662,3 +1664,18 @@ This revises D10 (template structure) and D72 (hash behavior). It requires a sch
 This extends D10 (template structure). It requires a schema `version` bump per D109.
 
 **Rationale**: In a large change, the scope list and links to source documents had no home except `## Goal`. Goal then grew long and stopped being one outcome sentence. A dedicated section keeps Goal one sentence. The name `## Background` covers both scope items and source links without collision: `design.md` has `## Context`, `## Decisions`, `## Goals / Non-Goals`, and `## Risks / Trade-offs` — none named `Background`. Adding it to `KEEP` catches the most common reason a tasks preview goes stale (a scope change). Making it optional means `plan-hash.mjs` does not break on existing `plan.md` files that lack it. Rejected: `## Context` (collides with `design.md`). Rejected: `## Scope` and `## References` (each covers only half the content).
+
+---
+
+## D126: Review Fixes for D124 and D125
+
+**Decision**:
+
+- `plan-hash.mjs` strips HTML comments inside each section body, after it splits the sections. It does not strip them from the whole file first.
+- An empty `## Background` hashes the same as a missing one.
+- The done check says: "Is `## Open Questions` empty? An HTML comment does not count." This applies in `apply.instruction` and in the archive skill.
+- The five workflow skills say `Shipped schema version: 2`.
+
+This revises D124 and the done check of D60.
+
+**Rationale**: A review of D124 and D125 found these gaps. With a strip on the whole file, a stray `<!--` in prose and a later `-->` removed the headings between them, so the script exited with code 1. The template has an empty `## Background`. If a user deleted it, the hash changed and the tasks preview became stale, which D124 wanted to prevent. The template also puts a comment under `## Open Questions`, so the done check could read the section as not empty. The skills held version 1, so `check-version.mjs` failed in CI, and each skill would stop on a "repo version higher" message. A plan with no HTML comments keeps its v1 hash, so an update does not mark old previews as stale.

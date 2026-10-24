@@ -21,5 +21,5 @@ apply:
     - Record the answer to each open question in `## Decisions`, and remove the question.
     - Do not edit tasks-preview.md.
     - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
-    - End with the done check: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty?
+    - End with the done check: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
     - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.

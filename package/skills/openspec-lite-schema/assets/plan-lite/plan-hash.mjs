@@ -14,9 +14,7 @@ try {
   console.error(`plan-hash: cannot read ${process.argv[2]}`);
   process.exit(1);
 }
-text = text.replace(/^﻿/, "").replace(/\r\n/g, "\n");
-// Strip HTML comments before parsing or hashing.
-text = text.replace(/<!--[\s\S]*?-->/g, "");
+text = text.replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
 
 // Split into { title, body } sections at "## " lines outside fenced code blocks.
 // As in CommonMark, a fence closes only with the same character, at least the same length, and no info string.
@@ -39,8 +37,12 @@ if (missing.length > 0) {
   console.error(`plan-hash: missing heading: ${missing.map((k) => `## ${k}`).join(", ")}`);
   process.exit(1);
 }
+// Strip HTML comments per section, so a stray "<!--" cannot hide a heading.
+// An empty optional section hashes the same as a missing one.
 const kept = sections
   .filter((s) => KEEP.includes(s.title))
-  .map((s) => `${s.title}\n${s.body.join("\n")}`.replace(/\s+/g, " ").trim())
+  .map((s) => ({ title: s.title, body: s.body.join("\n").replace(/<!--[\s\S]*?-->/g, "").replace(/\s+/g, " ").trim() }))
+  .filter((s) => REQUIRED.includes(s.title) || s.body !== "")
+  .map((s) => `${s.title} ${s.body}`.trim())
   .sort();
 console.log(createHash("sha256").update(kept.join("\n")).digest("hex"));

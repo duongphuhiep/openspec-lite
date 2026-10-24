@@ -16,7 +16,7 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
    1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
    2. Compare it with the shipped version:
 
-      Shipped schema version: 1
+      Shipped schema version: 2
 
       - The file is missing, its version is lower, or it has no readable `version` line: run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions. Otherwise, continue with the next step of this skill. Do not end your turn after `openspec-lite-schema` finishes. In your end summary, include its report: the status, the copied files, and the backup path.
       - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
@@ -26,7 +26,7 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
 
 `<dir>` is `openspec/changes/<name>`.
 
-1. **Done check**: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty? To find the code, search for what the Goal names, for example with `git grep`. Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them. If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
+1. **Done check**: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count. To find the code, search for what the Goal names, for example with `git grep`. Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them. If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
 2. Read `<dir>/plan.md`. Do not use `tasks-preview.md` for promotion.
 3. Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
