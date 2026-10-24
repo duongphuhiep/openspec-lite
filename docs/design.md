@@ -35,6 +35,7 @@ openspec-lite/
 │   ├── install.test.mjs
 │   └── schema.test.mjs
 ├── .github/workflows/
+│   ├── apm-install.yml
 │   └── test.yml
 ├── docs/
 │   └── test-scenarios.md
@@ -68,6 +69,10 @@ openspec-lite/
   - It runs `node scripts/check-version.mjs`. Contract: `node scripts/check-version.mjs [root]`, default `.`. It checks the five workflow skills by name under `<root>/package/skills/`. It prints `ok <skill> <n>` or `FAIL <skill>: <reason>` per skill, and exits with code 1 on any failure (D99). If `schema.yaml` has no readable version, it prints only `FAIL schema.yaml: missing file or version line`. The script reads each line `Shipped schema version: <n>` in each workflow skill. The line can be indented. It normalizes CRLF to LF first. It compares numbers. It fails if a workflow skill has no marker line, or if any number differs from `version` in `assets/plan-lite/schema.yaml` (D66, D87, D93, D106).
   - It runs `node --test` from the repo root. Node finds `tests/*.test.mjs`. `node --test tests/` fails on Node 24 (D84, D99).
   - On a tag push, it fails if the tag is not `v` + `version` from `package/apm.yml`. It reads the line `^version:` with no YAML library (D94).
+- The `apm-install` workflow (`.github/workflows/apm-install.yml`) runs scenario 10. It runs only by hand, from the Actions tab (`workflow_dispatch`) (D130):
+  - It installs the latest APM with `microsoft/apm-action@v1` in `setup-only` mode.
+  - It reads the latest `v*` tag. In an empty `git init` folder, it runs `apm install duongphuhiep/openspec-lite/package#^<major>.0.0 --target claude`.
+  - It checks that `.claude/skills/` has the six `openspec-lite-*` skills, with `scripts/install.mjs` and `assets/plan-lite/` in `openspec-lite-schema/`. It checks that `apm_modules/duongphuhiep/openspec-lite/` holds only `package/`, and that `apm.lock.yaml` has `resolved_ref: <tag>`.
 - Before each release tag:
   - Run scenarios 1–9 and 11–21 in `docs/test-scenarios.md` by hand (D69, D113, D115, D120, D122). Each scenario has steps and an expected result. The list (D99):
     1. Fresh repo: propose installs the schema, creates the change, writes `plan.md`.
@@ -79,7 +84,7 @@ openspec-lite/
     7. Upgrade with a preview, interrupted after it writes `proposal.md`, then run again: it resumes and validates.
     8. Newer repo schema: each workflow skill stops with the "Run `apm update`" message.
     9. Schema re-copy: the old folder moves to `openspec/schemas-backup/`. An existing `operations.archive.guidance` list keeps its items and gets the openspec-lite item, with one `operations:` key (D110).
-    10. Real APM install from the tag (D83). Run this one right after the tag push (D107).
+    10. Real APM install from the tag (D83). Run the `apm-install` workflow after the tag push when the release adds, moves, or deletes a file in `package/`, or changes `package/apm.yml`. Also run it after an APM update (D130).
     11. OpenSpec root in a subfolder of the git root: the skills run from `root.path`, and the skill-folder search finds the skill in a parent folder (D111).
     12. propose resume: a plan-lite change with no `plan.md` resumes with one `skip_specs` line (D111, D112).
     13. archive rerun: (a) after a failed validate, the agent shows earlier deltas before the write and drafts the decision again; (b) after a failed `openspec archive`, it skips the ADRs with `Change: <name>` (D111, D112, D113).
@@ -91,7 +96,6 @@ openspec-lite/
     19. tasks-preview and upgrade after an upgrade: refuse, or ask to resume when `plan.md` exists (D107, D108).
     20. Upgrade lists the destination of each `plan.md` section and asks before it prunes. Archive drafts an item that the user picks from the skipped list. Upgrade with no requirement puts `skip_specs: true` back (D108, D120).
     21. Archive with a decision that replaces an `Accepted` ADR: the new ADR has `Supersedes:`, and only the `Status:` line of the old ADR changes. A rerun fixes an old ADR that an earlier run did not mark (D122).
-  - Right after the tag push, install from the tag in a temp repo. Check that `apm_modules/` holds only `package/` content (D83, D107).
 
 ## 2a. Tests (D84)
 

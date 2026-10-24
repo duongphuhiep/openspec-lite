@@ -1,0 +1,34 @@
+name: apm-install
+
+# Scenario 10: a real APM install from the latest published tag (D130).
+# Run it by hand from the Actions tab, for example after a tag that changes the package layout or apm.yml.
+on:
+  workflow_dispatch:
+
+jobs:
+  apm-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: microsoft/apm-action@v1
+        with:
+          setup-only: "true"
+      - run: apm --version
+      - name: Install from the latest tag and check the result
+        run: |
+          tag=$(git tag --list 'v*' --sort=-v:refname | head -1)
+          test -n "$tag" || { echo "no v* tag"; exit 1; }
+          major=${tag#v}; major=${major%%.*}
+          cd "$(mktemp -d)"
+          git init -q
+          apm install "duongphuhiep/openspec-lite/package#^$major.0.0" --target claude
+          n=$(ls -d .claude/skills/openspec-lite-* | wc -l)
+          test "$n" -eq 6 || { echo "expected 6 openspec-lite skills, found $n"; exit 1; }
+          test -f .claude/skills/openspec-lite-schema/scripts/install.mjs || { echo "missing scripts/install.mjs"; exit 1; }
+          test -d .claude/skills/openspec-lite-schema/assets/plan-lite || { echo "missing assets/plan-lite/"; exit 1; }
+          m=apm_modules/duongphuhiep/openspec-lite
+          test "$(ls -A "$m")" = package || { echo "$m holds more than package/:"; ls -A "$m"; exit 1; }
+          grep -q "resolved_ref: $tag" apm.lock.yaml || { echo "apm.lock.yaml does not resolve to $tag"; grep resolved_ref apm.lock.yaml; exit 1; }
+          echo "ok: $tag"

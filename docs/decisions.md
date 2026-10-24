@@ -1723,3 +1723,19 @@ This extends D91 and D125.
 This revises D126 and D125.
 
 **Rationale**: A review found that the strip ignored fences, but D108 treats fenced text as content. So an edit to a comment in a code example under a hashed section did not make the tasks preview stale. Round 1 accepted this gap, but the stale check is the purpose of the hash. For propose, the D125 text "leaves the section empty" conflicted with "Fill only what is known". If the prompt gave a scope list, the rule sent it back into `## Goal`, which is the problem of issue #1.
+
+---
+
+## D130: Scenario 10 Is a Manual CI Workflow, Run Only When It Applies
+
+**Decision**:
+
+- `.github/workflows/apm-install.yml` runs scenario 10. Its only trigger is `workflow_dispatch`, so a person starts it from the Actions tab or with `gh workflow run apm-install.yml`.
+- It installs the latest APM with `microsoft/apm-action@v1` in `setup-only` mode. It does not pin the APM version, so it also catches a change in a new APM.
+- It installs from the latest `v*` tag with the range `^<major>.0.0`, as a user does. It checks the six skills, the schema assets, a module folder with only `package/`, and `resolved_ref` in `apm.lock.yaml`.
+- Run it after a tag push that adds, moves, or deletes a file in `package/`, or changes `package/apm.yml`. Also run it after an APM update. Skip it for a release that changes only the text of existing files.
+- The header of `docs/test-scenarios.md` now lists scenarios 1–9 and 11–21. Scenario 21 (D122) was missing.
+
+This revises D107 for scenario 10.
+
+**Rationale**: Several published releases installed with no fault. Scenario 10 checks the package layout and the APM resolution, not the skill text. So a text-only release cannot break it. A manual run each time cost a step for little value. A workflow removes the manual steps, and a manual trigger keeps it out of each push. Rejected: a run on each tag push, because the user wants it optional. Rejected: an input for the tag, because the `^<major>.0.0` range always resolves to the latest tag of that major.

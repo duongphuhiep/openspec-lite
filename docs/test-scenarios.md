@@ -1,6 +1,6 @@
 # Test Scenarios
 
-Run scenarios 1–9 and 11–20 by hand before each release tag (D69). Run scenario 10 right after the tag push, because it needs the published tag. The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
+Run scenarios 1–9 and 11–21 by hand before each release tag (D69). Scenario 10 needs the published tag. Run it with the `apm-install` workflow after the tag push, only when it applies (D130). The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
 
 Setup for each scenario, unless it says otherwise:
 
@@ -121,15 +121,19 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 ## 10. Real APM install from the tag
 
+**When**: after a tag push that adds, moves, or deletes a file in `package/`, or changes `package/apm.yml`. Also after an APM update. Skip it for a release that changes only the text of existing files (D130).
+
 **Steps**:
 
 1. Push the release tag `vX.Y.Z`.
-2. In an empty folder: `git init`, then `apm install duongphuhiep/openspec-lite/package#^X.0.0 --target claude`.
+2. On GitHub, open **Actions** → **apm-install** → **Run workflow** on `main`. Or run `gh workflow run apm-install.yml`.
 
-**Expected**:
+The workflow does the install in an empty `git init` folder: `apm install duongphuhiep/openspec-lite/package#^X.0.0 --target claude`. To run it by hand, do the same and check the results below.
+
+**Expected**: the workflow passes. It checks each of these:
 
 - `.claude/skills/` has the six `openspec-lite-*` skills. `openspec-lite-schema/` has `scripts/install.mjs` and `assets/plan-lite/`.
-- `apm_modules/duongphuhiep/openspec-lite/` has only `package/` content: no `tests/`, `scripts/`, or `docs/`.
+- `apm_modules/duongphuhiep/openspec-lite/` holds only `package/`: no `tests/`, `scripts/`, or `docs/`.
 - `apm.lock.yaml` has `resolved_ref: vX.Y.Z`.
 
 ## 11. OpenSpec root in a subfolder
