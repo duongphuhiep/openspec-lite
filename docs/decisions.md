@@ -1783,4 +1783,6 @@ This extends D120.
 
 This extends D120 and D132.
 
+**Status**: After the rerun on 5af5008, the first bullet is revised. Upgrade does not put the command in a loop or a chain, and does not filter it with `grep`. It reads the full JSON and does not write an artifact without its `template` and `instruction`. The "stop if denied" rule is removed: in 3 of 3 denials, the agent retried with a plain command, which is correct. In 2 of 4 runs, a pipe to `grep` ran, because the allowlist does not deny it, and one run lost the `instruction` field.
+
 **Rationale**: In the rerun on dc3b8c0, the scenario allowlist denied `openspec instructions` calls in a `for` loop or in a pipe to `python3`. The agent then wrote the artifacts with no `template` and no `instruction`. In the same 20a run, `design.md` got a pointer to the kept open question under `## Open Questions`. Step 2.3 forbade the question there, but not a pointer to it. The d05538c run passed this check, so the pointer is model variance that the text did not close.
