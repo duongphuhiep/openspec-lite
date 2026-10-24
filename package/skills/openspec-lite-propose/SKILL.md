@@ -30,7 +30,7 @@ If the request is small (one obvious fix, no constraints or open questions worth
 2. Run `openspec new change "<name>" --schema plan-lite`. If it fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`. If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped here. Ask: "Resume the change <name>?" On yes, go to step 3. In each other case, show the error and ask for another name.
 3. Set `skip_specs: true` in `openspec/changes/<name>/.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change.
 4. Run `openspec instructions plan --change "<name>" --json`. Write `openspec/changes/<name>/plan.md` from its `template` field.
-5. Fill only what is known. Leave the other sections empty. Do not invent non-goals, constraints, or decisions.
+5. Fill only what is known. Leave the other sections empty. Keep each guidance comment. Do not invent non-goals, constraints, or decisions.
 
 A decision entry is `### Decision: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative.
 

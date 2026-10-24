@@ -1648,7 +1648,7 @@ This revises D10 (template structure) and D72 (hash behavior). It requires a sch
 
 **Status**: D126 moves the strip into each section body, after section parsing.
 
-**Rationale**: The decision format (`### Decision: <title>`, then "Chose X because Y.") lives only in `openspec-lite-propose` and `apply.instruction`. An agent or person editing `plan.md` without those skills does not see the format. Option (a) — comments only in unhashed sections — leaves `## Constraints` bare, the section most likely to be hand-edited. Option (b) strips comments before hashing, so all sections stay safe. Both options cost a version bump (D109 covers any change under `assets/plan-lite/`), so option (b) has no extra release cost.
+**Rationale**: The decision format (`### Decision: <title>`, then "Chose X because Y.") lives only in `openspec-lite-propose` and `apply.instruction`. If an agent or a person edits `plan.md` without those skills, they do not see the format. Option (a) puts comments only in the sections that are not hashed. Then `## Constraints` has no guidance, and people often edit it by hand. Option (b) strips comments before it hashes, so each section can have a comment. D109 bumps the version for each change under `assets/plan-lite/`. So both options need a bump, and option (b) has no extra release cost.
 
 ---
 
@@ -1663,7 +1663,7 @@ This revises D10 (template structure) and D72 (hash behavior). It requires a sch
 
 This extends D10 (template structure). It requires a schema `version` bump per D109.
 
-**Rationale**: In a large change, the scope list and links to source documents had no home except `## Goal`. Goal then grew long and stopped being one outcome sentence. A dedicated section keeps Goal one sentence. The name `## Background` covers both scope items and source links without collision: `design.md` has `## Context`, `## Decisions`, `## Goals / Non-Goals`, and `## Risks / Trade-offs` — none named `Background`. Adding it to `KEEP` catches the most common reason a tasks preview goes stale (a scope change). Making it optional means `plan-hash.mjs` does not break on existing `plan.md` files that lack it. Rejected: `## Context` (collides with `design.md`). Rejected: `## Scope` and `## References` (each covers only half the content).
+**Rationale**: In a large change, the scope list and links to source documents had no home except `## Goal`. Goal then grew long and stopped being one outcome sentence. A dedicated section keeps Goal one sentence. The name `## Background` covers both scope items and source links. No section in `design.md` has this name. A scope change is the most common reason for a stale tasks preview, so `Background` is in `KEEP`. The section is optional, so `plan-hash.mjs` does not fail on an old `plan.md` with no `## Background`. Rejected: `## Context`, because `design.md` has a section with this name. Rejected: `## Scope` and `## References`, because each name covers only half the content.
 
 ---
 
@@ -1679,3 +1679,17 @@ This extends D10 (template structure). It requires a schema `version` bump per D
 This revises D124 and the done check of D60.
 
 **Rationale**: A review of D124 and D125 found these gaps. With a strip on the whole file, a stray `<!--` in prose and a later `-->` removed the headings between them, so the script exited with code 1. The template has an empty `## Background`. If a user deleted it, the hash changed and the tasks preview became stale, which D124 wanted to prevent. The template also puts a comment under `## Open Questions`, so the done check could read the section as not empty. The skills held version 1, so `check-version.mjs` failed in CI, and each skill would stop on a "repo version higher" message. A plan with no HTML comments keeps its v1 hash, so an update does not mark old previews as stale.
+
+---
+
+## D127: Keep the Guidance Comments in plan.md
+
+**Decision**:
+
+- Propose keeps each guidance comment of the template in `plan.md`. It writes the content under the comment.
+- When upgrade prunes `plan.md`, a section with only an HTML comment counts as no section. If only such sections are left, upgrade deletes `plan.md`.
+- The `## Decisions` comment says that "Rejected Z because W." is optional, as D92 says.
+
+This extends D124 and D120.
+
+**Rationale**: A review of D126 found these gaps. With no rule, each agent could keep or remove the comments, so plans would differ. A kept comment helps a later person who edits `plan.md` by hand. `plan-hash.mjs` ignores comments, so they do not change the hash. Without the prune rule, a section with only a comment would keep `plan.md` after an upgrade. A test now pins the v1 hash of a plan with no comments, so the D126 claim cannot break silently.

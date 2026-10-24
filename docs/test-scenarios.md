@@ -21,7 +21,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - The agent runs `openspec-lite-schema`. `openspec/schemas/plan-lite/` exists. `openspec/config.yaml` has the archive guidance item.
 - `openspec/changes/<name>/` exists. `.openspec.yaml` has `schema: plan-lite` and `skip_specs: true`.
-- `plan.md` has the five headings, with only known content filled in.
+- `plan.md` has the six headings and their guidance comments, with only known content filled in.
 - The agent asks: "Do you want a tasks preview?" It writes no code.
 
 ## 2. Small request: Level 1
@@ -89,7 +89,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 ## 8. Newer repo schema
 
-**Steps**: Change `version: 1` to `version: 99` in `openspec/schemas/plan-lite/schema.yaml`. Run each workflow skill.
+**Steps**: Change the `version:` value to `99` in `openspec/schemas/plan-lite/schema.yaml`. Run each workflow skill.
 
 **Expected**: Each skill stops with the message "This repo uses a newer plan-lite schema. Run `apm update`. …". The message also names `apm update -g` for a user-scope install. No file changes.
 
@@ -97,7 +97,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. Change `version: 1` to `version: 0` in `openspec/schemas/plan-lite/schema.yaml`.
+1. Change the `version:` value to `0` in `openspec/schemas/plan-lite/schema.yaml`.
 2. Add a file `openspec/schemas/plan-lite/local-note.txt`.
 3. Replace the `operations` comment in `openspec/config.yaml` with a real key:
 
