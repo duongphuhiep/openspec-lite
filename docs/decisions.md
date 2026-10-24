@@ -1771,3 +1771,16 @@ This extends D127, D108, and D114.
 This extends D120.
 
 **Rationale**: In the rerun on cd93c44, both runs of scenario 20c ran step 5 and the summary in the same turn as the prune step. One run showed no list and no question, but its summary said "I'm waiting for your answer to the question above". The other run asked with no list. The step said "in the same reply", but it did not say to stop. `apply.instruction` uses "End your turn, and wait for the answer" for the same case. When propose sets `skip_specs: true` and the upgrade writes no delta, the flag never leaves the file, so "stays" is also correct.
+
+---
+
+## D133: Upgrade Runs Each Instructions Command Alone, and Writes No Pointer to a Kept Question
+
+**Decision**:
+
+- Upgrade runs `openspec instructions <artifact> --change "<name>" --schema spec-driven --json` as one plain command for each artifact, with no loop and no pipe. If the command fails or is denied, upgrade stops and shows the error. It does not write the artifact without the output.
+- An open question that changes the specs, the approach, or the tasks stays in `plan.md`. Upgrade writes neither the question nor a note that points to it in `design.md`.
+
+This extends D120 and D132.
+
+**Rationale**: In the rerun on dc3b8c0, the scenario allowlist denied `openspec instructions` calls in a `for` loop or in a pipe to `python3`. The agent then wrote the artifacts with no `template` and no `instruction`. In the same 20a run, `design.md` got a pointer to the kept open question under `## Open Questions`. Step 2.3 forbade the question there, but not a pointer to it. The d05538c run passed this check, so the pointer is model variance that the text did not close.
