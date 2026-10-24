@@ -46,7 +46,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 4. Prune `plan.md`:
    1. List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept". If the items of one section go to different destinations, list each item. Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
    2. If a section has content that is in no artifact and is not kept, say so. Offer to add it to an artifact first.
-   3. Show the list from step 4.1 first. Then, in the same reply, ask the user: "Delete the moved sections from `plan.md`?" On no, keep `plan.md` as it is, and go to step 5.
+   3. Show the list from step 4.1 first. Then, in the same reply, ask the user: "Delete the moved sections from `plan.md`?" End your turn, and wait for the answer. Do not run step 5 or write the summary before the answer. On no, keep `plan.md` as it is, and go to step 5.
    4. Delete each section or item whose content moved. Keep each kept item. If no section is left, delete `plan.md`. A section with only an HTML comment counts as no section.
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 

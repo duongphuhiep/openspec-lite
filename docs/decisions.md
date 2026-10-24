@@ -1758,3 +1758,16 @@ This revises D107 for scenario 10.
 This extends D127, D108, and D114.
 
 **Rationale**: In 6 of 6 propose runs, the agent removed the comment of each section that it filled. "Keep each guidance comment" did not say that a filled section keeps its comment. In 1 of 2 runs of scenario 20c, upgrade turned a Goal that names a behavior into a requirement in its own words. It did not ask, which D114 forbids. A global v1.3.0 install in `~/.claude/skills/` hid the release candidate in each group, until the runs used the flag (`docs/facts.md`).
+
+---
+
+## D132: Upgrade Ends the Turn After the Prune Question
+
+**Decision**:
+
+- Upgrade step 4.3 shows the list of `plan.md` sections and asks "Delete the moved sections from `plan.md`?" in one reply. Then it ends the turn. It does not run `openspec validate` or write the summary before the answer.
+- Scenario 20c expects the list and the question, with nothing after them. Its summary can say that `skip_specs` "stays" or "was put back".
+
+This extends D120.
+
+**Rationale**: In the rerun on cd93c44, both runs of scenario 20c ran step 5 and the summary in the same turn as the prune step. One run showed no list and no question, but its summary said "I'm waiting for your answer to the question above". The other run asked with no list. The step said "in the same reply", but it did not say to stop. `apply.instruction` uses "End your turn, and wait for the answer" for the same case. When propose sets `skip_specs: true` and the upgrade writes no delta, the flag never leaves the file, so "stays" is also correct.
