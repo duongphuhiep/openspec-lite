@@ -629,5 +629,6 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `microsoft/apm-action@v1` with `setup-only: 'true'` installs the APM CLI and puts it on `PATH`. It does not read `apm.yml` and runs no install.
 - The `apm-version` input defaults to `'0.14.0'`, not to the latest release (`action.yml` of v1.10.0). Pass `latest` to get the newest APM.
 - With APM 0.14.0, `apm install duongphuhiep/openspec-lite/package#^1.0.0` fails: "all probes failed (marker-file, Contents API, git ls-remote, shallow-fetch)". Source: GitHub Actions run 40135649274, 2026-10-24.
+- With `apm-version: latest`, the action installed APM 0.35.0. The install resolved `#^1.0.0` to `v1.3.0` (`@2dd711e8`), and each check of the `apm-install` workflow passed. Source: GitHub Actions run 40135803923, 2026-10-24.
 - On Linux without Homebrew, the README install is `curl -sSL https://aka.ms/apm-unix | sh`. Release assets include `apm-linux-x86_64.tar.gz`. The latest APM release on 2026-10-24 is v0.35.0.
 - `apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude` resolved to `v1.3.0` (`@2dd711e8`). `apm_modules/duongphuhiep/openspec-lite/` holds only one folder: `package`.
