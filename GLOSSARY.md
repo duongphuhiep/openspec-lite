@@ -13,7 +13,7 @@ The custom OpenSpec schema for Level 2. Its only artifact is the plan. The tasks
 _Avoid_: Lite schema, openspec-lite schema
 
 **Plan**:
-The living document of a plan-lite change. It holds the goal, non-goals, constraints, open questions, and decisions.
+The living document of a plan-lite change. It holds the goal, an optional background, non-goals, constraints, open questions, and decisions.
 _Avoid_: Proposal, design
 
 **Tasks preview**:

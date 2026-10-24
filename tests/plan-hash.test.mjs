@@ -84,6 +84,12 @@ test("a missing heading exits with code 1 and names it", () => {
   assert.match(r.stderr, /missing heading: ## Non-Goals/);
 });
 
+test("a hashed heading with the wrong letter case exits with code 1", () => {
+  const r = hash(baseWithBackground.replace("## Background", "## background"));
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /wrong letter case in heading: ## background/);
+});
+
 test("a missing file exits with code 1", () => {
   const r = spawnSync(process.execPath, [script, join(dir, "nope.md")], { encoding: "utf8" });
   assert.equal(r.status, 1);

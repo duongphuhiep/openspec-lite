@@ -1,7 +1,7 @@
 // Usage: node plan-hash.mjs <plan.md>
 // Hashes Goal, Non-Goals, Constraints, and Background (optional). Ignores line endings, whitespace, section order, and HTML comments.
 // A "## " line inside a fenced code block is content, not a heading.
-// Exits with code 1 if the file cannot be read or one of the required headings is missing.
+// Exits with code 1 if the file cannot be read, a required heading is missing, or a hashed heading has the wrong letter case.
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 
@@ -35,6 +35,12 @@ const titles = sections.map((s) => s.title);
 const missing = REQUIRED.filter((k) => !titles.includes(k));
 if (missing.length > 0) {
   console.error(`plan-hash: missing heading: ${missing.map((k) => `## ${k}`).join(", ")}`);
+  process.exit(1);
+}
+// A wrong letter case would drop an optional section from the hash with no error.
+const wrongCase = titles.filter((t) => !KEEP.includes(t) && KEEP.some((k) => k.toLowerCase() === t.toLowerCase()));
+if (wrongCase.length > 0) {
+  console.error(`plan-hash: wrong letter case in heading: ${wrongCase.map((t) => `## ${t}`).join(", ")}`);
   process.exit(1);
 }
 // Strip HTML comments per section, so a stray "<!--" cannot hide a heading.

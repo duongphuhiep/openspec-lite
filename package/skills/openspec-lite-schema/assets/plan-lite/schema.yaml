@@ -5,7 +5,7 @@ description: Lightweight plan — goal, constraints, decisions. No tasks. Upgrad
 artifacts:
   - id: plan
     generates: plan.md
-    description: Living plan — goal, non-goals, constraints, open questions, decisions
+    description: Living plan — goal, background, non-goals, constraints, open questions, decisions
     template: plan.md
     requires: []
 apply:

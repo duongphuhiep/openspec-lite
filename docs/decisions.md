@@ -1693,3 +1693,18 @@ This revises D124 and the done check of D60.
 This extends D124 and D120.
 
 **Rationale**: A review of D126 found these gaps. With no rule, each agent could keep or remove the comments, so plans would differ. A kept comment helps a later person who edits `plan.md` by hand. `plan-hash.mjs` ignores comments, so they do not change the hash. Without the prune rule, a section with only a comment would keep `plan.md` after an upgrade. A test now pins the v1 hash of a plan with no comments, so the D126 claim cannot break silently.
+
+---
+
+## D128: plan-hash.mjs Fails on a Hashed Heading With the Wrong Letter Case
+
+**Decision**:
+
+- `plan-hash.mjs` exits with code 1 if a heading differs from a hashed title only in letter case, for example `## background`. The message names the heading.
+- It checks the missing required headings first, so the D91 message does not change.
+- The `## Decisions` template comment is one line, as D124 says.
+- The artifact `description` in `schema.yaml` and the "Plan" entry in `GLOSSARY.md` name the optional background.
+
+This extends D91 and D125.
+
+**Rationale**: A review of D127 found that `## Background` is optional. A heading such as `## background` then dropped out of the hash with no error, so a scope change did not make the tasks preview stale. D91 closed this gap for the required headings. A check on letter case only is simple and catches the usual typo. Rejected: a fuzzy match on other spellings, because it adds code for rare cases. The `GLOSSARY.md` "Done check" entry does not get the comment rule, because the glossary holds no implementation details.

@@ -14,5 +14,4 @@
 <!-- Unresolved questions. Remove each question when its answer goes to ## Decisions. -->
 
 ## Decisions
-<!-- ### Decision: <title>, then "Chose X because Y."
-Add "Rejected Z because W." when there was an alternative. -->
+<!-- ### Decision: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. -->

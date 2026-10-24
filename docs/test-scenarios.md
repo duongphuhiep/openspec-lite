@@ -368,13 +368,13 @@ In each case, `.openspec.yaml`, `tasks.md`, and the other artifacts do not chang
 
 ## 20. Checks before a delete or a skip
 
-This scenario checks that upgrade does not prune `plan.md` with no check, and that the user can promote a skipped item (D120). It also checks that upgrade with no requirement puts `skip_specs: true` back (D108).
+This scenario checks that upgrade does not prune `plan.md` with no check, and that the user can promote a skipped item (D120). It also checks that upgrade with no requirement puts `skip_specs: true` back (D108). 20a also checks that upgrade uses `## Background` (D125) and prunes the sections that hold only a guidance comment (D127).
 
 ### 20a. Upgrade asks before it prunes
 
 **Steps**:
 
-1. Create a plan-lite change with a Goal, two Constraints, one `### Decision:` entry, and one open question in `plan.md`. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change.
+1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision:` entry, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change.
 2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". At the prune question, answer no.
 3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question.
 
@@ -384,7 +384,8 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - Before the prune question, the agent lists each `plan.md` section with its artifact and heading. The open question is "kept".
 - After step 2, `plan.md` is the same as in step 1.
 - At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
-- After step 3, `plan.md` has only the open question. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
+- `proposal.md` holds the two scope items of `## Background`.
+- After step 3, `plan.md` has only `## Open Questions` with the open question. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
 
 ### 20b. Archive drafts an item that the user picks
 
