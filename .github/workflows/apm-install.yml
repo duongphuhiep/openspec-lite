@@ -1,6 +1,6 @@
 name: apm-install
 
-# Scenario 10: a real APM install from the latest published tag (D130).
+# A real APM install from the latest published tag (D130). It replaces test scenario 10.
 # Run it by hand from the Actions tab, for example after a tag that changes the package layout or apm.yml.
 on:
   workflow_dispatch:

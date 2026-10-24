@@ -1,6 +1,6 @@
 # Test Scenarios
 
-Run scenarios 1–9 and 11–21 by hand before each release tag (D69). Scenario 10 needs the published tag. Run it with the `apm-install` workflow after the tag push, only when it applies (D130). The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
+Run scenarios 1–9 and 11–21 by hand before each release tag (D69). Number 10 is not used. The `apm-install` CI workflow does the real APM install from the tag (D130). The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
 
 Setup for each scenario, unless it says otherwise:
 
@@ -118,23 +118,6 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The agent reports the backup path and the copied files.
 - `openspec/config.yaml` has one `operations:` key. Its `archive.guidance` list has "keep me" and the openspec-lite item.
 - `openspec instructions plan --change <name> --json`, for the change that propose made, prints no "could not parse" warning. `openspec list` never prints it (`docs/facts.md`).
-
-## 10. Real APM install from the tag
-
-**When**: after a tag push that adds, moves, or deletes a file in `package/`, or changes `package/apm.yml`. Also after an APM update. Skip it for a release that changes only the text of existing files (D130).
-
-**Steps**:
-
-1. Push the release tag `vX.Y.Z`.
-2. On GitHub, open **Actions** → **apm-install** → **Run workflow** on `main`. Or run `gh workflow run apm-install.yml`.
-
-The workflow does the install in an empty `git init` folder: `apm install duongphuhiep/openspec-lite/package#^X.0.0 --target claude`. To run it by hand, do the same and check the results below.
-
-**Expected**: the workflow passes. It checks each of these:
-
-- `.claude/skills/` has the six `openspec-lite-*` skills. `openspec-lite-schema/` has `scripts/install.mjs` and `assets/plan-lite/`.
-- `apm_modules/duongphuhiep/openspec-lite/` holds only `package/`: no `tests/`, `scripts/`, or `docs/`.
-- `apm.lock.yaml` has `resolved_ref: vX.Y.Z`.
 
 ## 11. OpenSpec root in a subfolder
 
