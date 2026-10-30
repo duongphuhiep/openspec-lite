@@ -4,9 +4,9 @@ A lightweight workflow extension for [OpenSpec](https://github.com/Fission-AI/Op
 
 ## The Problem
 
-The OpenSpec workflow has four artifacts: `proposal → specs → design → tasks`.
+The OpenSpec workflow `explore → proposal → apply → archive` generates `proposal → specs → design → tasks` artifacts.
 
-1. This workflow is too heavy for medium changes. A `plan.md` is sufficient for medium changes.
+1. This workflow is too heavy for medium changes. A `plan.md` is sufficient for most medium changes.
 2. The artifacts overlap. Proposal covers WHY, design covers HOW, and specs cover WHAT. The boundary between them is fuzzy. A good proposal needs scope, feasibility, and trade-offs, which belong to design.
 3. `tasks.md` often adds little value for a medium change.
    - It can become pseudo-code that is almost real code. Then the AI can write the real code directly.
@@ -19,7 +19,7 @@ The OpenSpec workflow has four artifacts: `proposal → specs → design → tas
 
 ## The Solution: `openspec-lite`
 
-`openspec-lite` targets medium changes. The workflow is: plan → implement (→ doc).
+`openspec-lite` targets medium changes. The workflow is: `plan → implement (→ doc)`.
 
 - plan: `openspec-lite-propose` creates `plan.md` in `openspec/changes/<name>/`. Add any context the AI needs to implement correctly.
 - implement: `openspec-lite-apply` implements from `plan.md`.
@@ -94,7 +94,12 @@ Try stock `/opsx:apply` first. If it does not work well, use `openspec-lite-appl
 
 Do not run stock `/opsx:archive` on a plan-lite change. It skips promotion, so the `plan.md` decisions never become specs or ADRs. Use `openspec-lite-archive`.
 
-Use stock `/opsx:explore` before you propose. openspec-lite has no explore skill.
+## No Need for `/opsx:explore`
+
+openspec-lite has no explore skill. You can use stock `/opsx:explore`. However you won't need it. Consider:
+
+- Plan the change directly with `openspec-lite-propose`. It generates a `plan.md`.
+- Use the [mattpocock/grill-me](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md) to enrich this live document with "facts" and "decisions".
 
 ## Tasks Preview
 
@@ -143,7 +148,7 @@ One filter is sufficient. The AI shows the list. You approve, reject, or edit ea
 
 ## Upgrade Path
 
-When a plan-lite change grows past its original scope, `openspec-lite-upgrade` does these steps:
+The `/openspec-lite-upgrade` skill converts changes from `openspec-lite` to `openspec`:
 
 1. It removes `skip_specs: true` from `.openspec.yaml`.
 2. It asks you to answer each open question that changes the specs, the approach, or the tasks. Then it writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. The `plan.md` decisions go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.
@@ -156,6 +161,10 @@ Review all artifacts after the upgrade. Review `tasks.md` carefully, because it 
 If `plan.md` is kept, resolve the kept items before `/opsx:apply`. The stock skills do not read `plan.md`.
 
 After an upgrade, archive with stock `/opsx:archive`.
+
+### You May Not Need `/openspec-lite-upgrade`
+
+openspec-lite is designed for "medium changes". In practice, it works well with "large changes" too. This skill is the least tested one in the set.
 
 ## Compatibility
 
