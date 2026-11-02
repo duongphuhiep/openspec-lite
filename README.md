@@ -1,51 +1,52 @@
 # openspec-lite
 
-A lightweight workflow extension for [OpenSpec](https://github.com/Fission-AI/OpenSpec). It fills the gap between a throwaway `plan.md` and a full spec-driven change.
+If you think that [OpenSpec](https://github.com/Fission-AI/OpenSpec) is too heavy or verbose, **openspec-lite** is a compatible alternative.
+It adds a custom OpenSpec schema, `plan-lite`, that generates one minimal `plan.md`. The workflow becomes `plan → implement (→ doc)`.
 
-## The Problem
+## The problem with OpenSpec
 
 The OpenSpec workflow `explore → proposal → apply → archive` generates `proposal → specs → design → tasks` artifacts.
 
-1. This workflow is too heavy for medium changes. A `plan.md` is sufficient for most medium changes.
-2. The artifacts overlap. Proposal covers WHY, design covers HOW, and specs cover WHAT. The boundary between them is fuzzy. A good proposal needs scope, feasibility, and trade-offs, which belong to design.
-3. `tasks.md` often adds little value for a medium change.
+- **The workflow is too heavy for medium changes.** For most medium changes, a `plan → implement` flow with one minimal `plan.md` is sufficient.
+- **The artifacts overlap.** The proposal covers WHY, the design covers HOW, and the specs cover WHAT. The boundary between them is fuzzy. A good proposal needs scope, feasibility, and trade-offs, but these belong to the design.
+- **`tasks.md` adds little value.**
    - It can become pseudo-code that is almost real code. Then the AI can write the real code directly.
    - The AI writes `tasks.md` before implementation, so it locks in the approach too early. `tasks.md` is a contract. When the AI finds a better approach during implementation, `tasks.md` either restricts the AI or becomes out of date.
    - `tasks.md` is useful mainly for three purposes:
      - To guide a small model when a large model writes it.
      - To track implementation progress.
      - To preview the implementation.
-   - For a medium change, the same model usually plans and codes, and we do not need to track progress. So we often read `tasks.md` only to preview what the AI will do to the code.
+   - For a medium change, the same model usually plans and codes, and you do not need to track progress. So you often read `tasks.md` only to preview what the AI does to the code.
 
-## The Solution: `openspec-lite`
+## The solution: openspec-lite
 
-`openspec-lite` targets medium changes. The workflow is: `plan → implement (→ doc)`.
+openspec-lite targets medium changes. The workflow is `plan → implement (→ doc)`:
 
-- plan: `openspec-lite-propose` creates `plan.md` in `openspec/changes/<name>/`. Add any context the AI needs to implement correctly.
-- implement: `openspec-lite-apply` implements from `plan.md`.
-- doc: `openspec-lite-archive` promotes non-obvious information and contracts from `plan.md` to `openspec/specs/` and ADRs. Then it moves the change to the archive.
+- **Plan**: `openspec-lite-propose` creates `plan.md` in `openspec/changes/<name>/`. Add the context that the AI needs to implement the change correctly.
+- **Implement**: `openspec-lite-apply` implements the change from `plan.md`.
+- **Doc**: `openspec-lite-archive` promotes non-obvious information and contracts from `plan.md` to `openspec/specs/` and ADRs. Then it moves the change to the archive.
 
-`plan.md` keeps WHY, WHAT, and HOW together during the work. At archive time, the AI separates the items that last: requirements and contracts go to specs, and decisions go to ADRs.
+`plan.md` keeps WHY, WHAT, and HOW together during the proposal AND exploring work. This `plan.md` is a live document, it records the context, your proposal, facts you found during exploration, decisions you've made, or decision made by AI during implementation... At archive time, the AI separates the items that last: requirements and contracts go to specs, and decisions go to ADRs.
 
-An OpenSpec custom schema alone can give you a one-artifact workflow. openspec-lite adds the upgrade, promotion, and preview workflow around it.
+A custom OpenSpec schema alone can give you a one-artifact workflow. openspec-lite adds the preview, upgrade, and promotion steps around it.
 
-**To review the AI's plan before it writes code:** Use `tasks-preview.md`. See the Tasks Preview section.
+**To review the AI's plan before it writes code**, use `tasks-preview.md`. See [Preview the code changes](#preview-the-code-changes).
 
-**If the change grows too large:** Run `openspec-lite-upgrade`. It converts the plan-lite change to a spec-driven change.
+**If the change grows too large**, run `openspec-lite-upgrade`. It converts the plan-lite change to a spec-driven change. See [Upgrade to a spec-driven change](#upgrade-to-a-spec-driven-change).
 
-## Install
+## Install openspec-lite
 
-Requirements:
+Before you begin, install these tools:
 
-- [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI `>=1.9.0 <2.0.0`. The `@1` keeps npm inside that range:
+- The [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI, version `>=1.9.0 <2.0.0`. The `@1` keeps npm inside that range:
 
   ```sh
   npm install -g @fission-ai/openspec@1
   ```
 
-- [Microsoft APM](https://github.com/microsoft/apm) CLI.
+- The [Microsoft APM](https://github.com/microsoft/apm) CLI.
 
-In your repo, run these two commands. Use the same harness in both:
+In your repo, run these two commands. Use the same harness in both commands:
 
 ```sh
 openspec init --tools claude
@@ -54,7 +55,7 @@ apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude
 
 - `openspec init` installs the stock OpenSpec skills and the `/opsx:*` commands that openspec-lite uses. With `--tools none`, it installs no skills.
 - `apm install` installs the six openspec-lite skills. `#^1.0.0` lets `apm update` move to each newer 1.x release.
-- Always pass `--target`. Without it, APM deploys only to harness folders that it detects. For example, `openspec init --tools codex` writes only `.agents/skills/`, which APM does not detect, so `apm install` with no `--target` installs nothing for Codex.
+- Always pass `--target`. Without it, APM deploys only to the harness folders that it detects. For example, `openspec init --tools codex` writes only `.agents/skills/`, which APM does not detect, so `apm install` with no `--target` installs nothing for Codex.
 
 The two tools use the same harness name, except for GitHub Copilot:
 
@@ -68,7 +69,9 @@ The two tools use the same harness name, except for GitHub Copilot:
 | Kiro           | `kiro`                  | `kiro`                 |
 | GitHub Copilot | `github-copilot`        | `copilot`              |
 
-### Update
+To check the install, look for the six `openspec-lite-*` skill folders in your harness folder, for example `.claude/skills/`.
+
+### Update openspec-lite
 
 To get the newest 1.x release, run this command in your repo:
 
@@ -80,28 +83,28 @@ apm update
 - If you installed openspec-lite with `apm install -g`, run `apm update -g`.
 - To move to a new major version, edit the openspec-lite ref in `apm.yml`, for example to `#^2.0.0`. Then run `apm install`.
 
-## What openspec-lite Ships
+## What openspec-lite ships
 
 - **`plan-lite` schema**: one artifact, `plan.md`. It has no design and no `tasks.md`. The opt-in `tasks-preview.md` is outside the schema.
 - **`openspec-lite-propose`**: creates a plan-lite change. It asks if you want a tasks preview.
 - **`openspec-lite-tasks-preview`**: generates or regenerates `tasks-preview.md`.
-- **`openspec-lite-apply`**: implements from `plan.md`. It uses `tasks-preview.md` as a guide.
+- **`openspec-lite-apply`**: implements the change from `plan.md`. It uses `tasks-preview.md` as a guide.
 - **`openspec-lite-upgrade`**: upgrades a plan-lite change to spec-driven when the scope grows.
 - **`openspec-lite-archive`**: archives the change. It promotes selected items to specs and ADRs.
 - **`openspec-lite-schema`**: installs or replaces the plan-lite schema in the repo. It moves an old copy to `openspec/schemas-backup/`. The other skills check the schema version and run it when necessary.
 
-Try stock `/opsx:apply` first. If it does not work well, use `openspec-lite-apply`.
+To implement, try stock `/opsx:apply` first. If it does not work well, use `openspec-lite-apply`.
 
-Do not run stock `/opsx:archive` on a plan-lite change. It skips promotion, so the `plan.md` decisions never become specs or ADRs. Use `openspec-lite-archive`.
+Do not run stock `/opsx:archive` on a plan-lite change. It skips promotion, so the `plan.md` decisions never become specs or ADRs. Use `openspec-lite-archive` instead.
 
-## No Need for `/opsx:explore`
+## Explore a change without `/opsx:explore`
 
-openspec-lite has no explore skill. You can use stock `/opsx:explore`. However you won't need it. Consider:
+openspec-lite has no explore skill. You can use stock `/opsx:explore`, but you usually do not need it:
 
-- Plan the change directly with `openspec-lite-propose`. It generates a `plan.md`.
-- Use the [mattpocock/grill-me](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md) to enrich this live document with "facts" and "decisions".
+1. Plan the change directly with `openspec-lite-propose`. It generates `plan.md`.
+2. To add facts and decisions to `plan.md` as you go, use a questioning skill such as [mattpocock/grill-me](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md).
 
-## Tasks Preview
+## Preview the code changes
 
 `tasks-preview.md` is opt-in. It shows the code changes that the AI intends to make. Read it before coding starts, to find a wrong approach early.
 
@@ -113,12 +116,12 @@ openspec-lite has no explore skill. You can use stock `/opsx:explore`. However y
 During apply:
 
 - When the two files conflict, `plan.md` wins.
-- If `plan.md` changed after the preview was generated, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply adds to the other sections. It ignores HTML comments.
+- If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply adds to the other sections. It ignores HTML comments.
 - Apply records each meaningful deviation in the `plan.md` decisions.
 
 ## Lifecycle
 
-```
+```text
 openspec-lite-propose
       │
       ▼
@@ -146,9 +149,9 @@ At archive time, the AI uses three filters to select what to promote:
 
 One filter is sufficient. The AI shows the list. You approve, reject, or edit each item in the conversation. You can also pick a skipped item, and the AI drafts it. The AI writes nothing before your approval.
 
-## Upgrade Path
+## Upgrade to a spec-driven change
 
-The `/openspec-lite-upgrade` skill converts changes from `openspec-lite` to `openspec`:
+If a plan-lite change grows too large, run `openspec-lite-upgrade`. It converts the change to a stock OpenSpec spec-driven change:
 
 1. It removes `skip_specs: true` from `.openspec.yaml`.
 2. It asks you to answer each open question that changes the specs, the approach, or the tasks. Then it writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. The `plan.md` decisions go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.
@@ -162,9 +165,9 @@ If `plan.md` is kept, resolve the kept items before `/opsx:apply`. The stock ski
 
 After an upgrade, archive with stock `/opsx:archive`.
 
-### You May Not Need `/openspec-lite-upgrade`
+### You may not need `openspec-lite-upgrade`
 
-openspec-lite is designed for "medium changes". In practice, it works well with "large changes" too. This skill is the least tested one in the set.
+openspec-lite targets medium changes. In practice, it also works well for large changes. The upgrade skill is the least tested skill in the set.
 
 ## Compatibility
 
@@ -179,12 +182,13 @@ Run `apm update` to get the newest release in your range. A minor or patch relea
 - `node --test` runs the tests in `tests/`. The schema test needs the `openspec` CLI.
 - `node scripts/check-version.mjs` checks the shipped schema version in each workflow skill.
 - Before a release, run the scenarios in [`docs/test-scenarios.md`](docs/test-scenarios.md).
+- To test a real install from the latest tag, run the `apm-install` workflow from the GitHub **Actions** tab.
 
 ## License
 
 MIT. See [`package/LICENSE`](package/LICENSE).
 
-## See Also
+## See also
 
 - [`docs/design.md`](docs/design.md): current rules for skills, schema, and delivery
 - [`GLOSSARY.md`](GLOSSARY.md): glossary of project terms
