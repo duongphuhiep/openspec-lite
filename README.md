@@ -16,7 +16,7 @@ The OpenSpec workflow `explore → proposal → apply → archive` generates `pr
      - To guide a small model when a large model writes it.
      - To track implementation progress.
      - To preview the implementation.
-   - For a medium change, the same model usually plans and codes, and you do not need to track progress. So you often read `tasks.md` only to preview what the AI does to the code.
+   - For a medium change, the same model usually plans and codes, and you do not need to track progress. So you often read `tasks.md` only to preview the code changes that the AI intends to make.
 
 ## The solution: openspec-lite
 
@@ -26,7 +26,13 @@ openspec-lite targets medium changes. The workflow is `plan → implement (→ d
 - **Implement**: `openspec-lite-apply` implements the change from `plan.md`.
 - **Doc**: `openspec-lite-archive` promotes non-obvious information and contracts from `plan.md` to `openspec/specs/` and ADRs. Then it moves the change to the archive.
 
-`plan.md` keeps WHY, WHAT, and HOW together during the proposal AND exploring work. This `plan.md` is a live document, it records the context, your proposal, facts you found during exploration, decisions you've made, or decision made by AI during implementation... At archive time, the AI separates the items that last: requirements and contracts go to specs, and decisions go to ADRs.
+`plan.md` keeps WHY, WHAT, and HOW together while you propose and explore the change. `plan.md` is a live document. It records:
+
+- The context and your proposal.
+- The facts that you find during exploration.
+- The decisions that you make, and the decisions that the AI makes during implementation.
+
+At archive time, the AI separates the items that last: requirements and contracts go to specs, and decisions go to ADRs.
 
 A custom OpenSpec schema alone can give you a one-artifact workflow. openspec-lite adds the preview, upgrade, and promotion steps around it.
 
@@ -93,7 +99,7 @@ apm update
 - **`openspec-lite-archive`**: archives the change. It promotes selected items to specs and ADRs.
 - **`openspec-lite-schema`**: installs or replaces the plan-lite schema in the repo. It moves an old copy to `openspec/schemas-backup/`. The other skills check the schema version and run it when necessary.
 
-To implement, try stock `/opsx:apply` first. If it does not work well, use `openspec-lite-apply`.
+To implement, try stock `/opsx:apply` first. If it does not follow `plan.md` well, use `openspec-lite-apply`.
 
 Do not run stock `/opsx:archive` on a plan-lite change. It skips promotion, so the `plan.md` decisions never become specs or ADRs. Use `openspec-lite-archive` instead.
 
@@ -147,7 +153,7 @@ At archive time, the AI uses three filters to select what to promote:
 - **Surprising**: it would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code.
 
-One filter is sufficient. The AI shows the list. You approve, reject, or edit each item in the conversation. You can also pick a skipped item, and the AI drafts it. The AI writes nothing before your approval.
+An item needs to pass only one filter. The AI shows the list. You approve, reject, or edit each item in the conversation. You can also pick a skipped item, and the AI drafts it. The AI writes nothing before your approval.
 
 ## Upgrade to a spec-driven change
 
@@ -155,13 +161,13 @@ If a plan-lite change grows too large, run `openspec-lite-upgrade`. It converts 
 
 1. It removes `skip_specs: true` from `.openspec.yaml`.
 2. It asks you to answer each open question that changes the specs, the approach, or the tasks. Then it writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. The `plan.md` decisions go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.
-3. It changes `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. It comes after the four artifacts, so an interrupted upgrade can run again.
+3. It changes `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. This step comes after the four artifacts, so you can run an interrupted upgrade again.
 4. It lists where each `plan.md` section moved, and asks before it deletes the moved sections. If nothing is left, it deletes `plan.md`.
 5. It runs `openspec validate`.
 
 Review all artifacts after the upgrade. Review `tasks.md` carefully, because it is a contract.
 
-If `plan.md` is kept, resolve the kept items before `/opsx:apply`. The stock skills do not read `plan.md`.
+If you keep `plan.md`, resolve the kept items before you run `/opsx:apply`. The stock skills do not read `plan.md`.
 
 After an upgrade, archive with stock `/opsx:archive`.
 
