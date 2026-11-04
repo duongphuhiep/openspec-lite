@@ -9,7 +9,7 @@ Create a plan-lite change. Do not write code.
 
 ## 1. Split and Level 1 questions
 
-If the request has more than one outcome, the first outcome is the main outcome. Do these checks for each other outcome:
+The first outcome of the request is the main outcome, also when the request has only one outcome. If the request has more than one outcome, do the split checks for each other outcome:
 
 - If it touches the same code as the main outcome, keep it in this change. Do not ask.
 - Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it as an outcome of this change.

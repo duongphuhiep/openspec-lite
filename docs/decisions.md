@@ -2026,7 +2026,7 @@ This extends D116 and D119.
 - The done check asks "Is each outcome of the Goal met?". Archive searches the code for what each outcome names, and names each outcome that is not met.
 - Propose derives the change name from the main outcome.
 - Upgrade gives each outcome its own item in the What Changes section of `proposal.md`.
-- `GLOSSARY.md` defines "Outcome".
+- `GLOSSARY.md` defines "Outcome", "main outcome", and "split question".
 - The Goal comment in `templates/plan.md` states these rules. The schema `version` goes to 4, per D109.
 - Scenario 22 checks the rules: related outcomes stay in one change, an outcome that can ship alone goes to a separate change, and archive checks each outcome.
 

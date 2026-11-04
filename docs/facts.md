@@ -709,3 +709,5 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - bjulius/skill-evaluator does static analysis only. It does not run the skill.
 
 - Claude Code 2.1.317: the JSON of `claude -p --output-format json` has `total_cost_usd`, `num_turns`, `duration_ms`, `duration_api_ms`, `ttft_ms`, `permission_denials`, `subagent_stats`, `stop_reason`, and `is_error`. `usage` has `input_tokens`, `output_tokens`, `cache_read_input_tokens`, and `cache_creation_input_tokens`. Each `modelUsage` entry also has `thinkingTokens` and `costUSD`. Source: a one-turn run with `eu.anthropic.claude-haiku-5-5` on Bedrock, 2026-11-04.
+
+- git 2.53.0: `git grep` searches only tracked files. It does not find text in a new file that is not committed or staged. `git grep --untracked` finds it. Thus a scenario must commit its code before the archive done check runs `git grep` (scenario 22c). Source: a test in a temp repo, 2026-11-04.

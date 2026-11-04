@@ -196,7 +196,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 ### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80, D148)
 
-- If the request has more than one outcome, the first outcome is the main outcome. If another outcome touches the same code as the main outcome, keep it, with no question. Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it (D148).
+- The first outcome of the request is the main outcome, also when the request has only one outcome. If another outcome touches the same code as the main outcome, keep it, with no question. Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it (D148).
 - If the outcomes that stay are small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it. Then stop (D148).
 - Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the main outcome.
 - Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
@@ -335,7 +335,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 <!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item a number higher than each ID of its kind in this file. Gaps and any order are OK. Use the IDs only in this file and in tasks-preview.md. Outside them, refer to an item by its title, or a short form of its text, with the change name. -->
 
 ## Goal
-<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. If the outcomes touch the same code, keep them together. Otherwise, if an outcome can ship alone, ask the user to make it a separate change. -->
+<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. The first outcome is the main outcome. Keep each outcome that touches the same code as the main outcome. Otherwise, if an outcome can ship alone, ask the user to make it a separate change. -->
 
 ## Background
 <!-- Optional. List scope items and link to source documents that set the context. -->

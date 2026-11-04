@@ -480,13 +480,14 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 
 **Steps**:
 
-1. Create a plan-lite change `add-csv-export`. Its `## Goal` has two bullets: "Add a CSV export to the report page." and "Show the report dates in the user time zone."
-2. Add a CSV export to the code. Do not change the date code.
-3. Run `openspec-lite-archive`.
+1. Add a report page with a date helper that formats the dates in UTC. Commit the code.
+2. Create a plan-lite change `add-csv-export`. Its `## Goal` has two bullets: "Add a CSV export to the report page." and "Show the report dates in the user time zone."
+3. Add a CSV export to the report page that uses the date helper. Do not change the date helper. Commit the code.
+4. Run `openspec-lite-archive`.
 
 **Expected**:
 
-- The done check says that the date outcome is not met. It names that outcome.
+- The done check finds the CSV export, and says that the date outcome is not met. It names that outcome.
 - The agent asks: "Archive anyway?" Answer no. The agent stops, and writes no spec, no ADR, and no archive folder.
 
 ---
