@@ -1,6 +1,6 @@
 ---
 name: openspec-lite-upgrade
-description: Upgrade a plan-lite change to a full spec-driven OpenSpec change when its scope grows. It writes proposal.md, specs, design.md, and tasks.md from plan.md and tasks-preview.md. Use only when the user asks for openspec-lite-upgrade, or to upgrade a plan-lite change.
+description: Upgrade a plan-lite change to a full spec-driven OpenSpec change, at any time, for example when its scope grows. It writes proposal.md, specs, design.md, and tasks.md from plan.md and tasks-preview.md. Use only when the user asks for openspec-lite-upgrade, or to upgrade a plan-lite change.
 ---
 
 # openspec-lite-upgrade

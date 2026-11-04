@@ -34,7 +34,7 @@ test("a plan with no comments and no Background keeps its schema v1 hash", () =>
   assert.equal(hash(base).stdout.trim(), "15893b4d8739ddf6a4f728903e8ae5335a5c518453b727c3d4345cba128c6b8a");
 });
 
-test("CRLF, BOM, section order, Open Questions, Facts, and Decisions do not change the hash", () => {
+test("CRLF, BOM, section order, Open Questions, Facts, Decisions, and text before the first heading do not change the hash", () => {
   const ref = hash(base).stdout;
   assert.equal(hash(base.replace(/\n/g, "\r\n")).stdout, ref, "CRLF");
   assert.equal(hash("\uFEFF" + base).stdout, ref, "BOM");

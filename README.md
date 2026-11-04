@@ -97,7 +97,7 @@ apm update
 - **`openspec-lite-propose`**: creates a plan-lite change. It asks if you want a tasks preview.
 - **`openspec-lite-tasks-preview`**: generates or regenerates `tasks-preview.md`.
 - **`openspec-lite-apply`**: implements the change from `plan.md`. It uses `tasks-preview.md` as a guide.
-- **`openspec-lite-upgrade`**: upgrades a plan-lite change to spec-driven when the scope grows.
+- **`openspec-lite-upgrade`**: upgrades a plan-lite change to spec-driven, at any time.
 - **`openspec-lite-archive`**: archives the change. It promotes selected items to specs and ADRs.
 - **`openspec-lite-schema`**: installs or replaces the plan-lite schema in the repo. It moves an old copy to `openspec/schemas-backup/`. The other skills check the schema version and run it when necessary.
 
@@ -125,7 +125,7 @@ During apply:
 
 - When the two files conflict, `plan.md` wins.
 - If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply edits the other sections. It ignores HTML comments.
-- Apply records each meaningful deviation as a decision in `plan.md`. It removes each decision that the deviation supersedes, and updates each decision that it makes stale.
+- Apply records each meaningful deviation as a decision in `plan.md`. It removes each decision that the deviation supersedes, and updates each decision that it makes stale. Then it removes each fact that justifies no current decision or constraint.
 
 ## Lifecycle
 
@@ -140,7 +140,7 @@ openspec-lite-propose
       │
       ├── /opsx:apply or openspec-lite-apply → code
       │
-      ├── scope grows? → openspec-lite-upgrade → spec-driven change
+      ├── want full OpenSpec? → openspec-lite-upgrade → spec-driven change
       │
       └── done? → openspec-lite-archive
                         │

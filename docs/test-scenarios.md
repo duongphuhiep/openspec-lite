@@ -245,7 +245,7 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
 - Each new rule has at least one `#### Scenario:`.
 - The delta form is free. "A locked account SHALL NOT log in, also with a valid password" can be a MODIFIED "Password login" (with its full text) or an ADDED requirement. Both pass if the main spec below ends up correct.
 - The decision becomes an ADR with `Change: lockout`.
-- The `## Context` of the ADR includes the fact about the login logs, in words (D135). No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D138).
+- The `## Context` of the ADR includes the fact about the login logs, in words (D135). No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D142).
 - After the archive, `openspec/specs/auth/spec.md` has:
   - the "Password login" requirement, with its first scenario and the new locked-account rule;
   - the new lockout requirement.
@@ -292,7 +292,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 - Each item tagged `spec` is in a requirement draft. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. Each item tagged `ADR` is in an ADR draft.
 - For each item that the agent does not draft, it names the item and says why it skips it. No item disappears with no word.
 - The reason for the semicolon (French Excel) stays in the spec or in the ADR. It is the non-obvious part.
-- The ADR of the browser decision has the fact about the page load in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D138).
+- The ADR of the browser decision has the fact about the page load in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D142).
 - After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items, and `openspec/adr/` has the `ADR` item.
 
 Record each mismatch with the answer key. A tagged `spec` or `ADR` item that is not promoted, and not named as skipped, is a failure.
@@ -384,7 +384,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 **Steps**:
 
-1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, one `## Facts` item that the decision relies on, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change.
+1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, one `## Facts` item that the decision relies on, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change. Run `openspec-lite-tasks-preview`. If the preview names no `plan.md` ID, add one, for example "(D1)", to a task line.
 2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". At the prune question, answer no.
 3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question.
 
@@ -395,7 +395,8 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - After step 2, `plan.md` is the same as in step 1.
 - At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
 - `proposal.md` holds the two scope items of `## Background`.
-- `design.md` → `## Context` holds the fact (D135). `design.md` holds no `plan.md` ID such as `C1` or `D1` (D138).
+- `design.md` → `## Context` holds the fact (D135). `design.md` holds no `plan.md` ID such as `C1` or `D1` (D142).
+- `tasks.md` holds no `plan.md` ID. Each task names the item by its title (D142).
 - After step 3, `plan.md` has only `## Open Questions` with the open question. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
 
 ### 20b. Archive drafts an item that the user picks

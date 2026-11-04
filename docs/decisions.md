@@ -137,7 +137,7 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: The Decisions section is the key differentiator from a throwaway plan.md. Without it, the file has no long-term value and nothing worth promoting at archive time.
 
-**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D134 adds IDs to constraints, open questions, and decisions. D135 adds `## Facts`. D140 adds the ID comment before `## Goal`. D136: the section is no longer append-only. It holds only the current decisions.
+**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D134 adds IDs to constraints, open questions, and decisions. D135 adds `## Facts`. D137 writes the decision heading as `### Decision D<n>:`. D140 adds the ID comment before `## Goal`. D142 adds the rule that the IDs stay in `plan.md` and `tasks-preview.md`. D136: the section is no longer append-only. It holds only the current decisions.
 
 ---
 
@@ -1875,7 +1875,7 @@ This extends D134, D135, and D137.
 
 - `apply.instruction` records the answer to an open question as a `### Decision D<n>:` entry.
 - Archive lists a fact that justifies no drafted decision with a one-line reason, as for each other item that it does not draft (D116).
-- A scenario names a fact in words, not by its ID, because D138 forbids the IDs in specs and ADRs.
+- An expected result about a spec or an ADR names a fact in words, not by its ID, because D138 forbids the IDs in specs and ADRs. A check on `plan.md` itself can use the IDs.
 
 This extends D137 and D138.
 
