@@ -26,7 +26,7 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
 
 `<dir>` is `openspec/changes/<name>`.
 
-1. **Done check**: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count. To find the code, search for what each outcome of the Goal names, for example with `git grep`. Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them. If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
+1. **Done check**: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count. To find the code, search for what each outcome of the Goal names, for example with `git grep`. Name each outcome that is not met. Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them. If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
 2. Read `<dir>/plan.md`. Do not use `tasks-preview.md` for promotion.
 3. Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.

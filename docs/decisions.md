@@ -1648,7 +1648,7 @@ This extends D105, D111, and D112.
 
 This revises D10 (template structure) and D72 (hash behavior). It requires a schema `version` bump per D109.
 
-**Status**: D126 moves the strip into each section body, after section parsing.
+**Status**: D126 moves the strip into each section body, after section parsing. D148 replaces the "One sentence" rule of the Goal comment.
 
 **Rationale**: The decision format (`### Decision: <title>`, then "Chose X because Y.") lives only in `openspec-lite-propose` and `apply.instruction`. If an agent or a person edits `plan.md` without those skills, they do not see the format. Option (a) puts comments only in the sections that are not hashed. Then `## Constraints` has no guidance, and people often edit it by hand. Option (b) strips comments before it hashes, so each section can have a comment. D109 bumps the version for each change under `assets/plan-lite/`. So both options need a bump, and option (b) has no extra release cost.
 
@@ -2014,13 +2014,15 @@ This extends D116 and D119.
 
 - `## Goal` holds one outcome by preference. It can hold more than one outcome if they are related.
 - Write one outcome per bullet, in one or two sentences each.
-- If an outcome can ship alone, it goes to a separate change. Propose suggests the separate change, and names it in the summary.
-- If the outcomes touch the same code, they stay in one change.
-- The done check asks "Is each outcome of the Goal met?". Archive searches the code for what each outcome names.
+- If an outcome can ship alone, propose asks: "<outcome> can ship alone. Make it a separate change?" It asks before it picks the change name. On yes, the outcome stays out of this change, and the summary names it. On no, it stays as an outcome.
+- If the outcomes touch the same code, they stay in one change, with no question.
+- The done check asks "Is each outcome of the Goal met?". Archive searches the code for what each outcome names, and names each outcome that is not met.
 - Propose derives the change name from the first outcome.
+- Upgrade gives each outcome its own item in the What Changes section of `proposal.md`.
+- `GLOSSARY.md` defines "Outcome".
 - The Goal comment in `templates/plan.md` states these rules. The schema `version` goes to 4, per D109.
 - Scenario 22 checks the rules: related outcomes stay in one change, an outcome that can ship alone goes to a separate change, and archive checks each outcome.
 
 This replaces the "One sentence" rule of the Goal comment from D124, and the "keeps Goal one sentence" text in the rationale of D125.
 
-**Rationale**: No decision gave a reason for the one-sentence rule. The skills use Goal for the done check, the change name, and the archive search. Each use needs a clear outcome, not one sentence. A real change can add a feature and fix an old bug in the same code, so it has two outcomes. A change archives as one unit. If one outcome is blocked, the other outcome waits too, so an outcome that can ship alone goes to its own change. Scope items and source links still go to `## Background` (D125). The hash does not change, because the hash ignores HTML comments (D124).
+**Rationale**: No decision gave a reason for the one-sentence rule. The skills use Goal for the done check, the change name, and the archive search. Each use needs a clear outcome, not one sentence. A real change can add a feature and fix an old bug in the same code, so it has two outcomes. A change archives as one unit. If one outcome is blocked, the other outcome waits too, so an outcome that can ship alone goes to its own change. Propose asks before it moves an outcome out, because the user asked for it, and a silent removal can lose it. The question comes before the change name, so the name never comes from an outcome that moves out. Scope items and source links still go to `## Background` (D125). The hash does not change, because the hash ignores HTML comments (D124).

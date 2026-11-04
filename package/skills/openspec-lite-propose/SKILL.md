@@ -7,9 +7,11 @@ description: Create a plan-lite change with openspec-lite. It writes a lightweig
 
 Create a plan-lite change. Do not write code.
 
-## 1. Level 1 question
+## 1. Level 1 and split questions
 
 If the request is small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop. Write no files.
+
+If an outcome of the request can ship alone, ask: "<outcome> can ship alone. Make it a separate change?" On yes, leave it out of this change. On no, keep it as an outcome of this change. Outcomes that touch the same code stay in one change, with no question.
 
 ## 2. Schema check
 
@@ -26,13 +28,13 @@ If the request is small (one obvious fix, no constraints or open questions worth
 
 ## 3. Create the change
 
-1. Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal. If the goal has more than one outcome, use the first one.
+1. Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the Goal. If the Goal has more than one outcome, use the first one.
 2. Run `openspec new change "<name>" --schema plan-lite`. If it fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`. If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped here. Ask: "Resume the change <name>?" On yes, go to step 3. In each other case, show the error and ask for another name.
 3. Set `skip_specs: true` in `openspec/changes/<name>/.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change.
 4. Run `openspec instructions plan --change "<name>" --json`. Write `openspec/changes/<name>/plan.md` from its `template` field.
 5. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment. Do not invent non-goals, constraints, facts, or decisions.
 
-`## Goal` holds one outcome by preference. If the request has related outcomes, write one outcome per bullet, in one or two sentences each. If the outcomes touch the same code, keep them in this change. If an outcome can ship alone, do not write it in `plan.md`. Suggest a separate change for it, and name it in the summary.
+`## Goal` holds one outcome by preference. If the change has more than one outcome, write one outcome per bullet, in one or two sentences each.
 
 A decision entry is `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative.
 
@@ -51,5 +53,5 @@ Suggest `openspec-lite-upgrade` if one of these is true:
 
 ## 5. End
 
-1. In the summary, show the change name and the path of `plan.md`.
+1. In the summary, show the change name and the path of `plan.md`. Name each outcome that the user moved to a separate change.
 2. Ask: "Do you want a tasks preview?" On yes, run the `openspec-lite-tasks-preview` skill. If you cannot invoke a skill, tell the user to run it.

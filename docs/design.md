@@ -130,7 +130,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 **Skill chaining** (D57): To run another skill, invoke it if the harness can. If the harness cannot, tell the user which skill to run, and stop.
 
-**Schema check** (D44, D56, D81): Do this after change selection and the change schema guard, before any other step. propose has no change yet. It first asks the Level 1 question (see openspec-lite-propose), then starts here (D93).
+**Schema check** (D44, D56, D81): Do this after change selection and the change schema guard, before any other step. propose has no change yet. It first asks the Level 1 question and the split question (see openspec-lite-propose), then starts here (D93, D148).
 
 1. Read `version` from `openspec/schemas/plan-lite/schema.yaml` in the target repo.
 2. Compare it with the shipped version. Each workflow skill holds the line `Shipped schema version: <n>` (D87). The number must equal `version` in `assets/plan-lite/schema.yaml` (D66).
@@ -194,16 +194,17 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - Report the copied files, the backup path, and the `config.yaml` line. Do not use `git diff` or `git status`. Tell the user to compare and delete the backup.
 - Tell the user to commit the schema to git.
 
-### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80)
+### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80, D148)
 
 - If the request is small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop.
-- Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal. If the goal has more than one outcome, use the first one.
+- If an outcome of the request can ship alone, ask: "<outcome> can ship alone. Make it a separate change?" On yes, leave it out of this change. On no, keep it. Outcomes that touch the same code stay in one change, with no question (D148).
+- Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the Goal. If the Goal has more than one outcome, use the first one.
 - Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
 - Set `skip_specs: true` in `.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change (D112).
 - Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Keep only the current decisions, and no facts with statistics that soon go out of date (D136). Remove each fact that justifies no current decision or constraint (D140).
-- `## Goal` holds one outcome by preference. Related outcomes are OK, one per bullet, in one or two sentences each. Outcomes that touch the same code stay in one change. If an outcome can ship alone, propose suggests a separate change for it, and names it in the summary (D148).
+- `## Goal` holds one outcome by preference. If the change has more than one outcome, write one outcome per bullet, in one or two sentences each (D148).
 - If an upgrade signal is present (see §5), suggest an upgrade.
-- In the summary, show the change name.
+- In the summary, show the change name. Name each outcome that the user moved to a separate change (D148).
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
 - Do not write code.
 
@@ -239,12 +240,12 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - If `state` is `blocked`, `plan.md` is missing. Stop, and point to `openspec-lite-propose`. Do not follow CLI text that names another skill (D111).
 - Users try stock `/opsx:apply` first (D27).
 
-### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121)
+### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148)
 
 1. Remove `skip_specs: true` from `.openspec.yaml`. While it is set, the CLI forbids spec files (D99).
 2. Ask the user to answer each open question that changes the specs, the approach, or the tasks. Do this before you write an artifact. If the user cannot answer now, the question stays in `plan.md` (D120, `docs/facts.md`). Then write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. Run it as one plain command, with no loop, no chain, and no pipe. Read the full JSON. Do not write the artifact without its `template` and `instruction` (D133). On a resumed run, keep each artifact that already exists, and write only the missing ones. Follow the `instruction` field of each result.
    Do not write the `plan.md` IDs in an artifact. Refer to an item by its title, or a short form of its text, with the change name (D142, D143).
-   1. `proposal.md`: from Goal and the scope. If `## Background` exists, use its scope items and source links (D125). Non-Goals go to `design.md` → `## Goals / Non-Goals`.
+   1. `proposal.md`: from Goal and the scope. If the Goal has more than one outcome, give each outcome its own item in What Changes (D148). If `## Background` exists, use its scope items and source links (D125). Non-Goals go to `design.md` → `## Goals / Non-Goals`.
    2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, add a `## Purpose` section for a new capability (D117), give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. If `plan.md` has no requirement, ask the user for one. The Goal alone is not a requirement. You can suggest one from it, but ask before you write it (D131). If the user has none, put `skip_specs: true` back and say so in the summary (D108). Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit. Facts go to `## Context` (D135). An open question that is safe to answer later goes to `## Open Questions`. An open question that changes the specs, the approach, or the tasks has no slot. Its answer goes to the specs or to `## Decisions`. Neither the question nor a note that points to it goes to `design.md` (D133).
    3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. Replace each `plan.md` ID in it with the item title (D142). If an answer from step 2 changes the tasks, edit the seed to match it, and say so in the summary. Then delete `tasks-preview.md`. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here: keep `tasks.md`, and delete `tasks-preview.md` (D107).
 3. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
@@ -252,9 +253,9 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 6. In the summary, ask the user to review all artifacts. Ask for an extra review of `tasks.md`, because it is a contract. Say if `skip_specs` was removed, or put back because the change has no spec delta. If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`. If the user said no to the delete, say that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth (D120). If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs (D115).
 
-### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122)
+### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122, D148)
 
-1. Ask the done check (see §4). To find the code, search for what each outcome of the Goal names, for example with `git grep`. Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
+1. Ask the done check (see §4). To find the code, search for what each outcome of the Goal names, for example with `git grep`. Name each outcome that is not met (D148). Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
 2. Read `plan.md`. Do not read `tasks-preview.md` for promotion.
 3. Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.

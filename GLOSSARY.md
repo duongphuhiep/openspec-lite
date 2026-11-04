@@ -44,6 +44,10 @@ _Avoid_: Sync, merge, upgrade
 Externally observable behavior that a client or another team depends on. Promotion writes it to a spec, even if it is obvious from the code. Three other uses of the word are different. "`tasks.md` is a contract" means that apply must follow its steps. The upgrade signal "a contract (spec) becomes necessary" means a spec that others must agree on before the work. In `docs/design.md`, "contract" also names the command-line interface of a script, for example `install.mjs`.
 _Avoid_: Interface, API (for this meaning)
 
+**Outcome**:
+A result that a change delivers. `## Goal` in `plan.md` holds one outcome by preference, or more than one related outcome, one per bullet. The done check asks if each outcome is met.
+_Avoid_: Objective, deliverable
+
 **Done check**:
 The three questions at the end of apply and the start of archive: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 _Avoid_: Done checklist, definition of done

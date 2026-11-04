@@ -462,7 +462,7 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 - The agent creates one change. Its name comes from the first outcome, for example `add-csv-export`.
 - `## Goal` has two bullets, one per outcome. Each bullet has one or two sentences.
 - The Goal comment of the template stays.
-- The summary suggests no separate change.
+- The agent does not ask the split question. The summary names no separate change.
 
 ### 22b. An outcome that can ship alone goes to a separate change
 
@@ -470,15 +470,16 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 
 **Expected**:
 
-- The agent creates one change for the CSV export.
+- Before it creates a change, the agent asks if the logging library upgrade can be a separate change. Answer yes.
+- The agent creates one change for the CSV export. Its name comes from the CSV export.
 - `## Goal` names only the CSV export. `plan.md` does not mention the logging library.
-- The summary suggests a separate change for the logging library upgrade, and names it.
+- The summary names the logging library upgrade as a separate change.
 
 ### 22c. Archive checks each outcome
 
 **Steps**:
 
-1. Create a plan-lite change `csv-export-and-dates`. Its `## Goal` has two bullets: "Add a CSV export to the report page." and "Show the report dates in the user time zone."
+1. Create a plan-lite change `add-csv-export`. Its `## Goal` has two bullets: "Add a CSV export to the report page." and "Show the report dates in the user time zone."
 2. Add a CSV export to the code. Do not change the date code.
 3. Run `openspec-lite-archive`.
 
