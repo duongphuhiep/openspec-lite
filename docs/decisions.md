@@ -1963,3 +1963,17 @@ This extends D138, D139, and D142.
 This extends D134, D140, and D142.
 
 **Rationale**: An agent does not see the IDs of removed items, so "not used yet" lets it reuse an ID. Then a preview that cites the old ID points to a new item, with no stale warning. "Higher than each ID of its kind" is a best-effort rule: it reuses an ID only when the item with the highest number was removed. A test often maps to a constraint, so an agent can put `C1` in a test name.
+
+---
+
+## D145: Fixes From Review Round 5 on f956aec
+
+**Decision**:
+
+- `apply.instruction` says how to pick `<n>` for a new decision: higher than each decision ID in `plan.md` (D144).
+- Scenario 4b uses a `plan.md` with no template comments, so the run checks `apply.instruction` alone. Its ID check applies only when the agent adds a new decision.
+- The release scenario list in `design.md` §2 names the fact and ID checks of scenarios 14, 15, and 20.
+
+This extends D144.
+
+**Rationale**: A plan from schema version 2, or a plan written by hand, has no top comment of the template. Without the rule in `apply.instruction`, apply has no numbering rule for such a plan. If apply updates the old decision in place, no new ID exists, so the ID check cannot apply.

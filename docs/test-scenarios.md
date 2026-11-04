@@ -57,12 +57,12 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. On a new plan-lite change, write a `plan.md` with two constraints with no ID, and one decision `### Decision D1: Use a fixed 60-second window`. Add one fact `- F1: Bursts at the window edge do not matter, because the clients retry slowly.` It justifies only D1.
+1. On a new plan-lite change, write a `plan.md` with no template comments, so that the run checks `apply.instruction` alone. Give it two constraints with no ID, and one decision `### Decision D1: Use a fixed 60-second window`. Add one fact `- F1: Bursts at the window edge do not matter, because the clients retry slowly.` It justifies only D1.
 2. Run `openspec-lite-apply`. During the work, tell the agent: "Use a sliding window instead."
 
 **Expected**:
 
-- `## Decisions` has the sliding window decision, with an ID number higher than each other decision ID in the file. The fixed window decision is removed, or updated to the sliding window (D136).
+- `## Decisions` has the sliding window decision. The fixed window decision is removed, or updated to the sliding window (D136). If the agent adds a new decision, its ID number is higher than each other decision ID in the file (D144).
 - If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140).
 - The two constraints still have no ID (D138).
 
@@ -396,7 +396,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
 - `proposal.md` holds the two scope items of `## Background`.
 - `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
-- `tasks.md` holds no `plan.md` ID. Each task names the item by its title (D142).
+- `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title instead (D142).
 - After step 3, `plan.md` has only `## Open Questions` with the open question. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
 
 ### 20b. Archive drafts an item that the user picks
