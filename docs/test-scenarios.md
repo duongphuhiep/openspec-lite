@@ -21,7 +21,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - The agent runs `openspec-lite-schema`. `openspec/schemas/plan-lite/` exists. `openspec/config.yaml` has the archive guidance item.
 - `openspec/changes/<name>/` exists. `.openspec.yaml` has `schema: plan-lite` and `skip_specs: true`.
-- `plan.md` has the six headings and their guidance comments, with only known content filled in.
+- `plan.md` has the ID comment before `## Goal`, the seven headings, and their guidance comments, with only known content filled in.
 - The agent asks: "Do you want a tasks preview?" It writes no code.
 
 ## 2. Small request: Level 1
@@ -126,7 +126,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected**:
 
-- The agent says that it will replace the schema (v0 → v2, the shipped version), and asks first.
+- The agent says that it will replace the schema (v0 → v3, the shipped version), and asks first.
 - After yes, `openspec/schemas-backup/plan-lite-v0-<timestamp>/` holds the old folder with `local-note.txt`.
 - `openspec/schemas/plan-lite/` has no `local-note.txt`.
 - The agent reports the backup path and the copied files.
@@ -474,7 +474,7 @@ Notes:
 - Pin the full model ID, for example `eu.anthropic.claude-sonnet-5-5`. On a Bedrock setup, the alias `sonnet` resolved to `claude-sonnet-4-6`. Check `modelUsage` in the JSON.
 - A scenario that needs an interrupt (7, 13) starts from a hand-built state, because a print-mode run cannot stop at an exact step.
 - Use `--setting-sources project,local`. Without it, a skill in `~/.claude/skills/` wins over the project copy with the same name. A global openspec-lite install then hides the release candidate (D131).
-- Check the line `Base directory for this skill:` in the session log. It must name the temp folder, not `~/.claude/skills/`.
+- Check the line `Base directory for this skill:` in the session log. It must name the temp folder, not `~/.claude/skills/`. On macOS, it shows the real path `/private/var/folders/...`, but `mktemp -d` prints `/var/folders/...`. A slash command such as `/opsx:apply` writes no such line.
 - The flag also skips `~/.claude/settings.json`. On Bedrock, set `CLAUDE_CODE_USE_BEDROCK=1` in the shell.
 - `< /dev/null` stops the 3-second wait for stdin.
 - Permission denials in the JSON (`permission_denials`) mostly come from compound shell commands outside the allowlist. The agent then retries with allowed commands.

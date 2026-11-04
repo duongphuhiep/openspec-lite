@@ -656,6 +656,24 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 
 ---
 
+## Scenario Run on 92c77ff (Schema v3)
+
+**Source**: agent scenarios 1–9 and 11–21, Claude Code 2.1.317 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261104-92c77ff/`, 2026-11-04
+
+- All 25 scenario runs passed with no rerun. The PARTIAL results of the d05538c run (12, 20c) did not occur again.
+- `claude -p --setting-sources project,local` still loads the project copy of each skill in 2.1.317, also when `~/.claude/skills/` has the same names.
+- A project slash command such as `/opsx:apply` writes `<command-name>/opsx:apply</command-name>` to the session log, but no `Base directory for this skill:` line (session `05fb3430`).
+- On macOS, the `Base directory for this skill:` line shows `/private/var/folders/...`, but `mktemp -d` prints `/var/folders/...` (session `6a1ad918`).
+- `claude -p --resume <session_id>` returns the same `session_id`, so all turns of a scenario are in one log file (session `11c58fdc`).
+- Inside one turn, a `cd <dir>` stays in effect for the later Bash calls. Between `--resume` turns, it does not. In 21a, a stale `cd openspec` made `git grep` miss the code, and the done check gave a false warning (sessions `264b7888`, `aa0e6f98`).
+- With the scenario allowlist, a command that does `cd <dir>` and then `git` is denied: "This command changes directory before running a version-control command, which can pick up untrusted hooks or repository configuration from the target directory." `sed -i` alone, `npm test`, and a heredoc followed by more statements are also denied. A plain `rm <path in the project>` runs (sessions `cc4735b7`, `e00e49bc`). After a denial, Sonnet 5.5 retried with allowed commands or the Write and Edit tools.
+- The Claude Code `.jsonl` session log can hold the same tool call twice. The second copy has no `uuid` (session `aa0e6f98`).
+- OpenSpec 1.14.2: `openspec validate` on a change with `skip_specs: true` passes, and prints the info line "skip_specs is set in .openspec.yaml: change declares no spec-level behavior changes, zero deltas accepted".
+- OpenSpec 1.14.2: if the archive target folder exists, `openspec archive <name> --yes` exits with code 1 with "Error: Archive '<date>-<name>' already exists.", and the change stays active (session `4b6ccdbc`).
+- OpenSpec 1.14.2: a `## Purpose` shorter than 50 characters gives the warning "Purpose section is too brief". `openspec validate --all` still passes. With `--strict`, it fails (session `11bd0009`).
+- In 16a and 16b, Sonnet 5.5 again switched from `/opsx:archive` to `openspec-lite-archive` because of the skill description, with and without the `config.yaml` guidance (sessions `3a5b05b6`, `436fbdf0`).
+- Small deviations that no scenario checks: in 6, the agent set `skip_specs: true` before the user answered the drafts. In 18, it offered to draft an ADR after the guard stop. In 7, it did not say that an earlier, interrupted run removed `skip_specs`. Chat replies use plan IDs such as "C1 is met". D142 bans the IDs only in files, commits, pull requests, and tickets.
+
 ## Skill Evaluation Tools
 
 **Source**: probe runs of `claude plugin eval` (Claude Code 2.1.316, `eu.anthropic.claude-sonnet-5-5`, Bedrock), its `--help`, the Codex skill-creator `SKILL.md` (github.com/openai/codex, `codex-rs/skills/src/assets/samples/skill-creator/SKILL.md`), the local Anthropic skill-creator plugin, developers.openai.com/blog/eval-skills, github.com/bjulius/skill-evaluator, 2026-11-02
