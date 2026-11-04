@@ -291,7 +291,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 
 - Each item tagged `spec` is in a requirement draft. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. Each item tagged `ADR` is in an ADR draft.
 - For each item that the agent does not draft, it names the item and says why it skips it. No item disappears with no word.
-- The reason for the semicolon (French Excel) stays in the spec or in the ADR. It is the non-obvious part.
+- The reason for the semicolon (French Excel) stays in the requirement text or in the ADR, not only in a scenario title. It is the non-obvious part (D147).
 - The ADR of the browser decision has the fact about the page load in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D142).
 - After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items, and `openspec/adr/` has the `ADR` item.
 
@@ -505,6 +505,6 @@ Each report has a metrics table, with one row for each scenario run and one tota
 - **Turns**: the sum of `num_turns`, the steps of the agent loop.
 - **Tools**: the tool calls in the session log, counted once for each `tool_use` ID. The log can hold the same call twice.
 - **Denials**: the sum of `permission_denials`. They come from the allowlist, not from the skill.
-- **User turns**: the number of `--resume` turns, that is, the answers that the user gave.
+- **User turns**: the number of `--resume` turns, that is, the answers that the user gave. A turn in a new session does not count.
 - **Time s**: the sum of `duration_ms`. It depends on the provider load, so it is the weakest number.
 - The file table gives the lines and words of each `.md` file under `openspec/`, except `openspec/schemas/`. It measures the size of `plan.md` against the size of the spec-driven artifacts.

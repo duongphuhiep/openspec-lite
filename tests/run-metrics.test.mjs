@@ -47,6 +47,19 @@ test("sums the turns, counts each tool call once, and lists the artifacts", () =
   assert.doesNotMatch(r.stdout, /skip\.md/);
 });
 
+test("a turn in a new session is not a user turn", () => {
+  const d = mkdtempSync(join(tmpRoot, "run-metrics-"));
+  mkdirSync(join(d, "sessions", "proj"), { recursive: true });
+  writeFileSync(join(d, "sessions", "proj", "s1.jsonl"), "");
+  writeFileSync(join(d, "sessions", "proj", "s2.jsonl"), "");
+  writeFileSync(join(d, "t1.json"), JSON.stringify(turn()));
+  writeFileSync(join(d, "t2.json"), JSON.stringify(turn({ session_id: "s2" })));
+  writeFileSync(join(d, "t3.json"), JSON.stringify(turn({ session_id: "s2" })));
+  const r = run("--sessions", join(d, "sessions"), join(d, "t1.json"), join(d, "t2.json"), join(d, "t3.json"));
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.stdout.split("\n")[0].split(" | ").at(-2), "1");
+});
+
 test("exits with code 1 if the session log is missing", () => {
   const d = mkdtempSync(join(tmpRoot, "run-metrics-"));
   mkdirSync(join(d, "sessions"));

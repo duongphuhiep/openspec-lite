@@ -1991,3 +1991,17 @@ This extends D144.
 - No LLM-judged quality score, and no time-to-first-token number.
 
 **Rationale**: `docs/evaluation-orignial-idea.md` step 1 needs numbers to compare a run with the skill against a run with stock OpenSpec, and an old tag against a new commit. The JSON of `claude -p` already has the numbers (`docs/facts.md`). A script makes each group count in the same way. Cache reads are most of the input, but they cost about 10% of new input, so one total would hide a cost change. The file table gives a source for the claim that `plan.md` is smaller than the spec-driven artifacts. An LLM score costs money and varies, and the disk checks already measure the outcome.
+
+---
+
+## D147: Archive Keeps the Reason of a Constraint
+
+**Decision**:
+
+- When archive drafts a requirement from an item that gives a reason, for example the "because" part of a constraint, it keeps the reason in the requirement text. A scenario title alone does not keep it.
+- Archive step 4 is a list of sub-bullets. The rule "list each item that you do not draft, including each non-goal, with a one-line reason" comes second, right after the sort rule.
+- Scenario 15 expects the French Excel reason in the requirement text or in the ADR, not only in a scenario title.
+
+This extends D116 and D119.
+
+**Rationale**: In the compare run of 2026-11-04, scenario 15 failed on v1.5.0. The agent turned the semicolon constraint into a scenario and dropped "because the users open it in a French Excel". It also named the non-goal with no reason. In the 92c77ff run, the reason survived only in a scenario title. No version of the skill said to keep the reason. In v1.5.0, step 4 grew by about 100 words, and the non-goal rule became its last sentence.

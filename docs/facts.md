@@ -674,6 +674,23 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - In 16a and 16b, Sonnet 5.5 again switched from `/opsx:archive` to `openspec-lite-archive` because of the skill description, with and without the `config.yaml` guidance (sessions `3a5b05b6`, `436fbdf0`).
 - Small deviations that no scenario checks: in 6, the agent set `skip_specs: true` before the user answered the drafts. In 18, it offered to draft an ADR after the guard stop. In 7, it did not say that an earlier, interrupted run removed `skip_specs`. Chat replies use plan IDs such as "C1 is met". D142 bans the IDs only in files, commits, pull requests, and tickets.
 
+## Compare Run, v1.4.0 and v1.5.0
+
+**Source**: all scenarios, one run for each version, Claude Code 2.1.317 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261104-compare-v1.4.0-v1.5.0/`, 2026-11-04
+
+- v1.4.0 passed 29 of 29 runs. v1.5.0 passed 29 of 30. Scenario 15 failed: the "French Excel" reason of a constraint reached no spec or ADR, and a non-goal was named with no reason (session `a06c8483`).
+- Over the 29 common runs, v1.5.0 cost 4.814 USD against 4.972 USD. Without scenario 4, where one v1.4.0 run sent a denied heredoc 4 times, the cost was 4.686 against 4.626 USD.
+- The v1.5.0 `plan.md` is about 70–200 words bigger, because of the schema 3 template comments and `## Facts`. The promoted specs and ADRs are not bigger.
+- APM 0.33.0 installs a package from a git worktree path, for example `../openspec-lite-v1.4.0/package`, the same as from the repo.
+- OpenSpec 1.14.2 writes `skip_specs: true` on `openspec new change --schema plan-lite` with schema version 2 too, and `openspec archive --yes` behaves the same for version 2 and 3.
+- OpenSpec 1.14.2: at a git root with no `openspec/` folder, `openspec list --json` exited with code 1 in this run (session `030e1cf2`). The 92c77ff run reported code 2. The exit code is not verified, so do not rely on it.
+- Claude Code 2.1.317, scenario allowlist: a command that sets a shell variable and uses it (`d=x; ls $d`) is denied with "A variable set in this command can't be checked before it runs". A redirect to `$d/...` is denied. `echo`, `xargs`, and two statements on separate lines are denied. A `Write` to a path outside the project folder is denied (sessions `4f83ad78`, `649f5686`, `11532f10`).
+- Claude Code 2.1.317: after a denial of a long heredoc, Sonnet 5.5 can send the same command several times. Each try is a new `tool_use` ID and a new entry in `permission_denials`.
+- Claude Code 2.1.317: six `claude -p` runs can start at the same time from six temp folders. Each run writes its own log under `~/.claude/projects/<folder name>/<session_id>.jsonl`.
+- Rerun of scenario 15 with the D147 fix (`.scenario-runs/20261104-rerun15-D147/`): 3 of 3 runs pass. Each run kept the "because" part of each constraint in the requirement text (sessions `5053203f`, `8be52e86`, `37936118`).
+- Claude Code 2.1.317 on Bedrock: parallel `claude -p` sessions each start with a cold prompt cache. In the scenario 15 reruns, turn 1 had about 23,300 `cache_creation_input_tokens`, against 12,415 in a run that started after others. This adds about 0.09 USD per run. Compare cost only between runs with the same cache state.
+- `run-metrics.mjs` before the fix on 2026-11-04 counted a turn in a new session as a user turn. It now counts only a turn with the same `session_id` as the turn before it.
+
 ## Skill Evaluation Tools
 
 **Source**: probe runs of `claude plugin eval` (Claude Code 2.1.316, `eu.anthropic.claude-sonnet-5-5`, Bedrock), its `--help`, the Codex skill-creator `SKILL.md` (github.com/openai/codex, `codex-rs/skills/src/assets/samples/skill-creator/SKILL.md`), the local Anthropic skill-creator plugin, developers.openai.com/blog/eval-skills, github.com/bjulius/skill-evaluator, 2026-11-02

@@ -55,7 +55,8 @@ const row = [
   sum((t) => t.num_turns),
   toolIds.size,
   sum((t) => t.permission_denials?.length),
-  turns.length - 1,
+  // A --resume turn keeps the session_id. A new session is not a user answer.
+  turns.filter((t, i) => i > 0 && t.session_id === turns[i - 1].session_id).length,
   Math.round(sum((t) => t.duration_ms) / 1000),
 ];
 console.log(`| ${row.join(" | ")} |`);
