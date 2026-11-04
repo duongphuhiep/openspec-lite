@@ -1846,3 +1846,19 @@ This revises the "append-only" rule of D10 and of `design.md` §4. It extends D1
 This extends D134, D135, and D136.
 
 **Rationale**: With the literal `D1` in the instruction, apply could write a second `D1` in a file that already has one. The README said "at any time", but the glossary said "when its scope grows". A spec states behavior, not the facts behind it, so a fact has no slot in a spec.
+
+---
+
+## D138: Fixes From Review Round 2 on 0e4bb40
+
+**Decision**:
+
+- Archive and upgrade do not copy the `plan.md` IDs (`C1`, `OQ1`, `F1`, `D1`) to a spec, an ADR, or `design.md`. They write each reference to an ID in words.
+- `apply.instruction` says: "Do not add an ID to an existing item that has none."
+- The template shows the IDs as `C<n>`, `OQ<n>`, `F<n>`, and `D<n>`.
+- Archive step 4 states the D137 rule: a fact that justifies no drafted decision is listed as not drafted.
+- `GLOSSARY.md` adds **Plan fact** and **Item ID**.
+
+This extends D134, D135, and D137.
+
+**Rationale**: An ID is unique only in its `plan.md`. After archive or prune, a spec or an ADR that says "D3" points to nothing, or to a decision of another log. A change that started with schema version 2 has constraints with no ID. If apply adds an ID, the plan hash changes, and the preview becomes stale with no real change. A fact that is not promoted is not lost: it stays in the archived `plan.md` in `openspec/changes/archive/`.

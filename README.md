@@ -26,7 +26,7 @@ openspec-lite targets medium changes. The workflow is `plan → implement (→ d
 - **Implement**: `openspec-lite-apply` implements the change from `plan.md`.
 - **Doc**: `openspec-lite-archive` promotes non-obvious information and contracts from `plan.md` to `openspec/specs/` and ADRs. Then it moves the change to the archive.
 
-`plan.md` keeps WHY, WHAT, and HOW together while you propose and explore the change. `plan.md` is a live document. It records:
+`plan.md` keeps WHY, WHAT, and HOW together while you propose and explore the change. `plan.md` is a living document. It records:
 
 - The context and your proposal.
 - The non-obvious facts that you find during exploration, when they justify a decision or a constraint.
@@ -124,8 +124,8 @@ openspec-lite has no explore skill. You can use stock `/opsx:explore`, but you u
 During apply:
 
 - When the two files conflict, `plan.md` wins.
-- If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply adds to the other sections. It ignores HTML comments.
-- Apply records each meaningful deviation as a decision in `plan.md`. It removes each decision that the deviation supersedes.
+- If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply edits the other sections. It ignores HTML comments.
+- Apply records each meaningful deviation as a decision in `plan.md`. It removes each decision that the deviation supersedes, and updates each decision that it makes stale.
 
 ## Lifecycle
 

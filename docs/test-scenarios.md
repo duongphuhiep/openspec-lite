@@ -260,6 +260,10 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 
    ## Open Questions
 
+   ## Facts
+   - F1: The report page loads all rows of the table at page load. [justifies D1: ADR Context]
+   - F2: The import script of the finance team reads the columns by name, not by position. [justifies C3 only: named as not drafted]
+
    ## Decisions
    ### Decision D1: Build the CSV in the browser
    Chose the browser because the table already has all rows in memory. Rejected a server endpoint because it adds an API for one button. [non-obvious: ADR]
@@ -274,6 +278,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 - Each item tagged `spec` is in a requirement draft. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. Each item tagged `ADR` is in an ADR draft.
 - For each item that the agent does not draft, it names the item and says why it skips it. No item disappears with no word.
 - The reason for the semicolon (French Excel) stays in the spec or in the ADR. It is the non-obvious part.
+- The ADR of D1 has F1 in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D138).
 - After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items, and `openspec/adr/` has the `ADR` item.
 
 Record each mismatch with the answer key. A tagged `spec` or `ADR` item that is not promoted, and not named as skipped, is a failure.
@@ -365,7 +370,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 **Steps**:
 
-1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change.
+1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, one `## Facts` item that the decision relies on, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change.
 2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". At the prune question, answer no.
 3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question.
 
@@ -376,6 +381,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - After step 2, `plan.md` is the same as in step 1.
 - At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
 - `proposal.md` holds the two scope items of `## Background`.
+- `design.md` → `## Context` holds the fact (D135). `design.md` holds no `plan.md` ID such as `C1` or `D1` (D138).
 - After step 3, `plan.md` has only `## Open Questions` with the open question. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
 
 ### 20b. Archive drafts an item that the user picks
