@@ -196,7 +196,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal.
 - Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
 - Set `skip_specs: true` in `.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change (D112).
-- Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Keep only the current decisions, and no facts with statistics that soon go out of date (D136).
+- Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Keep only the current decisions, and no facts with statistics that soon go out of date (D136). Remove each fact that justifies no current decision or constraint (D140).
 - If an upgrade signal is present (see §5), suggest an upgrade.
 - In the summary, show the change name.
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
@@ -275,7 +275,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 name: plan-lite
 version: 3
 openspec-version: ">=1.9.0 <2.0.0"
-description: Lightweight plan — goal, constraints, decisions. No tasks. Upgradeable to spec-driven.
+description: Lightweight plan — goal, constraints, facts, decisions. No tasks. Upgradeable to spec-driven.
 artifacts:
   - id: plan
     generates: plan.md
@@ -321,7 +321,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - It exits with code 1 if the file cannot be read, or if `Goal`, `Non-Goals`, or `Constraints` is missing. `Background` is optional: no error if absent (D125).
 - `tests/plan-hash.test.mjs` covers each rule.
 
-`templates/plan.md` (D10, D124, D125, D134, D135, D136):
+`templates/plan.md` (D10, D124, D125, D134, D135, D136, D140):
 
 ```markdown
 <!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item an ID that is not used yet. Gaps and any order are OK. -->

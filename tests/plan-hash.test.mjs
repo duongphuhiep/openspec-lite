@@ -46,6 +46,7 @@ test("CRLF, BOM, section order, Open Questions, Facts, and Decisions do not chan
   assert.equal(hash(base.replace("Q1?", "")).stdout, ref, "Open Questions");
   assert.equal(hash(base + "### Decision D1: A\nChose A because B.\n").stdout, ref, "Decisions");
   assert.equal(hash(base.replace("## Decisions", "## Facts\n<!-- hint -->\n- F1: A\n\n## Decisions")).stdout, ref, "Facts");
+  assert.equal(hash("<!-- ID rule -->\nIntro text\n\n" + base).stdout, ref, "text before the first heading");
   assert.equal(hash(base.replace("Keep Z", "Keep   Z\n")).stdout, ref, "whitespace");
 });
 

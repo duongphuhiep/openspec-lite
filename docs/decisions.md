@@ -137,7 +137,7 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: The Decisions section is the key differentiator from a throwaway plan.md. Without it, the file has no long-term value and nothing worth promoting at archive time.
 
-**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D134 adds IDs to constraints, open questions, and decisions. D135 adds `## Facts`. D136: the section is no longer append-only. It holds only the current decisions.
+**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D134 adds IDs to constraints, open questions, and decisions. D135 adds `## Facts`. D140 adds the ID comment before `## Goal`. D136: the section is no longer append-only. It holds only the current decisions.
 
 ---
 
@@ -1801,6 +1801,8 @@ This extends D120 and D132.
 
 This revises the entry format of D92.
 
+**Status**: D137 writes the heading as `### Decision D<n>: <title>`. D140 moves the ID comment to the top of the template.
+
 **Rationale**: A reviewer can point to one item with a short ID, for example "D3 relies on F2" or "D3 breaks C1". A unique ID in the file is sufficient for this. Strict numbers would make the agent renumber items after each removal, which adds noise to the diff.
 
 ---
@@ -1810,7 +1812,7 @@ This revises the entry format of D92.
 **Decision**:
 
 - `plan.md` gets a `## Facts` section between `## Open Questions` and `## Decisions`. Each fact is `- F1: <fact>`, with the ID rules of D134.
-- It holds only non-obvious facts that the user or the agent finds during exploration or grilling, for example with `/opsx:explore` or a grilling skill such as grill-me. Each fact must justify a decision or a constraint of the change.
+- It holds only non-obvious facts found during exploration or grilling, for example with `/opsx:explore` or the grill-me skill. Each fact must justify a decision or a constraint of the change.
 - The plan hash does not cover `## Facts`, as for `## Decisions`.
 - At archive, a fact goes to the `## Context` of each ADR whose decision it justifies. A fact that justifies no promoted decision is listed as not drafted, with a reason (D116).
 - At upgrade, facts go to `design.md` → `## Context`.
@@ -1820,7 +1822,7 @@ This revises the entry format of D92.
 
 ---
 
-## D136: plan.md Keeps the Current Decisions, and Facts Have No Volatile Statistics
+## D136: plan.md Keeps the Current Decisions, and Facts Have No Statistics That Soon Go Out of Date
 
 **Decision**:
 
@@ -1891,3 +1893,18 @@ This extends D137 and D138.
 This extends D135, D136, and D138.
 
 **Rationale**: An agent that fills `## Constraints` first does not read the `## Decisions` comment. The plan hash ignores the text before the first `##` heading, so the top comment does not change the hash. A fact that justifies only a removed decision breaks the `## Facts` filter of D135.
+
+---
+
+## D141: Fixes From Review Round 5 on f86e3cc
+
+**Decision**:
+
+- Propose also removes each fact that justifies no current decision or constraint, as apply does (D140).
+- A test checks that the text before the first `##` heading does not change the plan hash. D140 relies on this.
+- The schema `description` lists facts.
+- D134 and D10 get `**Status**` lines for D137 and D140.
+
+This extends D140.
+
+**Rationale**: Propose can also supersede a decision when the user edits the plan, so the same orphan fact can stay. Without a test, a change to `plan-hash.mjs` could hash the top comment, and each preview would become stale after a template update.

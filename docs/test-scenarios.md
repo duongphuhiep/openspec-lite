@@ -56,13 +56,13 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. On a new plan-lite change, write a `plan.md` with two constraints with no ID, and one decision `### Decision D1: Use a fixed 60-second window`. Add one fact `- F1: <fact>` that justifies only D1.
+1. On a new plan-lite change, write a `plan.md` with two constraints with no ID, and one decision `### Decision D1: Use a fixed 60-second window`. Add one fact `- F1: Bursts at the window edge do not matter, because the clients retry slowly.` It justifies only D1.
 2. Run `openspec-lite-apply`. During the work, tell the agent: "Use a sliding window instead."
 
 **Expected**:
 
 - `## Decisions` has the sliding window decision, with an ID that is not used yet in the file. The fixed window decision is removed, or updated to the sliding window (D136).
-- F1 is removed, because it justifies no current decision or constraint (D140).
+- If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140).
 - The two constraints still have no ID (D138).
 
 ## 5. Archive with promotion
