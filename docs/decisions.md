@@ -1810,7 +1810,7 @@ This revises the entry format of D92.
 **Decision**:
 
 - `plan.md` gets a `## Facts` section between `## Open Questions` and `## Decisions`. Each fact is `- F1: <fact>`, with the ID rules of D134.
-- It holds only non-obvious facts that the user or the agent finds during exploration or grilling, for example with `/openspec-explore` or `/grill-me`. Each fact must justify a decision or a constraint of the change.
+- It holds only non-obvious facts that the user or the agent finds during exploration or grilling, for example with `/opsx:explore` or a grilling skill such as grill-me. Each fact must justify a decision or a constraint of the change.
 - The plan hash does not cover `## Facts`, as for `## Decisions`.
 - At archive, a fact goes to the `## Context` of each ADR whose decision it justifies. A fact that justifies no promoted decision is listed as not drafted, with a reason (D116).
 - At upgrade, facts go to `design.md` → `## Context`.
@@ -1857,8 +1857,22 @@ This extends D134, D135, and D136.
 - `apply.instruction` says: "Do not add an ID to an existing item that has none."
 - The template shows the IDs as `C<n>`, `OQ<n>`, `F<n>`, and `D<n>`.
 - Archive step 4 states the D137 rule: a fact that justifies no drafted decision is listed as not drafted.
-- `GLOSSARY.md` adds **Plan fact** and **Item ID**.
+- `GLOSSARY.md` adds **Fact** and **Item ID**.
 
 This extends D134, D135, and D137.
 
-**Rationale**: An ID is unique only in its `plan.md`. After archive or prune, a spec or an ADR that says "D3" points to nothing, or to a decision of another log. A change that started with schema version 2 has constraints with no ID. If apply adds an ID, the plan hash changes, and the preview becomes stale with no real change. A fact that is not promoted is not lost: it stays in the archived `plan.md` in `openspec/changes/archive/`.
+**Rationale**: An ID is unique only in its `plan.md`. After archive or prune, a spec or an ADR that says "D3" points to nothing, or to a decision of another log. A change that started with schema version 2 has constraints with no ID. If apply adds an ID to a constraint, the plan hash changes, and the preview becomes stale with no real change. A fact that is not promoted is not lost: it stays in the archived `plan.md` in `openspec/changes/archive/`.
+
+---
+
+## D139: Fixes From Review Round 3 on 5b089bb
+
+**Decision**:
+
+- `apply.instruction` records the answer to an open question as a `### Decision D<n>:` entry.
+- Archive lists a fact that justifies no drafted decision with a one-line reason, as for each other item that it does not draft (D116).
+- A scenario names a fact in words, not by its ID, because D138 forbids the IDs in specs and ADRs.
+
+This extends D137 and D138.
+
+**Rationale**: Without the format, apply can write an answer with no ID. Without the reason, a skipped fact looks like a lost fact. The term **Fact** in `GLOSSARY.md` replaces **Plan fact**, because the skills and docs say only "fact".

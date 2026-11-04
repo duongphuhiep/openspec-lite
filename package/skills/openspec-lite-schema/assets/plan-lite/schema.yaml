@@ -18,7 +18,7 @@ apply:
     - If the plan hash command exits with code 1, show its message and stop.
     - When plan.md and tasks-preview.md conflict, plan.md wins.
     - The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of plan.md, as `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. List the deviations in the end summary. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale. Do not add an ID to an existing item that has none.
-    - Record the answer to each open question in `## Decisions`, and remove the question.
+    - Record the answer to each open question in `## Decisions`, as a `### Decision D<n>:` entry, and remove the question.
     - Do not edit tasks-preview.md.
     - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
     - End with the done check: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.

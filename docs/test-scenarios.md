@@ -231,7 +231,7 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
 - Each new rule has at least one `#### Scenario:`.
 - The delta form is free. "A locked account SHALL NOT log in, also with a valid password" can be a MODIFIED "Password login" (with its full text) or an ADDED requirement. Both pass if the main spec below ends up correct.
 - The decision becomes an ADR with `Change: lockout`.
-- The `## Context` of the ADR includes fact F1 (D135).
+- The `## Context` of the ADR includes the fact about the login logs, in words (D135). No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D138).
 - After the archive, `openspec/specs/auth/spec.md` has:
   - the "Password login" requirement, with its first scenario and the new locked-account rule;
   - the new lockout requirement.

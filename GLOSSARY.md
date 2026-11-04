@@ -16,12 +16,12 @@ _Avoid_: Lite schema, openspec-lite schema
 The living document of a plan-lite change. It holds the goal, an optional background, non-goals, constraints, open questions, facts, and decisions.
 _Avoid_: Proposal, design
 
-**Plan fact**:
+**Fact**:
 An item of `## Facts` in a plan. It is a non-obvious fact, found during exploration or grilling, that justifies a decision or a constraint. It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
 _Avoid_: Finding, note
 
 **Item ID**:
-The short ID of a constraint, open question, plan fact, or decision in a plan: `C<n>`, `OQ<n>`, `F<n>`, or `D<n>`. It is unique only in its plan.
+The short ID of a constraint, open question, fact, or decision in a plan: `C<n>`, `OQ<n>`, `F<n>`, or `D<n>`. It is unique only in its plan.
 _Avoid_: Number, key
 
 **Tasks preview**:
