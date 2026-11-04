@@ -52,6 +52,19 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - It ends with the done check (Goal, Constraints, Open Questions).
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
 
+### 4b. Apply keeps only the current decisions
+
+**Steps**:
+
+1. On a new plan-lite change, write a `plan.md` with two constraints with no ID, and one decision `### Decision D1: Use a fixed 60-second window`. Add one fact `- F1: <fact>` that justifies only D1.
+2. Run `openspec-lite-apply`. During the work, tell the agent: "Use a sliding window instead."
+
+**Expected**:
+
+- `## Decisions` has the sliding window decision, with an ID that is not used yet in the file. The fixed window decision is removed, or updated to the sliding window (D136).
+- F1 is removed, because it justifies no current decision or constraint (D140).
+- The two constraints still have no ID (D138).
+
 ## 5. Archive with promotion
 
 **Steps**:
@@ -278,7 +291,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 - Each item tagged `spec` is in a requirement draft. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. Each item tagged `ADR` is in an ADR draft.
 - For each item that the agent does not draft, it names the item and says why it skips it. No item disappears with no word.
 - The reason for the semicolon (French Excel) stays in the spec or in the ADR. It is the non-obvious part.
-- The ADR of D1 has F1 in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D138).
+- The ADR of the browser decision has the fact about the page load in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D138).
 - After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items, and `openspec/adr/` has the `ADR` item.
 
 Record each mismatch with the answer key. A tagged `spec` or `ADR` item that is not promoted, and not named as skipped, is a failure.

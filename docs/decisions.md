@@ -1875,4 +1875,19 @@ This extends D134, D135, and D137.
 
 This extends D137 and D138.
 
-**Rationale**: Without the format, apply can write an answer with no ID. Without the reason, a skipped fact looks like a lost fact. The term **Fact** in `GLOSSARY.md` replaces **Plan fact**, because the skills and docs say only "fact".
+**Rationale**: Without the format, apply can write an answer with no ID. Without the reason, a skipped fact looks like a lost fact.
+
+---
+
+## D140: Fixes From Review Round 4 on 840cc2a
+
+**Decision**:
+
+- The template comment on ID rules moves to the top of `plan.md`, before `## Goal`. It applies to the C, OQ, F, and D IDs, so it must not sit under `## Decisions`.
+- When apply removes or updates a decision, it also removes each fact that justifies no current decision or constraint.
+- Scenario 4b checks D136, D138, and this rule in a live apply run.
+- If the user rejects an ADR draft at archive, the facts of that draft need no extra report. The user saw them in the draft.
+
+This extends D135, D136, and D138.
+
+**Rationale**: An agent that fills `## Constraints` first does not read the `## Decisions` comment. The plan hash ignores the text before the first `##` heading, so the top comment does not change the hash. A fact that justifies only a removed decision breaks the `## Facts` filter of D135.
