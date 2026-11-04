@@ -690,3 +690,5 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - The Anthropic skill-creator uses `evals/evals.json` and runs with-skill and baseline subagents in the same turn. For an edit, the baseline is a snapshot of the old skill. `scripts/aggregate_benchmark.py` gives pass rate, time, and tokens as mean ± stddev.
 - The Codex skill-creator "Independent Forward-Testing" gives a subagent a realistic request and the skill in a temp workspace, with no expected answer. It has no baseline arm and no score.
 - bjulius/skill-evaluator does static analysis only. It does not run the skill.
+
+- Claude Code 2.1.317: the JSON of `claude -p --output-format json` has `total_cost_usd`, `num_turns`, `duration_ms`, `duration_api_ms`, `ttft_ms`, `permission_denials`, `subagent_stats`, `stop_reason`, and `is_error`. `usage` has `input_tokens`, `output_tokens`, `cache_read_input_tokens`, and `cache_creation_input_tokens`. Each `modelUsage` entry also has `thinkingTokens` and `costUSD`. Source: a one-turn run with `eu.anthropic.claude-haiku-5-5` on Bedrock, 2026-11-04.

@@ -1977,3 +1977,17 @@ This extends D134, D140, and D142.
 This extends D144.
 
 **Rationale**: A plan from schema version 2, or a plan written by hand, has no top comment of the template. Without the rule in `apply.instruction`, apply has no numbering rule for such a plan. If apply updates the old decision in place, no new ID exists, so the ID check cannot apply.
+
+---
+
+## D146: Metrics in the Scenario Reports
+
+**Decision**:
+
+- Each scenario report has a metrics table: one row for each run, and one total row for the group.
+- The columns are Pass, Checks, Cost USD, Output tok, Thinking tok, Input tok, Cache read tok, Turns, Tools, Denials, User turns, and Time s. A file table gives the lines and words of each `.md` file under `openspec/`, except `openspec/schemas/`.
+- `scripts/run-metrics.mjs` makes the row from the JSON of each `claude -p` turn and the session log. Pass and Checks need a judgment, so the script prints `?` for them.
+- The script counts tool calls by `tool_use` ID. It does not add the cache reads to the other input tokens.
+- No LLM-judged quality score, and no time-to-first-token number.
+
+**Rationale**: `docs/evaluation-orignial-idea.md` step 1 needs numbers to compare a run with the skill against a run with stock OpenSpec, and an old tag against a new commit. The JSON of `claude -p` already has the numbers (`docs/facts.md`). A script makes each group count in the same way. Cache reads are most of the input, but they cost about 10% of new input, so one total would hide a cost change. The file table gives a source for the claim that `plan.md` is smaller than the spec-driven artifacts. An LLM score costs money and varies, and the disk checks already measure the outcome.

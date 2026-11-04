@@ -193,6 +193,7 @@ Run `apm update` to get the newest release in your range. A minor or patch relea
 
 - `node --test` runs the tests in `tests/`. The schema test needs the `openspec` CLI.
 - `node scripts/check-version.mjs` checks the shipped schema version in each workflow skill.
+- `node scripts/run-metrics.mjs` prints the cost, token, and tool numbers of a scenario run. See "Metrics" in [`docs/test-scenarios.md`](docs/test-scenarios.md).
 - Before a release, run the scenarios in [`docs/test-scenarios.md`](docs/test-scenarios.md).
 - To test a real install from the latest tag, run the `apm-install` workflow from the GitHub **Actions** tab.
 

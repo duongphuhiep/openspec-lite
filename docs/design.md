@@ -28,11 +28,13 @@ openspec-lite/
 │               └── templates/
 │                   └── plan.md
 ├── scripts/
-│   └── check-version.mjs
+│   ├── check-version.mjs
+│   └── run-metrics.mjs
 ├── tests/
 │   ├── plan-hash.test.mjs
 │   ├── check-version.test.mjs
 │   ├── install.test.mjs
+│   ├── run-metrics.test.mjs
 │   └── schema.test.mjs
 ├── .github/workflows/
 │   ├── apm-install.yml
@@ -74,7 +76,7 @@ openspec-lite/
   - It reads the latest `v*` tag. In an empty `git init` folder, it runs `apm install duongphuhiep/openspec-lite/package#^<major>.0.0 --target claude`.
   - It checks that `.claude/skills/` has the six `openspec-lite-*` skills, with `scripts/install.mjs` and `assets/plan-lite/` in `openspec-lite-schema/`. It checks that `apm_modules/duongphuhiep/openspec-lite/` holds only `package/`, and that `apm.lock.yaml` has `resolved_ref: <tag>`.
 - Before each release tag:
-  - Run scenarios 1–9 and 11–21 in `docs/test-scenarios.md` by hand (D69, D113, D115, D120, D122). Each scenario has steps and an expected result. The list (D99):
+  - Run scenarios 1–9 and 11–21 in `docs/test-scenarios.md` by hand (D69, D113, D115, D120, D122). Each scenario has steps and an expected result. Each report has the metrics table of "Metrics" in `docs/test-scenarios.md`, made with `node scripts/run-metrics.mjs` (D146). The list (D99):
     1. Fresh repo: propose installs the schema, creates the change, writes `plan.md`.
     2. Small request: propose offers Level 1 and stops on yes, with no files written.
     3. Tasks preview, then edit a Constraint: apply warns that the preview is stale.
@@ -103,6 +105,7 @@ openspec-lite/
 - `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, Facts, Decisions, and HTML comments do not change the hash. A stray `<!--` does not hide a heading. A comment inside a fence changes the hash. An absent and an empty `## Background` give the same hash. A changed Constraint or Background changes it. The shipped template hashes with no error. Text before the first `##` heading does not change the hash (D141). A heading with the wrong letter case exits with code 1. A plan with no comments keeps its v1 hash value. A missing required heading or a missing file exits with code 1.
 - `check-version.test.mjs`: runs the script on fixture folders. A match passes. A mismatch fails. A missing marker line fails. A missing skill fails. A skill with CRLF line endings passes. An indented marker passes. A second marker with a wrong number fails. `01` equals `1`. A root with no `package/` prints one `schema.yaml` failure (D106).
 - `install.test.mjs`: a first install copies. A lower repo version moves to a timestamped backup, then copies. An equal version prints `status: current`. A higher version exits with code 2. Missing shipped assets exit with code 3. A second backup with the same timestamp gets a `-2` suffix. A quoted higher version with a comment exits with code 2. A file system error exits with code 1, with an `install:` message and no stack trace (D96, D98, D102, D106).
+- `run-metrics.test.mjs`: the script sums the cost, tokens, turns, denials, and time of all turns. It counts a tool call that is twice in the log once. It lists the `.md` files under `openspec/`, except `openspec/schemas/`. A missing session log exits with code 1 (D146).
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It also tests the upgrade path (`instructions <artifact> --schema spec-driven` on a plan-lite change), an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs` (D108). It also tests the CLI behavior that the skills rely on: `state: blocked` with no `plan.md`, `root.path` from a subfolder and `root: null` above it, `skipped: true` on `instructions specs` with `skip_specs`, and the failure on a duplicate key in `.openspec.yaml` (D112). The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
 
 ## 3. Skill Rules

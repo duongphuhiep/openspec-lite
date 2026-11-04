@@ -478,3 +478,33 @@ Notes:
 - The flag also skips `~/.claude/settings.json`. On Bedrock, set `CLAUDE_CODE_USE_BEDROCK=1` in the shell.
 - `< /dev/null` stops the 3-second wait for stdin.
 - Permission denials in the JSON (`permission_denials`) mostly come from compound shell commands outside the allowlist. The agent then retries with allowed commands.
+
+## Metrics
+
+Each report has a metrics table, with one row for each scenario run and one total row for the group. The numbers are useful only in a comparison, for example the same scenario on the last tag and on the new commit.
+
+1. Save the JSON of each turn in its own file, in order, for example `> turn-1.json`, then `> turn-2.json` for the first `--resume` turn.
+2. After the last turn, run this command from the repo root. Use the temp folder of the scenario for `--dir`:
+
+   ```sh
+   node scripts/run-metrics.mjs --label <scenario> --dir <temp folder> turn-1.json turn-2.json
+   ```
+
+3. Copy the row to the report. Replace the two `?` with the pass count and the check count. Copy the file table if the scenario writes artifacts.
+
+```markdown
+| Scenario | Pass | Checks | Cost USD | Output tok | Thinking tok | Input tok | Cache read tok | Turns | Tools | Denials | User turns | Time s |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+```
+
+- **Pass**: the number of runs that pass, of all runs, for example `3/3`.
+- **Checks**: the number of expected results that pass in this run, for example `4/5`.
+- **Cost USD**: the sum of `total_cost_usd`. It is the best single cost number, because it weights each token type.
+- **Output tok** and **Thinking tok**: what the agent writes and thinks. A change to the skill text changes these first.
+- **Input tok**: `input_tokens` + `cache_creation_input_tokens`. **Cache read tok**: `cache_read_input_tokens`, which costs about 10% of new input. Do not add the two into one total, because the total hides the cost change.
+- **Turns**: the sum of `num_turns`, the steps of the agent loop.
+- **Tools**: the tool calls in the session log, counted once for each `tool_use` ID. The log can hold the same call twice.
+- **Denials**: the sum of `permission_denials`. They come from the allowlist, not from the skill.
+- **User turns**: the number of `--resume` turns, that is, the answers that the user gave.
+- **Time s**: the sum of `duration_ms`. It depends on the provider load, so it is the weakest number.
+- The file table gives the lines and words of each `.md` file under `openspec/`, except `openspec/schemas/`. It measures the size of `plan.md` against the size of the spec-driven artifacts.
