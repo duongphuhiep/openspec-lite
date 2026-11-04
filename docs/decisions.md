@@ -1665,7 +1665,7 @@ This revises D10 (template structure) and D72 (hash behavior). It requires a sch
 
 This extends D10 (template structure). It requires a schema `version` bump per D109.
 
-**Status**: D129 revises the fourth bullet: propose fills `## Background` when the prompt gives scope items or sources.
+**Status**: D129 revises the fourth bullet: propose fills `## Background` when the prompt gives scope items or sources. D148 replaces the one-sentence Goal with one or more related outcomes.
 
 **Rationale**: In a large change, the scope list and links to source documents had no home except `## Goal`. Goal then grew long and stopped being one outcome sentence. A dedicated section keeps Goal one sentence. The name `## Background` covers both scope items and source links. No section in `design.md` has this name. A scope change is the most common reason for a stale tasks preview, so `Background` is in `KEEP`. The section is optional, so `plan-hash.mjs` does not fail on an old `plan.md` with no `## Background`. Rejected: `## Context`, because `design.md` has a section with this name. Rejected: `## Scope` and `## References`, because each name covers only half the content.
 
@@ -2005,3 +2005,22 @@ This extends D144.
 This extends D116 and D119.
 
 **Rationale**: In the compare run of 2026-11-04, scenario 15 failed on v1.5.0. The agent turned the semicolon constraint into a scenario and dropped "because the users open it in a French Excel". It also named the non-goal with no reason. In the 92c77ff run, the reason survived only in a scenario title. No version of the skill said to keep the reason. In v1.5.0, step 4 grew by about 100 words, and the non-goal rule became its last sentence.
+
+---
+
+## D148: Goal Can Hold More Than One Related Outcome
+
+**Decision**:
+
+- `## Goal` holds one outcome by preference. It can hold more than one outcome if they are related.
+- Write one outcome per bullet, in one or two sentences each.
+- If an outcome can ship alone, it goes to a separate change. Propose suggests the separate change, and names it in the summary.
+- If the outcomes touch the same code, they stay in one change.
+- The done check asks "Is each outcome of the Goal met?". Archive searches the code for what each outcome names.
+- Propose derives the change name from the first outcome.
+- The Goal comment in `templates/plan.md` states these rules. The schema `version` goes to 4, per D109.
+- Scenario 22 checks the rules: related outcomes stay in one change, an outcome that can ship alone goes to a separate change, and archive checks each outcome.
+
+This replaces the "One sentence" rule of the Goal comment from D124, and the "keeps Goal one sentence" text in the rationale of D125.
+
+**Rationale**: No decision gave a reason for the one-sentence rule. The skills use Goal for the done check, the change name, and the archive search. Each use needs a clear outcome, not one sentence. A real change can add a feature and fix an old bug in the same code, so it has two outcomes. A change archives as one unit. If one outcome is blocked, the other outcome waits too, so an outcome that can ship alone goes to its own change. Scope items and source links still go to `## Background` (D125). The hash does not change, because the hash ignores HTML comments (D124).

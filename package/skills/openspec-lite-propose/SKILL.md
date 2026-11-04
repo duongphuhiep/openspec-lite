@@ -18,7 +18,7 @@ If the request is small (one obvious fix, no constraints or open questions worth
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare it with the shipped version:
 
-   Shipped schema version: 3
+   Shipped schema version: 4
 
    - The file is missing, its version is lower, or it has no readable `version` line: run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions. Otherwise, continue with the next step of this skill. Do not end your turn after `openspec-lite-schema` finishes. In your end summary, include its report: the status, the copied files, and the backup path.
    - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
@@ -26,11 +26,13 @@ If the request is small (one obvious fix, no constraints or open questions worth
 
 ## 3. Create the change
 
-1. Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal.
+1. Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal. If the goal has more than one outcome, use the first one.
 2. Run `openspec new change "<name>" --schema plan-lite`. If it fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`. If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped here. Ask: "Resume the change <name>?" On yes, go to step 3. In each other case, show the error and ask for another name.
 3. Set `skip_specs: true` in `openspec/changes/<name>/.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change.
 4. Run `openspec instructions plan --change "<name>" --json`. Write `openspec/changes/<name>/plan.md` from its `template` field.
 5. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment. Do not invent non-goals, constraints, facts, or decisions.
+
+`## Goal` holds one outcome by preference. If the request has related outcomes, write one outcome per bullet, in one or two sentences each. If the outcomes touch the same code, keep them in this change. If an outcome can ship alone, do not write it in `plan.md`. Suggest a separate change for it, and name it in the summary.
 
 A decision entry is `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative.
 

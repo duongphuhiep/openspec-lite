@@ -45,7 +45,7 @@ Externally observable behavior that a client or another team depends on. Promoti
 _Avoid_: Interface, API (for this meaning)
 
 **Done check**:
-The three questions at the end of apply and the start of archive: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty?
+The three questions at the end of apply and the start of archive: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 _Avoid_: Done checklist, definition of done
 
 **Upgrade**:

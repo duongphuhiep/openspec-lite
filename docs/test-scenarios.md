@@ -1,6 +1,6 @@
 # Test Scenarios
 
-Run scenarios 1–9 and 11–21 by hand before each release tag (D69). Number 10 is not used. The `apm-install` CI workflow does the real APM install from the tag (D130). The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
+Run scenarios 1–9 and 11–22 by hand before each release tag (D69). Number 10 is not used. The `apm-install` CI workflow does the real APM install from the tag (D130). The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
 
 Setup for each scenario, unless it says otherwise:
 
@@ -448,6 +448,44 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 2. Run `openspec-lite-archive`.
 
 **Expected**: the agent does not draft the decision again. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
+
+## 22. Goal with more than one outcome
+
+This scenario checks the rules for a Goal with more than one outcome (D148).
+
+### 22a. Related outcomes stay in one change
+
+**Steps**: Ask: "openspec-lite-propose: add a CSV export to the report page, and fix the old bug where the report page shows dates in UTC instead of the user time zone. The CSV export uses the same date code."
+
+**Expected**:
+
+- The agent creates one change. Its name comes from the first outcome, for example `add-csv-export`.
+- `## Goal` has two bullets, one per outcome. Each bullet has one or two sentences.
+- The Goal comment of the template stays.
+- The summary suggests no separate change.
+
+### 22b. An outcome that can ship alone goes to a separate change
+
+**Steps**: Ask: "openspec-lite-propose: add a CSV export to the report page, and upgrade the logging library in the billing service."
+
+**Expected**:
+
+- The agent creates one change for the CSV export.
+- `## Goal` names only the CSV export. `plan.md` does not mention the logging library.
+- The summary suggests a separate change for the logging library upgrade, and names it.
+
+### 22c. Archive checks each outcome
+
+**Steps**:
+
+1. Create a plan-lite change `csv-export-and-dates`. Its `## Goal` has two bullets: "Add a CSV export to the report page." and "Show the report dates in the user time zone."
+2. Add a CSV export to the code. Do not change the date code.
+3. Run `openspec-lite-archive`.
+
+**Expected**:
+
+- The done check says that the date outcome is not met. It names that outcome.
+- The agent asks: "Archive anyway?" Answer no. The agent stops, and writes no spec, no ADR, and no archive folder.
 
 ---
 

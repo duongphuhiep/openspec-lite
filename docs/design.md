@@ -76,7 +76,7 @@ openspec-lite/
   - It reads the latest `v*` tag. In an empty `git init` folder, it runs `apm install duongphuhiep/openspec-lite/package#^<major>.0.0 --target claude`.
   - It checks that `.claude/skills/` has the six `openspec-lite-*` skills, with `scripts/install.mjs` and `assets/plan-lite/` in `openspec-lite-schema/`. It checks that `apm_modules/duongphuhiep/openspec-lite/` holds only `package/`, and that `apm.lock.yaml` has `resolved_ref: <tag>`.
 - Before each release tag:
-  - Run scenarios 1–9 and 11–21 in `docs/test-scenarios.md` by hand (D69, D113, D115, D120, D122). Each scenario has steps and an expected result. Each report has the metrics table of "Metrics" in `docs/test-scenarios.md`, made with `node scripts/run-metrics.mjs` (D146). The list (D99):
+  - Run scenarios 1–9 and 11–22 in `docs/test-scenarios.md` by hand (D69, D113, D115, D120, D122). Each scenario has steps and an expected result. Each report has the metrics table of "Metrics" in `docs/test-scenarios.md`, made with `node scripts/run-metrics.mjs` (D146). The list (D99):
     1. Fresh repo: propose installs the schema, creates the change, writes `plan.md`.
     2. Small request: propose offers Level 1 and stops on yes, with no files written.
     3. Tasks preview, then edit a Constraint: apply warns that the preview is stale.
@@ -98,6 +98,7 @@ openspec-lite/
     19. tasks-preview and upgrade after an upgrade: refuse, or ask to resume when `plan.md` exists (D107, D108).
     20. Upgrade lists the destination of each `plan.md` section and asks before it prunes. The fact goes to `design.md`, and no artifact holds a `plan.md` ID (D135, D142). Archive drafts an item that the user picks from the skipped list. Upgrade with no requirement puts `skip_specs: true` back (D108, D120).
     21. Archive with a decision that replaces an `Accepted` ADR: the new ADR has `Supersedes:`, and only the `Status:` line of the old ADR changes. A rerun fixes an old ADR that an earlier run did not mark (D122).
+    22. Goal with more than one outcome: (a) propose keeps related outcomes as bullets in one change; (b) propose suggests a separate change for an outcome that can ship alone; (c) archive warns when one outcome is not met (D148).
 
 ## 2a. Tests (D84)
 
@@ -196,10 +197,11 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 ### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80)
 
 - If the request is small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop.
-- Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal.
+- Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal. If the goal has more than one outcome, use the first one.
 - Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
 - Set `skip_specs: true` in `.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change (D112).
 - Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Keep only the current decisions, and no facts with statistics that soon go out of date (D136). Remove each fact that justifies no current decision or constraint (D140).
+- `## Goal` holds one outcome by preference. Related outcomes are OK, one per bullet, in one or two sentences each. Outcomes that touch the same code stay in one change. If an outcome can ship alone, propose suggests a separate change for it, and names it in the summary (D148).
 - If an upgrade signal is present (see §5), suggest an upgrade.
 - In the summary, show the change name.
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
@@ -252,7 +254,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 ### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122)
 
-1. Ask the done check (see §4). To find the code, search for what the Goal names, for example with `git grep`. Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
+1. Ask the done check (see §4). To find the code, search for what each outcome of the Goal names, for example with `git grep`. Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
 2. Read `plan.md`. Do not read `tasks-preview.md` for promotion.
 3. Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
@@ -277,7 +279,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 ```yaml
 name: plan-lite
-version: 3
+version: 4
 openspec-version: ">=1.9.0 <2.0.0"
 description: Lightweight plan — goal, constraints, facts, decisions. No tasks. Upgradeable to spec-driven.
 artifacts:
@@ -310,7 +312,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - Record the answer to each open question in `## Decisions`, as a `### Decision D<n>:` entry, and remove the question.
 - Do not edit tasks-preview.md.
 - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
-- End with the done check: Is the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
+- End with the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
 - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 ```
 
@@ -332,7 +334,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 <!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item a number higher than each ID of its kind in this file. Gaps and any order are OK. Use the IDs only in this file and in tasks-preview.md. Outside them, refer to an item by its title, or a short form of its text, with the change name. -->
 
 ## Goal
-<!-- One sentence: the outcome this change delivers. -->
+<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. If an outcome can ship alone, make it a separate change. If the outcomes touch the same code, keep them together. -->
 
 ## Background
 <!-- Optional. List scope items and link to source documents that set the context. -->
