@@ -459,6 +459,7 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 
 **Expected**:
 
+- If the agent asks the Level 1 question, answer no.
 - The agent creates one change. Its name comes from the first outcome, for example `add-csv-export`.
 - `## Goal` has two bullets, one per outcome. Each bullet has one or two sentences.
 - The Goal comment of the template stays.
@@ -470,7 +471,7 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 
 **Expected**:
 
-- Before it creates a change, the agent asks if it can leave the logging library upgrade out of this change. It does not ask about the CSV export. Answer yes.
+- Before it creates a change, the agent asks if it can leave the logging library upgrade out of this change. It does not ask about the CSV export. Answer yes. If the agent then asks the Level 1 question, answer no.
 - The agent creates one change for the CSV export. Its name comes from the CSV export.
 - `## Goal` names only the CSV export. `plan.md` does not mention the logging library.
 - The summary names the logging library upgrade, and tells the user to run `openspec-lite-propose` for it.

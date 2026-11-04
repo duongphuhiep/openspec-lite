@@ -980,7 +980,7 @@ This extends D62.
 
 This extends D61.
 
-**Status**: D148: if the Goal has more than one outcome, the name comes from the first one.
+**Status**: D148: the name comes from the main outcome, the first outcome of the request.
 
 **Rationale**: This matches the stock propose skill. The user can rename the folder.
 
@@ -2018,13 +2018,13 @@ This extends D116 and D119.
 
 - `## Goal` holds one outcome by preference. It can hold more than one outcome if they are related.
 - Write one outcome per bullet, in one or two sentences each.
-- Propose asks the split question before the Level 1 question. The Level 1 question then applies to the outcomes that stay.
+- Propose asks the split question before the Level 1 question. The Level 1 question then applies to the outcomes that stay. On a "yes" to the Level 1 question, propose still names each outcome that the user moved out.
 - The first outcome of the request is the main outcome. If another outcome touches the same code as the main outcome, it stays in this change, with no question. This check comes first.
 - Otherwise, if the outcome can ship alone, propose asks: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" It asks before it picks the change name. On yes, the outcome stays out of this change. The summary names it, and tells the user to run `openspec-lite-propose` for it. On no, it stays as an outcome.
 - The template comment says to ask the user, not to split with no question.
 - A task in `tasks-preview.md` is a "verifiable result", not a "verifiable outcome", because "Outcome" now has one meaning in `GLOSSARY.md`.
 - The done check asks "Is each outcome of the Goal met?". Archive searches the code for what each outcome names, and names each outcome that is not met.
-- Propose derives the change name from the first outcome.
+- Propose derives the change name from the main outcome.
 - Upgrade gives each outcome its own item in the What Changes section of `proposal.md`.
 - `GLOSSARY.md` defines "Outcome".
 - The Goal comment in `templates/plan.md` states these rules. The schema `version` goes to 4, per D109.
