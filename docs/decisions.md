@@ -745,7 +745,7 @@ This revises the `NNNN-<slug>.md` name in D8 and D9.
 
 **Rationale**: The CLI never reports a plan-lite change as done, and archive does not check (`docs/facts.md`). Open questions that are still open are the real "not done" marker.
 
-**Status**: D73 moves the checklist into `apply.instruction`. D77 adds "Archive anyway?" to archive. D126 says that an HTML comment in `## Open Questions` does not count.
+**Status**: D73 moves the checklist into `apply.instruction`. D77 adds "Archive anyway?" to archive. D126 says that an HTML comment in `## Open Questions` does not count. D148 asks if each outcome of the Goal is met.
 
 ---
 
@@ -979,6 +979,8 @@ This extends D62.
 **Decision**: Use the name from the prompt, if it has one. Otherwise, propose derives a kebab-case name of 2 to 5 words from the goal and shows it in the summary.
 
 This extends D61.
+
+**Status**: D148: if the Goal has more than one outcome, the name comes from the first one.
 
 **Rationale**: This matches the stock propose skill. The user can rename the folder.
 
@@ -1610,6 +1612,8 @@ This revises D62 and D97 for upgrade, and D18 for archive.
 
 This extends D111, D93, D114, D105, and D120.
 
+**Status**: D148: the archive search looks for what each outcome of the Goal names.
+
 **Rationale**: The v1.2.0 scenario run found five gaps (`docs/facts.md`). In scenario 11, the agent ran `openspec new change` at the git root after the user confirmed `svc/`, and the command failed. In scenario 9, propose ran the schema skill but did not pass on its list of copied files. In archive runs, `git ls-files | head -30` showed only `.claude/` and `apm_modules/` files, so the agent said that the repo had no source code. In scenarios 5 and 13a, archive wrote the ADR before `validate`, once in the same command. In scenario 20a, upgrade asked the prune question with no list. A stricter root wording was tested and reverted: "start every command with `cd <absolute root path> && `". It failed 2 of 2 scenario 11 runs: the agent added the prefix to one command only, and skipped the confirm question.
 
 ---
@@ -2014,6 +2018,7 @@ This extends D116 and D119.
 
 - `## Goal` holds one outcome by preference. It can hold more than one outcome if they are related.
 - Write one outcome per bullet, in one or two sentences each.
+- Propose asks the split question before the Level 1 question. The Level 1 question then applies to the outcomes that stay.
 - The first outcome of the request is the main outcome. If another outcome touches the same code as the main outcome, it stays in this change, with no question. This check comes first.
 - Otherwise, if the outcome can ship alone, propose asks: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" It asks before it picks the change name. On yes, the outcome stays out of this change. The summary names it, and tells the user to run `openspec-lite-propose` for it. On no, it stays as an outcome.
 - The template comment says to ask the user, not to split with no question.

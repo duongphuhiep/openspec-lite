@@ -7,14 +7,14 @@ description: Create a plan-lite change with openspec-lite. It writes a lightweig
 
 Create a plan-lite change. Do not write code.
 
-## 1. Level 1 and split questions
-
-If the request is small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop. Write no files.
+## 1. Split and Level 1 questions
 
 If the request has more than one outcome, the first outcome is the main outcome. Do these checks for each other outcome:
 
 - If it touches the same code as the main outcome, keep it in this change. Do not ask.
 - Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it as an outcome of this change.
+
+If the outcomes that stay are small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop. Write no files.
 
 ## 2. Schema check
 

@@ -130,7 +130,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 **Skill chaining** (D57): To run another skill, invoke it if the harness can. If the harness cannot, tell the user which skill to run, and stop.
 
-**Schema check** (D44, D56, D81): Do this after change selection and the change schema guard, before any other step. propose has no change yet. It first asks the Level 1 question and the split question (see openspec-lite-propose), then starts here (D93, D148).
+**Schema check** (D44, D56, D81): Do this after change selection and the change schema guard, before any other step. propose has no change yet. It first asks the split question and the Level 1 question (see openspec-lite-propose), then starts here (D93, D148).
 
 1. Read `version` from `openspec/schemas/plan-lite/schema.yaml` in the target repo.
 2. Compare it with the shipped version. Each workflow skill holds the line `Shipped schema version: <n>` (D87). The number must equal `version` in `assets/plan-lite/schema.yaml` (D66).
@@ -196,8 +196,8 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 ### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80, D148)
 
-- If the request is small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop.
 - If the request has more than one outcome, the first outcome is the main outcome. If another outcome touches the same code as the main outcome, keep it, with no question. Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it (D148).
+- If the outcomes that stay are small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop.
 - Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the Goal. If the Goal has more than one outcome, use the first one.
 - Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
 - Set `skip_specs: true` in `.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change (D112).
@@ -335,7 +335,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 <!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item a number higher than each ID of its kind in this file. Gaps and any order are OK. Use the IDs only in this file and in tasks-preview.md. Outside them, refer to an item by its title, or a short form of its text, with the change name. -->
 
 ## Goal
-<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. If the outcomes touch the same code, keep them together. If an outcome can ship alone, ask the user to make it a separate change. -->
+<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. If the outcomes touch the same code, keep them together. Otherwise, if an outcome can ship alone, ask the user to make it a separate change. -->
 
 ## Background
 <!-- Optional. List scope items and link to source documents that set the context. -->

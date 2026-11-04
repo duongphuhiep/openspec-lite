@@ -46,7 +46,7 @@ _Avoid_: Interface, API (for this meaning)
 
 **Outcome**:
 A result that a change delivers. `## Goal` in `plan.md` holds one outcome by preference, or more than one related outcome, one per bullet. The done check asks if each outcome is met.
-_Avoid_: Objective, deliverable
+_Avoid_: Objective
 
 **Done check**:
 The three questions at the end of apply and the start of archive: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty?
