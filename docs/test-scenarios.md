@@ -49,6 +49,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - The agent implements from `plan.md`, and records deviations as `### Decision D<n>:` entries.
 - It does not edit `tasks-preview.md`.
+- No code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
 - It ends with the done check (Goal, Constraints, Open Questions).
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
 

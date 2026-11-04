@@ -1,4 +1,4 @@
-<!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item an ID that is not used yet. Gaps and any order are OK. -->
+<!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item an ID that is not used yet. Gaps and any order are OK. Use the IDs only in this file and in tasks-preview.md. Outside them, refer to an item by its title, or a short form of its text, with the change name. -->
 
 ## Goal
 <!-- One sentence: the outcome this change delivers. -->

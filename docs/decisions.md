@@ -1863,6 +1863,8 @@ This extends D134, D135, and D136.
 
 This extends D134, D135, and D137.
 
+**Status**: D142 widens the first bullet to each text outside `plan.md` and `tasks-preview.md`. It names the item by its title, with the change name.
+
 **Rationale**: An ID is unique only in its `plan.md`. After archive or prune, a spec or an ADR that says "D3" points to nothing, or to a decision of another log. A change that started with schema version 2 has constraints with no ID. If apply adds an ID to a constraint, the plan hash changes, and the preview becomes stale with no real change. A fact that is not promoted is not lost: it stays in the archived `plan.md` in `openspec/changes/archive/`.
 
 ---
@@ -1908,3 +1910,20 @@ This extends D135, D136, and D138.
 This extends D140.
 
 **Rationale**: Propose can also supersede a decision when the user edits the plan, so the same orphan fact can stay. Without a test, a change to `plan-hash.mjs` could hash the top comment, and each preview would become stale after a template update.
+
+---
+
+## D142: The plan.md IDs Stay in plan.md and tasks-preview.md
+
+**Decision**:
+
+- The IDs `C<n>`, `OQ<n>`, `F<n>`, and `D<n>` appear only in `plan.md` and `tasks-preview.md`. The preview extends `plan.md`, so it can refer to the IDs.
+- No other text holds them. This includes specs, ADRs, the upgrade artifacts, code comments, commit messages, pull requests, and tickets such as Jira issues.
+- To refer to an item from outside these two files, use the item title, or a short form of its text, with the change name. Example: "the decision 'Count failures per account' of the change `lockout`".
+- When upgrade seeds `tasks.md` from the preview, it replaces each ID with the item title.
+- The rule is in the top comment of the template, in `apply.instruction`, and in the archive and upgrade skills.
+- `openspec-lite-apply` does not repeat the rule. It follows `apply.instruction`, which already holds it, and D64 keeps one copy of the apply rules.
+
+This revises D138.
+
+**Rationale**: An ID is unique only in one `plan.md`, and archive or upgrade can remove the file. Outside it, "D3" points to nothing, or to a decision of another log, such as `docs/decisions.md` or an ADR folder. A title with the change name stays clear after the plan is gone. The preview lives and dies with `plan.md`, so an ID in it stays correct. `tasks.md` outlives `plan.md` after an upgrade, so it gets titles.

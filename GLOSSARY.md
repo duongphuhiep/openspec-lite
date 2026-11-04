@@ -21,7 +21,7 @@ An item of `## Facts` in a plan. It is a non-obvious fact, found during explorat
 _Avoid_: Finding, note
 
 **Item ID**:
-The short ID of a constraint, open question, fact, or decision in a plan: `C<n>`, `OQ<n>`, `F<n>`, or `D<n>`. It is unique only in its plan.
+The short ID of a constraint, open question, fact, or decision in a plan: `C<n>`, `OQ<n>`, `F<n>`, or `D<n>`. It is unique only in its plan. It appears only in the plan and in its tasks preview. Elsewhere, an item is named by its title, or a short form of its text, with the change name.
 _Avoid_: Number, key
 
 **Tasks preview**:
