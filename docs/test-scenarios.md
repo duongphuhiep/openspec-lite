@@ -49,7 +49,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - The agent implements from `plan.md`, and records deviations as `### Decision D<n>:` entries.
 - It does not edit `tasks-preview.md`.
-- No code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
+- No code, test name, test string, code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
 - It ends with the done check (Goal, Constraints, Open Questions).
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
 
@@ -62,7 +62,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected**:
 
-- `## Decisions` has the sliding window decision, with an ID that is not used yet in the file. The fixed window decision is removed, or updated to the sliding window (D136).
+- `## Decisions` has the sliding window decision, with an ID number higher than each other decision ID in the file. The fixed window decision is removed, or updated to the sliding window (D136).
 - If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140).
 - The two constraints still have no ID (D138).
 
@@ -395,7 +395,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - After step 2, `plan.md` is the same as in step 1.
 - At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
 - `proposal.md` holds the two scope items of `## Background`.
-- `design.md` → `## Context` holds the fact (D135). `design.md` holds no `plan.md` ID such as `C1` or `D1` (D142).
+- `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
 - `tasks.md` holds no `plan.md` ID. Each task names the item by its title (D142).
 - After step 3, `plan.md` has only `## Open Questions` with the open question. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
 

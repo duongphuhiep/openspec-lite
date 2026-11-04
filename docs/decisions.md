@@ -1801,7 +1801,7 @@ This extends D120 and D132.
 
 This revises the entry format of D92.
 
-**Status**: D137 writes the heading as `### Decision D<n>: <title>`. D140 moves the ID comment to the top of the template.
+**Status**: D137 writes the heading as `### Decision D<n>: <title>`. D140 moves the ID comment to the top of the template. D145: a new item gets a number higher than each ID of its kind in the file.
 
 **Rationale**: A reviewer can point to one item with a short ID, for example "D3 relies on F2" or "D3 breaks C1". A unique ID in the file is sufficient for this. Strict numbers would make the agent renumber items after each removal, which adds noise to the diff.
 
@@ -1879,7 +1879,7 @@ This extends D134, D135, and D137.
 
 This extends D137 and D138.
 
-**Status**: D144 narrows the third bullet to the expected results about specs and ADRs.
+**Status**: D143 narrows the third bullet to the expected results about specs and ADRs.
 
 **Rationale**: Without the format, apply can write an answer with no ID. Without the reason, a skipped fact looks like a lost fact.
 
@@ -1932,7 +1932,7 @@ This revises D138.
 
 ---
 
-## D144: Fixes From Review Rounds 1 and 2 on c488067
+## D143: Fixes From Review Rounds 1 and 2 on c488067
 
 **Decision**:
 
@@ -1945,3 +1945,20 @@ This revises D138.
 This extends D138, D139, and D142.
 
 **Rationale**: The agent writes the artifacts in order, so a rule in step 2.3 comes too late for `proposal.md` and the specs. A version 2 plan has `### Decision:` entries, and the pattern `### Decision D<n>:` does not match them. "No drafted decision" was not clear for a decision that becomes a requirement with no ADR.
+
+---
+
+## D145: Fixes From Review Round 3 on 51159d0
+
+**Decision**:
+
+- A new item gets a number higher than each ID of its kind in `plan.md`. This replaces "an ID that is not used yet".
+- The `## Decisions` guidance comment also says to remove each fact that justifies no current decision or constraint (D140).
+- The upgrade skill names an item by its title, with the change name, as the other texts do (D142).
+- The README says that the items have IDs, and that the IDs stay in `plan.md` and `tasks-preview.md`.
+- Scenario 4 checks code, test names, and test strings for leaked IDs. Scenario 20a also checks `proposal.md` and `specs/`.
+- The fixes of rounds 1 and 2 are D143. The D143 that the apply skill repeated the ID rule was removed before a commit, so its number is free.
+
+This extends D134, D140, and D142.
+
+**Rationale**: An agent does not see the IDs of removed items, so "not used yet" lets it reuse an ID. Then a preview that cites the old ID points to a new item, with no stale warning. "Higher than each ID of its kind" is a best-effort rule: it reuses an ID only when the item with the highest number was removed. A test often maps to a constraint, so an agent can put `C1` in a test name.

@@ -32,6 +32,8 @@ openspec-lite targets medium changes. The workflow is `plan → implement (→ d
 - The non-obvious facts that you find during exploration, when they justify a decision or a constraint.
 - The current decisions: yours, and the decisions that the AI makes during implementation. When a new decision replaces an old one, the AI removes or updates the old one. `plan.md` is not a history.
 
+Each constraint, open question, fact, and decision has a short ID, such as `C1` or `D2`. The IDs appear only in `plan.md` and `tasks-preview.md`. Specs, ADRs, code comments, and commit messages name an item by its title instead.
+
 `plan.md` is a compact form of `proposal.md`, `design.md`, and `specs/`. It has no overlap between sections, so it is easier to review.
 
 At archive time, the AI separates the items that last: requirements and contracts go to specs, and decisions go to ADRs with the facts that justify them.

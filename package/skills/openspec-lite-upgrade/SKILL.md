@@ -32,7 +32,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 1. Remove the `skip_specs: true` line from `<dir>/.openspec.yaml`. While it is set, the CLI forbids spec files.
 2. Before you write an artifact, find each open question in `plan.md` that changes the specs, the approach, or the tasks. Ask the user to answer it now, as the `design` instruction says. If the user cannot answer now, keep the question in `plan.md`.
 
-   Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact. To refer to an item, use its title, or a short form of its text.
+   Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact. To refer to an item, use its title, or a short form of its text, with the change name.
 
    Write the four artifacts in this order: `proposal`, `specs`, `design`, `tasks`. For each one, run `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. Run it as one plain command. Do not put it in a loop or a chain, and do not pipe it to another command. Read the full JSON output. Do not write the artifact without its `template` and `instruction`. Use its `template` and follow its `instruction`. If an artifact already exists from an earlier run, keep it and go to the next one. If a kept artifact looks incomplete, for example a template section that is still empty, tell the user and offer to complete it.
    1. `proposal.md`: from the Goal and the scope in `plan.md`. If `## Background` exists, use its scope items and source links for the proposal context.
