@@ -120,7 +120,7 @@ openspec-lite has no explore skill. You can use stock `/opsx:explore`, but you u
 
 - It is a reference, not a contract. Apply can change the approach, for example to make the code simpler.
 - It uses the OpenSpec `tasks.md` layout, with plain bullets instead of checkboxes. Tasks are in dependency order. Each task has verification criteria. Tests and docs go with the related code.
-- Each task is a meaningful, verifiable outcome. Do not split the work into very small subtasks.
+- Each task is a meaningful, verifiable result. Do not split the work into very small subtasks.
 - Do not edit it by hand. Put corrections in `plan.md`. Then run `openspec-lite-tasks-preview` again. It overwrites the old file.
 
 During apply:

@@ -2014,8 +2014,10 @@ This extends D116 and D119.
 
 - `## Goal` holds one outcome by preference. It can hold more than one outcome if they are related.
 - Write one outcome per bullet, in one or two sentences each.
-- If an outcome can ship alone, propose asks: "<outcome> can ship alone. Make it a separate change?" It asks before it picks the change name. On yes, the outcome stays out of this change, and the summary names it. On no, it stays as an outcome.
-- If the outcomes touch the same code, they stay in one change, with no question.
+- The first outcome of the request is the main outcome. If another outcome touches the same code as the main outcome, it stays in this change, with no question. This check comes first.
+- Otherwise, if the outcome can ship alone, propose asks: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" It asks before it picks the change name. On yes, the outcome stays out of this change. The summary names it, and tells the user to run `openspec-lite-propose` for it. On no, it stays as an outcome.
+- The template comment says to ask the user, not to split with no question.
+- A task in `tasks-preview.md` is a "verifiable result", not a "verifiable outcome", because "Outcome" now has one meaning in `GLOSSARY.md`.
 - The done check asks "Is each outcome of the Goal met?". Archive searches the code for what each outcome names, and names each outcome that is not met.
 - Propose derives the change name from the first outcome.
 - Upgrade gives each outcome its own item in the What Changes section of `proposal.md`.

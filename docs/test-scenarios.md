@@ -470,10 +470,10 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 
 **Expected**:
 
-- Before it creates a change, the agent asks if the logging library upgrade can be a separate change. Answer yes.
+- Before it creates a change, the agent asks if it can leave the logging library upgrade out of this change. It does not ask about the CSV export. Answer yes.
 - The agent creates one change for the CSV export. Its name comes from the CSV export.
 - `## Goal` names only the CSV export. `plan.md` does not mention the logging library.
-- The summary names the logging library upgrade as a separate change.
+- The summary names the logging library upgrade, and tells the user to run `openspec-lite-propose` for it.
 
 ### 22c. Archive checks each outcome
 

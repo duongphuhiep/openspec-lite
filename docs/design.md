@@ -98,7 +98,7 @@ openspec-lite/
     19. tasks-preview and upgrade after an upgrade: refuse, or ask to resume when `plan.md` exists (D107, D108).
     20. Upgrade lists the destination of each `plan.md` section and asks before it prunes. The fact goes to `design.md`, and no artifact holds a `plan.md` ID (D135, D142). Archive drafts an item that the user picks from the skipped list. Upgrade with no requirement puts `skip_specs: true` back (D108, D120).
     21. Archive with a decision that replaces an `Accepted` ADR: the new ADR has `Supersedes:`, and only the `Status:` line of the old ADR changes. A rerun fixes an old ADR that an earlier run did not mark (D122).
-    22. Goal with more than one outcome: (a) propose keeps related outcomes as bullets in one change; (b) propose suggests a separate change for an outcome that can ship alone; (c) archive warns when one outcome is not met (D148).
+    22. Goal with more than one outcome: (a) propose keeps related outcomes as bullets in one change; (b) propose asks before it leaves out an outcome that can ship alone; (c) archive warns when one outcome is not met (D148).
 
 ## 2a. Tests (D84)
 
@@ -197,14 +197,14 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 ### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80, D148)
 
 - If the request is small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop.
-- If an outcome of the request can ship alone, ask: "<outcome> can ship alone. Make it a separate change?" On yes, leave it out of this change. On no, keep it. Outcomes that touch the same code stay in one change, with no question (D148).
+- If the request has more than one outcome, the first outcome is the main outcome. If another outcome touches the same code as the main outcome, keep it, with no question. Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it (D148).
 - Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the Goal. If the Goal has more than one outcome, use the first one.
 - Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
 - Set `skip_specs: true` in `.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change (D112).
 - Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Keep only the current decisions, and no facts with statistics that soon go out of date (D136). Remove each fact that justifies no current decision or constraint (D140).
 - `## Goal` holds one outcome by preference. If the change has more than one outcome, write one outcome per bullet, in one or two sentences each (D148).
 - If an upgrade signal is present (see §5), suggest an upgrade.
-- In the summary, show the change name. Name each outcome that the user moved to a separate change (D148).
+- In the summary, show the change name. Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it (D148).
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
 - Do not write code.
 
@@ -220,7 +220,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
   ## 1. <group title>
 
-  - 1.1 <task: a verifiable outcome>
+  - 1.1 <task: a verifiable result>
     - Verify: <criteria>
     - Files: <paths, optional>
 
@@ -229,7 +229,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 - Use plain bullets. Do not use `- [ ]` checkboxes.
 - Order tasks by dependency. Give each task verification criteria. Put tests and docs with the related code.
-- Each task is a meaningful, verifiable outcome. Do not split into very small subtasks.
+- Each task is a meaningful, verifiable result. Do not split into very small subtasks.
 - Get `<hash>` with the plan hash command.
 - Overwrite the old file.
 
@@ -335,7 +335,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 <!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item a number higher than each ID of its kind in this file. Gaps and any order are OK. Use the IDs only in this file and in tasks-preview.md. Outside them, refer to an item by its title, or a short form of its text, with the change name. -->
 
 ## Goal
-<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. If an outcome can ship alone, make it a separate change. If the outcomes touch the same code, keep them together. -->
+<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. If the outcomes touch the same code, keep them together. If an outcome can ship alone, ask the user to make it a separate change. -->
 
 ## Background
 <!-- Optional. List scope items and link to source documents that set the context. -->

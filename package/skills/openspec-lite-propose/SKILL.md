@@ -11,7 +11,10 @@ Create a plan-lite change. Do not write code.
 
 If the request is small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, stop. Write no files.
 
-If an outcome of the request can ship alone, ask: "<outcome> can ship alone. Make it a separate change?" On yes, leave it out of this change. On no, keep it as an outcome of this change. Outcomes that touch the same code stay in one change, with no question.
+If the request has more than one outcome, the first outcome is the main outcome. Do these checks for each other outcome:
+
+- If it touches the same code as the main outcome, keep it in this change. Do not ask.
+- Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it as an outcome of this change.
 
 ## 2. Schema check
 
@@ -53,5 +56,5 @@ Suggest `openspec-lite-upgrade` if one of these is true:
 
 ## 5. End
 
-1. In the summary, show the change name and the path of `plan.md`. Name each outcome that the user moved to a separate change.
+1. In the summary, show the change name and the path of `plan.md`. Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it.
 2. Ask: "Do you want a tasks preview?" On yes, run the `openspec-lite-tasks-preview` skill. If you cannot invoke a skill, tell the user to run it.

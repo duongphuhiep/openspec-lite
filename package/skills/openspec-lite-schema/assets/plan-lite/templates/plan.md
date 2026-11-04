@@ -1,7 +1,7 @@
 <!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item a number higher than each ID of its kind in this file. Gaps and any order are OK. Use the IDs only in this file and in tasks-preview.md. Outside them, refer to an item by its title, or a short form of its text, with the change name. -->
 
 ## Goal
-<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. If an outcome can ship alone, make it a separate change. If the outcomes touch the same code, keep them together. -->
+<!-- The outcome(s) this change delivers. Prefer one outcome per change. More than one related outcome is OK: one per bullet, one or two sentences each. If the outcomes touch the same code, keep them together. If an outcome can ship alone, ask the user to make it a separate change. -->
 
 ## Background
 <!-- Optional. List scope items and link to source documents that set the context. -->

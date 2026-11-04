@@ -41,7 +41,7 @@ Write `tasks-preview.md` for a plan-lite change. Do not write code.
 
    ## 1. <group title>
 
-   - 1.1 <task: a verifiable outcome>
+   - 1.1 <task: a verifiable result>
      - Verify: <criteria>
      - Files: <paths, optional>
 
@@ -54,7 +54,7 @@ Rules:
 - Order the tasks by dependency.
 - Give each task verification criteria.
 - Put tests and docs in the same task as the related code.
-- Each task is a meaningful, verifiable outcome. Do not split the work into very small subtasks. Do not specify details that the coding agent can find itself.
+- Each task is a meaningful, verifiable result. Do not split the work into very small subtasks. Do not specify details that the coding agent can find itself.
 - Pseudo-diffs are permitted.
 
 ## 3. End
