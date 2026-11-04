@@ -215,6 +215,9 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
 
    ## Open Questions
 
+   ## Facts
+   - F1: In the login logs, brute-force attacks on one account come from many IP addresses.
+
    ## Decisions
    ### Decision D1: Count failures per account, not per IP
    Chose per account because attackers rotate IP addresses. Rejected per IP because it also locks out users behind one office NAT.
@@ -228,6 +231,7 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
 - Each new rule has at least one `#### Scenario:`.
 - The delta form is free. "A locked account SHALL NOT log in, also with a valid password" can be a MODIFIED "Password login" (with its full text) or an ADDED requirement. Both pass if the main spec below ends up correct.
 - The decision becomes an ADR with `Change: lockout`.
+- The `## Context` of the ADR includes fact F1 (D135).
 - After the archive, `openspec/specs/auth/spec.md` has:
   - the "Password login" requirement, with its first scenario and the new locked-account rule;
   - the new lockout requirement.

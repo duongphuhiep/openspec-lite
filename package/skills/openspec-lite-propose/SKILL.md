@@ -32,7 +32,7 @@ If the request is small (one obvious fix, no constraints or open questions worth
 4. Run `openspec instructions plan --change "<name>" --json`. Write `openspec/changes/<name>/plan.md` from its `template` field.
 5. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment. Do not invent non-goals, constraints, facts, or decisions.
 
-A decision entry is `### Decision D1: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative.
+A decision entry is `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative.
 
 `## Decisions` holds only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision.
 

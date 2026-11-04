@@ -137,7 +137,7 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: The Decisions section is the key differentiator from a throwaway plan.md. Without it, the file has no long-term value and nothing worth promoting at archive time.
 
-**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D136: the section is no longer append-only. It holds only the current decisions.
+**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D134 adds IDs to constraints, open questions, and decisions. D135 adds `## Facts`. D136: the section is no longer append-only. It holds only the current decisions.
 
 ---
 
@@ -1139,6 +1139,8 @@ This extends D72.
 
 This revises D10.
 
+**Status**: D134 adds an ID to the heading: `### Decision D<n>: <title>`.
+
 **Rationale**: Apply records each answer to an open question as a decision (D73). Many answers have no rejected alternative. One form with an optional part stays simple for the agent and for archive.
 
 ---
@@ -1793,13 +1795,13 @@ This extends D120 and D132.
 
 **Decision**:
 
-- In `plan.md`, each constraint is `- C1: <rule>`, each open question is `- OQ1: <question>`, and each decision is `### Decision D1: <title>`.
+- In `plan.md`, each constraint is `- C1: <rule>`, each open question is `- OQ1: <question>`, and each decision is `### Decision D1: <title>`. An agent gives each new item an ID that is not used yet in the file.
 - An ID is unique in its `plan.md` only. Gaps and any order are OK.
 - The template comments, `apply.instruction`, propose, and upgrade use the new format. The schema version goes from 2 to 3 (D109).
 
 This revises the entry format of D92.
 
-**Rationale**: A reviewer can point to one item with a short ID, for example "OQ2 is answered by D3". A unique ID in the file is sufficient for this. Strict numbers would make the agent renumber items after each removal, which adds noise to the diff.
+**Rationale**: A reviewer can point to one item with a short ID, for example "D3 relies on F2" or "D3 breaks C1". A unique ID in the file is sufficient for this. Strict numbers would make the agent renumber items after each removal, which adds noise to the diff.
 
 ---
 
@@ -1830,3 +1832,17 @@ This revises the entry format of D92.
 This revises the "append-only" rule of D10 and of `design.md` §4. It extends D135.
 
 **Rationale**: Archive promotes each decision of `plan.md` to an ADR. A superseded or stale decision would become a wrong ADR, and a reviewer must read the full history to find the current choice. The ADR folder, not `plan.md`, keeps the history. A statistic such as "the table has 1.2M rows" is true only for a short time, and a wrong fact can justify a wrong decision.
+
+---
+
+## D137: Fixes From Review Round 1 on bad18ec
+
+**Decision**:
+
+- The skills and `apply.instruction` write a decision heading as `### Decision D<n>: <title>`, not `D1`. The template comment says that each C, OQ, F, and D ID is unique in the file, and that a new item gets an ID that is not used yet.
+- An upgrade is an option at any time, not only when the scope grows. `GLOSSARY.md` and `README.md` say so. The upgrade signals of `design.md` §5 stay: they tell the agent when to suggest an upgrade.
+- A fact that justifies only a requirement or a constraint is not promoted. Archive lists it as not drafted, with a reason (D116, D135).
+
+This extends D134, D135, and D136.
+
+**Rationale**: With the literal `D1` in the instruction, apply could write a second `D1` in a file that already has one. The README said "at any time", but the glossary said "when its scope grows". A spec states behavior, not the facts behind it, so a fact has no slot in a spec.

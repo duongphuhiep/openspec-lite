@@ -40,7 +40,7 @@ A custom OpenSpec schema alone can give you a one-artifact workflow. openspec-li
 
 **To review the AI's plan before it writes code**, use `tasks-preview.md`. See [Preview the code changes](#preview-the-code-changes).
 
-**At any time**, you can convert an openspec-lite change (`plan.md`) to a stock OpenSpec change (`proposal.md`, `design.md`, and so on). See [Upgrade to a spec-driven change](#upgrade-to-a-spec-driven-change).
+**At any time**, you can convert a plan-lite change (`plan.md`) to a stock OpenSpec change (`proposal.md`, `design.md`, and so on). See [Upgrade to a spec-driven change](#upgrade-to-a-spec-driven-change).
 
 ## Install openspec-lite
 

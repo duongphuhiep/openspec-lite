@@ -302,7 +302,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - Before you write any code: if the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root, the folder that holds `openspec/`. If the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. If it is stale, stop and ask the user: regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md? End your turn, and wait for the answer.
 - If the plan hash command exits with code 1, show its message and stop.
 - When plan.md and tasks-preview.md conflict, plan.md wins.
-- The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of plan.md, as `### Decision D1: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. List the deviations in the end summary. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale.
+- The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of plan.md, as `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. List the deviations in the end summary. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale.
 - Record the answer to each open question in `## Decisions`, and remove the question.
 - Do not edit tasks-preview.md.
 - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
@@ -321,7 +321,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - It exits with code 1 if the file cannot be read, or if `Goal`, `Non-Goals`, or `Constraints` is missing. `Background` is optional: no error if absent (D125).
 - `tests/plan-hash.test.mjs` covers each rule.
 
-`templates/plan.md` (D10, D124, D125):
+`templates/plan.md` (D10, D124, D125, D134, D135, D136):
 
 ```markdown
 ## Goal
@@ -343,12 +343,12 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 <!-- Non-obvious facts found during exploration or grilling, as "- F1: <fact>". Record only facts that justify a decision or a constraint of this change. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
 
 ## Decisions
-<!-- IDs are unique in this file only. Gaps and any order are OK. -->
+<!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item an ID that is not used yet. Gaps and any order are OK. -->
 <!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. -->
 <!-- ### Decision D1: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. -->
 ```
 
-`## Decisions` holds only the current decisions, not a history. When an agent adds a decision, it removes each superseded decision and updates each stale one (D136). Entry format: `### Decision D1: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative (D92).
+`## Decisions` holds only the current decisions, not a history. When an agent adds a decision, it removes each superseded decision and updates each stale one (D136). Entry format: `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative (D92, D134).
 
 ## 5. Upgrade Signals (D11, D50, D54)
 

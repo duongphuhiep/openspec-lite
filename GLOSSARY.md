@@ -41,7 +41,7 @@ The three questions at the end of apply and the start of archive: Is the Goal me
 _Avoid_: Done checklist, definition of done
 
 **Upgrade**:
-The switch of an active change from plan-lite to spec-driven, when its scope grows.
+The switch of an active change from plan-lite to spec-driven. You can upgrade a change at any time.
 _Avoid_: Graduation, promotion, migration
 
 **Schema update**:
