@@ -18,7 +18,7 @@ The OpenSpec workflow `explore → proposal → apply → archive` generates `pr
      - To preview the implementation.
    - For a medium change, the same model usually plans and codes, and you do not need to track progress. So you often read `tasks.md` only to preview the code changes that the AI intends to make.
 
-## The solution: openspec-lite
+## The solution
 
 openspec-lite targets medium changes. The workflow is `plan → implement (→ doc)`:
 
@@ -29,16 +29,18 @@ openspec-lite targets medium changes. The workflow is `plan → implement (→ d
 `plan.md` keeps WHY, WHAT, and HOW together while you propose and explore the change. `plan.md` is a live document. It records:
 
 - The context and your proposal.
-- The facts that you find during exploration.
-- The decisions that you make, and the decisions that the AI makes during implementation.
+- The non-obvious facts that you find during exploration, when they justify a decision or a constraint.
+- The current decisions: yours, and the decisions that the AI makes during implementation. When a new decision replaces an old one, the AI removes or updates the old one. `plan.md` is not a history.
 
-At archive time, the AI separates the items that last: requirements and contracts go to specs, and decisions go to ADRs.
+`plan.md` is a compact form of `proposal.md`, `design.md`, and `specs/`. It has no overlap between sections, so it is easier to review.
+
+At archive time, the AI separates the items that last: requirements and contracts go to specs, and decisions go to ADRs with the facts that justify them.
 
 A custom OpenSpec schema alone can give you a one-artifact workflow. openspec-lite adds the preview, upgrade, and promotion steps around it.
 
 **To review the AI's plan before it writes code**, use `tasks-preview.md`. See [Preview the code changes](#preview-the-code-changes).
 
-**If the change grows too large**, run `openspec-lite-upgrade`. It converts the plan-lite change to a spec-driven change. See [Upgrade to a spec-driven change](#upgrade-to-a-spec-driven-change).
+**At any time**, you can convert an openspec-lite change (`plan.md`) to a stock OpenSpec change (`proposal.md`, `design.md`, and so on). See [Upgrade to a spec-driven change](#upgrade-to-a-spec-driven-change).
 
 ## Install openspec-lite
 
@@ -61,7 +63,7 @@ apm install duongphuhiep/openspec-lite/package#^1.0.0 --target claude
 
 - `openspec init` installs the stock OpenSpec skills and the `/opsx:*` commands that openspec-lite uses. With `--tools none`, it installs no skills.
 - `apm install` installs the six openspec-lite skills. `#^1.0.0` lets `apm update` move to each newer 1.x release.
-- Always pass `--target`. Without it, APM deploys only to the harness folders that it detects. For example, `openspec init --tools codex` writes only `.agents/skills/`, which APM does not detect, so `apm install` with no `--target` installs nothing for Codex.
+- Always pass `--target`. Without it, APM deploys only to the harness folders that it detects. For example, `openspec init --tools codex` writes only `.agents/skills/`, and APM does not detect this folder. So `apm install` with no `--target` installs nothing for Codex.
 
 The two tools use the same harness name, except for GitHub Copilot:
 
@@ -123,7 +125,7 @@ During apply:
 
 - When the two files conflict, `plan.md` wins.
 - If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply adds to the other sections. It ignores HTML comments.
-- Apply records each meaningful deviation in the `plan.md` decisions.
+- Apply records each meaningful deviation as a decision in `plan.md`. It removes each decision that the deviation supersedes.
 
 ## Lifecycle
 
@@ -157,10 +159,10 @@ An item needs to pass only one filter. The AI shows the list. You approve, rejec
 
 ## Upgrade to a spec-driven change
 
-If a plan-lite change grows too large, run `openspec-lite-upgrade`. It converts the change to a stock OpenSpec spec-driven change:
+To convert a plan-lite change to a stock OpenSpec spec-driven change, run `openspec-lite-upgrade`. It does these steps:
 
 1. It removes `skip_specs: true` from `.openspec.yaml`.
-2. It asks you to answer each open question that changes the specs, the approach, or the tasks. Then it writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. The `plan.md` decisions go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.
+2. It asks you to answer each open question that changes the specs, the approach, or the tasks. Then it writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. The `plan.md` decisions and facts go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.
 3. It changes `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. This step comes after the four artifacts, so you can run an interrupted upgrade again.
 4. It lists where each `plan.md` section moved, and asks before it deletes the moved sections. If nothing is left, it deletes `plan.md`.
 5. It runs `openspec validate`.
@@ -173,7 +175,9 @@ After an upgrade, archive with stock `/opsx:archive`.
 
 ### You may not need `openspec-lite-upgrade`
 
-openspec-lite targets medium changes. In practice, it also works well for large changes. The upgrade skill is the least tested skill in the set.
+openspec-lite targets medium changes, but in practice it also works well for large changes. An upgrade often doubles the size of the change, because the spec-driven artifacts repeat the same content.
+
+So you rarely need to upgrade a plan-lite change to a spec-driven change.
 
 ## Compatibility
 

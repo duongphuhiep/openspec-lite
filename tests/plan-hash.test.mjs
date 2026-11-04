@@ -45,6 +45,7 @@ test("CRLF, BOM, section order, Open Questions, and Decisions do not change the 
   );
   assert.equal(hash(base.replace("Q1?", "")).stdout, ref, "Open Questions");
   assert.equal(hash(base + "### Decision: A\nChose A because B.\n").stdout, ref, "Decisions");
+  assert.equal(hash(base + "\n## Facts\n- F1: A\n").stdout, ref, "Facts");
   assert.equal(hash(base.replace("Keep Z", "Keep   Z\n")).stdout, ref, "whitespace");
 });
 

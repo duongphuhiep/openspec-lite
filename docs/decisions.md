@@ -137,7 +137,7 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: The Decisions section is the key differentiator from a throwaway plan.md. Without it, the file has no long-term value and nothing worth promoting at archive time.
 
-**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`.
+**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D136: the section is no longer append-only. It holds only the current decisions.
 
 ---
 
@@ -1786,3 +1786,47 @@ This extends D120 and D132.
 **Status**: After the rerun on 5af5008, the first bullet is revised. Upgrade does not put the command in a loop or a chain, and does not filter it with `grep`. It reads the full JSON and does not write an artifact without its `template` and `instruction`. After the rerun on 1f0c3b7, "do not filter it with `grep`" becomes "do not pipe it to another command", because a pipe to `head -c 3500` cut off the `template` key. The "stop if denied" rule is removed: in 3 of 3 denials, the agent retried with a plain command, which is correct. In 2 of 4 runs, a pipe to `grep` ran, because the allowlist does not deny it, and one run lost the `instruction` field.
 
 **Rationale**: In the rerun on dc3b8c0, the scenario allowlist denied `openspec instructions` calls in a `for` loop or in a pipe to `python3`. The agent then wrote the artifacts with no `template` and no `instruction`. In the same 20a run, `design.md` got a pointer to the kept open question under `## Open Questions`. Step 2.3 forbade the question there, but not a pointer to it. The d05538c run passed this check, so the pointer is model variance that the text did not close.
+
+---
+
+## D134: IDs for Constraints, Open Questions, and Decisions in plan.md
+
+**Decision**:
+
+- In `plan.md`, each constraint is `- C1: <rule>`, each open question is `- OQ1: <question>`, and each decision is `### Decision D1: <title>`.
+- An ID is unique in its `plan.md` only. Gaps and any order are OK.
+- The template comments, `apply.instruction`, propose, and upgrade use the new format. The schema version goes from 2 to 3 (D109).
+
+This revises the entry format of D92.
+
+**Rationale**: A reviewer can point to one item with a short ID, for example "OQ2 is answered by D3". A unique ID in the file is sufficient for this. Strict numbers would make the agent renumber items after each removal, which adds noise to the diff.
+
+---
+
+## D135: A Facts Section in plan.md
+
+**Decision**:
+
+- `plan.md` gets a `## Facts` section between `## Open Questions` and `## Decisions`. Each fact is `- F1: <fact>`, with the ID rules of D134.
+- It holds only non-obvious facts that the user or the agent finds during exploration or grilling, for example with `/openspec-explore` or `/grill-me`. Each fact must justify a decision or a constraint of the change.
+- The plan hash does not cover `## Facts`, as for `## Decisions`.
+- At archive, a fact goes to the `## Context` of each ADR whose decision it justifies. A fact that justifies no promoted decision is listed as not drafted, with a reason (D116).
+- At upgrade, facts go to `design.md` → `## Context`.
+- The schema stays at version 3, because version 3 (D134) is not released yet.
+
+**Rationale**: Exploration and grilling find facts, for example how a library or an API behaves. Without a slot, the facts are lost, or they mix with the decisions and the constraints. The filter "justifies a decision or a constraint" keeps the section short. Facts change when exploration continues, so a new fact must not make the preview stale.
+
+---
+
+## D136: plan.md Keeps the Current Decisions, and Facts Have No Volatile Statistics
+
+**Decision**:
+
+- `## Decisions` in `plan.md` holds the current decisions, not a history of past decisions. When an agent adds a decision, it checks the existing ones. It removes each superseded decision, and it updates each stale decision.
+- The rule is in the `## Decisions` guidance comment of the template, in `openspec-lite-propose`, and in `apply.instruction`.
+- A fact in `## Facts` must not hold statistics that soon go out of date. A number as an example or a reference is OK. The rule is in the `## Facts` guidance comment and in `openspec-lite-propose`.
+- The schema stays at version 3, because version 3 is not released yet (D134).
+
+This revises the "append-only" rule of D10 and of `design.md` §4. It extends D135.
+
+**Rationale**: Archive promotes each decision of `plan.md` to an ADR. A superseded or stale decision would become a wrong ADR, and a reviewer must read the full history to find the current choice. The ADR folder, not `plan.md`, keeps the history. A statistic such as "the table has 1.2M rows" is true only for a short time, and a wrong fact can justify a wrong decision.

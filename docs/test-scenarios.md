@@ -47,7 +47,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected**:
 
-- The agent implements from `plan.md`, and records deviations as `### Decision:` entries.
+- The agent implements from `plan.md`, and records deviations as `### Decision D<n>:` entries.
 - It does not edit `tasks-preview.md`.
 - It ends with the done check (Goal, Constraints, Open Questions).
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
@@ -56,7 +56,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. On a finished change, make sure `plan.md` has one non-obvious requirement and one `### Decision:` entry.
+1. On a finished change, make sure `plan.md` has one non-obvious requirement and one `### Decision D<n>:` entry.
 2. Run `openspec-lite-archive`. Approve both drafts.
 
 **Expected**:
@@ -210,13 +210,13 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
    - No CAPTCHA.
 
    ## Constraints
-   - After 5 failed logins in 15 minutes, the system SHALL lock the account for 30 minutes.
-   - A locked account SHALL NOT log in, also with a valid password.
+   - C1: After 5 failed logins in 15 minutes, the system SHALL lock the account for 30 minutes.
+   - C2: A locked account SHALL NOT log in, also with a valid password.
 
    ## Open Questions
 
    ## Decisions
-   ### Decision: Count failures per account, not per IP
+   ### Decision D1: Count failures per account, not per IP
    Chose per account because attackers rotate IP addresses. Rejected per IP because it also locks out users behind one office NAT.
    ```
 
@@ -249,17 +249,17 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
    - No Excel export. [obvious: skip]
 
    ## Constraints
-   - The CSV SHALL use a semicolon separator, because the users open it in a French Excel. [non-obvious: spec]
-   - The export SHALL include only the rows that match the active filters. [non-obvious: spec]
-   - The CSV SHALL start with a header row of the column names. The import script of the finance team reads them. [obvious contract: spec]
-   - The export button is in the toolbar. [obvious, UI layout: skip]
+   - C1: The CSV SHALL use a semicolon separator, because the users open it in a French Excel. [non-obvious: spec]
+   - C2: The export SHALL include only the rows that match the active filters. [non-obvious: spec]
+   - C3: The CSV SHALL start with a header row of the column names. The import script of the finance team reads them. [obvious contract: spec]
+   - C4: The export button is in the toolbar. [obvious, UI layout: skip]
 
    ## Open Questions
 
    ## Decisions
-   ### Decision: Build the CSV in the browser
+   ### Decision D1: Build the CSV in the browser
    Chose the browser because the table already has all rows in memory. Rejected a server endpoint because it adds an API for one button. [non-obvious: ADR]
-   ### Decision: Use the date in the file name
+   ### Decision D2: Use the date in the file name
    Chose `report-YYYY-MM-DD.csv`. The import script of the finance team finds the file by this name. [obvious decision, contract: spec]
    ```
 
@@ -361,7 +361,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 **Steps**:
 
-1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision:` entry, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change.
+1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change.
 2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". At the prune question, answer no.
 3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question.
 
@@ -384,7 +384,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 **Steps**:
 
-1. Create a plan-lite change with a Goal and one `### Decision:` entry in `plan.md`. Do not write a requirement.
+1. Create a plan-lite change with a Goal and one `### Decision D<n>:` entry in `plan.md`. Do not write a requirement.
 2. Run `openspec-lite-upgrade`. When the agent asks for a requirement, answer "none".
 
 **Expected**:
@@ -404,7 +404,7 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 **Steps**:
 
 1. Write `openspec/adr/2026-01-10-fixed-window-rate-limit.md` with `# Fixed Window Rate Limit`, `Status: Accepted`, `Change: add-rate-limit`, and the three sections. Its `## Decision` says: "Use a fixed 60-second window per API key."
-2. Create a plan-lite change `sliding-rate-limit`. Its `plan.md` has a Goal and one `### Decision: Use a sliding window` entry: "Chose a sliding 60-second window because the fixed window allows bursts at the window edge. Rejected the fixed window."
+2. Create a plan-lite change `sliding-rate-limit`. Its `plan.md` has a Goal and one `### Decision D1: Use a sliding window` entry: "Chose a sliding 60-second window because the fixed window allows bursts at the window edge. Rejected the fixed window."
 3. Run `openspec-lite-archive`. Approve each draft.
 
 **Expected**:

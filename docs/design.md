@@ -100,7 +100,7 @@ openspec-lite/
 ## 2a. Tests (D84)
 
 - Tests live in `tests/` and run with `node --test` from the repo root. They have no dependencies.
-- `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, Decisions, and HTML comments do not change the hash. A stray `<!--` does not hide a heading. A comment inside a fence changes the hash. An absent and an empty `## Background` give the same hash. A changed Constraint or Background changes it. The shipped template hashes with no error. A heading with the wrong letter case exits with code 1. A plan with no comments keeps its v1 hash value. A missing required heading or a missing file exits with code 1.
+- `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, Facts, Decisions, and HTML comments do not change the hash. A stray `<!--` does not hide a heading. A comment inside a fence changes the hash. An absent and an empty `## Background` give the same hash. A changed Constraint or Background changes it. The shipped template hashes with no error. A heading with the wrong letter case exits with code 1. A plan with no comments keeps its v1 hash value. A missing required heading or a missing file exits with code 1.
 - `check-version.test.mjs`: runs the script on fixture folders. A match passes. A mismatch fails. A missing marker line fails. A missing skill fails. A skill with CRLF line endings passes. An indented marker passes. A second marker with a wrong number fails. `01` equals `1`. A root with no `package/` prints one `schema.yaml` failure (D106).
 - `install.test.mjs`: a first install copies. A lower repo version moves to a timestamped backup, then copies. An equal version prints `status: current`. A higher version exits with code 2. Missing shipped assets exit with code 3. A second backup with the same timestamp gets a `-2` suffix. A quoted higher version with a comment exits with code 2. A file system error exits with code 1, with an `install:` message and no stack trace (D96, D98, D102, D106).
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It also tests the upgrade path (`instructions <artifact> --schema spec-driven` on a plan-lite change), an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs` (D108). It also tests the CLI behavior that the skills rely on: `state: blocked` with no `plan.md`, `root.path` from a subfolder and `root: null` above it, `skipped: true` on `instructions specs` with `skip_specs`, and the failure on a duplicate key in `.openspec.yaml` (D112). The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
@@ -196,7 +196,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the goal.
 - Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
 - Set `skip_specs: true` in `.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change (D112).
-- Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, or decisions (D114).
+- Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Keep only the current decisions, and no facts with statistics that soon go out of date (D136).
 - If an upgrade signal is present (see §5), suggest an upgrade.
 - In the summary, show the change name.
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
@@ -239,7 +239,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 1. Remove `skip_specs: true` from `.openspec.yaml`. While it is set, the CLI forbids spec files (D99).
 2. Ask the user to answer each open question that changes the specs, the approach, or the tasks. Do this before you write an artifact. If the user cannot answer now, the question stays in `plan.md` (D120, `docs/facts.md`). Then write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. Run it as one plain command, with no loop, no chain, and no pipe. Read the full JSON. Do not write the artifact without its `template` and `instruction` (D133). On a resumed run, keep each artifact that already exists, and write only the missing ones. Follow the `instruction` field of each result.
    1. `proposal.md`: from Goal and the scope. If `## Background` exists, use its scope items and source links (D125). Non-Goals go to `design.md` → `## Goals / Non-Goals`.
-   2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, add a `## Purpose` section for a new capability (D117), give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. If `plan.md` has no requirement, ask the user for one. The Goal alone is not a requirement. You can suggest one from it, but ask before you write it (D131). If the user has none, put `skip_specs: true` back and say so in the summary (D108). Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit. An open question that is safe to answer later goes to `## Open Questions`. An open question that changes the specs, the approach, or the tasks has no slot. Its answer goes to the specs or to `## Decisions`. Neither the question nor a note that points to it goes to `design.md` (D133).
+   2. `specs/` and `design.md`: from `plan.md`. For specs, use the archive delta rules: pick `<capability>` from `openspec/specs/` first, add a `## Purpose` section for a new capability (D117), give each ADDED or MODIFIED requirement at least one `#### Scenario:`, and copy the full requirement for MODIFIED. If `plan.md` has no requirement, ask the user for one. The Goal alone is not a requirement. You can suggest one from it, but ask before you write it (D131). If the user has none, put `skip_specs: true` back and say so in the summary (D108). Decisions go to `design.md` → `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit. Facts go to `## Context` (D135). An open question that is safe to answer later goes to `## Open Questions`. An open question that changes the specs, the approach, or the tasks has no slot. Its answer goes to the specs or to `## Decisions`. Neither the question nor a note that points to it goes to `design.md` (D133).
    3. `tasks.md`: if `tasks-preview.md` exists, use it as the seed and add `[ ]` to each task line. If an answer from step 2 changes the tasks, edit the seed to match it, and say so in the summary. Then delete `tasks-preview.md`. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here: keep `tasks.md`, and delete `tasks-preview.md` (D107).
 3. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
 4. List each `plan.md` section with its destination artifact and heading, or "kept". If the items of one section go to different destinations, list each item. Keep a section that has no slot, for example an open question that the user cannot answer now. Name each content that is in no artifact and is not kept, and offer to add it first. Show the list, and ask before the delete in the same reply. End the turn, and wait for the answer. Do not validate or write the summary before it (D132). On yes, delete each section or item whose content moved. If no section is left, delete `plan.md`. A section with only an HTML comment counts as no section. On no, keep `plan.md` (D120, D121, D127).
@@ -254,7 +254,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
    - **Surprising**: it would surprise a new team member.
    - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code (D119).
-4. Sort each item: requirement → spec, decision → ADR. If a decision is also a contract, draft the contract as a requirement. Its rationale can also go to an ADR (D119). List each other `plan.md` item that is not drafted, including each non-goal, with a one-line reason (D116).
+4. Sort each item: requirement → spec, decision → ADR. If a decision is also a contract, draft the contract as a requirement. Its rationale can also go to an ADR (D119). A fact goes to the `## Context` of each ADR whose decision it justifies (D135). List each other `plan.md` item that is not drafted, including each non-goal, with a one-line reason (D116).
 5. Draft the full text of each item:
    - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93). For a new capability, start the delta with a `## Purpose` section, because the CLI otherwise writes "TBD" as the Purpose of the new main spec (D117).
    - A decision becomes an ADR: a `# <Title>` heading, then the plain lines `Status: Accepted` and `Change: <name>`, then the sections `## Context`, `## Decision`, and `## Consequences` (D112). Before drafting, skip each decision that already has an ADR with `Change: <name>` in `openspec/adr/`, because an earlier run wrote it (D111).
@@ -273,13 +273,13 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 ```yaml
 name: plan-lite
-version: 2
+version: 3
 openspec-version: ">=1.9.0 <2.0.0"
 description: Lightweight plan — goal, constraints, decisions. No tasks. Upgradeable to spec-driven.
 artifacts:
   - id: plan
     generates: plan.md
-    description: Living plan — goal, background, non-goals, constraints, open questions, decisions
+    description: Living plan — goal, background, non-goals, constraints, open questions, facts, decisions
     template: plan.md   # relative to templates/
     requires: []
 apply:
@@ -302,7 +302,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - Before you write any code: if the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root, the folder that holds `openspec/`. If the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. If it is stale, stop and ask the user: regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md? End your turn, and wait for the answer.
 - If the plan hash command exits with code 1, show its message and stop.
 - When plan.md and tasks-preview.md conflict, plan.md wins.
-- The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of plan.md, as `### Decision: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. List the deviations in the end summary.
+- The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of plan.md, as `### Decision D1: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. List the deviations in the end summary. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale.
 - Record the answer to each open question in `## Decisions`, and remove the question.
 - Do not edit tasks-preview.md.
 - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
@@ -334,16 +334,21 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 <!-- What this change will not do. One item per line. -->
 
 ## Constraints
-<!-- Rules the implementation must follow. One item per line. -->
+<!-- Rules the implementation must follow. One item per line, as "- C1: <rule>". -->
 
 ## Open Questions
-<!-- Unresolved questions. Remove each question when its answer goes to ## Decisions. -->
+<!-- Unresolved questions, as "- OQ1: <question>". Remove each question when its answer goes to ## Decisions. -->
+
+## Facts
+<!-- Non-obvious facts found during exploration or grilling, as "- F1: <fact>". Record only facts that justify a decision or a constraint of this change. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
 
 ## Decisions
-<!-- ### Decision: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. -->
+<!-- IDs are unique in this file only. Gaps and any order are OK. -->
+<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. -->
+<!-- ### Decision D1: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. -->
 ```
 
-Decisions are append-only. Entry format: `### Decision: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative (D92).
+`## Decisions` holds only the current decisions, not a history. When an agent adds a decision, it removes each superseded decision and updates each stale one (D136). Entry format: `### Decision D1: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative (D92).
 
 ## 5. Upgrade Signals (D11, D50, D54)
 
