@@ -137,7 +137,7 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: The Decisions section is the key differentiator from a throwaway plan.md. Without it, the file has no long-term value and nothing worth promoting at archive time.
 
-**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D134 adds IDs to constraints, open questions, and decisions. D135 adds `## Facts`. D137 writes the decision heading as `### Decision D<n>:`. D140 adds the ID comment before `## Goal`. D142 adds the rule that the IDs stay in `plan.md` and `tasks-preview.md`. D136: the section is no longer append-only. It holds only the current decisions.
+**Status**: D78: propose gets this template from the CLI. D92 makes "Rejected Z because W" optional. D124 adds a guidance comment under each heading. D125 adds `## Background`. D134 adds IDs to constraints, open questions, and decisions. D135 adds `## Facts`. D137 writes the decision heading as `### Decision D<n>:`. D140 adds the ID comment before `## Goal`. D142 adds the rule that the IDs stay in `plan.md` and `tasks-preview.md`. D144 changes the ID rule, and adds the fact rule to the `## Decisions` comment. D136: the section is no longer append-only. It holds only the current decisions.
 
 ---
 
@@ -1801,7 +1801,7 @@ This extends D120 and D132.
 
 This revises the entry format of D92.
 
-**Status**: D137 writes the heading as `### Decision D<n>: <title>`. D140 moves the ID comment to the top of the template. D145: a new item gets a number higher than each ID of its kind in the file.
+**Status**: D137 writes the heading as `### Decision D<n>: <title>`. D140 moves the ID comment to the top of the template. D144: a new item gets a number higher than each ID of its kind in the file.
 
 **Rationale**: A reviewer can point to one item with a short ID, for example "D3 relies on F2" or "D3 breaks C1". A unique ID in the file is sufficient for this. Strict numbers would make the agent renumber items after each removal, which adds noise to the diff.
 
@@ -1846,6 +1846,8 @@ This revises the "append-only" rule of D10 and of `design.md` §4. It extends D1
 - A fact that justifies only a requirement or a constraint is not promoted. Archive lists it as not drafted, with a reason (D116, D135).
 
 This extends D134, D135, and D136.
+
+**Status**: D144 replaces "an ID that is not used yet" with "a number higher than each ID of its kind in the file".
 
 **Rationale**: With the literal `D1` in the instruction, apply could write a second `D1` in a file that already has one. The README said "at any time", but the glossary said "when its scope grows". A spec states behavior, not the facts behind it, so a fact has no slot in a spec.
 
@@ -1948,7 +1950,7 @@ This extends D138, D139, and D142.
 
 ---
 
-## D145: Fixes From Review Round 3 on 51159d0
+## D144: Fixes From Review Round 3 on 51159d0
 
 **Decision**:
 
@@ -1957,7 +1959,6 @@ This extends D138, D139, and D142.
 - The upgrade skill names an item by its title, with the change name, as the other texts do (D142).
 - The README says that the items have IDs, and that the IDs stay in `plan.md` and `tasks-preview.md`.
 - Scenario 4 checks code, test names, and test strings for leaked IDs. Scenario 20a also checks `proposal.md` and `specs/`.
-- The fixes of rounds 1 and 2 are D143. The D143 that the apply skill repeated the ID rule was removed before a commit, so its number is free.
 
 This extends D134, D140, and D142.
 

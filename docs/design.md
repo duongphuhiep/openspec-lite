@@ -78,7 +78,7 @@ openspec-lite/
     1. Fresh repo: propose installs the schema, creates the change, writes `plan.md`.
     2. Small request: propose offers Level 1 and stops on yes, with no files written.
     3. Tasks preview, then edit a Constraint: apply warns that the preview is stale.
-    4. Stock `/opsx:apply` on a plan-lite change: it follows `apply.instruction` and ends with the done check.
+    4. Stock `/opsx:apply` on a plan-lite change: it follows `apply.instruction`, writes no `plan.md` ID outside `plan.md`, and ends with the done check. 4b: apply keeps only the current decisions and removes orphan facts.
     5. Archive with one requirement and one decision: the delta merges, the ADR is written.
     6. Archive with nothing promoted: `skip_specs` is set, archive succeeds.
     7. Upgrade with a preview, interrupted after it writes `proposal.md`, then run again: it resumes and validates.
@@ -323,7 +323,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - It exits with code 1 if the file cannot be read, or if `Goal`, `Non-Goals`, or `Constraints` is missing. `Background` is optional: no error if absent (D125).
 - `tests/plan-hash.test.mjs` covers each rule.
 
-`templates/plan.md` (D10, D124, D125, D134, D135, D136, D137, D140, D142):
+`templates/plan.md` (D10, D124, D125, D134, D135, D136, D137, D140, D142, D144):
 
 ```markdown
 <!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item a number higher than each ID of its kind in this file. Gaps and any order are OK. Use the IDs only in this file and in tasks-preview.md. Outside them, refer to an item by its title, or a short form of its text, with the change name. -->

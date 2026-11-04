@@ -39,7 +39,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 3. Edit a line under `## Constraints` in `plan.md`.
 4. Run stock `/opsx:apply` (or `openspec-lite-apply`).
 
-**Expected**: Before coding, the agent says that the preview is stale and offers to regenerate it. An edit under `## Open Questions` or `## Decisions` alone does not cause this warning.
+**Expected**: Before coding, the agent says that the preview is stale and offers to regenerate it. An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
 
 ## 4. Stock apply follows the plan-lite rules
 
