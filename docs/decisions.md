@@ -1875,9 +1875,11 @@ This extends D134, D135, and D137.
 
 - `apply.instruction` records the answer to an open question as a `### Decision D<n>:` entry.
 - Archive lists a fact that justifies no drafted decision with a one-line reason, as for each other item that it does not draft (D116).
-- An expected result about a spec or an ADR names a fact in words, not by its ID, because D138 forbids the IDs in specs and ADRs. A check on `plan.md` itself can use the IDs.
+- A scenario names a fact in words, not by its ID, because D138 forbids the IDs in specs and ADRs.
 
 This extends D137 and D138.
+
+**Status**: D144 narrows the third bullet to the expected results about specs and ADRs.
 
 **Rationale**: Without the format, apply can write an answer with no ID. Without the reason, a skipped fact looks like a lost fact.
 
@@ -1927,3 +1929,19 @@ This extends D140.
 This revises D138.
 
 **Rationale**: An ID is unique only in one `plan.md`, and archive or upgrade can remove the file. Outside it, "D3" points to nothing, or to a decision of another log, such as `docs/decisions.md` or an ADR folder. A title with the change name stays clear after the plan is gone. The preview lives and dies with `plan.md`, so an ID in it stays correct. `tasks.md` outlives `plan.md` after an upgrade, so it gets titles.
+
+---
+
+## D144: Fixes From Review Rounds 1 and 2 on c488067
+
+**Decision**:
+
+- Upgrade states the ID rule (D142) at the start of step 2, before the agent writes `proposal.md`.
+- Upgrade moves each `### Decision` entry to `design.md`, also an old entry with no ID (D138).
+- Archive lists a fact as not drafted when it justifies no drafted ADR. This includes the fact of a decision that archive drafts only as a requirement (D119).
+- An expected result about a spec or an ADR names a fact in words. A check on `plan.md` itself can use the IDs, as scenario 4b does.
+- `design.md` §4 says that the plan hash ignores the text before the first `##` heading.
+
+This extends D138, D139, and D142.
+
+**Rationale**: The agent writes the artifacts in order, so a rule in step 2.3 comes too late for `proposal.md` and the specs. A version 2 plan has `### Decision:` entries, and the pattern `### Decision D<n>:` does not match them. "No drafted decision" was not clear for a decision that becomes a requirement with no ADR.
