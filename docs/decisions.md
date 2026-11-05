@@ -2101,6 +2101,8 @@ This extends D112.
 
 This revises D131 and extends D114.
 
+**Status**: D163: an item that restates a part of `plan.md` in other words is not inferred, and gets no mark.
+
 **Rationale**: In scenario 7 of the 627b8fb run, `plan.md` had two constraints. Upgrade wrote 4 distinct requirements with no question: 2 from the constraints, 1 from the Goal, and 1 (RFC 4180 escaping) from the tasks preview. It also wrote scenarios from the tasks preview, for example "Table is empty". A spec is a contract that others depend on after the archive, and the tasks preview is a reference, not a contract. A list of sources in the summary was rejected, because it points to `plan.md` items, and the user usually deletes `plan.md` after the upgrade. A mark in the artifact stays where the reviewer reads. `tasks.md` gets no mark, because the agent writes almost each task from its own preview, so a mark on each line tells the reviewer nothing. If the user forgets a mark, stock `/opsx:archive` merges it into `openspec/specs/`. This is a visible signal, not a silent error, so no skill removes it.
 
 ---
@@ -2214,3 +2216,13 @@ This extends D120, D140, and D142.
 This extends D146.
 
 **Rationale**: In the 627b8fb run, group A could not make one row for each scenario, because scenarios 1, 3, and 4 share sessions, and the script counts a whole session log. In scenario 9, the table counted the template in `openspec/schemas-backup/` as an artifact. In scenario 11, `--dir <temp>` found no `openspec/` folder. All 8 groups made the total row by hand with no error, so a total mode is not worth a new code path and its tests yet. Add it when a run gets the total wrong.
+
+---
+
+## D163: A Restated plan.md Item Is Not Inferred
+
+**Decision**: An item that restates a part of `plan.md` or an answer of the user is not inferred, also in other words, or in another artifact or section. Upgrade marks only an item that adds something that `plan.md` and the answers do not say, also a detail that it adds to a `plan.md` item.
+
+This revises D152.
+
+**Rationale**: In 2 of 2 reruns of scenario 20c on f15aba0, upgrade put 🤖 on an item that restated `plan.md`: the decision, reworded in the Impact list of `proposal.md`, and the Goal, reworded in the Goals of `design.md`. Each run also marked its own Why line correctly. A mark is useful only if it is precise, because a user who sees many wrong marks learns to ignore them. Rejected: mark only in `specs/` and `design.md` → `## Decisions`, because the inferred Why line of `proposal.md` is new content that a reviewer must see.

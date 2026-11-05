@@ -49,7 +49,7 @@ A result that a change delivers. `## Goal` in `plan.md` holds one outcome by pre
 _Avoid_: Objective
 
 **Inferred item**:
-An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that comes from no section of `plan.md` and from no answer of the user. It has a 🤖 mark at the end of its line or heading. The user removes the mark to accept the item.
+An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that comes from no section of `plan.md` and from no answer of the user. A restatement of a `plan.md` item in other words is not an inferred item. It has a 🤖 mark at the end of its line or heading. The user removes the mark to accept the item.
 _Avoid_: Guess, assumption
 
 **Done check**:
