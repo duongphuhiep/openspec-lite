@@ -420,7 +420,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - `.openspec.yaml` has `schema: spec-driven` and `skip_specs: true`.
 - Before the delete, the agent shows the list of `plan.md` sections with their destinations, and asks the prune question. It ends the turn there, with no validate and no summary.
 - `openspec validate` passes.
-- The summary says that `skip_specs` stays or was put back, because the change has no spec delta.
+- The summary says that `skip_specs` is set at the end, because the change has no spec delta (D153).
 
 ## 21. Archive supersedes an old ADR
 

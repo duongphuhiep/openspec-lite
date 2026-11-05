@@ -1385,6 +1385,8 @@ Node 20 reached end of life on 2026-04-30, and development uses Node 24.
 
 This revises D46, D97, and D99 for upgrade.
 
+**Status**: D153: the upgrade summary reports the `skip_specs` state at the end, not what the run did.
+
 **Rationale**: A fresh `review-commit-range` round found each case:
 
 - `validate` fails on a spec-driven change with no delta and no `skip_specs` ("Change must have at least one delta"). Some upgrade signals, for example a handoff, give no requirement.
@@ -1595,6 +1597,8 @@ The upgrade signal "a contract (spec) becomes necessary" stays. It means a contr
 - At archive, the user can pick an item from the list of items that are not drafted. The agent then drafts that item, and the user approves it like the other drafts.
 
 This revises D62 and D97 for upgrade, and D18 for archive.
+
+**Status**: D153: the upgrade summary reports the `skip_specs` state at the end, not what the run did.
 
 **Rationale**: A review of the promotion and upgrade rules found two gaps. Archive names each item that it does not promote (D116), but upgrade deleted `plan.md` sections with no check. If the agent dropped a detail when it wrote `design.md`, the delete removed the only copy, and `validate` checks structure, not content. At archive, the user could approve, reject, or edit a draft, but the skill gave no step to promote an item that the filters skipped. The filters stay the default. The user only adds to them. In scenario 20a, the agent moved an open question that changes the specs to `design.md` → `## Open Questions`. The old example "open questions that are still open" did not stop it, because the OpenSpec `design` instruction has that section. The same instruction tells the agent to ask the user about such a question (`docs/facts.md`), so upgrade asks first.
 
@@ -2094,3 +2098,13 @@ This extends D112.
 This revises D131 and extends D114.
 
 **Rationale**: In scenario 7 of the 627b8fb run, `plan.md` had two constraints. Upgrade wrote 4 distinct requirements with no question: 2 from the constraints, 1 from the Goal, and 1 (RFC 4180 escaping) from the tasks preview. It also wrote scenarios from the tasks preview, for example "Table is empty". A spec is a contract that others depend on after the archive, and the tasks preview is a reference, not a contract. A list of sources in the summary was rejected, because it points to `plan.md` items, and the user usually deletes `plan.md` after the upgrade. A mark in the artifact stays where the reviewer reads. `tasks.md` gets no mark, because the agent writes almost each task from its own preview, so a mark on each line tells the reviewer nothing. If the user forgets a mark, stock `/opsx:archive` merges it into `openspec/specs/`. This is a visible signal, not a silent error, so no skill removes it.
+
+---
+
+## D153: Upgrade Reports the skip_specs State at the End
+
+**Decision**: the upgrade summary says the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none. It does not say what this run did to the line. The step that puts the line back no longer has its own "say so in the summary", because the summary rule covers it. Scenario 20c expects "set at the end".
+
+This revises D108 and D120.
+
+**Rationale**: In scenario 7 of the 627b8fb run, the first upgrade run stopped after `proposal.md`, but it had already removed the line. The second run found no line, and its summary said "`skip_specs` was not set". This was true for that run, but the user could read it as "the change never had the flag". The 92c77ff run gave the same report. A state is true after any number of interrupted runs, and the agent does not need the history. Rejected: make the second run find out what the first run did, because the agent cannot know it with certainty, and the user gets nothing from it.

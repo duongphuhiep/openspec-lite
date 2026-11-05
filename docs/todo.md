@@ -6,19 +6,11 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Item 1 of the run (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖) is done: see D152.
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), and item 2 (upgrade reports the `skip_specs` state at the end, D153).
 
 ---
 
 ## Skill text
-
-### 2. Upgrade reports `skip_specs` as an action, not as a state
-
-- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, section "3. End": "Say if `skip_specs` was removed, or put back because the change has no spec delta." Also `docs/design.md` §upgrade step 6.
-- **Problem**: upgrade step 1 removes `skip_specs: true`. In scenario 7, the first run stops after `proposal.md`, but it has already removed the line. The second run finds no line, so its summary says "`skip_specs` was not set". The sentence is true for that run, but it misleads the user: the flag was set, and the first run removed it. The files are correct. Only the report is wrong.
-- **Evidence**: group C, scenario 7 (session `5fbcb233-292e-4461-9520-5b82e048b5f2`). The 92c77ff run had the same result.
-- **Recommendation**: report the state at the end, not an action: "Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none." This is true after any number of interrupted runs. Update the scenario 7 and 20c expected results to match.
-- **Rejected**: make the second run find out what the first run did. The agent cannot know this with certainty, and the user gets nothing from it.
 
 ### 3. Archive offers to draft ADRs after its guard stops
 
@@ -75,7 +67,7 @@ Item 1 of the run (upgrade asks before a requirement that is not in `plan.md`, a
 
 - **Problem**: upgrade step 1 removes `skip_specs: true`, and step 2.2 puts it back if the user has no requirement. In 20c, the agent never removed the line, and no tool call touched it. The end state is correct, so the scenario passes. It does not check the order of the steps.
 - **Evidence**: group F, scenario 20c.
-- **Recommendation**: keep the check on the end state only. The order has no effect that a user can see, and item 2 changes the report to the end state too. Add one sentence to 20c that says so, so that a tester does not report it again.
+- **Recommendation**: keep the check on the end state only. The order has no effect that a user can see, and D153 changes the report to the end state too. Add one sentence to 20c that says so, so that a tester does not report it again.
 
 ### 10. Scenario 22a: the example change name
 

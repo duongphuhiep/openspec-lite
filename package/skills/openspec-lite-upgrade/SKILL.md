@@ -44,7 +44,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
       - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
       - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit it.
       - Write a requirement only from a constraint, a decision, or a fact of `plan.md`, or from an answer of the user. The Goal and `tasks-preview.md` alone are not requirements. You can suggest a requirement from them, but ask before you write it. After a yes, the user is its source, so it gets no 🤖 mark.
-      - If `plan.md` has no requirement for a spec, ask the user for at least one. If the user has none, add `skip_specs: true` back to `<dir>/.openspec.yaml`, and say so in the summary. Without a delta and without the flag, `validate` fails.
+      - If `plan.md` has no requirement for a spec, ask the user for at least one. If the user has none, add `skip_specs: true` back to `<dir>/.openspec.yaml`. Without a delta and without the flag, `validate` fails.
    3. `design.md`: Non-Goals go to `## Goals / Non-Goals`. Each `### Decision` entry of `plan.md` goes to `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit. Facts go to `## Context`. An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says. An open question that changes the specs, the approach, or the tasks has no slot. Do not put it, or a note that points to it, in `design.md`. Put its answer in the specs or in `## Decisions`. If the user has no answer, keep the question in `plan.md`.
    4. `tasks.md`: if `<dir>/tasks-preview.md` exists, use it as the seed. Remove its two header comment lines. Replace each `plan.md` ID in it with the item title, or a short form of its text. Add `[ ]` to each task line, for example `- [ ] 1.1 <task>`. If an answer from step 2 changes the tasks, edit the seed to match it, and say so in the summary. Then delete `tasks-preview.md`. If no preview exists, write `tasks.md` from the template. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here. Keep `tasks.md`, and delete `tasks-preview.md`.
 3. Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
@@ -63,7 +63,7 @@ In the summary:
 - Ask the user to review all artifacts.
 - If an artifact has 🤖 items, list them. Ask the user to review each one: remove the mark to accept the item, or delete the item.
 - Ask for an extra review of `tasks.md`, because it is a contract, not a reference.
-- Say if `skip_specs` was removed, or put back because the change has no spec delta.
+- Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
 - If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`.
 - If the user said no at step 4.3, say that the moved sections in `plan.md` are old copies. The artifacts are the source of truth.
