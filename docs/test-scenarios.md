@@ -546,10 +546,10 @@ Notes:
 
 ## Metrics
 
-Each report has a metrics table, with one row for each scenario run and one total row for the group. The numbers are useful only in a comparison, for example the same scenario on the last tag and on the new commit.
+Each report has a metrics table, with one row for each session and one total row for the group. If scenarios share a session, as scenarios 1, 3, and 4 can, name each of them in the label, for example `--label 1+3` (D162). The numbers are useful only in a comparison, for example the same scenario on the last tag and on the new commit.
 
 1. Save the JSON of each turn in its own file, in order, for example `> turn-1.json`, then `> turn-2.json` for the first `--resume` turn.
-2. After the last turn, run this command from the repo root. Use the temp folder of the scenario for `--dir`:
+2. After the last turn, run this command from the repo root. Use the OpenSpec root of the scenario for `--dir`. It is the temp folder, except in scenario 11, where it is `<temp>/svc` (D162):
 
    ```sh
    node scripts/run-metrics.mjs --label <scenario> --dir <temp folder> turn-1.json turn-2.json
@@ -572,4 +572,4 @@ Each report has a metrics table, with one row for each scenario run and one tota
 - **Denials**: the sum of `permission_denials`. They come from the allowlist, not from the skill.
 - **User turns**: the number of `--resume` turns, that is, the answers that the user gave. A turn in a new session does not count.
 - **Time s**: the sum of `duration_ms`. It depends on the provider load, so it is the weakest number.
-- The file table gives the lines and words of each `.md` file under `openspec/`, except `openspec/schemas/`. It measures the size of `plan.md` against the size of the spec-driven artifacts.
+- The file table gives the lines and words of each `.md` file under `openspec/`, except `openspec/schemas/` and `openspec/schemas-backup/`. It measures the size of `plan.md` against the size of the spec-driven artifacts.

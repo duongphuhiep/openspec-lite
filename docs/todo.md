@@ -6,24 +6,9 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158), item 8 (scenario 20b picks the item after the skipped list, D159), item 9 (scenario 20c checks only the end state of `skip_specs`, D160), and item 10 (scenario 22a states the name check, D161).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158), item 8 (scenario 20b picks the item after the skipped list, D159), item 9 (scenario 20c checks only the end state of `skip_specs`, D160), item 10 (scenario 22a states the name check, D161), and item 11 (the metrics rules, D162).
 
 ---
-
-## Metrics
-
-### 11. The metrics rules for shared sessions, backups, and subfolder roots
-
-- **Problem 1**: "Metrics" asks for one row for each scenario run. It does not say what to do when more than one scenario shares a session, as scenarios 1, 3, and 4 do. Group A made one row for each session.
-- **Problem 2**: `run-metrics.mjs --dir` skips only `openspec/schemas/`. In scenario 9, it counted `openspec/schemas-backup/.../templates/plan.md` as an artifact.
-- **Problem 3**: in scenario 11, the OpenSpec root is `svc/`. `--dir <temp folder>` finds no `openspec/` folder. The tester must give `--dir <temp>/svc`, and the text does not say this.
-- **Problem 4**: the script has no `--help`. `--help` fails with `ENOENT: open '--help'`. It makes one row for each call, so the tester adds the total row by hand.
-- **Evidence**: groups A, D, and H.
-- **Recommendation**:
-  - Problem 1: say "one row for each session. If scenarios share a session, name all of them in the label, for example `1+3`".
-  - Problem 2: skip `openspec/schemas-backup/` too. This is a one-line change in `scripts/run-metrics.mjs`, with a test.
-  - Problem 3: say "use the OpenSpec root of the scenario for `--dir`".
-  - Problem 4: skip `--help` and the total row until a run needs them.
 
 ## Found after the run
 

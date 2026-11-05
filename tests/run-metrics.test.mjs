@@ -35,8 +35,10 @@ test("sums the turns, counts each tool call once, and lists the artifacts", () =
   writeFileSync(join(d, "t2.json"), JSON.stringify(turn({ permission_denials: [] })));
   mkdirSync(join(d, "repo", "openspec", "changes", "c"), { recursive: true });
   mkdirSync(join(d, "repo", "openspec", "schemas"), { recursive: true });
+  mkdirSync(join(d, "repo", "openspec", "schemas-backup", "plan-lite-v0"), { recursive: true });
   writeFileSync(join(d, "repo", "openspec", "changes", "c", "plan.md"), "## Goal\nShip X\n");
   writeFileSync(join(d, "repo", "openspec", "schemas", "skip.md"), "x\n");
+  writeFileSync(join(d, "repo", "openspec", "schemas-backup", "plan-lite-v0", "backup.md"), "x\n");
 
   const r = run("--label", "4b", "--sessions", join(d, "sessions"), "--dir", join(d, "repo"), join(d, "t1.json"), join(d, "t2.json"));
   assert.equal(r.status, 0, r.stderr);
@@ -45,6 +47,7 @@ test("sums the turns, counts each tool call once, and lists the artifacts", () =
   assert.equal(models, "Models: m-1");
   assert.match(r.stdout, /\| openspec\/changes\/c\/plan\.md \| 2 \| 4 \|/);
   assert.doesNotMatch(r.stdout, /skip\.md/);
+  assert.doesNotMatch(r.stdout, /backup\.md/);
 });
 
 test("a turn in a new session is not a user turn", () => {

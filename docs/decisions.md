@@ -2199,3 +2199,18 @@ This extends D120, D140, and D142.
 **Decision**: Scenario 22a expects a name from the main outcome only, with no word from the time zone fix. It gives two correct examples, `add-csv-export` and `report-csv-export`, and the wrong name `report-csv-export-user-timezone`.
 
 **Rationale**: The scenario gave one example, `add-csv-export`. In 4 of 4 runs, the agent chose `report-csv-export`, which follows the rule, but a strict tester could read the example as the expected name. The check of D149 is that no word comes from the other outcomes, so the scenario now names the failure that D149 fixed.
+
+---
+
+## D162: Metrics Rules for Shared Sessions, Backups, and Subfolder Roots
+
+**Decision**:
+
+- The metrics table has one row for each session. If scenarios share a session, the label names each of them, for example `1+3`.
+- `run-metrics.mjs --dir` skips `openspec/schemas-backup/`, as it skips `openspec/schemas/`. `tests/run-metrics.test.mjs` checks it.
+- `--dir` is the OpenSpec root of the scenario: the temp folder, except in scenario 11, where it is `<temp>/svc`.
+- The script gets no `--help` and no total row. The usage line is the first comment of the script, and the tester adds the total by hand.
+
+This extends D146.
+
+**Rationale**: In the 627b8fb run, group A could not make one row for each scenario, because scenarios 1, 3, and 4 share sessions, and the script counts a whole session log. In scenario 9, the table counted the template in `openspec/schemas-backup/` as an artifact. In scenario 11, `--dir <temp>` found no `openspec/` folder. All 8 groups made the total row by hand with no error, so a total mode is not worth a new code path and its tests yet. Add it when a run gets the total wrong.

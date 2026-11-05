@@ -1,7 +1,7 @@
 // Usage: node scripts/run-metrics.mjs [--label <name>] [--dir <repo>] [--sessions <dir>] <turn.json>...
 // Each <turn.json> is the output of one `claude -p --output-format json` turn of one scenario run, in order.
 // Prints one Markdown table row: cost, tokens, turns, tool calls, denials, user turns, and time.
-// --dir also prints the lines and words of each .md file under <repo>/openspec/, except openspec/schemas/.
+// --dir also prints the lines and words of each .md file under <repo>/openspec/, except openspec/schemas/ and openspec/schemas-backup/.
 // --sessions is the folder of the session logs. The default is ~/.claude/projects.
 // Pass and Checks need a judgment, so the row leaves them as "?".
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
@@ -67,7 +67,7 @@ if (dir) {
   const walk = (d) =>
     readdirSync(d).flatMap((n) => {
       const p = join(d, n);
-      if (statSync(p).isDirectory()) return p === join(root, "schemas") ? [] : walk(p);
+      if (statSync(p).isDirectory()) return [join(root, "schemas"), join(root, "schemas-backup")].includes(p) ? [] : walk(p);
       return n.endsWith(".md") ? [p] : [];
     });
   console.log("\n| File | Lines | Words |\n| --- | --- | --- |");
