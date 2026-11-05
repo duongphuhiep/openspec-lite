@@ -84,7 +84,7 @@ openspec-lite/
     4. Stock `/opsx:apply` on a plan-lite change: it follows `apply.instruction`, writes no `plan.md` ID outside `plan.md`, and ends with the done check. 4b: apply keeps only the current decisions and removes orphan facts.
     5. Archive with one requirement and one decision: the delta merges, the ADR is written.
     6. Archive with nothing promoted: `skip_specs` is set, archive succeeds.
-    7. Upgrade with a preview, interrupted after it writes `proposal.md`, then run again: it resumes and validates.
+    7. Upgrade with a preview, interrupted after it writes `proposal.md`, then run again: it resumes and validates. It asks the open question and each planned requirement from the Goal or the preview in one turn before any write, and marks each inferred item with 🤖 (D152, D164).
     8. Newer repo schema: each workflow skill stops with the "Run `apm update`" message.
     9. Schema re-copy: the old folder moves to `openspec/schemas-backup/`. An existing `operations.archive.guidance` list keeps its items and gets the openspec-lite item, with one `operations:` key (D110).
     10. Not used. The `apm-install` workflow does the real APM install from the tag (D83, D130). Run it after the tag push when the release adds, moves, or deletes a file in `package/`, or changes `package/apm.yml`. Also run it after an APM update.
@@ -99,7 +99,7 @@ openspec-lite/
     19. tasks-preview and upgrade after an upgrade: refuse, or ask to resume when `plan.md` exists (D107, D108).
     20. Upgrade lists the destination of each `plan.md` section and asks before it prunes. The fact goes to `design.md`, and no artifact holds a `plan.md` ID (D135, D142). Archive drafts an item that the user picks from the skipped list. Upgrade with no requirement puts `skip_specs: true` back (D108, D120).
     21. Archive with a decision that replaces an `Accepted` ADR: the new ADR has `Supersedes:`, and only the `Status:` line of the old ADR changes. A rerun fixes an old ADR that an earlier run did not mark (D122).
-    22. Goal with more than one outcome: (a) propose keeps related outcomes as bullets in one change; (b) propose asks before it leaves out an outcome that can ship alone; (c) archive warns when one outcome is not met (D148).
+    22. Goal with more than one outcome: (a) propose keeps related outcomes as bullets in one change; (b) propose asks before it leaves out an outcome that can ship alone; (c) archive names the outcome that is not met, and asks only "Archive anyway?" (D148, D155).
 
 ## 2a. Tests (D84)
 
@@ -127,7 +127,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 
 **Change selection** (D61): Use the change named in the prompt. If no name is given and only one active change exists, use it. Otherwise ask. List active changes with `openspec list --json`. It does not give the schema, so read `schema` from each change's `.openspec.yaml` (D99).
 
-**Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. When archive refuses a change whose `design.md` has `### Decision` entries, it also warns: stock `/opsx:archive` does not turn them into ADRs, so copy them to `openspec/adr/` first to keep them (D115). Archive can offer to do this copy. It writes nothing before a yes. On yes, it uses the ADR form, the checks, the file rules, and the `Supersedes:` edits of the archive steps. It writes no spec, does not change `design.md`, and does not archive the change (D154). One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. A `spec-driven` change with no `plan.md` is refused, like any other schema (D108). An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106). A finished upgrade can also keep `plan.md`, so upgrade asks the user before it resumes (D107).
+**Change schema guard** (D75): tasks-preview, apply, upgrade, and archive refuse a change whose schema is not `plan-lite`. Point to the matching stock skill, for example `/opsx:archive`. When archive refuses a change whose `design.md` has `### Decision` entries, it also warns: stock `/opsx:archive` does not turn them into ADRs, so copy them to `openspec/adr/` first to keep them (D115). Archive can offer to do this copy. It writes nothing before a yes. On yes, it uses the ADR form, the checks, the file rules, and the `Supersedes:` edits of the archive steps. The `validate` condition of the ADR write does not apply. It writes no spec, does not change `design.md`, and does not archive the change (D154). One exception: upgrade accepts a `spec-driven` change that still has `plan.md`. A `spec-driven` change with no `plan.md` is refused, like any other schema (D108). An earlier run stopped after the schema switch, so upgrade resumes at the step after it (D106). A finished upgrade can also keep `plan.md`, so upgrade asks the user before it resumes (D107).
 
 **Skill chaining** (D57): To run another skill, invoke it if the harness can. If the harness cannot, tell the user which skill to run, and stop.
 
