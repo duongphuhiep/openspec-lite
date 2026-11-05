@@ -44,7 +44,15 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
    Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact. To refer to an item, use its title, or a short form of its text, with the change name.
 
-   In `proposal.md`, `specs/`, and `design.md`, put 🤖 at the end of the line or the heading of each inferred item. An item is inferred if it comes from no section of `plan.md` and from no answer of the user in this upgrade. Examples: a `#### Scenario:`, a `### Decision`, or a list item. A requirement is never inferred, because step 2 gives each requirement a source. An item that restates a part of `plan.md` or an answer is not inferred, also in other words, or in another artifact or section. Mark only an item that adds something that `plan.md` and the answers do not say, also when it adds a detail to a `plan.md` item. One mark per item. Do not mark `tasks.md`.
+   In `proposal.md`, `specs/`, and `design.md`, put 🤖 at the end of the line or the heading of each inferred item. An item is inferred only if it holds a new claim: a case, a value, a behavior, a risk, a dependency, a choice, or a reason that no section of `plan.md` and no answer of the user in this upgrade states. `tasks-preview.md` is not a source: a claim that only the preview states is new. An item can be a `#### Scenario:`, a `### Decision`, or a list item. A requirement is never inferred, because step 2 gives each requirement a source.
+
+   Before you mark an item, check each sentence of it, not only its main source. If one sentence holds a new claim, mark the item, and name that claim in a few words. If no sentence holds one, do not mark the item. These are not new claims:
+   - other words for a `plan.md` item or an answer;
+   - another form of it, for example a `#### Scenario:` that only restates its requirement;
+   - another artifact or section for it;
+   - the code, file, or module that a `plan.md` item clearly touches.
+
+   Examples: the scenario "Table is empty" gets 🤖, because `plan.md` does not say what the export does for an empty table. The Why line "no trace of who changed what" gets 🤖, because `plan.md` does not say that an entry records the user. The scenario "Columns follow the on-screen order" gets no 🤖, because it restates the column-order constraint. One mark per item. Do not mark `tasks.md`.
 
    Write the four artifacts in this order: `proposal`, `specs`, `design`, `tasks`. For each one, run `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. Run it as one plain command. Do not put it in a loop or a chain, and do not pipe it to another command. Read the full JSON output. Do not write the artifact without its `template` and `instruction`. Use its `template` and follow its `instruction`. If an artifact already exists from an earlier run, keep it and go to the next one. If a kept artifact looks incomplete, for example a template section that is still empty, tell the user and offer to complete it.
    1. `proposal.md`: from the Goal and the scope in `plan.md`. If the Goal has more than one outcome, give each outcome its own item in What Changes. If `## Background` exists, use its scope items and source links for the proposal context.
@@ -71,7 +79,7 @@ In the summary:
 
 - List the files that you wrote and deleted.
 - Ask the user to review all artifacts.
-- If an artifact has 🤖 items, list them. Ask the user to review each one: remove the mark to accept the item, or delete the item.
+- If an artifact has 🤖 items, list each one with its new claim. Ask the user to review each one: remove the mark to accept the item, or delete the item.
 - Ask for an extra review of `tasks.md`, because it is a contract, not a reference.
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.

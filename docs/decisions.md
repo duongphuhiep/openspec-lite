@@ -2225,6 +2225,8 @@ This extends D146.
 
 **Decision**: An item that restates a part of `plan.md` or an answer of the user is not inferred, also in other words, or in another artifact or section. Upgrade marks only an item that adds something that `plan.md` and the answers do not say, also a detail that it adds to a `plan.md` item.
 
+**Status**: Revised by D167.
+
 This revises D152.
 
 **Rationale**: In 2 of 2 reruns of scenario 20c on f15aba0, upgrade put 🤖 on an item that restated `plan.md`: the decision, reworded in the Impact list of `proposal.md`, and the Goal, reworded in the Goals of `design.md`. Each run also marked its own Why line correctly. A mark is useful only if it is precise, because a user who sees many wrong marks learns to ignore them. Rejected: mark only in `specs/` and `design.md` → `## Decisions`, because the inferred Why line of `proposal.md` is new content that a reviewer must see.
@@ -2274,3 +2276,22 @@ This revises the last bullet of D151.
 This revises D152 and D164.
 
 **Rationale**: A review of D164 found three gaps. The template, upgrade step 2.3, and archive treat a fact only as the reason for a decision or a constraint, and archive never drafts a fact as a requirement (D135). With a fact as a source, upgrade and archive could promote the same `plan.md` in two ways. The rule "If the user gives no requirement in step 2, write no spec" had lost its old condition, so a literal agent could drop a requirement from a constraint when the user said no to a Goal requirement. Scenario 20c asked for any decision and no requirement, but since D164 a decision that is a contract is a source, so the expected "no spec" could fail. A second review found two more gaps. Upgrade defined a contract as "a behavior that a user or another system can see", so a UI layout could become a requirement in upgrade but not in archive. And "step 2 plans no requirement" was false when step 2 planned only a Goal requirement that the user then refused, so the flag was not put back, and `validate` failed.
+
+---
+
+## D167: A 🤖 Mark Needs a Named New Claim
+
+**Decision**:
+
+- Upgrade marks an item with 🤖 only if it holds a new claim: a case, a value, a behavior, a risk, a dependency, or a choice that `plan.md` and the answers of the user do not state.
+- Before it marks an item, the agent names the new claim in a few words. If it cannot name one, it does not mark the item.
+- A reason is also a claim type. `tasks-preview.md` is not a source, so a claim that only the preview states is new.
+- The agent checks each sentence of an item, not only its main source. If one sentence holds a new claim, the item gets the mark.
+- These are not new claims: other words, another form (for example a `#### Scenario:` that only restates its requirement), another artifact or section, and the code, file, or module that a `plan.md` item clearly touches.
+- The skill gives examples of each side: "Table is empty" and the Why line "no trace of who changed what" get a mark, and "Columns follow the on-screen order" gets none.
+- The summary lists each 🤖 item with its new claim.
+
+This revises D163.
+
+**Rationale**: D163 said "mark … also when it adds a detail to a `plan.md` item". Almost each restatement adds some detail, for example a WHEN/THEN form, a code location, or an effect. So the agent always found a reason to mark it. In the D164 verification and the run on 38d9a54, upgrade marked a scenario that restated its requirement, an Impact line that restated the Goal with the name of the code, and a reworded decision (todo item 14). A closed list of claim types replaces the open "adds a detail" test, so the agent checks a type and does not judge each case. The named claim in the summary makes the check visible to the user and to a scenario run. Rejected: repeat "do not mark a restatement" more strongly, because the rule was already there, and the agent read each case as an added detail. A first version had no sentence check, no reason type, and no Why example. In 6 verification runs, it removed each over-mark, but 3 of 6 runs missed a mark: two Why lines that add who and when, and a preview-only sentence inside a decision from an answer. The agent judged each item by its main source. The sentence check and the Why example close these gaps.
+
