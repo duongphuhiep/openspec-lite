@@ -2084,6 +2084,8 @@ This extends D112.
 - "Running the Scenarios Headless" names the `/private/tmp/...` path and its session log folder.
 - The open items of the run stay open. They are listed in `.scenario-runs/20261105-627b8fb/summary.md`. The skill gaps need an owner decision.
 
+**Status**: D165 moves the open items to `docs/todo.md`.
+
 **Rationale**: All 33 runs passed, but 5 groups found scenario text that misled the tester. After scenario 1, `## Constraints` is empty, so "Edit a line" had no target. Scenario 9 named v3 after the bump to v4, and a version number in the text goes stale at each bump. "Step 10 of 21a" pointed to a step that 21a does not have. Three groups built a plan-lite change by hand, and each had to find the schema install and the `skip_specs` rule (D150) alone.
 
 ---
@@ -2241,3 +2243,17 @@ This revises D152.
 This revises D152 and extends D119.
 
 **Rationale**: In the D163 verification, 2 of 3 runs wrote a requirement from the Goal with no question, and 1 of 3 wrote one from the internal decision "store the audit log in the main database". The D152 rule was the 5th sub-bullet of the spec step, the step header said "the requirements in `plan.md`", and `plan.md` has no such section. The only question turn before a write was for the open questions, so in scenario 7 the agent asked that question and then wrote everything. Archive drafts a decision as a requirement only if it is a contract (D119), but upgrade had no such filter. In the D164 verification, 3 of 3 runs asked before any write, and 0 of 3 wrote a Goal requirement without a yes or a requirement from the internal decision (`docs/facts.md`).
+
+---
+
+## D165: docs/todo.md Holds the Open Items
+
+**Decision**:
+
+- `docs/todo.md` holds each open item: the problem, the evidence, and a recommendation, but no decision yet. It copies the key evidence, because `.scenario-runs/` is git-ignored.
+- To close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from `docs/todo.md`.
+- The file table of `CLAUDE.md` and the layout of `docs/design.md` name the file.
+
+This revises the last bullet of D151.
+
+**Rationale**: The open items of the 627b8fb run were only in `.scenario-runs/20261105-627b8fb/summary.md`. That folder exists only on the machine that ran the scenarios, so a new session or another person could not continue the work.

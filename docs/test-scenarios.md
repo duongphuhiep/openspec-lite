@@ -96,12 +96,12 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Steps**:
 
 1. Run this prompt, then answer yes to the tasks preview: "openspec-lite-propose: add a CSV export to the report page. Scope: one Export CSV button on the report page, exporting the rows shown in the table. Source: docs/report-page.md and issue #42. Requirement: the export uses the same column order as the table on screen. Decision: generate the CSV in the browser, because the data is already loaded there. Constraint: no new server endpoint. Open question: should the export include hidden columns? (This changes the tasks.)" (D157)
-2. Run `openspec-lite-upgrade`. Stop the agent after it writes `proposal.md`.
-3. Run `openspec-lite-upgrade` again. Answer the open question: "No, the export does not include hidden columns." If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply. At the prune question, answer yes.
+2. Run `openspec-lite-upgrade`. Answer its question turn with the answer of step 3. Stop the agent after it writes `proposal.md`.
+3. Run `openspec-lite-upgrade` again. If it asks the question turn again, answer the open question: "No, the export does not include hidden columns." If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply. At the prune question, answer yes.
 
 **Expected**:
 
-- After step 2, `.openspec.yaml` still has `schema: plan-lite`, and `skip_specs` is gone.
+- In step 2, the agent asks the question turn and ends the turn before it writes an artifact (D164). After step 2, `.openspec.yaml` still has `schema: plan-lite`, and `skip_specs` is gone.
 - After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a fact, a decision that is a contract, or an answer of the user. Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
 - The agent shows the list of `plan.md` destinations before the prune question. After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
@@ -408,12 +408,12 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 **Steps**:
 
 1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, one `## Facts` item that the decision relies on, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change. Run `openspec-lite-tasks-preview`. If the preview names no `plan.md` ID, add one, for example "(D1)", to a task line.
-2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". At the prune question, answer no.
+2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply (D164). At the prune question, answer no.
 3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question.
 
 **Expected**:
 
-- The agent asks the user to answer the open question before it writes an artifact.
+- The agent asks the user to answer the open question before it writes an artifact, in one reply with each planned requirement from the Goal or the tasks preview (D164).
 - Before the prune question, the agent lists each `plan.md` section with its artifact and heading. The open question is "kept".
 - After step 2, `plan.md` is the same as in step 1.
 - At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.

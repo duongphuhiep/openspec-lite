@@ -40,7 +40,8 @@ openspec-lite/
 │   ├── apm-install.yml
 │   └── test.yml
 ├── docs/
-│   └── test-scenarios.md
+│   ├── test-scenarios.md
+│   └── todo.md            # open items with evidence, no decision yet
 ├── GLOSSARY.md
 └── README.md
 ```
@@ -240,10 +241,20 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - If `state` is `blocked`, `plan.md` is missing. Stop, and point to `openspec-lite-propose`. Do not follow CLI text that names another skill (D111).
 - Users try stock `/opsx:apply` first (D27).
 
-### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148, D152, D153, D164)
+### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148, D152, D153, D158, D163, D164)
 
 1. Remove `skip_specs: true` from `.openspec.yaml`. While it is set, the CLI forbids spec files (D99).
-2. Before any artifact, plan the requirements. A requirement comes only from a constraint or a fact of `plan.md`, a decision that is also a contract (a behavior that a user or another system can see), or an answer of the user. A decision that is not a contract goes only to `design.md` → `## Decisions`. The Goal and `tasks-preview.md` alone are not sources. Then ask in one reply, and end the turn: each open question that changes the specs, the approach, or the tasks; each planned requirement from the Goal or the preview, with its text; and, if no requirement is planned, a request for one. If all three lists are empty, do not ask. If the user cannot answer an open question now, it stays in `plan.md` (D120, D164, `docs/facts.md`). Then write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. Run it as one plain command, with no loop, no chain, and no pipe. Read the full JSON. Do not write the artifact without its `template` and `instruction` (D133). On a resumed run, keep each artifact that already exists, and write only the missing ones. Follow the `instruction` field of each result.
+2. Before any artifact, plan the requirements (D164). A requirement comes only from these sources:
+   - a constraint or a fact of `plan.md`;
+   - a decision that is also a contract, that is, a behavior that a user or another system can see. A decision that is not a contract goes only to `design.md` → `## Decisions`;
+   - an answer of the user.
+
+   The Goal and `tasks-preview.md` alone are not sources. Then ask in one reply, and end the turn:
+   - each open question that changes the specs, the approach, or the tasks;
+   - each requirement that you plan from the Goal or the preview, with its text;
+   - a request for one requirement, if you plan none.
+
+   If all three lists are empty, do not ask. If the user cannot answer an open question now, the question stays in `plan.md` (D120, `docs/facts.md`). Then write the four artifacts in dependency order, while the change is still plan-lite. Get each template from `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`. Run it as one plain command, with no loop, no chain, and no pipe. Read the full JSON. Do not write the artifact without its `template` and `instruction` (D133). On a resumed run, keep each artifact that already exists, and write only the missing ones. Follow the `instruction` field of each result.
    Do not write the `plan.md` IDs in an artifact. Refer to an item by its title, or a short form of its text, with the change name (D142, D143).
    In `proposal.md`, `specs/`, and `design.md`, put 🤖 at the end of the line or the heading of each inferred item: an item from no section of `plan.md` and from no answer of the user in this upgrade. An item that restates a part of `plan.md` or an answer is not inferred, also in other words or in another section. An item that adds a detail is inferred (D163). One mark per item. `tasks.md` gets no mark (D152).
    1. `proposal.md`: from Goal and the scope. If the Goal has more than one outcome, give each outcome its own item in What Changes (D148). If `## Background` exists, use its scope items and source links (D125). Non-Goals go to `design.md` → `## Goals / Non-Goals`.

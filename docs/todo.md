@@ -6,7 +6,21 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158), item 8 (scenario 20b picks the item after the skipped list, D159), item 9 (scenario 20c checks only the end state of `skip_specs`, D160), item 10 (scenario 22a states the name check, D161), item 11 (the metrics rules, D162), item 12 (a restated `plan.md` item gets no 🤖, D163), and item 13 (one question turn before any write, and a decision becomes a requirement only if it is a contract, D164).
+Done:
+
+- Item 1: upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖 (D152).
+- Item 2: upgrade reports the `skip_specs` state at the end (D153).
+- Item 3: archive can offer to copy the decisions to ADRs after its guard (D154).
+- Item 4: archive asks only "Archive anyway?" (D155).
+- Item 5: scenario 4 gives a fixed answer to the questions of apply (D156).
+- Item 6: scenario 7 has a fixed prompt and a fixed answer (D157).
+- Item 7: upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form (D158).
+- Item 8: scenario 20b picks the item after the skipped list (D159).
+- Item 9: scenario 20c checks only the end state of `skip_specs` (D160).
+- Item 10: scenario 22a states the name check (D161).
+- Item 11: the metrics rules (D162).
+- Item 12: a restated `plan.md` item gets no 🤖 (D163).
+- Item 13: one question turn before any write, and a decision becomes a requirement only if it is a contract (D164).
 
 ---
 
