@@ -2103,7 +2103,7 @@ This extends D112.
 
 This revises D131 and extends D114.
 
-**Status**: D163: an item that restates a part of `plan.md` in other words is not inferred, and gets no mark. D164 moves the requirement question to one question turn before any write, and lets a decision become a requirement only if it is a contract.
+**Status**: D163: an item that restates a part of `plan.md` in other words is not inferred, and gets no mark. D164 moves the requirement question to one question turn before any write, and lets a decision become a requirement only if it is a contract. D166: a fact is not a source of a requirement.
 
 **Rationale**: In scenario 7 of the 627b8fb run, `plan.md` had two constraints. Upgrade wrote 4 distinct requirements with no question: 2 from the constraints, 1 from the Goal, and 1 (RFC 4180 escaping) from the tasks preview. It also wrote scenarios from the tasks preview, for example "Table is empty". A spec is a contract that others depend on after the archive, and the tasks preview is a reference, not a contract. A list of sources in the summary was rejected, because it points to `plan.md` items, and the user usually deletes `plan.md` after the upgrade. A mark in the artifact stays where the reviewer reads. `tasks.md` gets no mark, because the agent writes almost each task from its own preview, so a mark on each line tells the reviewer nothing. If the user forgets a mark, stock `/opsx:archive` merges it into `openspec/specs/`. This is a visible signal, not a silent error, so no skill removes it.
 
@@ -2242,6 +2242,8 @@ This revises D152.
 
 This revises D152 and extends D119.
 
+**Status**: D166 removes the fact from the sources of a requirement, and limits the "no requirement" rule to a plan with no planned requirement.
+
 **Rationale**: In the D163 verification, 2 of 3 runs wrote a requirement from the Goal with no question, and 1 of 3 wrote one from the internal decision "store the audit log in the main database". The D152 rule was the 5th sub-bullet of the spec step, the step header said "the requirements in `plan.md`", and `plan.md` has no such section. The only question turn before a write was for the open questions, so in scenario 7 the agent asked that question and then wrote everything. Archive drafts a decision as a requirement only if it is a contract (D119), but upgrade had no such filter. In the D164 verification, 3 of 3 runs asked before any write, and 0 of 3 wrote a Goal requirement without a yes or a requirement from the internal decision (`docs/facts.md`).
 
 ---
@@ -2257,3 +2259,17 @@ This revises D152 and extends D119.
 This revises the last bullet of D151.
 
 **Rationale**: The open items of the 627b8fb run were only in `.scenario-runs/20261105-627b8fb/summary.md`. That folder exists only on the machine that ran the scenarios, so a new session or another person could not continue the work.
+
+---
+
+## D166: A Fact Is Not a Source of a Requirement
+
+**Decision**:
+
+- Upgrade writes a requirement only from a constraint of `plan.md`, a decision that is also a contract, or an answer of the user. A fact is not a source. It is only the reason for a decision or a constraint, and it goes to `design.md` → `## Context`.
+- The "no requirement" rule of the spec step applies only if step 2 plans no requirement and the user gives none.
+- Scenario 20c uses a decision that is not a contract.
+
+This revises D152 and D164.
+
+**Rationale**: A review of D164 found three gaps. The template, upgrade step 2.3, and archive treat a fact only as the reason for a decision or a constraint, and archive never drafts a fact as a requirement (D135). With a fact as a source, upgrade and archive could promote the same `plan.md` in two ways. The rule "If the user gives no requirement in step 2, write no spec" had lost its old condition, so a literal agent could drop a requirement from a constraint when the user said no to a Goal requirement. Scenario 20c asked for any decision and no requirement, but since D164 a decision that is a contract is a source, so the expected "no spec" could fail.

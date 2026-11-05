@@ -102,7 +102,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected**:
 
 - In step 2, the agent asks the question turn and ends the turn before it writes an artifact (D164). After step 2, `.openspec.yaml` still has `schema: plan-lite`, and `skip_specs` is gone.
-- After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a fact, a decision that is a contract, or an answer of the user. Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
+- After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a decision that is a contract, or an answer of the user (D166). Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
 - The agent shows the list of `plan.md` destinations before the prune question. After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
 
@@ -432,7 +432,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 **Steps**:
 
-1. Create a plan-lite change with a Goal and one `### Decision D<n>:` entry in `plan.md`. Do not write a requirement.
+1. Create a plan-lite change with a Goal and one `### Decision D<n>:` entry in `plan.md`. The decision must not be a contract, for example "Store the audit log in the main database". Do not write a requirement or a constraint (D164).
 2. Run `openspec-lite-upgrade`. When the agent asks for a requirement, answer "none".
 
 **Expected**:
