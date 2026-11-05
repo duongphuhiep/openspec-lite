@@ -508,7 +508,7 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 **Expected**:
 
 - The done check finds the CSV export, and says that the date outcome is not met. It names that outcome.
-- The agent asks: "Archive anyway?" Answer no. The agent stops, and writes no spec, no ADR, and no archive folder.
+- The agent asks only: "Archive anyway?", with no menu of other options (D155). Answer no. The agent stops, and writes no spec, no ADR, and no archive folder. It tells the user to add an item that is not in `plan.md` to `plan.md`, then to run archive again.
 
 ---
 

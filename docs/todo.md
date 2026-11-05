@@ -6,22 +6,9 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), and item 3 (archive can offer to copy the decisions to ADRs after its guard, D154).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), and item 4 (archive asks only "Archive anyway?", D155).
 
 ---
-
-## Skill text
-
-### 4. Archive shows a menu, not the question "Archive anyway?"
-
-- **Where**: `package/skills/openspec-lite-archive/SKILL.md`, section "2. Archive", step 1 "Done check": "If an answer is 'no', show the warnings and ask: 'Archive anyway?' On no, stop."
-- **Problem**: in scenario 22c, the agent showed three options: "1. Archive anyway", "2. Stop", "3. Record first". Option 3 offers to draft a spec or an ADR before the archive. The user's answer "No." then has no clear meaning, but the agent read it as "Stop". The f0a5cad run also changed the question: "Archive anyway, or finish the time-zone work first?"
-- **Evidence**: group H, scenario 22c (session `56c0af8b`, turn 1), and `.scenario-runs/20261104-f0a5cad-D148/report.md`.
-- **Why it can matter**: option 3 drafts before the done check passes. The skill says "Write nothing before the user approves", so a draft is not a write. But it starts a promotion that the skill puts after the done check.
-- **Recommendation**: decide if the exact yes/no question matters.
-  - If it matters: "Ask only: 'Archive anyway?' Give no other options."
-  - If not: change scenario 22c to accept any reply that offers to archive anyway and to stop.
-  - I prefer the exact question, because a yes/no answer has one meaning, also in a headless run.
 
 ## Scenario text in `docs/test-scenarios.md`
 

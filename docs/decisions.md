@@ -952,6 +952,8 @@ This makes D53 precise.
 
 This revises D60.
 
+**Status**: D155: archive asks only this question, with no other options, and on no it tells the user how to keep an item that is not in `plan.md`.
+
 **Rationale**: It prevents an archive of an unfinished change by mistake. The cost is one question.
 
 ---
@@ -2125,3 +2127,17 @@ This revises D108 and D120.
 This extends D75 and D115.
 
 **Rationale**: In 4 of 4 runs of scenario 18, the agent offered "I can draft both ADRs in the format this skill uses", but no rule covered the offer or the yes path. D115 names the gap: after an upgrade, the decisions are in `design.md`, and stock `/opsx:archive` does not turn them into ADRs. The rule closes the gap with the ADR form and file rules that archive already has. Rejected: forbid the offer, because the user must then copy the decisions by hand, and the agent made the offer in each run anyway.
+
+---
+
+## D155: Archive Asks Only "Archive anyway?"
+
+**Decision**:
+
+- If an answer of the archive done check is "no", archive shows the warnings and asks only "Archive anyway?". It gives no other options.
+- On no, it stops, and tells the user: to keep an item that is not in `plan.md`, add it to `plan.md`, then run `openspec-lite-archive` again.
+- Scenario 22c expects the exact question and this hint.
+
+This extends D77.
+
+**Rationale**: In scenario 22c, 2 of 2 runs changed the question. On 627b8fb, the agent showed a menu: "1. Archive anyway", "2. Stop", "3. Record first". Option 3 asked the user for new content from memory, for example the CSV column format, to write as a spec or an ADR before the archive. On f0a5cad, the agent asked "Archive anyway, or finish the time-zone work first?". The done check is a gate, and a gate needs one yes or no answer, also in a headless run. Option 3 also skips `plan.md`, the source of each promotion, and the step 6 rule that lets the user pick only an item that archive skipped. The need behind option 3 is real: a user can see at the last moment that a decision is worth keeping. The hint gives that need a correct path, through `plan.md` and the normal filter and approval. Rejected: accept a menu in the scenario, because each run can invent new options, and the scenario cannot check them.

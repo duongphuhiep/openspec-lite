@@ -254,9 +254,9 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 6. In the summary, ask the user to review all artifacts. List each 🤖 item, and ask the user to remove the mark to accept it, or to delete the item (D152). Ask for an extra review of `tasks.md`, because it is a contract. Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none (D153). If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`. If the user said no to the delete, say that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth (D120). If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs (D115).
 
-### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122, D148, D154)
+### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122, D148, D154, D155)
 
-1. Ask the done check (see §4). To find the code, search for what each outcome of the Goal names, for example with `git grep`. Name each outcome that is not met (D148). Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask: "Archive anyway?" On no, stop.
+1. Ask the done check (see §4). To find the code, search for what each outcome of the Goal names, for example with `git grep`. Name each outcome that is not met (D148). Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask only: "Archive anyway?", with no other options. On no, stop, and tell the user: to keep an item that is not in `plan.md`, add it to `plan.md`, then run archive again (D155).
 2. Read `plan.md`. Do not read `tasks-preview.md` for promotion.
 3. Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
