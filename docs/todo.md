@@ -6,17 +6,11 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), and item 5 (scenario 4 gives a fixed answer to the questions of apply, D156).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), and item 6 (scenario 7 has a fixed prompt and a fixed answer, D157).
 
 ---
 
 ## Scenario text in `docs/test-scenarios.md`
-
-### 6. Scenario 7 needs an open question, but its prompt has none
-
-- **Problem**: scenario 7 step 1 says "Create a change with a tasks preview (scenario 3, steps 1–2)". Those steps use the scenario 1 prompt "add a CSV export to the report page.", which gives no open question. Step 3 says "Answer each open question". The runs use a longer prompt, with an open question that changes the tasks.
-- **Evidence**: group C, `7-setup`, turn 1 (session `62d3ec69-e111-4864-96b8-3c8d3d61d07b`). The prompt was: "openspec-lite-propose: add a CSV export to the report page. Scope: one Export CSV button ... Source: docs/report-page.md and issue #42. Requirement: the export uses the same column order as the table on screen. Decision: generate the CSV in the browser, because the data is already loaded there. Constraint: no new server endpoint. Open question: should the export include hidden columns? (This changes the tasks.)"
-- **Recommendation**: put this prompt in scenario 7 step 1. It also gives the D152 check of item 1 a known start state: two constraints, one decision, one fact, and one open question.
 
 ### 7. Scenario 20a: the ID comment after the prune, and "by its title"
 

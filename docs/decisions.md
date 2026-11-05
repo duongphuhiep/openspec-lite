@@ -2149,3 +2149,15 @@ This extends D77.
 **Decision**: Scenario 4 has a second step. The tester answers the questions of apply in one reply: continue from `plan.md`, do not regenerate the preview, one real answer for each open question, and a fixed stack (plain HTML and JavaScript under `src/`, `node:test`, no npm dependency, a minimal report page). The step forbids "use the defaults".
 
 **Rationale**: Scenario 4 runs on the change of scenarios 1 and 3. Apply then asks up to three questions before it codes: the stale preview from scenario 3, the open questions from scenario 1, and the stack of an empty repo. The scenario gave no answer, so each tester improvised. In the 627b8fb run, the tester wrote "I accept your defaults", but apply gave no defaults, so the agent chose the answers itself. A fixed answer makes two runs test the same thing. The open questions differ in each run, so the tester writes their answers. Rejected: a fixed `plan.md` with no open questions, because scenario 4 then no longer tests the change that scenarios 1 and 3 build.
+
+---
+
+## D157: Scenario 7 Has a Fixed Prompt and a Fixed Answer
+
+**Decision**:
+
+- Scenario 7 step 1 holds the full propose prompt: the Goal, the scope, two sources, one requirement, one decision with its reason, one constraint, and one open question that changes the tasks. The tester then answers yes to the tasks preview.
+- Step 3 gives the answer to the open question: "No, the export does not include hidden columns."
+- Scenarios 17, 18, 18b, and 19 start from the end of scenario 7, so they get the same start.
+
+**Rationale**: Step 1 pointed to scenario 3 steps 1–2, which use the scenario 1 prompt. That prompt names no open question, but step 3 said "Answer each open question". The 92c77ff and 627b8fb runs used a longer prompt that was not in the scenario text. Scenario 7 is also the test of D152, and D152 needs a known start, so that the tester can tell the requirements from `plan.md` from the inferred items. Rejected: keep the pointer to scenario 3 and add the open question to `plan.md` by hand, because the tester then writes the question, and two runs can differ.

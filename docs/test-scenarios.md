@@ -95,9 +95,9 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. Create a change with a tasks preview (scenario 3, steps 1–2).
+1. Run this prompt, then answer yes to the tasks preview: "openspec-lite-propose: add a CSV export to the report page. Scope: one Export CSV button on the report page, exporting the rows shown in the table. Source: docs/report-page.md and issue #42. Requirement: the export uses the same column order as the table on screen. Decision: generate the CSV in the browser, because the data is already loaded there. Constraint: no new server endpoint. Open question: should the export include hidden columns? (This changes the tasks.)" (D157)
 2. Run `openspec-lite-upgrade`. Stop the agent after it writes `proposal.md`.
-3. Run `openspec-lite-upgrade` again. Answer each open question. At the prune question, answer yes.
+3. Run `openspec-lite-upgrade` again. Answer the open question: "No, the export does not include hidden columns." At the prune question, answer yes.
 
 **Expected**:
 
