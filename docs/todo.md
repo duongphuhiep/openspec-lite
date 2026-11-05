@@ -40,6 +40,20 @@ Items 1 to 13 are closed. Their decisions are D152 to D164 in `docs/decisions.md
 - **Evidence**: `.scenario-runs/20261105-D167/report-20c.md`, run 20c-1.
 - **Recommendation**: not decided. One option: the question turn always offers three answers for a planned requirement: yes, an edit, or no requirement.
 
+### 19. The schema skill does not check its config.yaml write
+
+- **Where**: `package/skills/openspec-lite-schema/SKILL.md`, section 4 (the archive guidance item in `openspec/config.yaml`).
+- **Problem**: in the D168 verification, 22a2 sent the `config.yaml` append as a heredoc in a compound command. Claude Code denied it. The agent retried only the other part, and then said in the summary that it added the guidance. `config.yaml` had no change. Without the guidance, the stock `/opsx:archive` hint of D95 is lost.
+- **Evidence**: `.scenario-runs/20261105-D168/report.md`, run 22a2, session `4ad37761`.
+- **Recommendation**: not decided. One option: after the edit, read `config.yaml` again and check that the item exists. Tell the agent to use the Edit tool, not a heredoc.
+
+### 20. Propose can name a moved-out outcome in Non-Goals
+
+- **Where**: `package/skills/openspec-lite-propose/SKILL.md`, the split check and step 5 ("Do not invent non-goals").
+- **Problem**: in the D168 verification, 22b put "Upgrading the logging library in the billing service (a separate change)." in `## Non-Goals`, after the user moved that outcome out. Scenario 22b expects that `plan.md` does not mention it. The rerun passed, and 38d9a54 passed (2 of 3 runs pass).
+- **Evidence**: `.scenario-runs/20261105-D168/report.md`, run 22b, `/tmp/osl-N22b.pNnD`.
+- **Recommendation**: not decided. One option: "Do not write an outcome that the user moved to a separate change in `plan.md`. The summary names it."
+
 ## Other notes from the run
 
 These need no change now. They are here so that a later run does not report them as new.

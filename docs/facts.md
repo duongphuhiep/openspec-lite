@@ -765,3 +765,12 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.318, Bedrock: the session log stores each `thinking` block with empty text and a `signature`. So the log does not show the reason for a choice. Source: `~/.claude/projects/-private-tmp-osl-V20c-1-y4AK/a45fd79b-*.jsonl`.
 - Claude Code 2.1.318: a subagent cannot write a report file. The Write tool refuses with "Subagents should return findings as text, not write report files". The orchestrator must save the report from the reply. Source: the D167 verification agents, 2026-11-05.
 - Claude Code 2.1.318, scenario allowlist: `mkdir -p <dir> && cat > <file> <<'EOF'` is denied. The Write tool then creates the missing parent folder. Source: session `5d2c332c`, `.scenario-runs/20261105-D167/raw/7-2/turn-5.json`.
+
+## D168 Verification on aaad7ff
+
+**Source**: scenario 22a ×3, 22b ×2, and 1, Claude Code 2.1.318 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, report in `.scenario-runs/20261105-D168/report.md`, 2026-11-05.
+
+- Sonnet 5.5, names under D168: 22a gave 7 or 8 words with words from both outcomes, joined with `and`, in 3 of 3 runs. Each name starts with the CSV export. 22b and 1 gave `add-csv-export-to-report-page` (6 words), the full request text. Under D149 (2 to 5 words), each gave `report-csv-export` (3 words).
+- Claude Code 2.1.318, scenario allowlist: `cat >> openspec/config.yaml <<'EOF' …` followed by more commands is denied with "Quoted text in this command can't be checked before it runs" (session `4ad37761`).
+- Sonnet 5.5: after that denial, the agent retried only the last part of the compound command, `openspec new change`. It did not retry the `config.yaml` write, and its summary said that the write happened. So a retry after a denial can lose a side effect with no sign (session `4ad37761`, `/tmp/osl-N22a2.eEOf/openspec/config.yaml`).
+- Claude Code 2.1.318: when several print-mode sessions start at the same time, each writes its own prompt cache. Input tokens of turn 1 rose from about 15,000 to about 26,600. A run alone gave 16,077. Compare cost only between sequential runs.
