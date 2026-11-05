@@ -982,7 +982,7 @@ This extends D62.
 
 This extends D61.
 
-**Status**: D148: the name comes from the main outcome, the first outcome of the request.
+**Status**: D148: the name comes from the main outcome, the first outcome of the request. D168: the name has 2 to 10 words, as a soft limit.
 
 **Rationale**: This matches the stock propose skill. The user can rename the folder.
 
@@ -2054,6 +2054,8 @@ This replaces the "One sentence" rule of the Goal comment from D124, and the "ke
 
 This extends D148.
 
+**Status**: Superseded by D168. The name starts with the main outcome, and words from the other outcomes can follow.
+
 **Rationale**: In the f0a5cad scenario run, 22a failed. The skill said "from the main outcome", but the agent named the change `report-csv-export-user-timezone`, from both outcomes. With "only" and the explicit ban, 3 of 3 reruns named it `report-csv-export` (`docs/facts.md`). A name from all outcomes grows past 5 words when a change has three outcomes.
 
 ---
@@ -2200,6 +2202,8 @@ This extends D120, D140, and D142.
 
 ## D161: Scenario 22a States the Name Check
 
+**Status**: Revised by D168. `report-csv-export-user-timezone` now passes. A name that starts with the time zone fix fails.
+
 **Decision**: Scenario 22a expects a name from the main outcome only, with no word from the time zone fix. It gives two correct examples, `add-csv-export` and `report-csv-export`, and the wrong name `report-csv-export-user-timezone`.
 
 **Rationale**: The scenario gave one example, `add-csv-export`. In 4 of 4 runs, the agent chose `report-csv-export`, which follows the rule, but a strict tester could read the example as the expected name. The check of D149 is that no word comes from the other outcomes, so the scenario now names the failure that D149 fixed.
@@ -2295,3 +2299,16 @@ This revises D163.
 
 **Rationale**: D163 said "mark … also when it adds a detail to a `plan.md` item". Almost each restatement adds some detail, for example a WHEN/THEN form, a code location, or an effect. So the agent always found a reason to mark it. In the D164 verification and the run on 38d9a54, upgrade marked a scenario that restated its requirement, an Impact line that restated the Goal with the name of the code, and a reworded decision (todo item 14). A closed list of claim types replaces the open "adds a detail" test, so the agent checks a type and does not judge each case. The named claim in the summary makes the check visible to the user and to a scenario run. Rejected: repeat "do not mark a restatement" more strongly, because the rule was already there, and the agent read each case as an added detail. A first version had no sentence check, no reason type, and no Why example. In 6 verification runs, it removed each over-mark, but 3 of 6 runs missed a mark: two Why lines that add who and when, and a preview-only sentence inside a decision from an answer. The agent judged each item by its main source. The sentence check and the Why example close these gaps.
 
+---
+
+## D168: Change Names of 2 to 10 Words
+
+**Decision**:
+
+- Propose derives a kebab-case change name of 2 to 10 words, not 2 to 5. 10 words is a soft limit: the agent goes over it only if a shorter name is not clear.
+- The name starts with the main outcome. Words from the other outcomes can follow. If the name is too long, the agent removes the words of the other outcomes first.
+- Scenario 22a passes `report-csv-export-user-timezone`, and fails a name that starts with the time zone fix.
+
+This revises D80 and D161, and supersedes D149.
+
+**Rationale**: 5 words was too short. To stay under the limit, the agent had to drop words that make the name clear. A name with words from each outcome tells more about the change. D149 banned those words, because a name from all outcomes grows past 5 words, and because it can hide the main outcome. The 10-word limit removes the first reason. The "start with the main outcome" rule and the cut order remove the second.

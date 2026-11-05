@@ -45,7 +45,7 @@ Externally observable behavior that a client or another team depends on. Promoti
 _Avoid_: Interface, API (for this meaning)
 
 **Outcome**:
-A result that a change delivers. `## Goal` in `plan.md` holds one outcome by preference, or more than one related outcome, one per bullet. The first outcome of the request is the **main outcome**. The change name comes from it. The **split question** asks the user to leave out an outcome that can ship alone and does not touch the code of the main outcome. The done check asks if each outcome is met.
+A result that a change delivers. `## Goal` in `plan.md` holds one outcome by preference, or more than one related outcome, one per bullet. The first outcome of the request is the **main outcome**. The change name starts with it. The **split question** asks the user to leave out an outcome that can ship alone and does not touch the code of the main outcome. The done check asks if each outcome is met.
 _Avoid_: Objective
 
 **Inferred item**:
