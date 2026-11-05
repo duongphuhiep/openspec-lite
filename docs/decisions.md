@@ -1459,7 +1459,7 @@ This revises D58, D61, D74, D98, D105, and D110. `apply.instruction` changed, bu
 
 **Decision**:
 
-- propose sets `skip_specs: true` only if the line is missing. It never adds a second one.
+- propose sets `skip_specs: true` only if the line is missing. It never adds a second one. D150: propose reads the file first.
 - Archive ignores `skipped: true` and the warning of `instructions specs`, because `skip_specs` is still set at that step. It uses SHALL or MUST, as the CLI instruction says.
 - An ADR has an exact form: `# <Title>`, then the plain lines `Status: Accepted` and `Change: <name>`, then `## Context`, `## Decision`, and `## Consequences`. The rerun check searches for the line `Change: <name>`.
 - Archive lists the deltas from an earlier run before it writes the new ones. It merges into a kept file with the same path.
@@ -2045,3 +2045,18 @@ This replaces the "One sentence" rule of the Goal comment from D124, and the "ke
 This extends D148.
 
 **Rationale**: In the f0a5cad scenario run, 22a failed. The skill said "from the main outcome", but the agent named the change `report-csv-export-user-timezone`, from both outcomes. With "only" and the explicit ban, 3 of 3 reruns named it `report-csv-export` (`docs/facts.md`). A name from all outcomes grows past 5 words when a change has three outcomes.
+
+---
+
+## D150: Propose Reads .openspec.yaml Before It Sets skip_specs
+
+**Decision**:
+
+- Propose step 3 reads `.openspec.yaml` before the edit. If `skip_specs: true` exists, propose does not edit the file. If it is missing, propose adds it.
+- The step says that OpenSpec 1.14.2 already writes the line.
+- Scenario 1 expects one `skip_specs` line, with no add-and-remove in the run.
+- Scenario 12 step 1 adds `skip_specs: true` only if the line is missing. Before, the step made a duplicate key with OpenSpec 1.14.2.
+
+This extends D112.
+
+**Rationale**: In scenario 1 on f0a5cad, propose added a second `skip_specs: true` line, saw that the CLI failed, and removed the line. The D112 rule "If the line exists, do not add a second one" did not tell the agent to look first. OpenSpec 1.14.2 writes the line in `openspec new change --schema plan-lite` (`docs/facts.md`), so with that version the line always exists. The add-if-missing part stays for the older OpenSpec versions in the `openspec-version` range, because the facts do not show when OpenSpec started to write the line.

@@ -20,7 +20,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected**:
 
 - The agent runs `openspec-lite-schema`. `openspec/schemas/plan-lite/` exists. `openspec/config.yaml` has the archive guidance item.
-- `openspec/changes/<name>/` exists. `.openspec.yaml` has `schema: plan-lite` and `skip_specs: true`.
+- `openspec/changes/<name>/` exists. `.openspec.yaml` has `schema: plan-lite` and one `skip_specs: true` line. The agent did not add a second line and then remove it (D150).
 - `plan.md` has the ID comment before `## Goal`, the seven headings, and their guidance comments, with only known content filled in.
 - The agent asks: "Do you want a tasks preview?" It writes no code.
 
@@ -152,7 +152,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. Run `openspec new change resume-me --schema plan-lite`. Add `skip_specs: true` to its `.openspec.yaml`. Do not write `plan.md`.
+1. Run `openspec new change resume-me --schema plan-lite`. If its `.openspec.yaml` has no `skip_specs: true` line, add one. OpenSpec 1.14.2 writes the line itself. Do not write `plan.md`.
 2. Ask: "openspec-lite-propose: resume-me."
 
 **Expected**:

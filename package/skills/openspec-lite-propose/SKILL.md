@@ -33,7 +33,7 @@ If the outcomes that stay are small (one obvious fix, no constraints or open que
 
 1. Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 5 words from the main outcome only. Do not add words from the other outcomes.
 2. Run `openspec new change "<name>" --schema plan-lite`. If it fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`. If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped here. Ask: "Resume the change <name>?" On yes, go to step 3. In each other case, show the error and ask for another name.
-3. Set `skip_specs: true` in `openspec/changes/<name>/.openspec.yaml`. If the line exists, do not add a second one. A duplicate key breaks each CLI command on the change.
+3. Read `openspec/changes/<name>/.openspec.yaml` before you edit it. OpenSpec 1.14.2 already writes `skip_specs: true` there. If the line exists, do not edit the file. If it is missing, add it. A second `skip_specs` line is a duplicate key, and it breaks each CLI command on the change.
 4. Run `openspec instructions plan --change "<name>" --json`. Write `openspec/changes/<name>/plan.md` from its `template` field.
 5. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment. Do not invent non-goals, constraints, facts, or decisions.
 
