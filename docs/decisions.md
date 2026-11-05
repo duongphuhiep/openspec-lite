@@ -2101,7 +2101,7 @@ This extends D112.
 
 This revises D131 and extends D114.
 
-**Status**: D163: an item that restates a part of `plan.md` in other words is not inferred, and gets no mark.
+**Status**: D163: an item that restates a part of `plan.md` in other words is not inferred, and gets no mark. D164 moves the requirement question to one question turn before any write, and lets a decision become a requirement only if it is a contract.
 
 **Rationale**: In scenario 7 of the 627b8fb run, `plan.md` had two constraints. Upgrade wrote 4 distinct requirements with no question: 2 from the constraints, 1 from the Goal, and 1 (RFC 4180 escaping) from the tasks preview. It also wrote scenarios from the tasks preview, for example "Table is empty". A spec is a contract that others depend on after the archive, and the tasks preview is a reference, not a contract. A list of sources in the summary was rejected, because it points to `plan.md` items, and the user usually deletes `plan.md` after the upgrade. A mark in the artifact stays where the reviewer reads. `tasks.md` gets no mark, because the agent writes almost each task from its own preview, so a mark on each line tells the reviewer nothing. If the user forgets a mark, stock `/opsx:archive` merges it into `openspec/specs/`. This is a visible signal, not a silent error, so no skill removes it.
 
@@ -2226,3 +2226,18 @@ This extends D146.
 This revises D152.
 
 **Rationale**: In 2 of 2 reruns of scenario 20c on f15aba0, upgrade put 🤖 on an item that restated `plan.md`: the decision, reworded in the Impact list of `proposal.md`, and the Goal, reworded in the Goals of `design.md`. Each run also marked its own Why line correctly. A mark is useful only if it is precise, because a user who sees many wrong marks learns to ignore them. Rejected: mark only in `specs/` and `design.md` → `## Decisions`, because the inferred Why line of `proposal.md` is new content that a reviewer must see.
+
+---
+
+## D164: Upgrade Asks One Question Turn Before Any Write, and Filters Decisions
+
+**Decision**:
+
+- Upgrade step 2 plans the requirements before any artifact. A requirement comes only from a constraint or a fact of `plan.md`, a decision that is also a contract (a behavior that a user or another system can see), or an answer of the user. A decision that is not a contract goes only to `design.md` → `## Decisions`. The Goal and `tasks-preview.md` alone are not sources.
+- In one reply, before any write, upgrade asks: each open question that changes the specs, the approach, or the tasks; each planned requirement from the Goal or the preview, with its text; and, if no requirement is planned, a request for one. It ends the turn. If all three lists are empty, it does not ask.
+- The spec step writes only the requirements of step 2. Its header no longer says "the requirements in `plan.md`".
+- Scenario 7 expects the one question turn.
+
+This revises D152 and extends D119.
+
+**Rationale**: In the D163 verification, 2 of 3 runs wrote a requirement from the Goal with no question, and 1 of 3 wrote one from the internal decision "store the audit log in the main database". The D152 rule was the 5th sub-bullet of the spec step, the step header said "the requirements in `plan.md`", and `plan.md` has no such section. The only question turn before a write was for the open questions, so in scenario 7 the agent asked that question and then wrote everything. Archive drafts a decision as a requirement only if it is a contract (D119), but upgrade had no such filter. In the D164 verification, 3 of 3 runs asked before any write, and 0 of 3 wrote a Goal requirement without a yes or a requirement from the internal decision (`docs/facts.md`).

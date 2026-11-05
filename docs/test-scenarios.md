@@ -97,12 +97,12 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. Run this prompt, then answer yes to the tasks preview: "openspec-lite-propose: add a CSV export to the report page. Scope: one Export CSV button on the report page, exporting the rows shown in the table. Source: docs/report-page.md and issue #42. Requirement: the export uses the same column order as the table on screen. Decision: generate the CSV in the browser, because the data is already loaded there. Constraint: no new server endpoint. Open question: should the export include hidden columns? (This changes the tasks.)" (D157)
 2. Run `openspec-lite-upgrade`. Stop the agent after it writes `proposal.md`.
-3. Run `openspec-lite-upgrade` again. Answer the open question: "No, the export does not include hidden columns." At the prune question, answer yes.
+3. Run `openspec-lite-upgrade` again. Answer the open question: "No, the export does not include hidden columns." If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply. At the prune question, answer yes.
 
 **Expected**:
 
 - After step 2, `.openspec.yaml` still has `schema: plan-lite`, and `skip_specs` is gone.
-- After step 3, the agent keeps `proposal.md` and writes the rest. Each requirement comes from a constraint, a decision, or a fact of `plan.md`, or from an answer of the user, or the agent asked first. If the agent asks to write a requirement from the Goal or the tasks preview, answer yes. Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
+- After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a fact, a decision that is a contract, or an answer of the user. Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
 - The agent shows the list of `plan.md` destinations before the prune question. After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
 
