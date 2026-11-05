@@ -79,6 +79,41 @@ The reports are in `.scenario-runs/20261105-62c6fa7/`.
 - **Evidence**: `group-C.md` (7).
 - **Recommendation**: not decided. Decide if the question turn makes a preview-only text an answer (as the D167 verification found), or if a requirement must keep the words of its constraint.
 
+## Found in the run on 3c93237
+
+The reports are in `.scenario-runs/20261105-3c93237/`. The run passed 38 of 39 runs. Items 21 and 22 have new evidence:
+
+- Item 21: 22a kept the Goal comment in 3 of 3 runs. In 22b-3, the comment moved under the Goal line (`group-H.md`).
+- Item 22: in 20a, the `proposal.md` Impact line "API docs: the 429 behavior and the `Retry-After` header" comes only from the tasks preview, and has no 🤖. The Redis constraint went to `design.md` with no question (`group-F.md`, session `6e42c353`).
+
+### 25. The agent compares the OpenSpec version itself, and can get it wrong
+
+- **Where**: the `openspec --version` check of each workflow skill, for example `openspec-lite-archive/SKILL.md` step 3. It compares the version to `openspec-version` in `schema.yaml` (`>=1.9.0 <2.0.0`).
+- **Problem**: Sonnet 5.5 said 2 times that OpenSpec 1.14.2 is outside `>=1.9.0 <2.0.0`. No result changed, because the skill stopped for another reason. On a run that does not stop, a wrong compare can stop a skill with no cause.
+- **Evidence**: `group-D.md` (8, archive, session `0a7bd7b3`), `group-C.md` (19-3, session `6eccea24`).
+- **Recommendation**: not decided. One option: a skill script next to `install.mjs` does the compare and prints the result. (`scripts/check-version.mjs` checks the shipped schema version in the repo. It does not check the OpenSpec version.) The skill then reads only the result.
+
+### 26. Scenario 7 has no stable positive 🤖 check
+
+- **Where**: `docs/test-scenarios.md`, scenario 7, the example "Table is empty" from the tasks preview.
+- **Problem**: the tasks preview of step 1 did not have an empty-table case. Its other preview-only items went only to `tasks.md`. So the run had no item that needs a 🤖, and the check did not apply.
+- **Evidence**: `group-C.md` (7, session `45e99dc1`).
+- **Recommendation**: not decided. One option: scenario 7 writes a fixed `tasks-preview.md` with one preview-only scenario, as 20a does for its `plan.md`.
+
+### 27. Scenario 4 does not check that the agent runs its tests
+
+- **Where**: `docs/test-scenarios.md`, scenario 4, and the allowlist in "Running the Scenarios Headless".
+- **Problem**: the allowlist denied `npm test` 2 times. The agent did not fall back to `node --test`, and ended with no test run. On 62c6fa7, it fell back. No check covers the test run.
+- **Evidence**: `group-A.md` (4, `raw/A/4/turn-1.json`).
+- **Recommendation**: not decided. One option: add `Bash(npm test:*)` to the allowlist, or tell the user in step 2 to use `node --test`.
+
+### 28. The schema skill reply skips the copied files
+
+- **Where**: `package/skills/openspec-lite-schema/SKILL.md`, the report of the status, the copied files, and the backup path.
+- **Problem**: the reply did not list the copied files in 2 of 3 sessions that ran the schema skill. Scenario 9 failed once for this reason, and passed on the rerun. `docs/facts.md` records the same miss on an earlier run.
+- **Evidence**: `group-D.md` (9 run 1, session `18203724`; 11, session `2b7e81dd`).
+- **Recommendation**: not decided. One option: `install.mjs` prints the full report, and the skill tells the agent to copy that output.
+
 ## Other notes from the run
 
 These need no change now. They are here so that a later run does not report them as new.

@@ -793,3 +793,38 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.318, Sonnet 5.5: on `/opsx:archive` of a plan-lite change, the order of `openspec instructions archive` and the switch to `openspec-lite-archive` changes from run to run. Both 16a and 16b switched (group F).
 - Claude Code 2.1.318: an Edit removed the final newline of the archived `.openspec.yaml` again (group E, session `955bc1f0`). Now 3 of 9 such runs.
 - Sonnet 5.5, propose with D169: 3 of 3 runs of 22b kept the moved-out outcome out of `plan.md`. Before D169, 3 of 4 runs wrote it in `## Non-Goals` (`.scenario-runs/20261105-D169/`).
+
+## Scenario Run on 3c93237
+
+**Source**: agent scenarios 1–9 and 11–22 with 18b, Claude Code 2.1.318 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, Node v24.13.0, reports in `.scenario-runs/20261105-3c93237/`, 2026-11-05.
+
+- Claude Code 2.1.318 on Bedrock: an API request can hang for about 12 minutes. The session log then has an `api_error` "Request timed out." with `retryAttempt: 1` and `maxRetries: 10`. The retry succeeds, and the turn ends with `subtype: success`. This occurred in groups A, E, and G (sessions `8bd62a7a`, `a5ed5ff0`, `1cad0b4e`).
+- Claude Code 2.1.318: after a system suspend, the session log has a `connection_retry` entry, "Stream watchdog detected system suspend; aborting to retry on a fresh connection". The turn then completes (group B, session `11ad7ebe`).
+- Claude Code 2.1.318: `duration_ms` and `duration_api_ms` do not include the wait of a hung request or of a suspend. The `totalDuration` of the session log includes it. Example: `duration_ms` 27,572 against `totalDuration` 773,804 (group A, `raw/A/3-4/turn-1.json`). So Time s can hide a long wait.
+- After such a wait, the next request writes the prompt cache again: 39,606 `cache_creation_input_tokens` against 13,436 on 62c6fa7 for the same 13a turn. The cost doubles. The probable cause is that the 5-minute cache expired. Not verified (group B, `raw/B/13a/turn-1.json`).
+- Claude Code 2.1.318, `claude -p`: a task notification after the last reply starts one more reply. Then `result`, `usage`, `num_turns`, and `duration_ms` cover only that reply. `total_cost_usd` and `modelUsage` cover the full turn (group H, session `235f39b9`, `raw/H/22b-1/turn-1.json`).
+- Claude Code 2.1.318: a Bash call that runs longer than 120 s moves to the background. The tool result says "did not complete within its 120s timeout and was moved to the background". In group H, `git ls-files | head -50; openspec list --json` printed all its output, but did not exit for 12 minutes. This occurred in 1 of 7 sessions. The cause is not known (session `235f39b9`).
+- Sonnet 5.5: it did not take a task notification as a user answer. It said "that isn't an answer from you" and asked the question again (group H, session `235f39b9`).
+- Claude Code 2.1.318, print mode with `--setting-sources project,local`: the session gets a `gitStatus` block with the recent commit messages. The agent quoted a setup commit message with no `git` call. So setup commit messages can give hints to the agent (group C, session `4b9a2795`).
+- Claude Code 2.1.318 keeps the working folder of a `cd svc` in turn 1 into the `--resume` turn 2 (group D, session `2b7e81dd`).
+- Claude Code 2.1.318, scenario allowlist, more rules:
+  - These compound commands ran with no denial: `grep -ril … | head`, `find … -prune …; ls -R svc | head`, and `cd svc && cat … 2>&1 | head; openspec --version` (group D, session `2b7e81dd`). So a pipe, `2>&1`, and `cd <subfolder> &&` do not cause a denial alone. The `| grep -v -e` denial of the 62c6fa7 run fits the "`cd` to another folder, then `git`" rule better.
+  - `cd /tmp/<session folder> && …` ran, also though the session folder is `/private/tmp/<session folder>` (group C, session `6593a791`). Both forms are allowed working folders (group B, session `b9b59d48`).
+  - `ls ../specs` after `cd openspec/changes;` is denied, because it resolves outside the session folder: "ls in '/private/tmp/specs' was blocked" (group B, session `b9b59d48`).
+  - The message for a denied compound command names each part that is not allowed: "The following parts require approval: grep -v …, cp …" (group G, session `e9bda9b1`), and "… xargs ls -l" (group B, session `b9b59d48`).
+  - `rm -f <abs file>; ls <abs folder>` in the session folder ran (group C, session `1299e9bd`).
+  - `echo "exit $?"` is denied (group H, 3 sessions).
+  - With the literal change name, `cat >> openspec/config.yaml <<'EOF'` chained with more commands ran (session `743b4df4`). With `name=…` and `"$name"`, the same chain was denied with "Quoted text in this command can't be checked before it runs" (session `5e35ce1b`). So the shell variable causes the denial, not the heredoc (group F).
+- Claude Code 2.1.318 on macOS: the Bash tool runs zsh. `echo ======` fails with "(eval):1: ===== not found" and exit code 1. It is a shell error, not a denial (group F, session `13ccc85f`).
+- Sonnet 5.5: after a denied compound command, it reported the result of a `grep` that never ran. The claim was true only because of an earlier `cat` (group G, session `1cad0b4e`).
+- Sonnet 5.5: 2 times, it said that OpenSpec 1.14.2 is outside `>=1.9.0 <2.0.0`. It read both values and compared them itself, probably as text. No result changed, because the skill stopped for another reason (group D session `0a7bd7b3`, group C session `6eccea24`).
+- Sonnet 5.5, stock `/opsx:apply`: it loaded `openspec-lite-apply` by itself in 1 of 2 sessions again, in the scenario 3 negative session (`b0fe8e2b`). Now 3 of 6 sessions over the last 3 runs (group A).
+- Sonnet 5.5, scenario 4: after 2 denials of `npm test`, it did not fall back to `node --test`. It ended the turn with no test run (group A, `raw/A/4/turn-1.json`). On 62c6fa7, it fell back.
+- Sonnet 5.5, 16a: it switched to `openspec-lite-archive` before it ran `openspec instructions archive`. So the skill description alone caused the switch, not the `config.yaml` guidance (group F, session `dd469278`).
+- Sonnet 5.5, upgrade 20a: the shared Redis constraint went to a different place in each of the last 3 runs: a requirement with no question (38d9a54), a question (62c6fa7), and `design.md` with no question (3c93237, session `6e42c353`).
+- Sonnet 5.5, scenario 7: the tasks preview for the D157 prompt does not always have an empty-table case (group C, session `45e99dc1`).
+- Sonnet 5.5, propose: in 1 of 6 runs, the Goal comment moved under the Goal line. Its text stayed complete (group H, session `b3d72cd0`).
+- Sonnet 5.5, schema skill: the reply did not list the copied files in 2 of 3 sessions that ran the skill (group D, sessions `18203724`, `2b7e81dd`).
+- OpenSpec 1.14.2: when the archive target exists, `openspec archive` prints "Task status: No tasks" before "Error: Archive '<date>-<name>' already exists." (group B, session `b9b59d48`).
+- Claude Code 2.1.318: the session log has `"type":"api-request"` entries. For print-mode Sonnet 5.5, they show `thinking: {type: adaptive, display: omitted}`, `output_config.effort: "medium"`, and `max_tokens` 128000 (group B, session `11ad7ebe`).
+- Sonnet 5.5, D169: 22b passed 3 of 3 on 3c93237, and 6 of 6 with the D169 verification. 22a kept the Goal comment in 3 of 3 (group H).
