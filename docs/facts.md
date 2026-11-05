@@ -774,3 +774,22 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.318, scenario allowlist: `cat >> openspec/config.yaml <<'EOF' …` followed by more commands is denied with "Quoted text in this command can't be checked before it runs" (session `4ad37761`).
 - Sonnet 5.5: after that denial, the agent retried only the last part of the compound command, `openspec new change`. It did not retry the `config.yaml` write, and its summary said that the write happened. So a retry after a denial can lose a side effect with no sign (session `4ad37761`, `/tmp/osl-N22a2.eEOf/openspec/config.yaml`).
 - Claude Code 2.1.318: when several print-mode sessions start at the same time, each writes its own prompt cache. Input tokens of turn 1 rose from about 15,000 to about 26,600. A run alone gave 16,077. Compare cost only between sequential runs.
+
+## Scenario Run on 62c6fa7
+
+**Source**: agent scenarios 1–9 and 11–22 with 18b, Claude Code 2.1.318 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, Node v24.13.0, reports in `.scenario-runs/20261105-62c6fa7/`, 2026-11-05.
+
+- Claude Code 2.1.318, `--output-format json`: in a `--resume` turn, `total_cost_usd` and `modelUsage` (also `thinkingTokens`) are the totals of the session up to that turn. `usage`, `num_turns`, and `duration_ms` are for that turn only. Example: `raw/A/4b/turn-2.json` has `modelUsage` output 4,604, which is 3,015 of turn 1 plus 1,589 `usage` output of turn 2 (D170).
+- OpenSpec 1.14.2: `openspec validate --specs` with no spec under `openspec/specs/` prints "No items found to validate." and exits with code 0 (group B, `/tmp/osl-B6.KEK8`).
+- OpenSpec 1.14.2: at a git root with no OpenSpec root, `openspec list --json` exits with code 1, with `root: null`, the code `no_openspec_root`, and the `fix` "Run openspec init to create a root here." (group D, scenario 11).
+- Claude Code 2.1.318, scenario allowlist, more deny rules:
+  - The `cd` then `git` denial applies only when the `cd` goes to another folder. `cd <session folder>; …; git ls-files` ran (group A, sessions `8e874e9f`, `a26d1973`). `cd <subfolder> && …; cd ..; git …` was denied. `git -C <session folder> …` ran (group G, session `5a2141d8`).
+  - A compound command with `| grep -v -e …` and `2>&1` was denied. A plain `grep -n` between allowed commands ran (group D, sessions `c511e01f`, `47d10f2d`).
+  - `find … -exec cat {} +` in a chain is denied (group F, session `d308d6df`).
+  - `cd <abs> && rm <file> && cat <file>` ran. So `rm` is not a cause of the denial, and `sed -i` is (group C, session `c140b267`).
+  - The full `sed -i` denial text is "sed command requires approval (contains potentially dangerous operations)" (group B, session `d2852071`).
+- Claude Code 2.1.318, scenario allowlist: `cat >> openspec/config.yaml <<'EOF'` chained with `openspec new change` ran in 5 sessions (groups F, H). The denied command of the D168 run also set a shell variable and used `"$name"`. So the variable is the probable cause of "Quoted text in this command can't be checked", not the heredoc. Not tested alone.
+- Claude Code 2.1.318, Sonnet 5.5: stock `/opsx:apply` loaded `openspec-lite-apply` by itself again in 1 of 2 sessions, but this time in the scenario 3 negative session (`ad4ef966`), not in the scenario 4 session (`a26d1973`) (group A).
+- Claude Code 2.1.318, Sonnet 5.5: on `/opsx:archive` of a plan-lite change, the order of `openspec instructions archive` and the switch to `openspec-lite-archive` changes from run to run. Both 16a and 16b switched (group F).
+- Claude Code 2.1.318: an Edit removed the final newline of the archived `.openspec.yaml` again (group E, session `955bc1f0`). Now 3 of 9 such runs.
+- Sonnet 5.5, propose with D169: 3 of 3 runs of 22b kept the moved-out outcome out of `plan.md`. Before D169, 3 of 4 runs wrote it in `## Non-Goals` (`.scenario-runs/20261105-D169/`).

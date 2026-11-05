@@ -564,8 +564,8 @@ Each report has a metrics table, with one row for each session and one total row
 
 - **Pass**: the number of runs that pass, of all runs, for example `3/3`.
 - **Checks**: the number of expected results that pass in this run, for example `4/5`.
-- **Cost USD**: the sum of `total_cost_usd`. It is the best single cost number, because it weights each token type.
-- **Output tok** and **Thinking tok**: what the agent writes and thinks. A change to the skill text changes these first.
+- **Cost USD**: the sum of `total_cost_usd` of the last turn of each session. It is the best single cost number, because it weights each token type. In a `--resume` turn, `total_cost_usd` and `modelUsage` include the earlier turns of the session. `usage`, `num_turns`, and `duration_ms` give the values of that turn only.
+- **Output tok** and **Thinking tok**: what the agent writes and thinks. A change to the skill text changes these first. Thinking tok comes from `modelUsage` of the last turn of each session.
 - **Input tok**: `input_tokens` + `cache_creation_input_tokens`. **Cache read tok**: `cache_read_input_tokens`, which costs about 10% of new input. Do not add the two into one total, because the total hides the cost change.
 - **Turns**: the sum of `num_turns`, the steps of the agent loop.
 - **Tools**: the tool calls in the session log, counted once for each `tool_use` ID. The log can hold the same call twice.

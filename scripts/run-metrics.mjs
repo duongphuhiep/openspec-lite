@@ -22,7 +22,9 @@ if (args.length === 0) {
 }
 
 const turns = args.map((f) => JSON.parse(readFileSync(f, "utf8")));
-const sum = (get) => turns.reduce((n, t) => n + (get(t) ?? 0), 0);
+const sum = (get, list = turns) => list.reduce((n, t) => n + (get(t) ?? 0), 0);
+// total_cost_usd and modelUsage are session totals. A --resume turn includes the earlier turns, so use only the last turn of each session.
+const lastTurns = turns.filter((t, i) => turns[i + 1]?.session_id !== t.session_id);
 const models = new Set(turns.flatMap((t) => Object.keys(t.modelUsage ?? {})));
 
 // Count tool calls by tool_use id, because a log can hold the same call twice.
@@ -47,9 +49,9 @@ const row = [
   label,
   "?",
   "?",
-  sum((t) => t.total_cost_usd).toFixed(3),
+  sum((t) => t.total_cost_usd, lastTurns).toFixed(3),
   k(sum((t) => t.usage?.output_tokens)),
-  k(sum((t) => Object.values(t.modelUsage ?? {}).reduce((n, m) => n + (m.thinkingTokens ?? 0), 0))),
+  k(sum((t) => Object.values(t.modelUsage ?? {}).reduce((n, m) => n + (m.thinkingTokens ?? 0), 0), lastTurns)),
   k(sum((t) => t.usage?.input_tokens) + sum((t) => t.usage?.cache_creation_input_tokens)),
   k(sum((t) => t.usage?.cache_read_input_tokens)),
   sum((t) => t.num_turns),

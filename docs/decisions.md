@@ -1996,6 +1996,8 @@ This extends D144.
 
 ## D146: Metrics in the Scenario Reports
 
+**Status**: Revised by D170. Cost USD and Thinking tok come from the last turn of each session.
+
 **Decision**:
 
 - Each scenario report has a metrics table: one row for each run, and one total row for the group.
@@ -2212,6 +2214,8 @@ This extends D120, D140, and D142.
 
 ## D162: Metrics Rules for Shared Sessions, Backups, and Subfolder Roots
 
+**Status**: Revised by D170. Cost USD and Thinking tok come from the last turn of each session.
+
 **Decision**:
 
 - The metrics table has one row for each session. If scenarios share a session, the label names each of them, for example `1+3`.
@@ -2312,3 +2316,21 @@ This revises D163.
 This revises D80 and D161, and supersedes D149.
 
 **Rationale**: 5 words was too short. To stay under the limit, the agent had to drop words that make the name clear. A name with words from each outcome tells more about the change. D149 banned those words, because a name from all outcomes grows past 5 words, and because it can hide the main outcome. The 10-word limit removes the first reason. The "start with the main outcome" rule and the cut order remove the second.
+
+---
+
+## D169: A Moved-Out Outcome Stays Out of plan.md
+
+**Decision**: if the user moves an outcome to a separate change, propose does not write it in `plan.md`, also not in `## Non-Goals`. The summary names it, and tells the user to run `openspec-lite-propose` for it.
+
+**Rationale**: scenario 22b failed in 3 of 4 runs on the D168 skill text. Each failed run wrote the moved-out outcome in `## Non-Goals`, for example "Upgrading the logging library in the billing service (moved to a separate change)." The skill said "leave it out of this change", and "Do not invent non-goals". The line is not invented, because it comes from the answer of the user, and it fits the Non-Goals comment "What this change will not do". So no rule stopped it. D168 changed only the name rule, so the cause is model variance that the skill did not stop. A `plan.md` holds one change only. Upgrade copies Non-Goals to `design.md`, so the line would also go to the artifacts of the wrong change. The summary already tells the user about the other outcome. Rejected: accept one Non-Goals line in scenario 22b. In 3 verification runs with the rule, 3 of 3 passed, and no `plan.md` mentions the moved-out outcome.
+
+---
+
+## D170: Run Metrics Read Session Totals Once
+
+**Decision**: `scripts/run-metrics.mjs` takes Cost USD and Thinking tok from the last turn of each session. It still sums the other numbers over all turns.
+
+This revises D146 and D162.
+
+**Rationale**: in a `--resume` turn, `total_cost_usd` and `modelUsage` give the totals of the session up to that turn. `usage`, `num_turns`, and `duration_ms` give the values of that turn only. The script summed each turn, so it counted the earlier turns again. Each report with a `--resume` turn showed too high a cost. With the fix, the run on 38d9a54 costs 3.445 USD, not 5.643 USD. The comparisons between runs stay valid in direction, because each run had the same error, but not in size.

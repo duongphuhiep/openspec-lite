@@ -6,7 +6,7 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Items 1 to 13 are closed. Their decisions are D152 to D164 in `docs/decisions.md`. Item 14 is closed by D167.
+Items 1 to 13 are closed. Their decisions are D152 to D164 in `docs/decisions.md`. Item 14 is closed by D167. Item 20 is closed by D169.
 
 ---
 
@@ -47,12 +47,37 @@ Items 1 to 13 are closed. Their decisions are D152 to D164 in `docs/decisions.md
 - **Evidence**: `.scenario-runs/20261105-D168/report.md`, run 22a2, session `4ad37761`.
 - **Recommendation**: not decided. One option: after the edit, read `config.yaml` again and check that the item exists. Tell the agent to use the Edit tool, not a heredoc.
 
-### 20. Propose can name a moved-out outcome in Non-Goals
+## Found in the run on 62c6fa7
 
-- **Where**: `package/skills/openspec-lite-propose/SKILL.md`, the split check and step 5 ("Do not invent non-goals").
-- **Problem**: in the D168 verification, 22b put "Upgrading the logging library in the billing service (a separate change)." in `## Non-Goals`, after the user moved that outcome out. Scenario 22b expects that `plan.md` does not mention it. The rerun passed, and 38d9a54 passed (2 of 3 runs pass).
-- **Evidence**: `.scenario-runs/20261105-D168/report.md`, run 22b, `/tmp/osl-N22b.pNnD`.
-- **Recommendation**: not decided. One option: "Do not write an outcome that the user moved to a separate change in `plan.md`. The summary names it."
+The reports are in `.scenario-runs/20261105-62c6fa7/`.
+
+### 21. Propose can remove the Goal template comment
+
+- **Where**: `package/skills/openspec-lite-propose/SKILL.md`, step 5 ("Keep each `<!-- ... -->` guidance comment").
+- **Problem**: in 22a run 1 and in 11, `plan.md` lost the `## Goal` comment. All other comments stayed. The Goal comment is the longest one (D148). The 22a rerun and scenario 9 kept it.
+- **Evidence**: `group-H.md` (22a, `/tmp/osl-H22a.g2Jm`), `group-D.md` (11, `/tmp/osl-D11.2MAj`). Now 2 of 6 propose runs in this run.
+- **Recommendation**: not decided. Run propose a few more times. One option: write the Goal on the line under the comment with an Edit that keeps the comment, not a full rewrite of the section.
+
+### 22. Upgrade 20a: two possible missed marks, and a new constraint question
+
+- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, steps 2 and 3 (D164, D167).
+- **Problem**: in 20a, the admin scenario says the system "does not count it", but the requirement says only that the limit does not apply to `/admin/`. The `design.md` Goal "in any 60-second span" comes only from the tasks preview. Neither has a 🤖. The agent also asked "Is C2 a requirement, or only a design constraint?", which the skill does not ask. On 38d9a54, the same constraint became a requirement with no question. No 20a check covers these items.
+- **Evidence**: `group-F.md` (20a, session `2d03bd4d`).
+- **Recommendation**: not decided. Check the 20a marks in the next run. Decide if each constraint of a planned requirement needs a question.
+
+### 23. Archive after upgrade writes consequences that the user does not see
+
+- **Where**: `package/skills/openspec-lite-archive/SKILL.md`, the ADR copy after the guard (D154). Scenario 18b.
+- **Problem**: `design.md` has no consequences, so the agent wrote its own `## Consequences` lines. On 38d9a54, it asked the user to check them. On 62c6fa7, it did not tell the user. One line is a new claim: "The export contains only the data the page has already loaded." This adds to item 17.
+- **Evidence**: `group-C.md` (18b).
+- **Recommendation**: not decided. One option: the agent names each consequence that `design.md` does not state, and asks the user to check it.
+
+### 24. Upgrade can write a requirement that is stronger than its constraint
+
+- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, D166.
+- **Problem**: in scenario 7, the requirement "Export makes no server request" is stronger than its constraint, "no new server endpoint". The extra text comes from the tasks preview. The question turn showed it, and the user did not object.
+- **Evidence**: `group-C.md` (7).
+- **Recommendation**: not decided. Decide if the question turn makes a preview-only text an answer (as the D167 verification found), or if a requirement must keep the words of its constraint.
 
 ## Other notes from the run
 
@@ -65,3 +90,6 @@ These need no change now. They are here so that a later run does not report them
 - In scenarios 14 and 15 on 38d9a54, the ADR `## Consequences` held inferences with no mark. D152 applies only to upgrade, and the user approves each archive draft (group E).
 - In scenarios 13b and 15 on 38d9a54, the chat replies named `plan.md` IDs such as "C1". D142 covers files only, and no file outside `plan.md` held an ID (groups B, E).
 - In scenario 20a, the agent added a Redis outage risk to `design.md` that is not in `plan.md`. It said so in the summary. With D152, this item now gets a 🤖 mark (group F).
+- In scenario 9 on 62c6fa7, the schema-replace question did not name the `config.yaml` archive hint. On 38d9a54, it did (group D).
+- In scenario 20b on 62c6fa7, turn 3 said "I wrote it as a requirement", then "Nothing is written yet". The disk showed no write (group E).
+- In scenario 14 on 62c6fa7, the agent called a permission denial a "parser error" (group E).

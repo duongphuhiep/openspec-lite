@@ -32,7 +32,8 @@ test("sums the turns, counts each tool call once, and lists the artifacts", () =
   // The same call twice, as in a real log, then a second call.
   writeFileSync(join(d, "sessions", "proj", "s1.jsonl"), [call("t1"), call("t1"), call("t2")].join("\n"));
   writeFileSync(join(d, "t1.json"), JSON.stringify(turn()));
-  writeFileSync(join(d, "t2.json"), JSON.stringify(turn({ permission_denials: [] })));
+  // A --resume turn: total_cost_usd and modelUsage include turn 1.
+  writeFileSync(join(d, "t2.json"), JSON.stringify(turn({ permission_denials: [], total_cost_usd: 0.8, modelUsage: { "m-1": { thinkingTokens: 500 } } })));
   mkdirSync(join(d, "repo", "openspec", "changes", "c"), { recursive: true });
   mkdirSync(join(d, "repo", "openspec", "schemas"), { recursive: true });
   mkdirSync(join(d, "repo", "openspec", "schemas-backup", "plan-lite-v0"), { recursive: true });
@@ -43,7 +44,7 @@ test("sums the turns, counts each tool call once, and lists the artifacts", () =
   const r = run("--label", "4b", "--sessions", join(d, "sessions"), "--dir", join(d, "repo"), join(d, "t1.json"), join(d, "t2.json"));
   assert.equal(r.status, 0, r.stderr);
   const [row, models] = r.stdout.split("\n");
-  assert.equal(row, "| 4b | ? | ? | 1.000 | 4,000 | 600 | 2,000 | 100,000 | 20 | 2 | 1 | 1 | 120 |");
+  assert.equal(row, "| 4b | ? | ? | 0.800 | 4,000 | 500 | 2,000 | 100,000 | 20 | 2 | 1 | 1 | 120 |");
   assert.equal(models, "Models: m-1");
   assert.match(r.stdout, /\| openspec\/changes\/c\/plan\.md \| 2 \| 4 \|/);
   assert.doesNotMatch(r.stdout, /skip\.md/);
