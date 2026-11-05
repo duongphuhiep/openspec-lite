@@ -484,7 +484,7 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 **Expected**:
 
 - If the agent asks the Level 1 question, answer no.
-- The agent creates one change. Its name comes from the first outcome, for example `add-csv-export`.
+- The agent creates one change. Its name comes from the main outcome only, with no word from the time zone fix, for example `add-csv-export` or `report-csv-export`, not `report-csv-export-user-timezone` (D149, D161).
 - `## Goal` has two bullets, one per outcome. Each bullet has one or two sentences.
 - The Goal comment of the template stays.
 - The agent does not ask the split question. The summary names no separate change.

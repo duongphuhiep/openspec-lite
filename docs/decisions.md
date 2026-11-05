@@ -2191,3 +2191,11 @@ This extends D120, D140, and D142.
 **Decision**: Scenario 20c checks only the end state of `skip_specs`. It says that the agent can skip the remove (upgrade step 1) and the add-back (step 2.2) of the line, because no spec file is written. Upgrade does not change.
 
 **Rationale**: In the 627b8fb run and in 2 of 2 reruns on f15aba0, the agent never removed the line and put it back. Its only edit to `.openspec.yaml` changed the `schema:` line. The end state was correct each time. Step 1 exists because the CLI refuses a spec file while the flag is set, so with no requirement the remove and the add-back have no effect. The user sees no difference, and since D153 the summary reports only the end state. A check on the order needs the tool calls of the session log, for no result that a user can see. Rejected: change step 1 to "remove the line only before the first spec file", because each interrupted run must then find out if a spec file exists, the type of history check that D153 avoids.
+
+---
+
+## D161: Scenario 22a States the Name Check
+
+**Decision**: Scenario 22a expects a name from the main outcome only, with no word from the time zone fix. It gives two correct examples, `add-csv-export` and `report-csv-export`, and the wrong name `report-csv-export-user-timezone`.
+
+**Rationale**: The scenario gave one example, `add-csv-export`. In 4 of 4 runs, the agent chose `report-csv-export`, which follows the rule, but a strict tester could read the example as the expected name. The check of D149 is that no word comes from the other outcomes, so the scenario now names the failure that D149 fixed.

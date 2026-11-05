@@ -6,17 +6,9 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158), item 8 (scenario 20b picks the item after the skipped list, D159), and item 9 (scenario 20c checks only the end state of `skip_specs`, D160).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158), item 8 (scenario 20b picks the item after the skipped list, D159), item 9 (scenario 20c checks only the end state of `skip_specs`, D160), and item 10 (scenario 22a states the name check, D161).
 
 ---
-
-## Scenario text in `docs/test-scenarios.md`
-
-### 10. Scenario 22a: the example change name
-
-- **Problem**: 22a says "Its name comes from the first outcome, for example `add-csv-export`". Each run chose `report-csv-export`: the 627b8fb run and the three D149 reruns. The rule holds, but a tester can read the example as the expected name.
-- **Evidence**: group H, scenario 22a, and `.scenario-runs/20261104-f0a5cad-D148/report.md`.
-- **Recommendation**: write "for example `add-csv-export` or `report-csv-export`", or "a name from the CSV export only, with no word from the time zone fix".
 
 ## Metrics
 
