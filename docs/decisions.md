@@ -2175,3 +2175,11 @@ This extends D77.
 This extends D120, D140, and D142.
 
 **Rationale**: The prune rule covered sections and items only. The ID comment comes before the first heading, so no rule covered it, and the runs differed: on 92c77ff the agent deleted it, on 627b8fb it kept it. A kept open question has an ID, and the comment holds the ID rules for a new item, so it is still needed. It does not change the hash (D141). In 20a, the scenario said "by its title", but the skill allows a short form, so the 627b8fb run passed only because the tester read the skill.
+
+---
+
+## D159: Scenario 20b Picks the Item After the Skipped List
+
+**Decision**: Scenario 20b names the moment of the pick by its content: "In the first reply after the agent lists the skipped items, pick the toolbar item." If the agent asks "Archive anyway?", the tester answers yes in the same reply.
+
+**Rationale**: The step said "In the reply to the drafts". In the 627b8fb run and the run before it, the done check failed first. The agent listed the skipped items with "Archive anyway?" in turn 1, and showed the full drafts only in turn 2. So the tester picked the item before the drafts. Archive step 6 allows a pick in any reply after the skipped list, so the new wording is true for both orders.

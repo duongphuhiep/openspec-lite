@@ -424,7 +424,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 ### 20b. Archive drafts an item that the user picks
 
-**Steps**: Run scenario 15 again. In the reply to the drafts, pick the toolbar item from the skipped list. When the agent shows the toolbar draft, reject it. Approve the other drafts.
+**Steps**: Run scenario 15 again. In the first reply after the agent lists the skipped items, pick the toolbar item. If the agent asks "Archive anyway?", answer yes in the same reply. When the agent shows the toolbar draft, reject it. Approve the other drafts (D159).
 
 **Expected**: the agent drafts the toolbar item and shows it for approval. It writes nothing before the approval. After the archive, the result is the same as in scenario 15.
 

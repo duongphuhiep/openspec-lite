@@ -6,17 +6,11 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158), and item 8 (scenario 20b picks the item after the skipped list, D159).
 
 ---
 
 ## Scenario text in `docs/test-scenarios.md`
-
-### 8. Scenario 20b: the user picks the item before the full drafts
-
-- **Problem**: 20b says "In the reply to the drafts, pick the toolbar item". But archive first stops at the done check with a short plan of the drafts. So the user picks the item in turn 2, before the full drafts.
-- **Evidence**: group E, scenario 20b, turns 1–2. The last run was the same.
-- **Recommendation**: change the step to "In the reply to the draft plan or the drafts, pick the toolbar item."
 
 ### 9. Scenario 20c checks only the end state of `skip_specs`
 
