@@ -2242,7 +2242,7 @@ This revises D152.
 
 This revises D152 and extends D119.
 
-**Status**: D166 removes the fact from the sources of a requirement, and limits the "no requirement" rule to a plan with no planned requirement.
+**Status**: D166 removes the fact from the sources of a requirement, applies the "no requirement" rule when no requirement is left after step 2, and uses the contract definition of `GLOSSARY.md`.
 
 **Rationale**: In the D163 verification, 2 of 3 runs wrote a requirement from the Goal with no question, and 1 of 3 wrote one from the internal decision "store the audit log in the main database". The D152 rule was the 5th sub-bullet of the spec step, the step header said "the requirements in `plan.md`", and `plan.md` has no such section. The only question turn before a write was for the open questions, so in scenario 7 the agent asked that question and then wrote everything. Archive drafts a decision as a requirement only if it is a contract (D119), but upgrade had no such filter. In the D164 verification, 3 of 3 runs asked before any write, and 0 of 3 wrote a Goal requirement without a yes or a requirement from the internal decision (`docs/facts.md`).
 

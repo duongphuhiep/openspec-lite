@@ -241,7 +241,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - If `state` is `blocked`, `plan.md` is missing. Stop, and point to `openspec-lite-propose`. Do not follow CLI text that names another skill (D111).
 - Users try stock `/opsx:apply` first (D27).
 
-### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148, D152, D153, D158, D163, D164)
+### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148, D152, D153, D158, D163, D164, D166)
 
 1. Remove `skip_specs: true` from `.openspec.yaml`. While it is set, the CLI forbids spec files (D99).
 2. Before any artifact, plan the requirements (D164, D166). A requirement comes only from these sources:
@@ -263,7 +263,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 3. Change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
 4. List each `plan.md` section with its destination artifact and heading, or "kept". If the items of one section go to different destinations, list each item. Keep a section that has no slot, for example an open question that the user cannot answer now. Name each content that is in no artifact and is not kept, and offer to add it first. Show the list, and ask before the delete in the same reply. End the turn, and wait for the answer. Do not validate or write the summary before it (D132). On yes, delete each section or item whose content moved. Keep the ID comment at the top while a section is left (D158). If no section is left, delete `plan.md`. A section with only an HTML comment counts as no section. On no, keep `plan.md` (D120, D121, D127).
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
-6. In the summary, ask the user to review all artifacts. List each 🤖 item, and ask the user to remove the mark to accept it, or to delete the item (D152). Ask for an extra review of `tasks.md`, because it is a contract. Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none (D153). If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`. If the user said no to the delete, say that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth (D120). If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs (D115).
+6. In the summary, ask the user to review all artifacts. List each 🤖 item, and ask the user to remove the mark to accept it, or to delete the item (D152). Ask for an extra review of `tasks.md`, because it is a contract. Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none (D153). If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`. If the user said no to the delete, say that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth (D120). If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` can copy them to `openspec/adr/` before it (D115, D154).
 
 ### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122, D148, D154, D155)
 
