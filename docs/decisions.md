@@ -2161,3 +2161,17 @@ This extends D77.
 - Scenarios 17, 18, 18b, and 19 start from the end of scenario 7, so they get the same start.
 
 **Rationale**: Step 1 pointed to scenario 3 steps 1–2, which use the scenario 1 prompt. That prompt names no open question, but step 3 said "Answer each open question". The 92c77ff and 627b8fb runs used a longer prompt that was not in the scenario text. Scenario 7 is also the test of D152, and D152 needs a known start, so that the tester can tell the requirements from `plan.md` from the inferred items. Rejected: keep the pointer to scenario 3 and add the open question to `plan.md` by hand, because the tester then writes the question, and two runs can differ.
+
+---
+
+## D158: Upgrade Keeps the ID Comment While a Section Is Left
+
+**Decision**:
+
+- When upgrade prunes `plan.md`, it keeps the ID comment at the top while a section is left. If no section is left, it deletes `plan.md`, with the comment.
+- Scenario 20a expects the ID comment and `## Open Questions` after the prune.
+- Scenario 20a accepts a task that names an item by its title, or by a short form of its text, as upgrade step 2.4 and D142 say.
+
+This extends D120, D140, and D142.
+
+**Rationale**: The prune rule covered sections and items only. The ID comment comes before the first heading, so no rule covered it, and the runs differed: on 92c77ff the agent deleted it, on 627b8fb it kept it. A kept open question has an ID, and the comment holds the ID rules for a new item, so it is still needed. It does not change the hash (D141). In 20a, the scenario said "by its title", but the skill allows a short form, so the 627b8fb run passed only because the tester read the skill.

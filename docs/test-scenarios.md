@@ -419,8 +419,8 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
 - `proposal.md` holds the two scope items of `## Background`.
 - `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
-- `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title instead (D142).
-- After step 3, `plan.md` has only `## Open Questions` with the open question. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
+- `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title, or a short form of its text, instead (D142).
+- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open question (D158). No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
 
 ### 20b. Archive drafts an item that the user picks
 

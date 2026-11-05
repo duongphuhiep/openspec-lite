@@ -6,20 +6,11 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), and item 6 (scenario 7 has a fixed prompt and a fixed answer, D157).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158).
 
 ---
 
 ## Scenario text in `docs/test-scenarios.md`
-
-### 7. Scenario 20a: the ID comment after the prune, and "by its title"
-
-- **Problem 1**: the last expected bullet of 20a does not say if the ID comment at the top of `plan.md` must stay after the prune. On 92c77ff, the agent deleted it. On 627b8fb, it kept it.
-- **Problem 2**: the D142 bullet says each task "names the item by its title". Upgrade step 2.4 allows "the item title, or a short form of its text". On 627b8fb, the agent used short forms, for example "no burst of 200 across a window edge". On 92c77ff, it wrote titles in parentheses.
-- **Evidence**: group F, scenario 20a.
-- **Recommendation**:
-  - Problem 1: say that the ID comment is kept, because the prune deletes only sections whose content moved, and the ID comment is not a section. If no section is left, upgrade deletes `plan.md`, and the comment goes with it.
-  - Problem 2: change the bullet to "by its title, or a short form of its text", the same as the skill.
 
 ### 8. Scenario 20b: the user picks the item before the full drafts
 
