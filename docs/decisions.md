@@ -919,7 +919,7 @@ This supersedes D63.
 
 **Rationale**: A preview or an upgrade on a spec-driven change would damage it. One common rule replaces four separate rules.
 
-**Status**: D106 lets upgrade resume a spec-driven change that still has `plan.md`. D107 asks the user first.
+**Status**: D106 lets upgrade resume a spec-driven change that still has `plan.md`. D107 asks the user first. D154 lets archive offer to copy the `design.md` decisions to ADRs after the guard.
 
 ---
 
@@ -1527,6 +1527,8 @@ This revises D111.
 
 This revises D63.
 
+**Status**: D154: archive can offer to copy the decisions of `design.md` to ADRs after its guard, and does so on a yes.
+
 **Rationale**: Upgrade moves the `plan.md` decisions to `design.md` (D62). Stock archive keeps `design.md` only in the archive folder, so a team that expects ADRs loses them with no word. The user asked for a warning in this case, as for stock `/opsx:archive` on a plan-lite change. A check for `### Decision` entries needs no record of the upgrade. For promotion, the user cares about the result in the main spec, not about the delta form.
 
 ---
@@ -2108,3 +2110,18 @@ This revises D131 and extends D114.
 This revises D108 and D120.
 
 **Rationale**: In scenario 7 of the 627b8fb run, the first upgrade run stopped after `proposal.md`, but it had already removed the line. The second run found no line, and its summary said "`skip_specs` was not set". This was true for that run, but the user could read it as "the change never had the flag". The 92c77ff run gave the same report. A state is true after any number of interrupted runs, and the agent does not need the history. Rejected: make the second run find out what the first run did, because the agent cannot know it with certainty, and the user gets nothing from it.
+
+---
+
+## D154: Archive Can Copy the Decisions to ADRs After Its Guard
+
+**Decision**:
+
+- When the archive guard stops on a change that is not plan-lite, archive can offer to copy each `### Decision` of `design.md` to an ADR. It writes nothing before the user says yes.
+- On yes, archive drafts each ADR with the form and the two checks of section 2, step 5: the earlier ADRs with `Change: <name>`, and `Supersedes:`. It shows the drafts as in step 6. It writes each approved ADR with the file rules and the `Supersedes:` edits of step 10.
+- It does not run steps 7 to 9 or step 11. It writes no spec, does not change `design.md`, and does not archive the change. Stock `/opsx:archive` archives the change.
+- Scenario 18 accepts the offer. Scenario 18b checks the yes path.
+
+This extends D75 and D115.
+
+**Rationale**: In 4 of 4 runs of scenario 18, the agent offered "I can draft both ADRs in the format this skill uses", but no rule covered the offer or the yes path. D115 names the gap: after an upgrade, the decisions are in `design.md`, and stock `/opsx:archive` does not turn them into ADRs. The rule closes the gap with the ADR form and file rules that archive already has. Rejected: forbid the offer, because the user must then copy the decisions by hand, and the agent made the offer in each run anyway.

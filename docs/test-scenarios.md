@@ -361,6 +361,24 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 - The decisions from `plan.md` are in `design.md` → `## Decisions` (upgrade moved them, D62).
 - The agent warns that stock `/opsx:archive` does not turn these decisions into ADRs, and says to copy them to `openspec/adr/` first to keep them (D115).
 - The upgrade summary from scenario 7 already gave the same warning.
+- The agent can offer to copy the decisions to ADRs. It writes nothing before a yes (D154).
+
+### 18b. Archive copies the decisions to ADRs after the guard
+
+This scenario checks the yes path of the offer in scenario 18 (D154).
+
+**Steps**:
+
+1. Start from the end state of scenario 18.
+2. Answer: "Yes, copy the decisions of `design.md` to ADRs." If the agent made no offer in scenario 18, ask for this copy in the same words.
+3. Approve each draft.
+
+**Expected**:
+
+- The agent shows each ADR draft before it writes. Each draft has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
+- After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
+- `design.md`, the specs, and `.openspec.yaml` are the same as before step 2. The change is not archived.
+- The agent tells the user to run stock `/opsx:archive`.
 
 ## 19. Other openspec-lite skills after an upgrade
 

@@ -6,22 +6,11 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), and item 2 (upgrade reports the `skip_specs` state at the end, D153).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), and item 3 (archive can offer to copy the decisions to ADRs after its guard, D154).
 
 ---
 
 ## Skill text
-
-### 3. Archive offers to draft ADRs after its guard stops
-
-- **Where**: `package/skills/openspec-lite-archive/SKILL.md`, section "1. Common checks", step 3 "Guard". If `schema` is not `plan-lite`, the skill stops, tells the user to run stock `/opsx:archive`, and warns if `design.md` has `### Decision` entries.
-- **Problem**: in scenario 18, after the guard stopped, the agent said: "I can draft both ADRs in the format this skill uses, if you want them." It drafted nothing. The guard says only "stop" and warn, and it does not say "offer nothing".
-- **Evidence**: group C, scenario 18. The last three runs did the same.
-- **Why it can matter**: the offer is useful, because stock `/opsx:archive` does not turn the decisions into ADRs (D115). But on a yes, the agent writes ADRs from a spec-driven `design.md`, and no skill rule covers that path.
-- **Recommendation**: decide which behavior you want, and write it in the guard:
-  - Option A: forbid the offer: "Stop. Offer nothing else."
-  - Option B: allow it, and give the rule: "You can offer to copy each `### Decision` of `design.md` to `openspec/adr/` in the ADR format of section 2, step 5. Write nothing before the user says yes."
-  - I prefer option B, because it fills the D115 gap with a rule that the skill already has.
 
 ### 4. Archive shows a menu, not the question "Archive anyway?"
 
