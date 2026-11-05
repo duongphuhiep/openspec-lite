@@ -6,17 +6,11 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), and item 4 (archive asks only "Archive anyway?", D155).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), and item 5 (scenario 4 gives a fixed answer to the questions of apply, D156).
 
 ---
 
 ## Scenario text in `docs/test-scenarios.md`
-
-### 5. Scenario 4 does not say how to answer the stale preview and the open questions
-
-- **Problem**: scenario 4 says "On the change from scenario 1, run stock `/opsx:apply`." If it runs after scenario 3, the preview is stale, so apply stops first and offers to regenerate or continue. Also, the done check passes only if the user answers the open questions of scenario 1. The scenario does not say how to answer either one. In the 627b8fb run, the tester answered "I accept your defaults", but the agent had given no defaults. The agent said so, chose answers, and recorded them as decisions.
-- **Evidence**: group A, scenario 4 (session `b4dcfba8-4296-49b3-b73d-4800e4a98c04`).
-- **Recommendation**: add to the steps: "If apply says that the preview is stale, answer: continue from `plan.md`. Give an answer for each open question."
 
 ### 6. Scenario 7 needs an open question, but its prompt has none
 

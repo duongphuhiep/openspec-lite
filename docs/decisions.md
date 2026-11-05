@@ -2141,3 +2141,11 @@ This extends D75 and D115.
 This extends D77.
 
 **Rationale**: In scenario 22c, 2 of 2 runs changed the question. On 627b8fb, the agent showed a menu: "1. Archive anyway", "2. Stop", "3. Record first". Option 3 asked the user for new content from memory, for example the CSV column format, to write as a spec or an ADR before the archive. On f0a5cad, the agent asked "Archive anyway, or finish the time-zone work first?". The done check is a gate, and a gate needs one yes or no answer, also in a headless run. Option 3 also skips `plan.md`, the source of each promotion, and the step 6 rule that lets the user pick only an item that archive skipped. The need behind option 3 is real: a user can see at the last moment that a decision is worth keeping. The hint gives that need a correct path, through `plan.md` and the normal filter and approval. Rejected: accept a menu in the scenario, because each run can invent new options, and the scenario cannot check them.
+
+---
+
+## D156: Scenario 4 Gives a Fixed Answer to the Questions of Apply
+
+**Decision**: Scenario 4 has a second step. The tester answers the questions of apply in one reply: continue from `plan.md`, do not regenerate the preview, one real answer for each open question, and a fixed stack (plain HTML and JavaScript under `src/`, `node:test`, no npm dependency, a minimal report page). The step forbids "use the defaults".
+
+**Rationale**: Scenario 4 runs on the change of scenarios 1 and 3. Apply then asks up to three questions before it codes: the stale preview from scenario 3, the open questions from scenario 1, and the stack of an empty repo. The scenario gave no answer, so each tester improvised. In the 627b8fb run, the tester wrote "I accept your defaults", but apply gave no defaults, so the agent chose the answers itself. A fixed answer makes two runs test the same thing. The open questions differ in each run, so the tester writes their answers. Rejected: a fixed `plan.md` with no open questions, because scenario 4 then no longer tests the change that scenarios 1 and 3 build.

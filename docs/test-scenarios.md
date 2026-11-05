@@ -45,7 +45,10 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 ## 4. Stock apply follows the plan-lite rules
 
-**Steps**: On the change from scenario 1, run stock `/opsx:apply`.
+**Steps**:
+
+1. On the change from scenario 1, run stock `/opsx:apply`.
+2. Answer the questions of apply in one reply: "Continue from `plan.md`. Do not regenerate the preview. <one answer for each open question>. Stack: plain HTML and JavaScript under `src/`, tests with `node:test`, no npm dependency. Scaffold a minimal report page." Write a real answer for each open question in `plan.md`. Do not write "use the defaults", because apply gives no defaults (D156).
 
 **Expected**:
 
