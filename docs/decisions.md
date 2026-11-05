@@ -2267,9 +2267,10 @@ This revises the last bullet of D151.
 **Decision**:
 
 - Upgrade writes a requirement only from a constraint of `plan.md`, a decision that is also a contract, or an answer of the user. A fact is not a source. It is only the reason for a decision or a constraint, and it goes to `design.md` → `## Context`.
-- The "no requirement" rule of the spec step applies only if step 2 plans no requirement and the user gives none.
+- The "no requirement" rule of the spec step applies if no requirement is left after step 2: none is planned from a source, and the user accepts none.
+- Upgrade uses the contract definition of `GLOSSARY.md` and archive: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts.
 - Scenario 20c uses a decision that is not a contract.
 
 This revises D152 and D164.
 
-**Rationale**: A review of D164 found three gaps. The template, upgrade step 2.3, and archive treat a fact only as the reason for a decision or a constraint, and archive never drafts a fact as a requirement (D135). With a fact as a source, upgrade and archive could promote the same `plan.md` in two ways. The rule "If the user gives no requirement in step 2, write no spec" had lost its old condition, so a literal agent could drop a requirement from a constraint when the user said no to a Goal requirement. Scenario 20c asked for any decision and no requirement, but since D164 a decision that is a contract is a source, so the expected "no spec" could fail.
+**Rationale**: A review of D164 found three gaps. The template, upgrade step 2.3, and archive treat a fact only as the reason for a decision or a constraint, and archive never drafts a fact as a requirement (D135). With a fact as a source, upgrade and archive could promote the same `plan.md` in two ways. The rule "If the user gives no requirement in step 2, write no spec" had lost its old condition, so a literal agent could drop a requirement from a constraint when the user said no to a Goal requirement. Scenario 20c asked for any decision and no requirement, but since D164 a decision that is a contract is a source, so the expected "no spec" could fail. A second review found two more gaps. Upgrade defined a contract as "a behavior that a user or another system can see", so a UI layout could become a requirement in upgrade but not in archive. And "step 2 plans no requirement" was false when step 2 planned only a Goal requirement that the user then refused, so the flag was not put back, and `validate` failed.

@@ -552,7 +552,7 @@ Each report has a metrics table, with one row for each session and one total row
 2. After the last turn, run this command from the repo root. Use the OpenSpec root of the scenario for `--dir`. It is the temp folder, except in scenario 11, where it is `<temp>/svc` (D162):
 
    ```sh
-   node scripts/run-metrics.mjs --label <scenario> --dir <temp folder> turn-1.json turn-2.json
+   node scripts/run-metrics.mjs --label <scenario> --dir <openspec root> turn-1.json turn-2.json
    ```
 
 3. Copy the row to the report. Replace the two `?` with the pass count and the check count. Copy the file table if the scenario writes artifacts.

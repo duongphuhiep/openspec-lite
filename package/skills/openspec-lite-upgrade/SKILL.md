@@ -32,7 +32,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 1. Remove the `skip_specs: true` line from `<dir>/.openspec.yaml`. While it is set, the CLI forbids spec files.
 2. Before you write an artifact, plan the requirements. A requirement can come only from these sources:
    - a constraint of `plan.md`. A fact is only the reason for a decision or a constraint, so it goes to `design.md` → `## Context`;
-   - a decision of `plan.md` that is also a contract: a behavior that a user or another system can see. A decision that is not a contract goes only to `design.md` → `## Decisions`;
+   - a decision of `plan.md` that is also a contract: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. A decision that is not a contract goes only to `design.md` → `## Decisions`;
    - an answer of the user.
 
    The Goal and `tasks-preview.md` alone are not sources. Then ask the user, in one reply, before you write any artifact:
@@ -54,7 +54,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
       - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
       - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit it.
       - Write only the requirements of step 2. After a yes in step 2, the user is the source of a requirement, so it gets no 🤖 mark.
-      - If step 2 plans no requirement, and the user gives none, write no spec, and add `skip_specs: true` back to `<dir>/.openspec.yaml`. Without a delta and without the flag, `validate` fails.
+      - If no requirement is left after step 2, write no spec, and add `skip_specs: true` back to `<dir>/.openspec.yaml`. Without a delta and without the flag, `validate` fails.
    3. `design.md`: Non-Goals go to `## Goals / Non-Goals`. Each `### Decision` entry of `plan.md` goes to `## Decisions`. Constraints go to `## Context` or `## Risks / Trade-offs` if they fit. Facts go to `## Context`. An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says. An open question that changes the specs, the approach, or the tasks has no slot. Do not put it, or a note that points to it, in `design.md`. Put its answer in the specs or in `## Decisions`. If the user has no answer, keep the question in `plan.md`.
    4. `tasks.md`: if `<dir>/tasks-preview.md` exists, use it as the seed. Remove its two header comment lines. Replace each `plan.md` ID in it with the item title, or a short form of its text. Add `[ ]` to each task line, for example `- [ ] 1.1 <task>`. If an answer from step 2 changes the tasks, edit the seed to match it, and say so in the summary. Then delete `tasks-preview.md`. If no preview exists, write `tasks.md` from the template. If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here. Keep `tasks.md`, and delete `tasks-preview.md`.
 3. Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
