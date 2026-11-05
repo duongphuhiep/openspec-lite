@@ -48,6 +48,10 @@ _Avoid_: Interface, API (for this meaning)
 A result that a change delivers. `## Goal` in `plan.md` holds one outcome by preference, or more than one related outcome, one per bullet. The first outcome of the request is the **main outcome**. The change name comes from it. The **split question** asks the user to leave out an outcome that can ship alone and does not touch the code of the main outcome. The done check asks if each outcome is met.
 _Avoid_: Objective
 
+**Inferred item**:
+An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that comes from no section of `plan.md` and from no answer of the user. It has a 🤖 mark at the end of its line or heading. The user removes the mark to accept the item.
+_Avoid_: Guess, assumption
+
 **Done check**:
 The three questions at the end of apply and the start of archive: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 _Avoid_: Done checklist, definition of done

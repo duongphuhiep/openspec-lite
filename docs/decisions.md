@@ -1763,6 +1763,8 @@ This revises D107 for scenario 10.
 
 This extends D127, D108, and D114.
 
+**Status**: D152 applies the Goal rule to each requirement, also when `plan.md` has one, and adds `tasks-preview.md` to it. D151 removes the version number from scenario 9.
+
 **Rationale**: In 6 of 6 propose runs, the agent removed the comment of each section that it filled. "Keep each guidance comment" did not say that a filled section keeps its comment. In 1 of 2 runs of scenario 20c, upgrade turned a Goal that names a behavior into a requirement in its own words. It did not ask, which D114 forbids. A global v1.3.0 install in `~/.claude/skills/` hid the release candidate in each group, until the runs used the flag (`docs/facts.md`).
 
 ---
@@ -2060,3 +2062,35 @@ This extends D148.
 This extends D112.
 
 **Rationale**: In scenario 1 on f0a5cad, propose added a second `skip_specs: true` line, saw that the CLI failed, and removed the line. The D112 rule "If the line exists, do not add a second one" did not tell the agent to look first. OpenSpec 1.14.2 writes the line in `openspec new change --schema plan-lite` (`docs/facts.md`), so with that version the line always exists. The add-if-missing part stays for the older OpenSpec versions in the `openspec-version` range, because the facts do not show when OpenSpec started to write the line.
+
+---
+
+## D151: Scenario Text Fixes From the 627b8fb Run
+
+**Decision**:
+
+- The setup of `docs/test-scenarios.md` says: install the schema before a hand-built plan-lite change, add no second `skip_specs` line, and commit code before an archive run.
+- Scenario 3 step 3 says "Add or edit a line under `## Constraints`".
+- Scenario 9 says "v0 → the shipped version", with no version number.
+- Scenario 21b step 1 names step 10 of `openspec-lite-archive`.
+- "Running the Scenarios Headless" names the `/private/tmp/...` path and its session log folder.
+- The open items of the run stay open. They are listed in `.scenario-runs/20261105-627b8fb/summary.md`. The skill gaps need an owner decision.
+
+**Rationale**: All 33 runs passed, but 5 groups found scenario text that misled the tester. After scenario 1, `## Constraints` is empty, so "Edit a line" had no target. Scenario 9 named v3 after the bump to v4, and a version number in the text goes stale at each bump. "Step 10 of 21a" pointed to a step that 21a does not have. Three groups built a plan-lite change by hand, and each had to find the schema install and the `skip_specs` rule (D150) alone.
+
+---
+
+## D152: Upgrade Asks Before a Requirement That Is Not in plan.md, and Marks Inferred Items
+
+**Decision**:
+
+- Upgrade writes a requirement only from a constraint, a decision, or a fact of `plan.md`, or from an answer of the user. The Goal and `tasks-preview.md` alone are not requirements. Upgrade can suggest a requirement from them, but asks before it writes it. Before, this rule was only in the branch for a `plan.md` with no requirement.
+- In `proposal.md`, `specs/`, and `design.md`, upgrade puts 🤖 at the end of the line or the heading of each inferred item. An inferred item comes from no section of `plan.md` and from no answer of the user in the upgrade. The Goal and `## Background` count as sources. One mark per item.
+- `tasks.md` gets no mark.
+- A requirement that the user accepts after the question gets no mark, because the user is its source.
+- The upgrade summary lists each 🤖 item. The user removes the mark to accept the item, or deletes the item. No skill removes the mark.
+- `GLOSSARY.md` defines "Inferred item". Scenario 7 checks the rule.
+
+This revises D131 and extends D114.
+
+**Rationale**: In scenario 7 of the 627b8fb run, `plan.md` had two constraints. Upgrade wrote 4 distinct requirements with no question: 2 from the constraints, 1 from the Goal, and 1 (RFC 4180 escaping) from the tasks preview. It also wrote scenarios from the tasks preview, for example "Table is empty". A spec is a contract that others depend on after the archive, and the tasks preview is a reference, not a contract. A list of sources in the summary was rejected, because it points to `plan.md` items, and the user usually deletes `plan.md` after the upgrade. A mark in the artifact stays where the reviewer reads. `tasks.md` gets no mark, because the agent writes almost each task from its own preview, so a mark on each line tells the reviewer nothing. If the user forgets a mark, stock `/opsx:archive` merges it into `openspec/specs/`. This is a visible signal, not a silent error, so no skill removes it.

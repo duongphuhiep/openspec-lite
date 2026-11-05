@@ -716,3 +716,22 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.318, `eu.anthropic.claude-sonnet-5-5`: with the rule "derive a name from the main outcome", propose named a two-outcome change from both outcomes (1 of 1 runs). With "from the main outcome only. Do not add words from the other outcomes.", it used only the main outcome (3 of 3 runs). Source: `.scenario-runs/20261104-f0a5cad-D148/report.md`, 2026-11-04.
 
 - Claude Code 2.1.318, `eu.anthropic.claude-sonnet-5-5`: with the D150 propose step 3, 3 of 3 runs of scenario 1 left `.openspec.yaml` with one `skip_specs` line and made no edit to it. 1 run read the file. 2 runs did not, and relied on the skill text that OpenSpec 1.14.2 writes the line. Source: `.scenario-runs/20261105-D150/report.md`, 2026-11-05.
+
+## Scenario Run on 627b8fb
+
+**Source**: agent scenarios 1–9 and 11–22, Claude Code 2.1.318 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261105-627b8fb/`, 2026-11-05. All 33 runs passed.
+
+- D150 holds in each propose run of the group: `.openspec.yaml` has one `skip_specs: true` line, and no tool call wrote the file (groups A, B, D, F, H).
+- OpenSpec 1.14.2: at a git root with no OpenSpec root, `openspec list --json` exited with code 1 again (group D, session `d3e6b132`). Two runs of three now give code 1.
+- OpenSpec 1.14.2: when `openspec archive` creates a new capability with a Purpose of fewer than 50 characters, it warns "carried Purpose is under 50 characters; openspec validate --strict reports it as too brief". The archive still succeeds (group E, sessions `c9cd0bb7`, `04413579`).
+- OpenSpec 1.14.2: `openspec archive <name> --yes` on a plan-lite change prints "Task status: No tasks", exits with code 0, and gives no warning about `plan.md`, also with the `config.yaml` guidance (group F, 16c).
+- Claude Code 2.1.318, Sonnet 5.5: on `/opsx:archive` of a plan-lite change, the agent read `.openspec.yaml` and switched to `openspec-lite-archive`, with and without the `config.yaml` guidance. The skill description caused the switch (group F, sessions `6ac256a3`, `549e1c74`).
+- Claude Code 2.1.318, `acceptEdits` and the scenario allowlist: the deny rule depends on the form of the command, not only on its first word.
+  - These ran: `echo "skip_specs: true" >> <file> && openspec validate && openspec archive --yes` (group B, session `18a68d41`), `printf '...' >> openspec/config.yaml && grep ...` (group F, `902a242e`), `rm <file> && grep ...` (group F, `2d2c66bc`), and `cd <cwd>; cat <files>` (group A, `01813744`).
+  - These were denied: a chain with `echo "exit $?"` or `echo rc=$?` ("A variable in this command can't be checked before it runs"), `cd <dir>; cat > <file> <<'EOF'`, a heredoc followed by more commands on new lines ("Parser skipped input between top-level statements"), a `for` loop, and `sed -i` in a compound command (groups A, B, C, E, G).
+  - Thus the 2.1.317 facts "`echo` is denied" and "a command that starts with `cd <dir>;` is denied" are too broad for 2.1.318.
+- Claude Code 2.1.318: in `cd openspec && tail ../src/x.js`, the path check resolves `../` from the session folder, not from the folder after `cd`, and denies the path (group G, session `3b9bb24c`).
+- Claude Code 2.1.318: an Edit that removes the last line of a file can also remove the final newline (1 of 3 runs, group E, session `c9cd0bb7`).
+- Claude Code 2.1.318: with `mktemp -d /tmp/...`, the `Base directory for this skill:` line shows `/private/tmp/...`, and the session logs are in `~/.claude/projects/-private-tmp-<name>/`. Each project folder also has a `memory` folder now (groups D, H).
+- A security review plugin on this machine starts its own `claude` sessions in a temp repo after a commit. Their logs are in the same project folder, with the first prompt "Review this change for security vulnerabilities." and entrypoint `sdk-py`. `run-metrics.mjs` reads only `<session_id>.jsonl`, so its counts are correct. A scan of all `*.jsonl` files in the folder counts too much (group H).
+- APM 0.33.0: `apm install` prints two "Skipped inactive experimental resolver for target 'copilot-cowork' / 'copilot-app'" info lines. The install still works, and the six skills match `package/skills/` (group C).

@@ -21,6 +21,7 @@ Write all prose in ASD-STE100 Simplified Technical Language.
 | `docs/decisions.md` | Append-only log of decisions with rationale | Why a rule exists. Old entries can be superseded. |
 | `docs/facts.md` | Verified facts about OpenSpec and tools, with sources | How external tools behave |
 | `GLOSSARY.md` | Glossary of project terms | What each term means |
+| `docs/todo.md` | Open items with evidence and a recommendation, but no decision yet | What is left to decide. Remove an item when its decision is in `decisions.md`. |
 | `README.md` | User-facing overview and lifecycle | Nothing. It summarizes the files above. |
 
 Rules:
