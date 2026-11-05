@@ -2183,3 +2183,11 @@ This extends D120, D140, and D142.
 **Decision**: Scenario 20b names the moment of the pick by its content: "In the first reply after the agent lists the skipped items, pick the toolbar item." If the agent asks "Archive anyway?", the tester answers yes in the same reply.
 
 **Rationale**: The step said "In the reply to the drafts". In the 627b8fb run and the run before it, the done check failed first. The agent listed the skipped items with "Archive anyway?" in turn 1, and showed the full drafts only in turn 2. So the tester picked the item before the drafts. Archive step 6 allows a pick in any reply after the skipped list, so the new wording is true for both orders.
+
+---
+
+## D160: Scenario 20c Checks Only the End State of skip_specs
+
+**Decision**: Scenario 20c checks only the end state of `skip_specs`. It says that the agent can skip the remove (upgrade step 1) and the add-back (step 2.2) of the line, because no spec file is written. Upgrade does not change.
+
+**Rationale**: In the 627b8fb run and in 2 of 2 reruns on f15aba0, the agent never removed the line and put it back. Its only edit to `.openspec.yaml` changed the `schema:` line. The end state was correct each time. Step 1 exists because the CLI refuses a spec file while the flag is set, so with no requirement the remove and the add-back have no effect. The user sees no difference, and since D153 the summary reports only the end state. A check on the order needs the tool calls of the session log, for no result that a user can see. Rejected: change step 1 to "remove the line only before the first spec file", because each interrupted run must then find out if a spec file exists, the type of history check that D153 avoids.

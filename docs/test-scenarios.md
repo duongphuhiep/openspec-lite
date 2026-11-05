@@ -442,6 +442,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - Before the delete, the agent shows the list of `plan.md` sections with their destinations, and asks the prune question. It ends the turn there, with no validate and no summary.
 - `openspec validate` passes.
 - The summary says that `skip_specs` is set at the end, because the change has no spec delta (D153).
+- Only the end state of `skip_specs` counts. The agent can skip the remove and the add-back of the line, because no spec file is written (D160).
 
 ## 21. Archive supersedes an old ADR
 

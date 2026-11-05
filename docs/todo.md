@@ -6,17 +6,11 @@ The run reports are in `.scenario-runs/20261105-627b8fb/` (`summary.md` and `gro
 
 When you close an item, record the decision in `docs/decisions.md`, update `docs/design.md` in the same commit, and remove the item from this file.
 
-Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158), and item 8 (scenario 20b picks the item after the skipped list, D159).
+Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and marks inferred items with 🤖, D152), item 2 (upgrade reports the `skip_specs` state at the end, D153), item 3 (archive can offer to copy the decisions to ADRs after its guard, D154), item 4 (archive asks only "Archive anyway?", D155), item 5 (scenario 4 gives a fixed answer to the questions of apply, D156), item 6 (scenario 7 has a fixed prompt and a fixed answer, D157), and item 7 (upgrade keeps the ID comment while a section is left, and scenario 20a accepts a short form, D158), item 8 (scenario 20b picks the item after the skipped list, D159), and item 9 (scenario 20c checks only the end state of `skip_specs`, D160).
 
 ---
 
 ## Scenario text in `docs/test-scenarios.md`
-
-### 9. Scenario 20c checks only the end state of `skip_specs`
-
-- **Problem**: upgrade step 1 removes `skip_specs: true`, and step 2.2 puts it back if the user has no requirement. In 20c, the agent never removed the line, and no tool call touched it. The end state is correct, so the scenario passes. It does not check the order of the steps.
-- **Evidence**: group F, scenario 20c.
-- **Recommendation**: keep the check on the end state only. The order has no effect that a user can see, and D153 changes the report to the end state too. Add one sentence to 20c that says so, so that a tester does not report it again.
 
 ### 10. Scenario 22a: the example change name
 
@@ -38,6 +32,16 @@ Done: item 1 (upgrade asks before a requirement that is not in `plan.md`, and ma
   - Problem 2: skip `openspec/schemas-backup/` too. This is a one-line change in `scripts/run-metrics.mjs`, with a test.
   - Problem 3: say "use the OpenSpec root of the scenario for `--dir`".
   - Problem 4: skip `--help` and the total row until a run needs them.
+
+## Found after the run
+
+### 12. Upgrade puts 🤖 on items that come from `plan.md`
+
+- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, section "2. Upgrade", step 2, the 🤖 rule (D152).
+- **Problem**: the rule says to mark an item that "comes from no section of `plan.md` and from no answer of the user". In a rerun of scenario 20c on f15aba0, 2 of 2 runs also marked items that come from `plan.md`. Run 1 marked "The main database holds the audit log." in `proposal.md`, which comes from the decision. Run 2 marked the goal "Record admin actions in an audit log." in `design.md`, which comes from the Goal. Each run marked the inferred Why line of `proposal.md` correctly.
+- **Why it matters**: a mark on a `plan.md` item makes the user review it again, and it teaches the user to ignore the mark. A wrong mark is safer than a missing mark, but too many marks hide the real inferred items.
+- **Evidence**: `.scenario-runs/20261105-f15aba0-20c/report.md`, sessions `6f9d0b69` and `86c4ac0f`.
+- **Recommendation**: not decided. Options: name the common cases in the rule ("A restated Goal, constraint, decision, or fact is not inferred, also in other words or in another section"), or mark only in `specs/` and `design.md` → `## Decisions`, where an inferred item becomes a contract or a decision.
 
 ## Other notes from the run
 
