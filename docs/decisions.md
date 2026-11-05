@@ -2032,4 +2032,16 @@ This extends D116 and D119.
 
 This replaces the "One sentence" rule of the Goal comment from D124, and the "keeps Goal one sentence" text in the rationale of D125.
 
+**Status**: D149 makes the name come from the main outcome only.
+
 **Rationale**: No decision gave a reason for the one-sentence rule. The skills use Goal for the done check, the change name, and the archive search. Each use needs a clear outcome, not one sentence. A real change can add a feature and fix an old bug in the same code, so it has two outcomes. A change archives as one unit. If one outcome is blocked, the other outcome waits too, so an outcome that can ship alone goes to its own change. Propose asks before it moves an outcome out, because the user asked for it, and a silent removal can lose it. The question comes before the change name, so the name never comes from an outcome that moves out. Scope items and source links still go to `## Background` (D125). The hash does not change, because the hash ignores HTML comments (D124).
+
+---
+
+## D149: Change Name From the Main Outcome Only
+
+**Decision**: Propose derives the change name from the main outcome only. It does not add words from the other outcomes.
+
+This extends D148.
+
+**Rationale**: In the f0a5cad scenario run, 22a failed. The skill said "from the main outcome", but the agent named the change `report-csv-export-user-timezone`, from both outcomes. With "only" and the explicit ban, 3 of 3 reruns named it `report-csv-export` (`docs/facts.md`). A name from all outcomes grows past 5 words when a change has three outcomes.
