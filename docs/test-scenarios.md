@@ -81,7 +81,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The two constraints still have no ID (D138).
 - The sliding window decision has no 🤖, because it records an instruction of the user (D181).
 
-### 4c. Preview and apply record a non-obvious fact
+### 4c. Preview and apply record a fact that backs a decision
 
 **Steps**:
 
@@ -98,9 +98,25 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - After step 2, if a decision of the preview says how `lookup` finds an unknown city, `## Facts` has the fact that backs it: the tool reports an unknown city with an error body in its output, not with a failing exit, with its source. The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module" (D184). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
-- After step 3, if `## Facts` had the fact about the error body after step 2, it is still there, because the decision on how `lookup` reads the output uses it (D184). The summary lists each fact, decision, and open question that apply added, changed, or removed.
-- In step 4, if archive drafts an ADR for the decision that calls `tools/geo.mjs`, and `plan.md` has the fact about the error body, the fact is in the `## Context` of that ADR. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the fact as not drafted, with a reason (D179, D186).
+- After step 3, if `## Facts` had the fact about the error body after step 2, it is still there, because the decision on how `lookup` finds an unknown city uses it (D184). The summary lists each fact, decision, and open question that apply added, changed, or removed.
+- In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, and `plan.md` has the fact about the error body, the fact is in the `## Context` of that ADR. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the fact as not drafted, with a reason (D179, D186).
 - In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
+
+### 4d. Preview and apply record a non-obvious fact
+
+This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14.2 prints "No items found to validate." and exits with code 0 for `openspec validate --specs` with no spec (`docs/facts.md`). The code of the repo cannot show it.
+
+**Steps**:
+
+1. On a new plan-lite change `spec-gate`, write a `plan.md` with the Goal "Add `scripts/spec-gate.mjs`. It exits with code 1 when the repo has no spec, and with code 0 otherwise." and the constraint "- C1: Use the `openspec` CLI to find the specs. Do not scan the files." Create no spec. Commit.
+2. Run `openspec-lite-tasks-preview spec-gate`. Commit.
+3. Run `openspec-lite-apply spec-gate`. When it asks the open questions, answer: "Use your recommended answer for each question."
+
+**Expected**:
+
+- After step 2 or step 3, `## Facts` has a fact that `openspec validate --specs` exits with code 0 when no spec exists, with the command as its source. It is a non-obvious fact, because only a run shows it.
+- After step 3, the fact is still in `## Facts`, also if no decision names it (D184).
+- The script exits with code 1 in this repo, which has no spec. The agent checks it with a run.
 
 ## 5. Archive with promotion
 

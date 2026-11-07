@@ -164,7 +164,7 @@ At archive time, the AI uses four filters to select what to promote:
 - **Non-obvious**: a future reader cannot deduce it from the code in 5 minutes.
 - **Surprising**: it would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code.
-- **Non-obvious fact**: a fact of `plan.md` that needed a run, a test, research, or a long analysis of the code to find. It goes to the context of an ADR.
+- **Non-obvious fact**: a fact of `plan.md` that needed a run, a test, research, or a long analysis of the code to find. A fact that you can easily see in the code is not one. It goes to the context of an ADR.
 
 An item needs to pass only one filter. The AI shows the list. You approve, reject, or edit each item in the conversation. You can also pick a skipped item, and the AI drafts it. The AI writes nothing before your approval.
 

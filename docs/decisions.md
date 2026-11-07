@@ -2598,3 +2598,17 @@ This revises D185.
 
 **Rationale**: review round 8 found that the 4c check could fail on a correct archive, and that README did not follow D184 and D185. Each fix has one logical choice.
 
+---
+
+## D188: Fixes From Review Round 9 on cb22fc4..local
+
+**Decision**:
+
+- The definition of a non-obvious fact says: "A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found it." It is in each copy of the definition: apply, the tasks preview, archive (step 3 and step 4), the template, `GLOSSARY.md`, README, and `design.md`. Before, only the "Do not record" sentence had it, so archive and the prune could still keep such a fact as non-obvious.
+- Scenario 4c uses one name for the decision that the error-body fact backs: the decision on how `lookup` finds an unknown city. Its title is now "Preview and apply record a fact that backs a decision".
+- New scenario 4d checks a real non-obvious fact: with no spec, `openspec validate --specs` exits with code 0. Only a run shows it.
+
+This completes D186.
+
+**Rationale**: review round 9 found that D186 changed the record rule but not the definition, that 4c named its decision in three ways, and that no scenario tested a real non-obvious fact after D186. The 4d fact is in `docs/facts.md`, so the answer key is known. Each fix has one logical choice.
+
