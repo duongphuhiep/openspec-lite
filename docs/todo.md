@@ -77,7 +77,7 @@ The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 4
 
 ## Found in the run on 5aa0025
 
-The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194, D195, and D196 close items 48, 49, and 52.
+The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 to D197 close items 48, 49, 52, and 53.
 
 ### 50. Apply writes a test that does not fail on the old behavior
 
@@ -92,13 +92,6 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 - **Problem**: after the ADRs, the agent did not name the open question. The rule is one sentence in a long paragraph, with no fixed place in the reply. One draft also asked to remove a 🤖 from `design.md`, against the guard.
 - **Evidence**: `group-C.md` (18b, 2 of 2 runs). The 18b step 4 also needs one more user turn ("I removed both marks.").
 - **Recommendation**: not decided. One option: a fixed line in the reply before the archive question, for example "Open in `plan.md`: …".
-
-### 53. The preview cannot read an exit code when `echo $?` is denied
-
-- **Where**: `package/skills/openspec-lite-tasks-preview/SKILL.md`, the fact rules (D184). Scenarios 4c and 4d.
-- **Problem**: the allowlist denied each `echo $?` form. In 4d-1, the fact says "The exit code was not checked". In 4c-2, the decision relies on an error body with no exit code fact.
-- **Evidence**: `group-I.md` (4c-2, 4d-1).
-- **Recommendation**: not decided. One option: a small script that runs a command and prints its exit code, as D193 added for the git note.
 
 ### 54. A fact that only repeats the code or an `ls` result
 

@@ -2741,3 +2741,9 @@ Scenarios 19 and 20a check this.
 This revises D133 and D191.
 
 **Rationale**: in the run on 5aa0025, `design.md` held a note that points to a kept open question in 2 of 2 runs of 20a, and in group C. `proposal.md` → Impact held one too. The D133 rule is one sentence in the `design.md` step, and the stock `design` instruction asks for risks, so the agent puts an open risk there. A separate check after all artifacts finds the pointer in each file. In 1 of 2 runs of 20a, upgrade skipped the resume question and ran `validate`. In 19-3, after "no", it did not name the open question that stays in `plan.md`, which the stock skills do not read (todo item 52).
+
+## D197: A Script Gives the Exit Code of a Command
+
+**Decision**: the schema ships `exit-code.mjs`. `node exit-code.mjs <command> [args...]` runs the command with no shell, shows its output, and prints `exit: <code>` as the last line. It always exits with code 0. Apply and the tasks preview use it to know the exit code of a command, alone, not in a chain. They do not add `echo $?`. If the agent did not get an exit code, it records nothing about it. Scenarios 4c and 4d check this. The schema stays at version 5, because version 5 is not released yet.
+
+**Rationale**: in the run on 5aa0025, the allowlist denied each `echo $?` form. In 4d-1, the preview then wrote the fact "The exit code was not checked". In 4c-2, a decision relied on an error body with no exit code fact (todo item 53). The allowlist allows `node`, and many user setups allow it too. A script gives the code in the same form each time, as `plan-status.mjs` does for the git note (D193).
