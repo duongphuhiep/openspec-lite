@@ -862,3 +862,29 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `openspec list --specs` prints "No specs found." and exits with code 0.
 - `openspec validate --specs` prints "- Validating..." and "No items found to validate.", and exits with code 0. So no `openspec` command fails when a repo has no spec.
 
+
+## Scenario Run on 80d076b
+
+**Source**: all agent scenarios, Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, Node v24.13.0, reports in `.scenario-runs/20261107-80d076b/`, 2026-11-07.
+
+- OpenSpec 1.14.2: `openspec archive --yes` copies a delta scenario heading into the main spec as it is, also with a trailing 🤖 (group C, session `467cad8c`).
+- OpenSpec 1.14.2: when a delta makes a new capability, `openspec archive` replaces the `# Spec Delta` title with `# <capability> Specification`, and keeps the `## Purpose` of the delta (group E, sessions `1db36732`, `2a660370`).
+- OpenSpec 1.14.2: `openspec validate --specs --json` with no spec prints `"items": []` and `summary.totals.items: 0`, and exits with code 0 (group I, sessions `4672e247`, `ae21b178`).
+- OpenSpec 1.14.2: `openspec validate` on a delta requirement with no scenario exits with code 1, prints one `✗ [ERROR] … must include at least one scenario` line for each requirement, then three "Next steps" hints (group B, session `6fd86a5f`).
+- `openspec-version.mjs` on OpenSpec 1.14.2 prints `ok: OpenSpec 1.14.2 is in the range >=1.9.0 <2.0.0`. No session compared the versions itself (groups D and E). With a repo schema at version 99, no skill reaches the script, because the schema check stops first (group D).
+- Sonnet 5.5, D175 version step: it adds `; echo rc=$?` or `; echo exit $?` to the script command in 9 of 10 sessions (groups B and E). The scenario allowlist denies it. Mostly the agent then runs the script alone. In 1 session, it gave up, and the version check did not run (group E, session `5fd87fe1`).
+- Claude Code 2.1.319, scenario allowlist: `node install.mjs …; cat openspec/config.yaml` runs, and the same chain with `echo "exit $?"` is denied. So `$?` causes the denial, not the `;` chain (group D, sessions `3d163107`, `6c46145d`). `env PATH=/nonexistent <cmd>` is denied (group I, `b2ae50da`). `rm -r <dir>` runs (group I, `9da2c3c4`).
+- Claude Code 2.1.319: the `<command-name>` grep of `log.sh` also matches the Skill tool description, 3 times in each session. Filter it out (group D).
+- Sonnet 5.5, archive with D181: in 3 of 7 sessions, it said that a decision is "marked 🤖 in `plan.md`" when the decision had no 🤖 (group B, sessions `e8b7fcfd`, `c4bd46e5`, `e0b913a6`).
+- Sonnet 5.5, apply: in a chained `git status --porcelain …; ls <change>; cat plan.md`, it read the `ls` line "plan.md" as a porcelain line, and said that `plan.md` was not committed (group A, session `aba79d03`).
+- Sonnet 5.5, apply: it wrote no test file for a sliding window in 2 of 2 runs of 4b. A fake-clock check of one run cannot tell a sliding window from a fixed window (group A, sessions `aba79d03`, `4d192db7`).
+- Sonnet 5.5, apply: it wrote "Rejected … because" reasons from model knowledge in 2 of 2 runs of scenario 4 (group A, sessions `952ed726`, `e710314b`).
+- Sonnet 5.5, tasks preview: it recorded an obvious fact as the reason of its 🤖 decision in 2 of 2 runs of 4c, and "the repo has no `src/`" in 3 of 4 runs of group I. Apply did not update such a fact after it made it false (group I, `9b6906e4`, `67e5b160`; group A, `597557f9`, `e710314b`).
+- Sonnet 5.5, apply: it wrote a design choice (parse the JSON item count) as a fact, with no decision (group I, 4d-1, `4672e247`).
+- Sonnet 5.5, upgrade: it wrote the summary in the same reply as the prune question in 2 of about 6 prune turns (group F `3d872e81`, group C `2e2fc0f4`). It also missed a 🤖 on a new claim (group F, `a9c7d046`).
+- Sonnet 5.5, upgrade with D182: the same start state gave two results for the 🤖 contract decision in scenario 7 (group C, `2e2fc0f4`, `e751845f`).
+- Sonnet 5.5, schema skill: the reply skipped the copied files in 2 of 2 runs of scenario 9 (group D, `6c46145d`, `3d163107`).
+- Sonnet 5.5, tasks preview on a repo with no application code: it adds open questions about where the code is, with no question to the user (groups C, F).
+- Claude Code 2.1.319, stock `/opsx:apply`: it loaded no skill in 3 of 3 sessions. Over all runs, it loaded `openspec-lite-apply` in 3 of 11 sessions (group A).
+- The plan-lite template of schema version 5 is about 144 words longer than version 4. The same hand-built plan of 22c has 471 words now, and had 327 on 3c93237 (group H).
+- A background loop can change a file between the Write of archive and its `validate` in print mode. So scenario 13a can run with a real run 1 (group B, `setup/break-delta.sh`).
