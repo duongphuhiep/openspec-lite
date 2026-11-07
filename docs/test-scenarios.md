@@ -43,7 +43,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected**:
 
-- In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added to `plan.md`, or says that it added none. After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Non-Goals, and Constraints did not change (D171).
+- In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision of scenario 1 (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
 - Before coding, the agent says that the preview is stale and offers to regenerate it. In the same reply, it asks each open question of `plan.md`, with its recommended answer (D172). An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
 - Do not commit the edit of step 3. In step 4, the agent says in one line that `plan.md` is not committed (D171). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 

@@ -20,6 +20,10 @@ _Avoid_: Proposal, design
 An item of `## Facts` in a plan. It is a non-obvious fact, found during exploration, grilling, the tasks preview, or apply. It justifies a decision or a constraint, or it states a behavior of an external service or tool that the change uses, with its source (D171, D174). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
 _Avoid_: Finding, note
 
+**External service or tool**:
+A service, a program, or a library that a change uses but does not change, also if it is in the repo. A fact about its behavior stays in the plan with no decision, and archive keeps it in an ADR (D171, D179, D180).
+_Avoid_: Dependency, third-party tool
+
 **Item ID**:
 The short ID of a constraint, open question, fact, or decision in a plan: `C<n>`, `OQ<n>`, `F<n>`, or `D<n>`. It is unique only in its plan. It appears only in the plan and in its tasks preview. Elsewhere, an item is named by its title, or a short form of its text, with the change name.
 _Avoid_: Number, key

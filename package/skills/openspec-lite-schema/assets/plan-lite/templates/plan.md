@@ -13,10 +13,10 @@
 <!-- Rules the implementation must follow. One item per line, as "- C<n>: <rule>". -->
 
 ## Open Questions
-<!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. -->
+<!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. Only an answer of the user closes a question. -->
 
 ## Facts
-<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>". Record a fact that justifies a decision or a constraint of this change. Also record a behavior of an external service or tool that this change uses, seen during the work, with its source: a command that you ran, a file that you read, a doc URL, or an error text. Do not record a guess. Record a fact about a file in this repo only if it states a behavior that the code does not show at a glance. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
+<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>". Record a fact that justifies a decision or a constraint of this change. Also record a behavior of an external service or tool that this change uses but does not change, also if it is in this repo, seen during the work, with its source: a command that you ran, a file that you read, a doc URL, or an error text. Do not record a guess. Record a fact about a file in this repo only if it states a behavior that the code does not show at a glance. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
 
 ## Decisions
 <!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool. -->

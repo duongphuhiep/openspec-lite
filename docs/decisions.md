@@ -1836,7 +1836,7 @@ This revises the entry format of D92.
 
 **Rationale**: Exploration and grilling find facts, for example how a library or an API behaves. Without a slot, the facts are lost, or they mix with the decisions and the constraints. The filter "justifies a decision or a constraint" keeps the section short. Facts change when exploration continues, so a new fact must not make the preview stale.
 
-**Status**: Revised by D171.
+**Status**: Revised by D171. Revised by D179 (archive keeps a tool fact in an ADR).
 
 ---
 
@@ -2358,7 +2358,7 @@ This revises D146 and D162.
 
 This revises D29 (apply records only the deviations), D135 (each fact justifies a decision or a constraint), and D140 (the fact prune).
 
-**Status**: Revised by D172 (open questions, tool errors, and the fact source). Also revised by D174 (a fact about a repo file) and D177 (decisions against the code, reasons).
+**Status**: Revised by D172 (open questions, tool errors, and the fact source). Also revised by D174 (a fact about a repo file) and D177 (decisions against the code, reasons). Also revised by D178 (ask once, the note, the decisions of this run), D179 (archive), and D180 (the term, the decisions of this run).
 
 **Rationale**: a fact about an external tool that the agent finds during the preview or apply was lost at the end of the session. The same is true for the reason of a choice that is not a deviation, and for a worry of the agent. `plan.md` is the living record of the change, and archive promotes its decisions. The plan hash covers only Goal, Background, Non-Goals, and Constraints, so these writes do not make the preview stale. Rejected: ask the user to commit or back up `plan.md` before each run, because it adds a question turn to each run, and question turns were the least stable part of the scenario runs. Rejected: mark each new item with ✨, because a mark does not show an update or a removal, and it needs rules for when it goes away and for archive to remove it. A one-line git note, the summary list, and `git diff` show the full change with no new turn.
 
@@ -2377,7 +2377,7 @@ This revises D171.
 
 **Rationale**: in the D171 verification, apply answered the open questions of the preview itself in 2 of 2 runs of scenario 4c. It wrote them as decisions, removed them, and passed the done check, so the user never saw them. A question in `plan.md` is a question for the user. Rejected: let apply answer and mark each answer in the summary, because the user can miss it in a long summary. In scenario 4, `node --test <dir>` failed with "Cannot find module". The agent changed the test script for this reason, but recorded no fact. The D171 rule named the examples, but not the trigger "an error that changes the work". In 2 of 2 previews, the agent read the tool file and did not run it. A file that the agent read is an honest source. Rejected: require the agent to run each tool, because the preview could then run a tool with side effects. Two facts were over-recorded (one about repo code, one from general knowledge). No rule change for them now. Check them in the next run.
 
-**Status**: Revised by D174 (a fact about a repo file).
+**Status**: Revised by D174 (a fact about a repo file). Also revised by D178: apply asks each open question once per session, and continues.
 
 ---
 
@@ -2433,6 +2433,8 @@ This revises D171.
 
 **Rationale**: in the D172 verification, the code of 4c run 2 moved away from a decision, and the agent did not update it. It said that the change "follows directly from" the decision. The rule "update each decision that it makes stale" runs only when the agent adds a decision, so a code change alone did not trigger it. In scenario 4, a "Rejected … because" reason was a guess: "reports are not large enough to need it". A stale decision or a guessed reason goes to an ADR at archive, and misleads the next reader. This closes todo item 30.
 
+**Status**: Revised by D178: apply updates only the decisions of this run, and plan.md wins over an older decision.
+
 ---
 
 ## D178: Fixes From Review Round 1 on cb22fc4..local
@@ -2459,4 +2461,20 @@ This revises D171.
 This revises D135 and D171.
 
 **Rationale**: review round 1 (remark 11) found that D171 keeps a tool fact also when no decision uses it, but archive listed such a fact as "not drafted". So the fact stayed only in `openspec/changes/archive/`, and the next change did not find it. Rejected: keep it as now, because the fact is lost to a later reader. Rejected: put it in a spec, because a spec describes our system, not an external tool. The user chose the ADR.
+
+---
+
+## D180: Fixes From Review Round 2 on cb22fc4..local
+
+**Decision**:
+
+- Apply removes or updates only a decision of this run when it adds a decision. It changes a decision from before this run only when the user tells it to, for example "Use a sliding window instead" in scenario 4b. On another conflict, it asks the user. The tasks preview never changes a decision from before its run. On a conflict, it records an open question. This completes D178, because the supersede rule could still remove an older decision.
+- "External service or tool" is a service, a program, or a library that the change uses but does not change, also if it is in the repo. The apply rules, the tasks preview, the template, archive, and `GLOSSARY.md` give this meaning. The prune exception and the archive ADR of D179 depend on it.
+- The `## Open Questions` template comment says: "Only an answer of the user closes a question."
+- On a rerun, archive skips a decision or a fact that already has an ADR with `Change: <name>`, so a D179 fact ADR is not written twice.
+- Scenario 3 checks that the preview summary lists the added, changed, and removed items, and that Background did not change.
+- The tasks preview rules in `design.md` are sub-bullets, as in the skill.
+- D135, D171, D172, and D177 get Status lines.
+
+**Rationale**: review round 2 found these gaps. Each fix has one logical choice. The D178 fix of the decision check was incomplete. The term was used in four rules with no meaning, and scenario 4c puts its tool in the repo.
 
