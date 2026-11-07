@@ -38,14 +38,14 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. Run scenario 1. Commit. Then answer yes to the tasks preview. Commit again after the preview.
 2. Check `tasks-preview.md`: the second line is `<!-- plan-sha256: <64 hex chars> -->`, and the tasks have no checkboxes.
-3. Add or edit a line under `## Constraints` in `plan.md`.
+3. Add or edit a line under `## Constraints` in `plan.md`. Do not commit this edit.
 4. Run stock `/opsx:apply` (or `openspec-lite-apply`).
 
 **Expected**:
 
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision of scenario 1 (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
 - Before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172). An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
-- Do not commit the edit of step 3. In step 4, the agent says in one line that `plan.md` is not committed (D171). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
+- In step 4, the agent says in one line that `plan.md` is not committed (D171). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 
 ## 4. Stock apply follows the plan-lite rules
 
@@ -126,14 +126,14 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. Run this prompt, then answer yes to the tasks preview: "openspec-lite-propose: add a CSV export to the report page. Scope: one Export CSV button on the report page, exporting the rows shown in the table. Source: docs/report-page.md and issue #42. Requirement: the export uses the same column order as the table on screen. Decision: generate the CSV in the browser, because the data is already loaded there. Constraint: no new server endpoint. Open question: should the export include hidden columns? (This changes the tasks.)" (D157)
+1. Run this prompt, then answer yes to the tasks preview: "openspec-lite-propose: add a CSV export to the report page. Scope: one Export CSV button on the report page, exporting the rows shown in the table. Source: docs/report-page.md and issue #42. Requirement: the export uses the same column order as the table on screen. Decision: generate the CSV in the browser, because the data is already loaded there. Constraint: no new server endpoint. Open question: should the export include hidden columns? (This changes the tasks.)" (D157) After the preview, add this decision to `## Decisions` of `plan.md`, with the next free ID, to stand for an agent decision: `### Decision D<n>: Quote each cell 🤖`, then "Chose to quote each cell because a cell can hold a comma." Commit.
 2. Run `openspec-lite-upgrade`. Answer its question turn with the answer of step 3. Stop the agent after it writes `proposal.md`.
-3. Run `openspec-lite-upgrade` again. If it asks the question turn again, answer the open question: "No, the export does not include hidden columns." If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply. At the prune question, answer yes.
+3. Run `openspec-lite-upgrade` again. If it asks the question turn again, answer the open question: "No, the export does not include hidden columns." If the agent also asks to write a requirement from the Goal, the tasks preview, or the quoting decision, answer yes in the same reply. At the prune question, answer yes.
 
 **Expected**:
 
 - In step 2, the agent asks the question turn and ends the turn before it writes an artifact (D164). After step 2, `.openspec.yaml` still has `schema: plan-lite`, and `skip_specs` is gone.
-- After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a decision that is a contract, or an answer of the user (D166). Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). Each decision with 🤖 in `plan.md`, for example one from the tasks preview, keeps its 🤖 in `design.md`. A requirement from such a decision is asked in the question turn (D182). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
+- After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a decision that is a contract, or an answer of the user (D166). Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). The quoting decision keeps its 🤖 in `design.md`, and the summary lists it as an agent decision. The question turn asks the requirement that the agent plans from it, because the quoting is a contract of the CSV file (D182). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
 - The agent shows the list of `plan.md` destinations before the prune question. After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
 

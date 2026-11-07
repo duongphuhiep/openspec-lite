@@ -2520,3 +2520,19 @@ This revises D152, D167, and D181.
 
 **Rationale**: review round 4 found these gaps in the D181 text. Each fix has one logical choice. The upgrade rule keeps one meaning of 🤖 in both places: an item that the agent wrote and that a person did not confirm.
 
+---
+
+## D183: Fixes From Review Round 5 on cb22fc4..local
+
+**Decision**:
+
+- The decision rule of apply and of the tasks preview is split into three parts: record a decision, mark it with 🤖, and keep `## Decisions` current. The text does not change. The stop rule ("ask the user, and end your turn") is now in a short part, where an agent does not miss it.
+- In `apply.instruction`, the rule that records the answer of the user comes directly after the rule that asks the open questions.
+- The tasks preview records an answer that the user gives in this session as a decision with no 🤖, and removes the question. Before, it could not close the question, so apply asked it again.
+- The tasks preview has a step 6: record the open questions in `plan.md`.
+- Scenario 3 says "Do not commit this edit" in step 3, not in Expected.
+- Scenario 7 adds a 🤖 contract decision by hand after the preview, so that the D182 checks can fail.
+- `GLOSSARY.md`: archive keeps a tool fact in an ADR only if the code handles the behavior.
+
+**Rationale**: review round 5 found these gaps. Each fix has one logical choice. After 4 rounds, the decision rule had 22 sentences in one bullet.
+

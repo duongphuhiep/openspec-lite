@@ -21,7 +21,7 @@ An item of `## Facts` in a plan. It is a non-obvious fact, found during explorat
 _Avoid_: Finding, note
 
 **External service or tool**:
-A service, a program, or a library that a change uses but does not change, also if it is in the repo. A fact about its behavior stays in the plan with no decision, and archive keeps it in an ADR (D171, D179, D180).
+A service, a program, or a library that a change uses but does not change, also if it is in the repo. A fact about its behavior stays in the plan with no decision. Archive keeps it in an ADR if the code handles the behavior (D171, D179, D180).
 _Avoid_: Dependency, third-party tool
 
 **Item ID**:
