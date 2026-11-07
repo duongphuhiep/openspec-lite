@@ -12,41 +12,6 @@ Items 1 to 13 are closed. Their decisions are D152 to D164 in `docs/decisions.md
 
 ## Found after the run
 
-### 15. Upgrade writes the summary in the prune reply
-
-- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, step 4 (prune), and D132: "Show the list, and ask before the delete in the same reply. End the turn ... Do not validate or write the summary before it."
-- **Problem**: in the D164 verification, 20c-2 asked the prune question, and in the same reply wrote most of the summary: the written files, the review requests, the 🤖 list, the `skip_specs` state, and the ADR warning. It did not validate. 20c-1 and 7 asked the prune question alone.
-- **Evidence**: `.scenario-runs/20261105-D164/report.md`, session `34368e46`, turn 2.
-- **Recommendation**: not decided. Run 20c a few more times to see how often it happens before a change. The run on 38d9a54 did not show it again: 20a and 20c ended each prune turn with no summary (group F).
-
-### 16. Stock apply can load `openspec-lite-apply`
-
-- **Where**: `docs/test-scenarios.md`, scenario 4. It checks that stock `/opsx:apply` follows the plan-lite rules from `apply.instruction`.
-- **Problem**: in the run on 38d9a54, stock `/opsx:apply` loaded `openspec-lite-apply` by itself in 1 of 2 sessions. The schema does not name that skill. So that run tested the skill, not `apply.instruction` alone. The scenario does not say if this result is a pass.
-- **Evidence**: `.scenario-runs/20261105-38d9a54/group-A.md`, session `fc32a327`. The scenario 3 negative session `e51582e6` loaded no skill. No stock apply session on 627b8fb loaded it.
-- **Recommendation**: not decided. One option: count it as a pass, as scenario 3 does. To test `apply.instruction` alone, also check the session log for a `Base directory for this skill:` line, and rerun if it names `openspec-lite-apply`.
-
-### 17. Two scenario texts do not cover what the agent did
-
-- **Where**: `docs/test-scenarios.md`, scenarios 18b and 11.
-- **Problem**: in 18b, `design.md` has no consequences, so the agent wrote its own `## Consequences` lines and asked the user to check them. The scenario does not say what to expect. In 11, the agent asked the root question and the size question in one reply. The scenario does not say how to answer both.
-- **Evidence**: `.scenario-runs/20261105-38d9a54/group-C.md` (18b, `/tmp/osl-C18.GStA/openspec/adr/2026-11-05-generate-csv-in-browser.md`) and `group-D.md` (11).
-- **Recommendation**: not decided. For 18b, expect an ADR draft with inferred consequences that the agent names. For 11, answer both questions in one reply.
-
-### 18. The upgrade question turn has no "no requirement" answer
-
-- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, step 2 question turn (D164).
-- **Problem**: in the D167 verification, 20c-1 asked "Can I write this requirement, or would you give your own?", then listed optional details with "Tell me if any apply". The agent read the answer "none" as "no detail applies". It wrote `specs/audit-log/spec.md` and removed `skip_specs`, so 4 checks of 20c failed.
-- **Evidence**: `.scenario-runs/20261105-D167/report-20c.md`, run 20c-1.
-- **Recommendation**: not decided. One option: the question turn always offers three answers for a planned requirement: yes, an edit, or no requirement.
-
-### 19. The schema skill does not check its config.yaml write
-
-- **Where**: `package/skills/openspec-lite-schema/SKILL.md`, section 4 (the archive guidance item in `openspec/config.yaml`).
-- **Problem**: in the D168 verification, 22a2 sent the `config.yaml` append as a heredoc in a compound command. Claude Code denied it. The agent retried only the other part, and then said in the summary that it added the guidance. `config.yaml` had no change. Without the guidance, the stock `/opsx:archive` hint of D95 is lost.
-- **Evidence**: `.scenario-runs/20261105-D168/report.md`, run 22a2, session `4ad37761`.
-- **Recommendation**: not decided. One option: after the edit, read `config.yaml` again and check that the item exists. Tell the agent to use the Edit tool, not a heredoc.
-
 ## Found in the run on 62c6fa7
 
 The reports are in `.scenario-runs/20261105-62c6fa7/`.
@@ -86,13 +51,6 @@ The reports are in `.scenario-runs/20261105-3c93237/`. The run passed 38 of 39 r
 - Item 21: 22a kept the Goal comment in 3 of 3 runs. In 22b-3, the comment moved under the Goal line (`group-H.md`).
 - Item 22: in 20a, the `proposal.md` Impact line "API docs: the 429 behavior and the `Retry-After` header" comes only from the tasks preview, and has no 🤖. The Redis constraint went to `design.md` with no question (`group-F.md`, session `6e42c353`).
 
-### 25. The agent compares the OpenSpec version itself, and can get it wrong
-
-- **Where**: the `openspec --version` check of each workflow skill, for example `openspec-lite-archive/SKILL.md` step 3. It compares the version to `openspec-version` in `schema.yaml` (`>=1.9.0 <2.0.0`).
-- **Problem**: Sonnet 5.5 said 2 times that OpenSpec 1.14.2 is outside `>=1.9.0 <2.0.0`. No result changed, because the skill stopped for another reason. On a run that does not stop, a wrong compare can stop a skill with no cause.
-- **Evidence**: `group-D.md` (8, archive, session `0a7bd7b3`), `group-C.md` (19-3, session `6eccea24`).
-- **Recommendation**: not decided. One option: a skill script next to `install.mjs` does the compare and prints the result. (`scripts/check-version.mjs` checks the shipped schema version in the repo. It does not check the OpenSpec version.) The skill then reads only the result.
-
 ### 26. Scenario 7 has no stable positive 🤖 check
 
 - **Where**: `docs/test-scenarios.md`, scenario 7, the example "Table is empty" from the tasks preview.
@@ -100,37 +58,12 @@ The reports are in `.scenario-runs/20261105-3c93237/`. The run passed 38 of 39 r
 - **Evidence**: `group-C.md` (7, session `45e99dc1`).
 - **Recommendation**: not decided. One option: scenario 7 writes a fixed `tasks-preview.md` with one preview-only scenario, as 20a does for its `plan.md`.
 
-### 27. Scenario 4 does not check that the agent runs its tests
-
-- **Where**: `docs/test-scenarios.md`, scenario 4, and the allowlist in "Running the Scenarios Headless".
-- **Problem**: the allowlist denied `npm test` 2 times. The agent did not fall back to `node --test`, and ended with no test run. On 62c6fa7, it fell back. No check covers the test run.
-- **Evidence**: `group-A.md` (4, `raw/A/4/turn-1.json`).
-- **Recommendation**: not decided. One option: add `Bash(npm test:*)` to the allowlist, or tell the user in step 2 to use `node --test`.
-
 ### 28. The schema skill reply skips the copied files
 
 - **Where**: `package/skills/openspec-lite-schema/SKILL.md`, the report of the status, the copied files, and the backup path.
 - **Problem**: the reply did not list the copied files in 2 of 3 sessions that ran the schema skill. Scenario 9 failed once for this reason, and passed on the rerun. `docs/facts.md` records the same miss on an earlier run.
 - **Evidence**: `group-D.md` (9 run 1, session `18203724`; 11, session `2b7e81dd`).
 - **Recommendation**: not decided. One option: `install.mjs` prints the full report, and the skill tells the agent to copy that output.
-
-## Found in the D171 and D172 verifications
-
-The reports are in `.scenario-runs/20261107-D171/` and `.scenario-runs/20261107-D172/`.
-
-### 29. The tasks preview records facts about repo code
-
-- **Where**: `package/skills/openspec-lite-tasks-preview/SKILL.md`, "Record in plan.md", and the `## Facts` template comment (D171, D172).
-- **Problem**: in 3 of 5 runs of 4c, the preview recorded "geo.mjs is a CLI script, not a module". The skill says "Do not record … a fact that a reader finds in the code of this repo". The tool is in the repo, so the tool rule and this rule overlap. D172 chose to check again before a rule change.
-- **Evidence**: D171 report (4c run 1), D172 report (4c runs 1 and 2).
-- **Recommendation**: not decided. One option: a fact about a file in the repo is allowed only if it states behavior that the code does not show at a glance, for example an error that comes with exit code 0.
-
-### 30. Apply leaves a decision stale, or gives a reason with no support
-
-- **Where**: `apply.instruction` in `schema.yaml` (D171).
-- **Problem**: in 4c run 2 of D172, the code moved away from D1, and the agent did not update D1. It said that the change "follows directly from D1". In scenario 4, a "Rejected … because" reason was a guess. The CRLF choice of scenario 4 was only in a code comment in 2 of 2 runs.
-- **Evidence**: D172 report, sessions `6e30aee4` and `c6ae9e42`. D171 report (CRLF).
-- **Recommendation**: not decided. One option: at the end, before the done check, apply compares each decision with the code, and updates each one that the code no longer matches. A reason must come from the run, the user, or `plan.md`.
 
 ## Other notes from the run
 

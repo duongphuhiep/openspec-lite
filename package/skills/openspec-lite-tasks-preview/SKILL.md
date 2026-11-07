@@ -25,7 +25,7 @@ Write `tasks-preview.md` for a plan-lite change. Record what you learn in `plan.
 ## 2. Write the preview
 
 1. If `openspec/changes/<name>/plan.md` is missing, stop. Tell the user to run `openspec-lite-propose`.
-2. Run `git status --porcelain -- openspec/changes/<name>/plan.md` from the OpenSpec root. If it prints a line, tell the user in one line: "plan.md is not committed. Commit it to see the changes of this run in git diff." Then continue. If the command fails, for example with no git repo, say nothing.
+2. Run `git status --porcelain -- openspec/changes/<name>/plan.md` from the OpenSpec root. If it prints a line, tell the user in one line: "plan.md is not committed, so git diff cannot show the changes of this run alone. Commit plan.md before the next run." Then continue. If the command fails, for example with no git repo, say nothing.
 3. Read `plan.md`. Explore the code that the change touches. Record in `plan.md` as you go (see "Record in plan.md").
 4. From the OpenSpec root, run:
 
@@ -64,7 +64,7 @@ Write to `plan.md` with no question. Edit only `## Facts`, `## Decisions`, and `
 
 - **Fact**, when you find it: each behavior of an external service or tool that this change uses and that you saw in this run, for example an API response, a library limit, or a CLI error. When a command, a tool, or a service gives an error or an output that makes you change what you do, record it, with the command and the error text. Give the source of each fact: a command that you ran, a file that you read, a doc URL, or an error text. Also record each other non-obvious fact that justifies a new decision. Do not record a guess. Record a fact about a file in this repo only if it states a behavior that the code does not show at a glance, for example an error that comes with exit code 0. Write `- F<n>: <fact>`.
 - **Decision**, when you make it: each choice between real alternatives in the approach that another person could make in a different way. Do not record a choice that follows directly from the code or from a constraint. Write `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. Each reason must come from this run, the user, or plan.md. Do not guess a reason. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool.
-- **Open question**, after you write the preview: each point that you are unsure or worried about and cannot resolve, as `- OQ<n>: <question>`.
+- **Open question**, after you write the preview: each point that you are unsure or worried about and cannot resolve, as `- OQ<n>: <question>`. Do not answer or remove an existing open question. Only an answer of the user closes a question.
 
 Give each new item a number higher than each ID of its kind in the file. Do not add an ID to an existing item that has none.
 

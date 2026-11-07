@@ -57,6 +57,11 @@ test("schema.yaml with no openspec-version line exits with code 1", { skip }, ()
   assert.equal(run({ schema: "name: plan-lite\n" }).status, 1);
 });
 
+test("a range that the script cannot read exits with code 1", { skip }, () => {
+  assert.equal(run({ schema: 'openspec-version: "^1.9.0"\n' }).status, 1);
+  assert.equal(run({ schema: 'openspec-version: "1.x"\n' }).status, 1);
+});
+
 test("the shipped schema.yaml has a readable range", { skip }, () => {
   const r = run({ schema: readFileSync(join(assets, "schema.yaml"), "utf8") });
   assert.equal(r.status, 0, r.stdout);

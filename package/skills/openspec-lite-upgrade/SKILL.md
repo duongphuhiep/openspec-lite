@@ -31,7 +31,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
 1. Remove the `skip_specs: true` line from `<dir>/.openspec.yaml`. While it is set, the CLI forbids spec files.
 2. Before you write an artifact, plan the requirements. A requirement can come only from these sources:
-   - a constraint of `plan.md`. A fact is only the reason for a decision or a constraint, so it goes to `design.md` → `## Context`;
+   - a constraint of `plan.md`. A fact is not a source of a requirement, so it goes to `design.md` → `## Context`;
    - a decision of `plan.md` that is also a contract: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. A decision that is not a contract goes only to `design.md` → `## Decisions`;
    - an answer of the user.
 

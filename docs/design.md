@@ -212,7 +212,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
 - Do not write code.
 
-### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172)
+### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172, D174, D177)
 
 - If `plan.md` is missing, stop. Tell the user to run `openspec-lite-propose` (D99).
 - Read `plan.md` and explore the code first.
@@ -237,10 +237,10 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - Get `<hash>` with the plan hash command.
 - Overwrite the old file.
 - At the start, run `git status --porcelain` on `plan.md`. If it prints a line, say in one line that `plan.md` is not committed, and continue. With no git repo, say nothing (D171).
-- Record in `plan.md`, with no question (D171): each fact about an external service or tool that the change uses, seen in this run, with its source (a command that you ran, a file that you read, a doc URL, or an error text), when you find it. This includes each error or output of a tool that makes you change what you do (D172). A fact about a file in the repo states a behavior that the code does not show at a glance (D174); each choice between real alternatives in the approach, as a decision, when you make it. Each reason comes from this run, the user, or `plan.md` (D177); and at the end, each point that you are unsure or worried about, as an open question. Do not edit Goal, Background, Non-Goals, or Constraints. The plan hash does not cover the other sections, so the preview stays current.
+- Record in `plan.md`, with no question (D171): each fact about an external service or tool that the change uses, seen in this run, with its source (a command that you ran, a file that you read, a doc URL, or an error text), when you find it. This includes each error or output of a tool that makes you change what you do (D172). A fact about a file in the repo states a behavior that the code does not show at a glance (D174); each choice between real alternatives in the approach, as a decision, when you make it. Each reason comes from this run, the user, or `plan.md` (D177); and at the end, each point that you are unsure or worried about, as an open question. Do not answer or remove an existing open question: only an answer of the user closes it (D172). Do not edit Goal, Background, Non-Goals, or Constraints. The plan hash does not cover the other sections, so the preview stays current.
 - In the summary, list each fact, decision, and open question that the run added, changed, or removed (D171).
 
-### openspec-lite-apply (D27, D64, D73, D171, D172)
+### openspec-lite-apply (D27, D64, D73, D171, D172, D177)
 
 - Run `openspec instructions apply --change "<name>" --json`. Follow its `instruction`. The schema `apply.instruction` is the only copy of the plan-lite apply rules.
 - Add one rule to the CLI output: ignore checkbox and task-count text. A plan-lite change has no tracked tasks.
@@ -323,11 +323,11 @@ apply:
 
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
+- First, run `git status --porcelain -- <changeDir>/plan.md` from the OpenSpec root. If it prints a line, tell the user in one line: "plan.md is not committed, so git diff cannot show the changes of this run alone. Commit plan.md before the next run." Then continue. If the command fails, for example with no git repo, say nothing.
 - Implement from plan.md. If <changeDir>/tasks-preview.md exists, use it as a guide. The CLI does not list it in contextFiles.
 - Before you write any code: if the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root, the folder that holds `openspec/`. If the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. If it is stale, stop and ask the user: regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md? End your turn, and wait for the answer.
 - If the plan hash command exits with code 1, show its message and stop.
-- Before you write any code, run `git status --porcelain -- <changeDir>/plan.md` from the OpenSpec root. If it prints a line, tell the user in one line: "plan.md is not committed. Commit it to see the changes of this run in git diff." Then continue. If the command fails, for example with no git repo, say nothing.
-- Before you write any code: if `## Open Questions` holds a question, ask each one in one reply, with your recommended answer, and end your turn. If the preview is also stale, ask both in the same reply. Do not answer an open question yourself.
+- Before you write any code: if `## Open Questions` holds a question that you did not ask yet in this session, ask each one in one reply, with your recommended answer, and end your turn. If the preview is also stale, ask both in the same reply. Do not answer an open question yourself. If the user leaves a question open, keep it in `## Open Questions`, and continue.
 - When plan.md and tasks-preview.md conflict, plan.md wins.
 - Record each decision in `## Decisions` of plan.md when you make it. A decision is a choice between real alternatives that another person could make in a different way. A meaningful deviation from the preview, for example to make the code simpler, is also a decision. Do not record a choice that follows directly from the code or from a constraint. Write `### Decision D<n>: <title>`, with `<n>` higher than each decision ID in the file. Then write "Chose X because Y." Add "Rejected Z because W." when there was an alternative. Each reason must come from this run, the user, or plan.md. Do not guess a reason. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool.
 - Record each fact in `## Facts` of plan.md when you find it, as `- F<n>: <fact>`: each behavior of an external service or tool that this change uses and that you saw in this run, for example an API response, a library limit, or a CLI error. When a command, a tool, or a service gives an error or an output that makes you change what you do, record it, with the command and the error text. Give the source of each fact: a command that you ran, a file that you read, a doc URL, or an error text. Also record each other non-obvious fact that justifies a new decision. Do not record a guess. Record a fact about a file in this repo only if it states a behavior that the code does not show at a glance, for example an error that comes with exit code 0.
@@ -335,7 +335,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - Record the answer of the user to each open question in `## Decisions`, as a `### Decision D<n>:` entry, and remove the question. Only an answer of the user closes a question.
 - Do not edit tasks-preview.md.
 - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
-- At the end, before the done check, compare each decision in `## Decisions` with the code. Update each decision that the code no longer matches.
+- At the end, before the done check, compare each decision in `## Decisions` with the code. If the code no longer matches a decision that you made in this run, update the decision. If it does not match a decision from before this run, plan.md wins: fix the code. If the code cannot follow that decision, ask the user.
 - At the end, before the done check, record in `## Open Questions` each point that you are unsure or worried about and cannot resolve, as `- OQ<n>: <question>`.
 - In the end summary, list each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID. The plan hash does not cover these three sections, so these edits do not make the preview stale.
 - End with the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
@@ -346,7 +346,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 
 - Usage: `node openspec-version.mjs`. It reads `openspec-version` from the `schema.yaml` next to it, and runs `openspec --version`.
 - It compares the numbers of `MAJOR.MINOR.PATCH`, not the text. It accepts the operators `>=`, `<=`, `>`, `<`, and `=`, and joins the comparators with AND.
-- It prints one line. Exit code 0: `ok: OpenSpec <v> is in the range <range>`. Exit code 2: `warn: …`, for a version outside the range or output with no version. Exit code 1: `fail: …`, if the command fails or `schema.yaml` has no `openspec-version` line.
+- It prints one line. Exit code 0: `ok: OpenSpec <v> is in the range <range>`. Exit code 2: `warn: …`, for a version outside the range or output with no version. Exit code 1: `fail: …`, if the command fails, `schema.yaml` has no `openspec-version` line, or the range has a part that is not `<op>X.Y.Z`, for example `^1.9.0`.
 - `tests/openspec-version.test.mjs` covers each rule with a fake `openspec` on `PATH`.
 
 `plan-hash.mjs` (D72, D91, D107, D124, D125, D126, D128, D129) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:

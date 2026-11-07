@@ -1174,7 +1174,7 @@ This revises D10.
 - `validate` fails on a plan-lite change with no deltas and no `skip_specs`. A change created without propose has no flag.
 - The other items define a failure path or an input that was undefined.
 
-**Status**: D109 revises the "newer schema" message and lets any tag bump the schema. D110 revises the archive `skip_specs` rule: it decides from the files on disk. D111 adds `apm update -g` to the message.
+**Status**: D109 revises the "newer schema" message and lets any tag bump the schema. D110 revises the archive `skip_specs` rule: it decides from the files on disk. D111 adds `apm update -g` to the message. Revised by D175: a script compares the OpenSpec version.
 
 ---
 
@@ -2358,7 +2358,7 @@ This revises D146 and D162.
 
 This revises D29 (apply records only the deviations), D135 (each fact justifies a decision or a constraint), and D140 (the fact prune).
 
-**Status**: Revised by D172 (open questions, tool errors, and the fact source).
+**Status**: Revised by D172 (open questions, tool errors, and the fact source). Also revised by D174 (a fact about a repo file) and D177 (decisions against the code, reasons).
 
 **Rationale**: a fact about an external tool that the agent finds during the preview or apply was lost at the end of the session. The same is true for the reason of a choice that is not a deviation, and for a worry of the agent. `plan.md` is the living record of the change, and archive promotes its decisions. The plan hash covers only Goal, Background, Non-Goals, and Constraints, so these writes do not make the preview stale. Rejected: ask the user to commit or back up `plan.md` before each run, because it adds a question turn to each run, and question turns were the least stable part of the scenario runs. Rejected: mark each new item with ✨, because a mark does not show an update or a removal, and it needs rules for when it goes away and for archive to remove it. A one-line git note, the summary list, and `git diff` show the full change with no new turn.
 
@@ -2376,6 +2376,8 @@ This revises D29 (apply records only the deviations), D135 (each fact justifies 
 This revises D171.
 
 **Rationale**: in the D171 verification, apply answered the open questions of the preview itself in 2 of 2 runs of scenario 4c. It wrote them as decisions, removed them, and passed the done check, so the user never saw them. A question in `plan.md` is a question for the user. Rejected: let apply answer and mark each answer in the summary, because the user can miss it in a long summary. In scenario 4, `node --test <dir>` failed with "Cannot find module". The agent changed the test script for this reason, but recorded no fact. The D171 rule named the examples, but not the trigger "an error that changes the work". In 2 of 2 previews, the agent read the tool file and did not run it. A file that the agent read is an honest source. Rejected: require the agent to run each tool, because the preview could then run a tool with side effects. Two facts were over-recorded (one about repo code, one from general knowledge). No rule change for them now. Check them in the next run.
+
+**Status**: Revised by D174 (a fact about a repo file).
 
 ---
 
@@ -2430,4 +2432,21 @@ This revises D93 (the version step of each workflow skill).
 This revises D171.
 
 **Rationale**: in the D172 verification, the code of 4c run 2 moved away from a decision, and the agent did not update it. It said that the change "follows directly from" the decision. The rule "update each decision that it makes stale" runs only when the agent adds a decision, so a code change alone did not trigger it. In scenario 4, a "Rejected … because" reason was a guess: "reports are not large enough to need it". A stale decision or a guessed reason goes to an ADR at archive, and misleads the next reader. This closes todo item 30.
+
+---
+
+## D178: Fixes From Review Round 1 on cb22fc4..local
+
+**Decision**:
+
+- Apply asks each open question only once in a session. If the user leaves a question open, apply keeps it in `## Open Questions` and continues. Without this rule, a literal agent asks again on each turn and never writes code.
+- The `git status` note is the first apply rule, before the stale stop, so that the note comes in the same reply as the stale warning.
+- At the end, apply updates only a decision that it made in this run. If the code does not match a decision from before this run, `plan.md` wins, and apply fixes the code. If the code cannot follow that decision, apply asks the user. This revises D177, which let the code overwrite a decision of the user.
+- The tasks preview does not answer or remove an existing open question. Only an answer of the user closes a question, as in apply (D172).
+- The note says: "plan.md is not committed, so git diff cannot show the changes of this run alone. Commit plan.md before the next run." The old text asked for a commit in the same turn, which the user cannot do.
+- `openspec-version.mjs` exits with code 1 if the range has a part that is not `<op>X.Y.Z`, for example `^1.9.0`. Before, it read `^1.9.0` as `=1.9.0`.
+- Scenarios 3, 4, and 4c: scenario 3 commits after scenario 1 and after the preview, so that only the step 3 edit is not committed. The open question checks of 4 and 4c apply only when a question exists.
+- `GLOSSARY.md` and the upgrade skill use the D171 meaning of a fact. D93, D171, and D172 get Status lines.
+
+**Rationale**: review round 1 found these gaps in the D171 to D177 text. Each fix has one logical choice.
 

@@ -1,7 +1,7 @@
 // Usage: node openspec-version.mjs
 // Runs `openspec --version` and compares the result with `openspec-version` in the schema.yaml next to this file.
 // Prints one line. Exit codes: 0 in the range, 2 outside the range or no readable version, 1 the command fails
-// or schema.yaml has no `openspec-version` line.
+// or schema.yaml has no `openspec-version` line, or the range is not a list of `<op>X.Y.Z` comparators.
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -13,6 +13,11 @@ try {
 } catch {}
 if (!range) {
   console.log(`fail: ${schemaPath} has no openspec-version line`);
+  process.exit(1);
+}
+// ponytail: only space-separated >=, <=, >, <, = comparators. Add ^ and ~ when a schema needs them.
+if (!/^\s*((>=|<=|>|<|=)?\s*\d+\.\d+\.\d+\s*)+$/.test(range)) {
+  console.log(`fail: openspec-version "${range}" in ${schemaPath} is not a list of <op>X.Y.Z comparators`);
   process.exit(1);
 }
 
