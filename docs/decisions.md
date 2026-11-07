@@ -2409,3 +2409,11 @@ This revises D93 (the version step of each workflow skill).
 
 **Rationale**: in the run on 3c93237, Sonnet 5.5 said 2 times that OpenSpec 1.14.2 is outside `>=1.9.0 <2.0.0`. It probably compared the versions as text. A script gives the same result each time. Todo item 25 proposed a script next to `install.mjs`. Rejected, because the workflow skills invoke the schema skill by name and do not know its folder, which is different in each harness. The schema assets have a fixed path in the repo, as `plan-hash.mjs` does (D72). The schema check runs before the version step, so the script exists when the skill needs it. This closes todo item 25.
 
+---
+
+## D176: Scenario 4 Runs the Tests With `node --test`
+
+**Decision**: the step 2 answer of scenario 4 tells the agent to run the tests with `node --test`. A new check expects that the agent runs the tests before the done check, that they pass, and that the summary gives the result. The scenario allowlist does not change.
+
+**Rationale**: the allowlist has `Bash(node:*)`, but not `npm test`. In the run on 3c93237, the agent tried `npm test` 2 times, was denied, and ended with no test run. No check caught it. For the user, a change with tests that did not run is not done (D173). Rejected: add `Bash(npm test:*)` to the allowlist, because `npm test` runs the `test` script of `package.json`, which the agent writes itself, so the allowlist would then allow any command. This closes todo item 27.
+
