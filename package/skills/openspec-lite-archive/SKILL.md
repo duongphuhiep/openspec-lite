@@ -32,6 +32,7 @@ Archive a plan-lite change with selective promotion. Write nothing before the us
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
    - **Surprising**: it would surprise a new team member.
    - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It is a requirement, even if it is obvious from the code.
+   - **Non-obvious fact**: a fact of `## Facts` that needs a run or a test result, research of remote sources, a long analysis of the code, or other work that is worth an agent to find it. Step 4 says where it goes.
 4. Sort each item:
    - A requirement goes to a spec, and a decision goes to an ADR. If a decision is also a contract, draft the contract as a requirement. Its rationale can also go to an ADR.
    - List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.

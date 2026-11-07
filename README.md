@@ -131,7 +131,7 @@ During apply:
 
 The tasks preview and apply both keep `plan.md` up to date while they work:
 
-- **Facts**: each fact that backs a decision, and each non-obvious fact, with its source. A non-obvious fact needs a run or a test result, research of remote sources (docs, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. This includes each tool error that makes them change the work. They do not record a fact that you can easily deduce from the code.
+- **Facts**: each fact that backs a decision or a constraint, and each non-obvious fact, with its source. A non-obvious fact needs a run or a test result, research of remote sources (docs, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. This includes each tool error that makes them change the work. They do not record a fact that you can easily deduce from the code.
 - **Decisions**: each choice between real alternatives, with the reason and the rejected options. A decision that the agent made ends with 🤖, unless it records your answer or your instruction. A decision with no 🤖 is yours: the agent asks before it changes it. Remove the 🤖 to accept a decision of the agent.
 - **Open questions**: at the end, each point that they are unsure or worried about. Before apply writes code, it asks you each open question, with its recommended answer. Only your answer closes a question. An open question makes the done check fail until you answer it.
 

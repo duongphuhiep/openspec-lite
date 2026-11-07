@@ -198,7 +198,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - Report the copied files, the backup path, and the `config.yaml` line. Do not use `git diff` or `git status`. Tell the user to compare and delete the backup.
 - Tell the user to commit the schema to git.
 
-### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80, D148)
+### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80, D148, D168, D169, D182, D184)
 
 - The first outcome of the request is the main outcome, also when the request has only one outcome. If another outcome touches the same code as the main outcome, keep it, with no question. Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it (D148).
 - If the outcomes that stay are small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it. Then stop (D148).
@@ -212,7 +212,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
 - Do not write code.
 
-### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172, D174, D177)
+### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172, D174, D177, D180, D181, D182, D183, D184)
 
 - If `plan.md` is missing, stop. Tell the user to run `openspec-lite-propose` (D99).
 - Read `plan.md` and explore the code first.
@@ -254,7 +254,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 1. Remove `skip_specs: true` from `.openspec.yaml`. While it is set, the CLI forbids spec files (D99).
 2. Before any artifact, plan the requirements (D164, D166). A requirement comes only from these sources:
-   - a constraint of `plan.md`. A fact is only the reason for a decision or a constraint, so it goes to `design.md` → `## Context`;
+   - a constraint of `plan.md`. A fact is not a source of a requirement, so it goes to `design.md` → `## Context`;
    - a decision that is also a contract, as `GLOSSARY.md` defines it: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. A decision that is not a contract goes only to `design.md` → `## Decisions`;
    - an answer of the user.
 
@@ -274,7 +274,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 5. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 6. In the summary, ask the user to review all artifacts. List each 🤖 item with its new claim (D167), and ask the user to remove the mark to accept it, or to delete the item (D152). Ask for an extra review of `tasks.md`, because it is a contract. Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none (D153). If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`. If the user said no to the delete, say that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth (D120). If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` can copy them to `openspec/adr/` before it (D115, D154).
 
-### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122, D148, D154, D155, D179)
+### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122, D148, D154, D155, D179, D180, D181, D184)
 
 1. Ask the done check (see §4). To find the code, search for what each outcome of the Goal names, for example with `git grep`. Name each outcome that is not met (D148). Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask only: "Archive anyway?", with no other options. On no, stop, and tell the user: to keep an item that is not in `plan.md`, add it to `plan.md`, then run archive again (D155).
 2. Read `plan.md`. Do not read `tasks-preview.md` for promotion.
@@ -282,6 +282,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
    - **Surprising**: it would surprise a new team member.
    - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code (D119).
+   - **Non-obvious fact**: a fact of `## Facts` that needs a run or a test result, research of remote sources, a long analysis of the code, or other work that is worth an agent to find it (D184).
 4. Sort each item: requirement → spec, decision → ADR. If a decision is also a contract, draft the contract as a requirement. Its rationale can also go to an ADR (D119). List each other `plan.md` item that is not drafted, including each non-goal, with a one-line reason (D116). The non-goal rule comes second, right after the sort rule (D147). A fact goes to the `## Context` of each ADR whose decision it justifies (D135). A non-obvious fact goes to the `## Context` of each drafted ADR that it relates to. If none holds it, archive drafts an ADR for the fact: `## Context` holds the fact and its source, `## Decision` says how the change uses or handles the fact, as the code shows, and `## Consequences` says what a later change must keep. If the change does not depend on the fact, archive lists it as not drafted (D179, D184). Each other fact that justifies no drafted ADR is listed as not drafted, with a one-line reason. This includes a fact of a decision that is drafted only as a requirement (D137, D139, D143). Do not copy the `plan.md` IDs to a spec or an ADR. Refer to an item by its title, or a short form of its text, with the change name (D138, D142).
 5. Draft the full text of each item:
    - A requirement becomes a delta under ADDED, MODIFIED, REMOVED, or RENAMED. Give each ADDED or MODIFIED requirement at least one `#### Scenario:`, derived from `plan.md` and the code. If an item gives a reason, for example the "because" part of a constraint, keep the reason in the requirement text. A scenario title alone does not keep it (D147). For MODIFIED, copy the full requirement from the main spec, then edit it. To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches (D93). For a new capability, start the delta with a `## Purpose` section, because the CLI otherwise writes "TBD" as the Purpose of the new main spec (D117).

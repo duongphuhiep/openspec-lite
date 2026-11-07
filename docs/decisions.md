@@ -2558,3 +2558,16 @@ This revises D135, D171, D174, D179, and D180.
 
 **Rationale**: the user defined the content of `## Facts`. The old rules had three special cases: a behavior of an external tool, a tool error, and a fact about a repo file that the code does not show at a glance. Each one is a kind of fact that costs work to find again. One category with one definition gives one rule in each skill, and also covers a test result, a log study, and a long code analysis. The user agreed that the prune and archive keep each non-obvious fact, and that each fact keeps its source.
 
+---
+
+## D185: Fixes From Review Round 6 on cb22fc4..local
+
+**Decision**:
+
+- Scenario 4c checks the error-body fact only when the rules of D184 ask for it: when a decision of the preview says how `lookup` finds an unknown city, or when the agent ran the tool. A fact that a reader can easily deduce from the short `tools/geo.mjs` is not a non-obvious fact, so a correct run can record no fact. The rule does not change.
+- The archive filter list gets a fourth filter, "Non-obvious fact", with the D184 meaning. Before, the filter "Non-obvious" meant "a reader cannot deduce it from the code in 5 minutes", so a D184 fact could fail step 3, and the step 4 rule never kept it.
+- `design.md`: the upgrade text says "A fact is not a source of a requirement", as the skill does. The propose, tasks preview, and archive headings list their newer decisions.
+- README: "a decision or a constraint", as in each other place.
+
+**Rationale**: review round 6 found these gaps after D184. Each fix has one logical choice. For the 4c check, D184 is the rule of the user, and D173 says that a scenario expects the best result for the user. Here the best result is the D184 result.
+
