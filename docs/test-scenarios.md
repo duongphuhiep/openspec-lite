@@ -70,7 +70,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The agent implements from `plan.md`, and records deviations as `### Decision D<n>:` entries.
 - It does not edit `tasks-preview.md`.
 - No code, test name, test string, code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
-- If `plan.md` has open questions, the agent asks each one with its recommended answer before coding, and ends the turn. For a question that only the user can answer, for example where some code is, it gives no recommendation and says why (D193). It closes only the questions that the user answered (D172).
+- If `plan.md` has open questions, the agent asks each one with its recommended answer before coding, and ends the turn. For a question that only the user can answer, for example where some code is, it gives no recommendation and says why (D193). Each other question still gets a recommendation (D195). It closes only the questions that the user answered (D172).
 - If a command failed and the agent changed the work for it, `## Facts` has a fact with the command and the error text (D172).
 - Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. Each decision that records an answer or an instruction of the user has no 🤖. Each other decision that the agent wrote ends its heading with 🤖, also when its reason comes from `plan.md` (D181, D182). The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - Before the done check, the agent runs the tests with `node --test`, and they pass. The summary gives the result (D176).

@@ -2720,3 +2720,11 @@ This revises D132, D171, D172, and D192.
 This revises D177 and D192.
 
 **Rationale**: in the run on 5aa0025, 2 of 2 runs of scenario 4 gave 🤖 decisions a reason with no source: "a `package.json` is not wanted", and the false "`"type": "module"` makes files load as ES modules in both Node and the browser" (todo item 48). The agent treated a claim about a runtime as a well-known fact. A claim of this kind is easy to get wrong, and a run or a doc can check it. "Reason not checked." tells the reviewer what to check, and a guess hides it.
+
+## D195: Only the Question That Only the User Can Answer Has No Recommendation
+
+**Decision**: when apply asks the open questions, it gives no recommendation only for a question that only the user can answer, and says why. It gives a recommendation for each other question. Scenario 4 checks this.
+
+This revises D193 item 3.
+
+**Rationale**: in the scenario 4 rerun on 5aa0025, apply gave no recommendation for any of three open questions. Only one of them (where the page is) needs the user. The other two had a clear recommendation, which run 1 gave (todo item 49). The D193 rule did not say that it applies to one question, not to the reply.

@@ -77,14 +77,7 @@ The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 4
 
 ## Found in the run on 5aa0025
 
-The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 closes item 48.
-
-### 49. D193 item 3 is over-applied
-
-- **Where**: `apply.instruction`, the rule for an open question that only the user can answer.
-- **Problem**: in the scenario 4 rerun, apply gave no recommendation for any open question. Only OQ1 (where the page is) needs the user. Run 1 gave a recommendation for OQ2 and OQ3.
-- **Evidence**: `group-A.md` (4 rerun, 1 of 3 sessions).
-- **Recommendation**: not decided. Say in the rule that each other question still gets a recommendation.
+The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 and D195 close items 48 and 49.
 
 ### 50. Apply writes a test that does not fail on the old behavior
 
