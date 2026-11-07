@@ -2728,3 +2728,16 @@ This revises D177 and D192.
 This revises D193 item 3.
 
 **Rationale**: in the scenario 4 rerun on 5aa0025, apply gave no recommendation for any of three open questions. Only one of them (where the page is) needs the user. The other two had a clear recommendation, which run 1 gave (todo item 49). The D193 rule did not say that it applies to one question, not to the reply.
+
+## D196: Upgrade Checks the Pointers to a Kept Open Question, and the Resume Question Ends the Turn
+
+**Decision**:
+
+1. After upgrade writes `tasks.md`, it reads `proposal.md` and `design.md` again. It removes each sentence that restates a kept open question, or points to it, for example "See the open questions in tasks.md" or "See task 0.2". This also applies to a question that the tasks preview added. The task in `## 0. Open questions` is the only place of a kept question.
+2. The resume question of the upgrade guard ends the turn. `validate` waits for the answer. On no, upgrade names each open question that stays in `plan.md`, and stops.
+
+Scenarios 19 and 20a check this.
+
+This revises D133 and D191.
+
+**Rationale**: in the run on 5aa0025, `design.md` held a note that points to a kept open question in 2 of 2 runs of 20a, and in group C. `proposal.md` → Impact held one too. The D133 rule is one sentence in the `design.md` step, and the stock `design` instruction asks for risks, so the agent puts an open risk there. A separate check after all artifacts finds the pointer in each file. In 1 of 2 runs of 20a, upgrade skipped the resume question and ran `validate`. In 19-3, after "no", it did not name the open question that stays in `plan.md`, which the stock skills do not read (todo item 52).

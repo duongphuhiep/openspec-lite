@@ -77,7 +77,7 @@ The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 4
 
 ## Found in the run on 5aa0025
 
-The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 and D195 close items 48 and 49.
+The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194, D195, and D196 close items 48, 49, and 52.
 
 ### 50. Apply writes a test that does not fail on the old behavior
 
@@ -92,13 +92,6 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 - **Problem**: after the ADRs, the agent did not name the open question. The rule is one sentence in a long paragraph, with no fixed place in the reply. One draft also asked to remove a 🤖 from `design.md`, against the guard.
 - **Evidence**: `group-C.md` (18b, 2 of 2 runs). The 18b step 4 also needs one more user turn ("I removed both marks.").
 - **Recommendation**: not decided. One option: a fixed line in the reply before the archive question, for example "Open in `plan.md`: …".
-
-### 52. Upgrade writes a pointer to a kept open question in `design.md`
-
-- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, step 2.3 (D133). Scenarios 20a and 19.
-- **Problem**: `design.md` → Risks says "See the open questions in tasks.md" or "See task 0.3". A later session saw this, and did not remove it. In 1 of 2 runs of 20a, upgrade also skipped the resume question of step 1.3. In 19-3, after "no", it did not name the open question that stays in `plan.md`.
-- **Evidence**: `group-F.md` (20a, 2 of 2), `group-C.md` (3 runs, 19-3).
-- **Recommendation**: not decided. One option: a check before `validate` that `design.md` names no task ID and no "open question".
 
 ### 53. The preview cannot read an exit code when `echo $?` is denied
 

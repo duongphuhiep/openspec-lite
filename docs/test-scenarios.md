@@ -451,7 +451,7 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 
 1. tasks-preview stops and points to stock `/opsx:continue`. It does not write `tasks-preview.md`.
 2. upgrade stops. It points to the stock skills `/opsx:apply` and `/opsx:archive`.
-3. upgrade asks if it can finish the upgrade, and says what is left to do: validate the artifacts, then decide what to delete from `plan.md`. The question names no step number (D191). Answer no. Then it stops with no file change.
+3. upgrade asks if it can finish the upgrade, and says what is left to do: validate the artifacts, then decide what to delete from `plan.md`. The question names no step number (D191). The turn ends at the question (D196). Answer no. Then it names the open question that stays in `plan.md`, and stops with no file change (D196).
 
 In each case, `.openspec.yaml`, `tasks.md`, and the other artifacts do not change.
 
@@ -476,7 +476,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - `proposal.md` holds the two scope items of `## Background`.
 - `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
 - `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title, or a short form of its text, instead (D142).
-- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open questions that the user could not answer (D158). The tasks preview of step 1 can add more open questions. Answer "I do not know yet" to each one. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question. `tasks.md` starts with a `## 0. Open questions` group, with one task for each open question that the user could not answer, so that stock `/opsx:apply` meets them first (D191).
+- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open questions that the user could not answer (D158). The tasks preview of step 1 can add more open questions. Answer "I do not know yet" to each one. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `proposal.md` and `design.md` do not restate an open question that stays in `plan.md`, and do not point to it, for example "See the open questions in tasks.md". This also applies to a question that the tasks preview added (D133, D196). In step 3, the turn ends at the resume question, before `validate` (D196). `tasks.md` starts with a `## 0. Open questions` group, with one task for each open question that the user could not answer, so that stock `/opsx:apply` meets them first (D191).
 
 ### 20b. Archive drafts an item that the user picks
 
