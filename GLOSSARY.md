@@ -56,6 +56,10 @@ _Avoid_: Objective
 An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that comes from no section of `plan.md` and from no answer of the user. A restatement of a `plan.md` item in other words is not an inferred item. It has a 🤖 mark at the end of its line or heading. The user removes the mark to accept the item.
 _Avoid_: Guess, assumption
 
+**Agent decision**:
+A decision in a plan that an agent wrote with its own reason. Its heading ends with 🤖. A decision with no 🤖 belongs to the user: one that the user wrote, or one that records an answer or an instruction of the user. An agent changes only an agent decision with no question. The user removes the 🤖 to accept it (D181).
+_Avoid_: AI decision, draft decision
+
 **Done check**:
 The three questions at the end of apply and the start of archive: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 _Avoid_: Done checklist, definition of done

@@ -20,4 +20,4 @@
 
 ## Decisions
 <!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool. -->
-<!-- ### Decision D<n>: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. -->
+<!-- ### Decision D<n>: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. An agent ends the heading with 🤖 when the reason is its own. A decision with no 🤖 belongs to the user. Remove the 🤖 to accept a decision. -->

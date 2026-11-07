@@ -44,7 +44,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected**:
 
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision of scenario 1 (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
-- Before coding, the agent says that the preview is stale and offers to regenerate it. In the same reply, it asks each open question of `plan.md`, with its recommended answer (D172). An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
+- Before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172). An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
 - Do not commit the edit of step 3. In step 4, the agent says in one line that `plan.md` is not committed (D171). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 
 ## 4. Stock apply follows the plan-lite rules
@@ -61,7 +61,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - No code, test name, test string, code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
 - If `plan.md` has open questions, the agent asks each one with its recommended answer before coding, and ends the turn. It closes only the questions that the user answered (D172).
 - If a command failed and the agent changed the work for it, `## Facts` has a fact with the command and the error text (D172).
-- Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
+- Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. Each decision that records an answer of the user has no 🤖. Each decision with a reason of the agent's own ends its heading with 🤖 (D181). The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - Before the done check, the agent runs the tests with `node --test`, and they pass. The summary gives the result (D176).
 - At the end, each decision in `## Decisions` matches the code. Each "because" reason comes from the run, the user, or `plan.md`, not from a guess (D177).
 - It ends with the done check (Goal, Constraints, Open Questions). If the run added an open question, the done check says that `## Open Questions` is not empty.
@@ -79,6 +79,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - `## Decisions` has the sliding window decision. The fixed window decision is removed, or updated to the sliding window (D136). If the agent adds a new decision, its ID number is higher than each other decision ID in the file (D144).
 - If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140).
 - The two constraints still have no ID (D138).
+- The sliding window decision has no 🤖, because it records an instruction of the user (D181).
 
 ### 4c. Preview and apply record a fact about an external tool
 
@@ -93,11 +94,13 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected** (D171, D172, D179):
 
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed.
+- After step 2, each decision of the preview ends its heading with 🤖. After step 3, the decision of the answered question has no 🤖 (D181).
 - After step 2, `## Facts` has a fact that the tool reports an unknown city with an error body in its output, not with a failing exit, with its source: the command that the agent ran, or the file that it read (D172). The summary lists it. No fact only restates what `tools/geo.mjs` shows at a glance, for example "geo.mjs is a CLI script, not a module" (D174). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
 - After step 3, the tool fact is still in `## Facts`, also if no decision names it. The summary lists each fact, decision, and open question that apply added, changed, or removed.
-- In step 4, the tool fact is in the `## Context` of an ADR draft: the ADR of the decision that calls `tools/geo.mjs`, or an ADR for the fact itself. Its `## Decision` says how `lookup` handles the error body. After the archive, `openspec/adr/` holds that ADR (D179).
+- In step 4, the tool fact is in the `## Context` of an ADR draft: the ADR of the decision that calls `tools/geo.mjs`, or an ADR for the fact itself. If it is an ADR for the fact, its `## Decision` says how `lookup` handles the error body. After the archive, `openspec/adr/` holds that ADR (D179).
+- In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
 
 ## 5. Archive with promotion
 

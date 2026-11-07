@@ -2452,6 +2452,8 @@ This revises D171.
 
 **Rationale**: review round 1 found these gaps in the D171 to D177 text. Each fix has one logical choice.
 
+**Status**: Revised by D181: the owner of a decision is its 🤖 mark, not the run.
+
 ---
 
 ## D179: Archive Keeps a Fact About an External Tool in an ADR
@@ -2477,4 +2479,22 @@ This revises D135 and D171.
 - D135, D171, D172, and D177 get Status lines.
 
 **Rationale**: review round 2 found these gaps. Each fix has one logical choice. The D178 fix of the decision check was incomplete. The term was used in four rules with no meaning, and scenario 4c puts its tool in the repo.
+
+**Status**: Revised by D181: the owner of a decision is its 🤖 mark, not the run.
+
+---
+
+## D181: A 🤖 Mark Shows an Agent Decision, and Fixes From Review Round 3
+
+**Decision**:
+
+- When apply or the tasks preview records a decision with a reason of its own, it ends the heading with 🤖. A decision that records an answer or an instruction of the user gets no 🤖. A decision with no 🤖 belongs to the user, also one that the user wrote by hand. The user removes the 🤖 to accept a decision.
+- The agent updates or removes only a 🤖 decision with no question. This includes a 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`. Apply changes a decision with no 🤖 only when the user tells it to. On another conflict, it asks and ends the turn. The tasks preview records an open question instead. At the end check, apply updates a 🤖 decision that the code no longer matches, and fixes the code for a decision with no 🤖.
+- Upgrade keeps the 🤖 of a decision when it moves the decision to `design.md`, because the user did not confirm it yet (D152). Archive names each draft that comes from a 🤖 decision. No spec or ADR holds a 🤖.
+- The template, `GLOSSARY.md` ("Agent decision"), README, and scenarios 4, 4b, and 4c give the rule.
+- Also from review round 3: the two "ask the user" rules of apply end the turn. The 4c ADR check of `## Decision` applies only to an ADR for the fact. The scenario 3 open question check applies only when a question exists.
+
+This revises D178 and D180, which used "a decision of this run".
+
+**Rationale**: review round 3 found that "a decision of this run" fails in two ways. Apply writes the answer of the user as a decision of this run, so it could change that answer later with no question. And after the user corrects `plan.md`, a new preview run could not replace the old preview decision. `plan.md` does not show who wrote a decision, and git cannot tell, because the user and the agent commit as the same git user. A visible mark can. The mark goes on the agent decisions, not on the user decisions, so that a decision that the user writes by hand is safe by default. A missed mark also fails safe: the agent asks. 🤖 already means "the agent wrote this, and a person did not confirm it" in upgrade (D152). Rejected: the owner from the words of the reason ("because the user answered"), because a decision that the user writes by hand has no such words. Rejected: the strict rule (never change an older decision), because each user correction then costs one more question turn. The user chose the mark.
 
