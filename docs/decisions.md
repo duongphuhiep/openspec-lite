@@ -2450,3 +2450,13 @@ This revises D171.
 
 **Rationale**: review round 1 found these gaps in the D171 to D177 text. Each fix has one logical choice.
 
+---
+
+## D179: Archive Keeps a Fact About an External Tool in an ADR
+
+**Decision**: at archive, a fact about an external service or tool goes to the `## Context` of each drafted ADR whose decision uses that service or tool. If no drafted ADR uses it, archive drafts an ADR for the fact. Its `## Context` holds the fact and its source. Its `## Decision` says how the change handles the behavior, as the code shows. Its `## Consequences` says what a later change must keep. If the code does not handle the behavior, archive lists the fact as not drafted. The user approves each draft, as for each other ADR. Scenario 4c gets an archive step.
+
+This revises D135 and D171.
+
+**Rationale**: review round 1 (remark 11) found that D171 keeps a tool fact also when no decision uses it, but archive listed such a fact as "not drafted". So the fact stayed only in `openspec/changes/archive/`, and the next change did not find it. Rejected: keep it as now, because the fact is lost to a later reader. Rejected: put it in a spec, because a spec describes our system, not an external tool. The user chose the ADR.
+

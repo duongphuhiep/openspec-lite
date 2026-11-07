@@ -88,13 +88,16 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 2. Run `openspec-lite-tasks-preview city-lookup`. Do not commit after it.
 3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Continue from plan.md. Use your recommended answer for the first question. Leave the other questions open." If it asks only one question, answer it the same way.
 
-**Expected** (D171, D172):
+4. Commit. Run `openspec-lite-archive city-lookup`. If it asks "Archive anyway?", answer yes. Approve each draft.
+
+**Expected** (D171, D172, D179):
 
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed.
 - After step 2, `## Facts` has a fact that the tool reports an unknown city with an error body in its output, not with a failing exit, with its source: the command that the agent ran, or the file that it read (D172). The summary lists it. No fact only restates what `tools/geo.mjs` shows at a glance, for example "geo.mjs is a CLI script, not a module" (D174). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
 - After step 3, the tool fact is still in `## Facts`, also if no decision names it. The summary lists each fact, decision, and open question that apply added, changed, or removed.
+- In step 4, the tool fact is in the `## Context` of an ADR draft: the ADR of the decision that calls `tools/geo.mjs`, or an ADR for the fact itself. Its `## Decision` says how `lookup` handles the error body. After the archive, `openspec/adr/` holds that ADR (D179).
 
 ## 5. Archive with promotion
 
