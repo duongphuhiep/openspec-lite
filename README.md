@@ -127,11 +127,11 @@ During apply:
 
 - When the two files conflict, `plan.md` wins.
 - If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply edits the other sections. It ignores HTML comments.
-- Apply records each meaningful deviation as a decision in `plan.md`. It removes each 🤖 decision that the deviation supersedes, and updates each 🤖 decision that it makes stale. It changes a decision with no 🤖 only when you say so. Then it removes each fact that justifies no current decision or constraint, except a fact about an external service or tool.
+- Apply records each meaningful deviation as a decision in `plan.md`. It removes each 🤖 decision that the deviation supersedes, and updates each 🤖 decision that it makes stale. It changes a decision with no 🤖 only when you say so. Then it removes each fact that justifies no current decision or constraint, except a non-obvious fact.
 
 The tasks preview and apply both keep `plan.md` up to date while they work:
 
-- **Facts**: each behavior of an external service or tool that they see, with its source. This includes each tool error that makes them change the work.
+- **Facts**: each fact that backs a decision, and each non-obvious fact, with its source. A non-obvious fact needs a run or a test result, research of remote sources (docs, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. This includes each tool error that makes them change the work. They do not record a fact that you can easily deduce from the code.
 - **Decisions**: each choice between real alternatives, with the reason and the rejected options. A decision that the agent made ends with 🤖, unless it records your answer or your instruction. A decision with no 🤖 is yours: the agent asks before it changes it. Remove the 🤖 to accept a decision of the agent.
 - **Open questions**: at the end, each point that they are unsure or worried about. Before apply writes code, it asks you each open question, with its recommended answer. Only your answer closes a question. An open question makes the done check fail until you answer it.
 

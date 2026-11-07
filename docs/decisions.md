@@ -1836,7 +1836,7 @@ This revises the entry format of D92.
 
 **Rationale**: Exploration and grilling find facts, for example how a library or an API behaves. Without a slot, the facts are lost, or they mix with the decisions and the constraints. The filter "justifies a decision or a constraint" keeps the section short. Facts change when exploration continues, so a new fact must not make the preview stale.
 
-**Status**: Revised by D171. Revised by D179 (archive keeps a tool fact in an ADR).
+**Status**: Revised by D171. Revised by D179 (archive keeps a tool fact in an ADR). Revised by D184: one category, the non-obvious fact, replaces the external tool fact.
 
 ---
 
@@ -2360,7 +2360,7 @@ This revises D146 and D162.
 
 This revises D29 (apply records only the deviations), D135 (each fact justifies a decision or a constraint), and D140 (the fact prune).
 
-**Status**: Revised by D172 (open questions, tool errors, and the fact source). Also revised by D174 (a fact about a repo file) and D177 (decisions against the code, reasons). Also revised by D178 (ask once, the note, the decisions of this run), D179 (archive), and D180 (the term, the decisions of this run).
+**Status**: Revised by D172 (open questions, tool errors, and the fact source). Also revised by D174 (a fact about a repo file) and D177 (decisions against the code, reasons). Also revised by D178 (ask once, the note, the decisions of this run), D179 (archive), and D180 (the term, the decisions of this run). Revised by D184: one category, the non-obvious fact, replaces the external tool fact.
 
 **Rationale**: a fact about an external tool that the agent finds during the preview or apply was lost at the end of the session. The same is true for the reason of a choice that is not a deviation, and for a worry of the agent. `plan.md` is the living record of the change, and archive promotes its decisions. The plan hash covers only Goal, Background, Non-Goals, and Constraints, so these writes do not make the preview stale. Rejected: ask the user to commit or back up `plan.md` before each run, because it adds a question turn to each run, and question turns were the least stable part of the scenario runs. Rejected: mark each new item with ✨, because a mark does not show an update or a removal, and it needs rules for when it goes away and for archive to remove it. A one-line git note, the summary list, and `git diff` show the full change with no new turn.
 
@@ -2398,6 +2398,8 @@ This revises D171.
 This revises D171 and D172 ("do not record a fact that a reader finds in the code of this repo").
 
 **Rationale**: in 3 of 5 runs of scenario 4c, the preview recorded "geo.mjs is a CLI script, not a module". The old rule banned each fact about repo code, but the tool rule allowed each fact about a tool that the change uses. The tool was in the repo, so the two rules overlapped, and the agent recorded both kinds. The new rule keeps the useful part: a behavior that a reader can miss, such as an error with a success exit. It drops the part that a reader sees in a few seconds. This closes todo item 29.
+
+**Status**: Revised by D184: one category, the non-obvious fact, replaces the external tool fact.
 
 ---
 
@@ -2466,6 +2468,8 @@ This revises D135 and D171.
 
 **Rationale**: review round 1 (remark 11) found that D171 keeps a tool fact also when no decision uses it, but archive listed such a fact as "not drafted". So the fact stayed only in `openspec/changes/archive/`, and the next change did not find it. Rejected: keep it as now, because the fact is lost to a later reader. Rejected: put it in a spec, because a spec describes our system, not an external tool. The user chose the ADR.
 
+**Status**: Revised by D184: one category, the non-obvious fact, replaces the external tool fact.
+
 ---
 
 ## D180: Fixes From Review Round 2 on cb22fc4..local
@@ -2482,7 +2486,7 @@ This revises D135 and D171.
 
 **Rationale**: review round 2 found these gaps. Each fix has one logical choice. The D178 fix of the decision check was incomplete. The term was used in four rules with no meaning, and scenario 4c puts its tool in the repo.
 
-**Status**: Revised by D181: the owner of a decision is its 🤖 mark, not the run.
+**Status**: Revised by D181: the owner of a decision is its 🤖 mark, not the run. Revised by D184: one category, the non-obvious fact, replaces the external tool fact.
 
 ---
 
@@ -2535,4 +2539,22 @@ This revises D152, D167, and D181.
 - `GLOSSARY.md`: archive keeps a tool fact in an ADR only if the code handles the behavior.
 
 **Rationale**: review round 5 found these gaps. Each fix has one logical choice. After 4 rounds, the decision rule had 22 sentences in one bullet.
+
+---
+
+## D184: A Plan Records Facts That Back a Decision, and Non-Obvious Facts
+
+**Decision**:
+
+- `## Facts` records a fact that backs a decision or a constraint, and each non-obvious fact. Each fact gives its source: a command or a test that the agent ran, the files that it analyzed, a doc URL, a log, or an error text.
+- A non-obvious fact needs one of these to find: a run or a test result; research of remote sources, for example documentation on the internet, another repo, logs, or a remote database; a long analysis of the code; or other work that is worth an agent to find it.
+- `## Facts` does not record a guess, a fact that a reader can easily deduce from the code, or numbers and statistics that soon go out of date. A number as a reference or an example is OK.
+- The prune keeps a non-obvious fact, also when no decision uses it. Archive puts a non-obvious fact into the `## Context` of each drafted ADR that it relates to, or drafts an ADR for it. If the change does not depend on the fact, archive lists it as not drafted.
+- The term "external service or tool" leaves the rules and `GLOSSARY.md`. `GLOSSARY.md` gets "Non-obvious fact", with "Tool fact" in its _Avoid_ list.
+- Scenario 4b has two facts that justify only the old decision: an obvious one, which the prune removes, and a non-obvious one, which stays.
+- The schema stays at version 5, because version 5 is not released yet.
+
+This revises D135, D171, D174, D179, and D180.
+
+**Rationale**: the user defined the content of `## Facts`. The old rules had three special cases: a behavior of an external tool, a tool error, and a fact about a repo file that the code does not show at a glance. Each one is a kind of fact that costs work to find again. One category with one definition gives one rule in each skill, and also covers a test result, a log study, and a long code analysis. The user agreed that the prune and archive keep each non-obvious fact, and that each fact keeps its source.
 

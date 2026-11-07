@@ -71,17 +71,17 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. On a new plan-lite change, write a `plan.md` with no template comments, so that the run checks `apply.instruction` alone. Give it two constraints with no ID, and one decision `### Decision D1: Use a fixed 60-second window`. Add one fact `- F1: Bursts at the window edge do not matter, because the clients retry slowly.` It justifies only D1.
+1. On a new plan-lite change, write a `plan.md` with no template comments, so that the run checks `apply.instruction` alone. Give it two constraints with no ID, and one decision `### Decision D1: Use a fixed 60-second window`. Add two facts that justify only D1: `- F1: A fixed window needs only one counter for each API key.`, which a reader can deduce, and `- F2: In the access logs, the clients retry after 30 seconds or more.`, which is non-obvious, because it needs a study of the logs.
 2. Run `openspec-lite-apply`. During the work, tell the agent: "Use a sliding window instead."
 
 **Expected**:
 
 - `## Decisions` has the sliding window decision. The fixed window decision is removed, or updated to the sliding window (D136). If the agent adds a new decision, its ID number is higher than each other decision ID in the file (D144).
-- If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140).
+- If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140). F2 stays, because it is a non-obvious fact (D184).
 - The two constraints still have no ID (D138).
 - The sliding window decision has no 🤖, because it records an instruction of the user (D181).
 
-### 4c. Preview and apply record a fact about an external tool
+### 4c. Preview and apply record a non-obvious fact
 
 **Steps**:
 
@@ -98,8 +98,8 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - After step 2, `## Facts` has a fact that the tool reports an unknown city with an error body in its output, not with a failing exit, with its source: the command that the agent ran, or the file that it read (D172). The summary lists it. No fact only restates what `tools/geo.mjs` shows at a glance, for example "geo.mjs is a CLI script, not a module" (D174). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
-- After step 3, the tool fact is still in `## Facts`, also if no decision names it. The summary lists each fact, decision, and open question that apply added, changed, or removed.
-- In step 4, the tool fact is in the `## Context` of an ADR draft: the ADR of the decision that calls `tools/geo.mjs`, or an ADR for the fact itself. If it is an ADR for the fact, its `## Decision` says how `lookup` handles the error body. After the archive, `openspec/adr/` holds that ADR (D179).
+- After step 3, the fact about the error body is still in `## Facts`, because the decision on how `lookup` reads the output uses it, or because the agent found it with a run of the tool, which makes it a non-obvious fact (D184). The summary lists each fact, decision, and open question that apply added, changed, or removed.
+- In step 4, the fact about the error body is in the `## Context` of an ADR draft: the ADR of the decision that calls `tools/geo.mjs`, or an ADR for the fact itself. If it is an ADR for the fact, its `## Decision` says how `lookup` handles the error body. After the archive, `openspec/adr/` holds that ADR (D179).
 - In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
 
 ## 5. Archive with promotion
