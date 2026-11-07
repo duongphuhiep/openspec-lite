@@ -2571,3 +2571,19 @@ This revises D135, D171, D174, D179, and D180.
 
 **Rationale**: review round 6 found these gaps after D184. Each fix has one logical choice. For the 4c check, D184 is the rule of the user, and D173 says that a scenario expects the best result for the user. Here the best result is the D184 result.
 
+**Status**: Revised by D186: a run of the tool alone does not make the 4c fact non-obvious.
+
+---
+
+## D186: Fixes From Review Round 7 on cb22fc4..local
+
+**Decision**:
+
+- A fact that a reader can easily deduce from the code is not recorded, also if the agent found it with a run. The fact rule of apply and of the tasks preview says so. Scenario 4c checks the error-body fact only when a decision of the preview uses it.
+- Scenario 4 checks the D182 rule: each decision that the agent wrote ends with 🤖, unless it records an answer or an instruction of the user, also when its reason comes from `plan.md`.
+- `design.md` headings and lists name D178 to D186 where their text cites them.
+
+This revises D185.
+
+**Rationale**: review round 7 found that D185 let a run make a fact non-obvious, but the shipped rule says not to record a fact that a reader can easily deduce from the code. The user defined a non-obvious fact as one that "requires" a run or a test result. A fact that the code shows does not require a run, so the code rule wins. The other two fixes have one choice each.
+
