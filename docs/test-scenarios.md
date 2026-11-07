@@ -63,6 +63,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - If a command failed and the agent changed the work for it, `## Facts` has a fact with the command and the error text (D172).
 - Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - Before the done check, the agent runs the tests with `node --test`, and they pass. The summary gives the result (D176).
+- At the end, each decision in `## Decisions` matches the code. Each "because" reason comes from the run, the user, or `plan.md`, not from a guess (D177).
 - It ends with the done check (Goal, Constraints, Open Questions). If the run added an open question, the done check says that `## Open Questions` is not empty.
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
 

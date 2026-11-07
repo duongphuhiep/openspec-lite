@@ -2417,3 +2417,17 @@ This revises D93 (the version step of each workflow skill).
 
 **Rationale**: the allowlist has `Bash(node:*)`, but not `npm test`. In the run on 3c93237, the agent tried `npm test` 2 times, was denied, and ended with no test run. No check caught it. For the user, a change with tests that did not run is not done (D173). Rejected: add `Bash(npm test:*)` to the allowlist, because `npm test` runs the `test` script of `package.json`, which the agent writes itself, so the allowlist would then allow any command. This closes todo item 27.
 
+---
+
+## D177: Apply Checks Each Decision Against the Code, and a Reason Is Not a Guess
+
+**Decision**:
+
+- At the end, before the done check, apply compares each decision in `## Decisions` with the code. It updates each decision that the code no longer matches. The end summary lists each changed decision, as D171 says.
+- In apply and in the tasks preview, each "because" reason of a decision comes from this run, the user, or `plan.md`. The agent does not guess a reason.
+- The schema stays at version 5, because version 5 is not released yet.
+
+This revises D171.
+
+**Rationale**: in the D172 verification, the code of 4c run 2 moved away from a decision, and the agent did not update it. It said that the change "follows directly from" the decision. The rule "update each decision that it makes stale" runs only when the agent adds a decision, so a code change alone did not trigger it. In scenario 4, a "Rejected … because" reason was a guess: "reports are not large enough to need it". A stale decision or a guessed reason goes to an ADR at archive, and misleads the next reader. This closes todo item 30.
+
