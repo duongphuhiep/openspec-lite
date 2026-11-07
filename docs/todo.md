@@ -65,6 +65,15 @@ The reports are in `.scenario-runs/20261105-3c93237/`. The run passed 38 of 39 r
 - **Evidence**: `group-D.md` (9 run 1, session `18203724`; 11, session `2b7e81dd`).
 - **Recommendation**: not decided. One option: `install.mjs` prints the full report, and the skill tells the agent to copy that output.
 
+## Found in the scenario audit of 2026-11-07
+
+### 31. Stock `/opsx:archive` with no archive guidance, and the `openspec archive` CLI
+
+- **Where**: `openspec/config.yaml` archive guidance (D95), and the old scenarios 16b and 16c, which D190 removed.
+- **Problem**: if the user deletes the openspec-lite guidance item, or runs `openspec archive <name> --yes` in a terminal, no openspec-lite rule reaches the archive. The knowledge of `plan.md` then stays only in `openspec/changes/archive/`. In the runs on 62c6fa7 and 3c93237, stock `/opsx:archive` still switched to `openspec-lite-archive` because of the skill description. The CLI archives with no warning (`docs/facts.md`).
+- **Target**: each archive path of a plan-lite change promotes `plan.md`, or warns before the archive.
+- **Recommendation**: not decided. Options: a stronger guard in `apply.instruction` or in the done check, or a README warning only.
+
 ## Other notes from the run
 
 These need no change now. They are here so that a later run does not report them as new.

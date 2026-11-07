@@ -2620,3 +2620,17 @@ This completes D186.
 
 **Rationale**: review round 10 found that "use the `openspec` CLI to find the specs" allows `openspec list --specs --json`, which prints `"specs": []`. A correct run with that command never meets the validate fact, so the 4d fact checks fail. With the command named, the agent must learn its exit code with no spec, which only a run shows (`docs/facts.md`).
 
+---
+
+## D190: The Scenarios Check the Results That the User Needs
+
+**Decision**: an audit of `docs/test-scenarios.md` against D173 found checks that copy a skill mechanic, checks that cannot fail, and user results that no check covers. The scenario text changes, and no skill changes:
+
+- Checks of the user result: 2 checks that the typo is fixed. 4, 4b, 4c, and 4d check that the code works. 7 checks that the content of `plan.md` arrives in `specs/` and `design.md`. 5 and 13a check the content of the drafts and of the end state. 12 checks that the agent does not invent a Goal. 21a checks that an unrelated ADR does not change.
+- Fixes: 14 accepts both delta forms in its end state. 3 has a negative step that can fail. 1 and 6 lose their process checks, and gain the user results: no invented content, a note on the `config.yaml` change, and a warning that rejected decisions stay only in the archive folder. 17b checks a warning about the open question.
+- 16b and 16c are removed. They could not fail. The gap that they recorded is todo item 31.
+
+Some new checks can fail on the current skills. D173 says that this is correct when the skill is wrong.
+
+**Rationale**: the audit found that the scenarios check the plan-lite mechanics well, but rarely check that the code works or that the content of `plan.md` arrives in the artifacts. These are the main results for the user. The audit also found six expected results that follow a skill rule that hurts the user (scenarios 15, 22c, 20a, 20c, 18, and 19). Each one changes a skill, so the user decides each one separately.
+

@@ -22,15 +22,24 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected**:
 
 - The agent runs `openspec-lite-schema`. `openspec/schemas/plan-lite/` exists. `openspec/config.yaml` has the archive guidance item.
-- `openspec/changes/<name>/` exists. `.openspec.yaml` has `schema: plan-lite` and one `skip_specs: true` line. The agent did not add a second line and then remove it (D150).
+- `openspec/changes/<name>/` exists. `.openspec.yaml` has `schema: plan-lite` and one `skip_specs: true` line (D150).
 - `plan.md` has the ID comment before `## Goal`, the seven headings, and their guidance comments, with only known content filled in.
+- `## Goal` names the CSV export. `plan.md` holds no constraint, fact, or decision that the prompt does not give.
+- The summary tells the user that the agent added the archive guidance to `openspec/config.yaml`, a file that the user owns.
 - The agent asks: "Do you want a tasks preview?" It writes no code.
 
 ## 2. Small request: Level 1
 
-**Steps**: Ask: "openspec-lite-propose: fix the typo 'recieve' in README.md."
+**Steps**:
 
-**Expected**: The agent asks: "This looks small. Implement directly with no change?" Answer yes. The agent creates no file under `openspec/`.
+1. Add a `README.md` with the line "You recieve a CSV file." Commit.
+2. Ask: "openspec-lite-propose: fix the typo 'recieve' in README.md."
+
+**Expected**:
+
+- The agent asks: "This looks small. Implement directly with no change?" Answer yes.
+- `README.md` says "You receive a CSV file." No other line changed.
+- The agent creates no file under `openspec/`.
 
 ## 3. Stale preview
 
@@ -40,11 +49,13 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 2. Check `tasks-preview.md`: the second line is `<!-- plan-sha256: <64 hex chars> -->`, and the tasks have no checkboxes.
 3. Add or edit a line under `## Constraints` in `plan.md`. Do not commit this edit.
 4. Run stock `/opsx:apply` (or `openspec-lite-apply`).
+5. Negative check: copy the repo of step 2. In the copy, edit only `## Open Questions`, `## Facts`, and `## Decisions` of `plan.md`, and commit. Run stock `/opsx:apply`.
 
 **Expected**:
 
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision of scenario 1 (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
-- Before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172). An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
+- Before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172).
+- In step 5, the agent says that the preview is current, and gives no stale warning.
 - In step 4, the agent says in one line that `plan.md` is not committed (D171). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 
 ## 4. Stock apply follows the plan-lite rules
@@ -63,6 +74,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - If a command failed and the agent changed the work for it, `## Facts` has a fact with the command and the error text (D172).
 - Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. Each decision that records an answer or an instruction of the user has no 🤖. Each other decision that the agent wrote ends its heading with 🤖, also when its reason comes from `plan.md` (D181, D182). The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - Before the done check, the agent runs the tests with `node --test`, and they pass. The summary gives the result (D176).
+- A test covers the export: the CSV holds the rows that the table shows, in the column order of the table. The test fails if the export writes the wrong rows or the wrong order.
 - At the end, each decision in `## Decisions` matches the code. Each "because" reason comes from the run, the user, or `plan.md`, not from a guess (D177).
 - It ends with the done check (Goal, Constraints, Open Questions). If the run added an open question, the done check says that `## Open Questions` is not empty.
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
@@ -78,8 +90,9 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - `## Decisions` has the sliding window decision. The fixed window decision is removed, or updated to the sliding window (D136). If the agent adds a new decision, its ID number is higher than each other decision ID in the file (D144).
 - If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140). F2 stays, because it is a non-obvious fact (D184).
-- The two constraints still have no ID (D138).
-- The sliding window decision has no 🤖, because it records an instruction of the user (D181).
+- The code uses a sliding window, and a test shows it.
+- The two constraints are the same as in step 1, with no ID (D138).
+- The sliding window decision has no 🤖, because it records an instruction of the user (D181). It gives no "because" reason that the user did not give and that the run does not show (D177).
 
 ### 4c. Preview and apply record a fact that backs a decision
 
@@ -100,6 +113,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
 - After step 3, if `## Facts` had the fact about the error body after step 2, it is still there, because the decision on how `lookup` finds an unknown city uses it (D184). The summary lists each fact, decision, and open question that apply added, changed, or removed.
 - In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, and `plan.md` has the fact about the error body, the fact is in the `## Context` of that ADR. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the fact as not drafted, with a reason (D179, D186).
+- After step 3, `lookup('Paris')` returns the coordinates, and `lookup('Atlantis')` returns `null`. The agent checks both with a run or a test.
 - In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
 
 ### 4d. Preview and apply record a non-obvious fact
@@ -111,12 +125,15 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 1. On a new plan-lite change `spec-gate`, write a `plan.md` with the Goal "Add `scripts/spec-gate.mjs`. It exits with code 1 when the repo has no spec, and with code 0 otherwise." and the constraint "- C1: Use `openspec validate --specs` to check the specs. Do not scan the files." Create no spec. Commit.
 2. Run `openspec-lite-tasks-preview spec-gate`. Commit.
 3. Run `openspec-lite-apply spec-gate`. When it asks the open questions, answer: "Use your recommended answer for each question."
+4. Add one valid spec under `openspec/specs/`, and run the script.
 
 **Expected**:
 
 - After step 2 or step 3, `## Facts` has a fact that `openspec validate --specs` exits with code 0 when no spec exists, with the command as its source. It is a non-obvious fact, because only a run shows it.
 - After step 3, the fact is still in `## Facts`, also if no decision names it (D184).
 - The script exits with code 1 in this repo, which has no spec. The agent checks it with a run.
+- In step 4, the script exits with code 0.
+- If the script reads the output text of `openspec validate`, `plan.md` has a 🤖 decision or an open question about it, because a new OpenSpec version can change the text.
 
 ## 5. Archive with promotion
 
@@ -128,7 +145,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Expected**:
 
 - The agent does the done check first. It asks "Archive anyway?" only if an answer is "no".
-- The requirement draft has at least one `#### Scenario:`.
+- The requirement draft states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR draft holds the reason of the decision and the rejected option. The agent writes nothing before the approval.
 - `openspec validate` passes. `openspec/adr/YYYY-MM-DD-<slug>.md` exists with Status `Accepted`.
 - `openspec/specs/<capability>/spec.md` holds the requirement. The change is in `openspec/changes/archive/`.
 
@@ -136,7 +153,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**: Remove `skip_specs` from `.openspec.yaml` of a finished change. Run `openspec-lite-archive`, and reject each draft.
 
-**Expected**: The agent sets `skip_specs: true`. `openspec validate` passes, and the archive succeeds. The agent writes no ADR and no spec.
+**Expected**: The archive succeeds, and `openspec/specs/` does not change. The agent writes no ADR. It tells the user that the decisions of `plan.md` now exist only in `openspec/changes/archive/`.
 
 ## 7. Interrupted upgrade
 
@@ -150,6 +167,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 - In step 2, the agent asks the question turn and ends the turn before it writes an artifact (D164). After step 2, `.openspec.yaml` still has `schema: plan-lite`, and `skip_specs` is gone.
 - After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a decision that is a contract, or an answer of the user (D166). Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). The quoting decision keeps its 🤖 in `design.md`, and the summary lists it as an agent decision. The question turn asks the requirement that the agent plans from it, because the quoting is a contract of the CSV file (D182). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
+- `specs/` holds the column-order requirement. The answer "no hidden columns" is in `specs/` or in `design.md`. `design.md` holds the browser decision and the "no new server endpoint" constraint.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
 - The agent shows the list of `plan.md` destinations before the prune question. After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
 
@@ -206,10 +224,12 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 1. Run `openspec new change resume-me --schema plan-lite`. If its `.openspec.yaml` has no `skip_specs: true` line, add one. OpenSpec 1.14.2 writes the line itself. Do not write `plan.md`.
 2. Ask: "openspec-lite-propose: resume-me."
+3. Answer yes to the resume question. If the agent asks what the change does, answer: "It adds a health check endpoint."
 
 **Expected**:
 
 - The agent says that the change exists with no `plan.md`, and asks to resume.
+- The agent does not invent a Goal. It asks what the change does, unless the user already said it. `## Goal` holds only the answer of the user.
 - After yes, `plan.md` exists, and `.openspec.yaml` has exactly one `skip_specs` line.
 - `openspec validate resume-me` passes.
 
@@ -227,7 +247,8 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 - Before it writes, the agent shows the delta from run 1 and asks to keep or delete it.
 - The agent drafts the decision again, because no ADR exists yet.
-- After run 2, `openspec/adr/` has one ADR for the decision, with the plain lines `Status: Accepted` and `Change: <name>`.
+- In run 1, the agent shows the `validate` error.
+- After run 2, `openspec/adr/` has one ADR for the decision, with the plain lines `Status: Accepted` and `Change: <name>`. `openspec/specs/` holds the requirement once, and the change is in `openspec/changes/archive/`.
 
 ### 13b. After a failed `openspec archive`
 
@@ -299,7 +320,8 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
 - The decision becomes an ADR with `Change: lockout`.
 - The `## Context` of the ADR includes the fact about the login logs, in words (D135). No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D142).
 - After the archive, `openspec/specs/auth/spec.md` has:
-  - the "Password login" requirement, with its first scenario and the new locked-account rule;
+  - the "Password login" requirement, with its "Valid password" scenario unchanged;
+  - the locked-account rule, in "Password login" or in its own requirement;
   - the new lockout requirement.
 - The Non-Goal "No CAPTCHA" is either in the ADR, or the agent says why it skipped it.
 
@@ -351,7 +373,7 @@ Record each mismatch with the answer key. A tagged `spec` or `ADR` item that is 
 
 ## 16. Stock `/opsx:archive` on a plan-lite change
 
-This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does not promote `plan.md`. openspec-lite adds a hint to `openspec/config.yaml` (D95), but the hint is best effort.
+This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does not promote `plan.md`. openspec-lite adds a hint to `openspec/config.yaml` (D95), but the hint is best effort. Without the hint, and with the `openspec archive` CLI, the gap is known (`docs/todo.md`, `docs/facts.md`), so no scenario runs these cases (D190).
 
 ### 16a. With the archive guidance in `config.yaml`
 
@@ -368,21 +390,6 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 
 **Failure**: the agent archives the change and does not mention promotion or `openspec-lite-archive`. Then the knowledge of `plan.md` stays only in `openspec/changes/archive/`. Record the exact reply, because this result decides if openspec-lite needs a stronger guard.
 
-### 16b. Without the archive guidance
-
-**Steps**:
-
-1. Repeat 16a, but first delete the openspec-lite item from `operations.archive.guidance` in `openspec/config.yaml`.
-2. Run stock `/opsx:archive <name>`.
-
-**Expected**: this is the known gap. No openspec-lite rule reaches the stock skill, so the agent can archive with no warning. Record what it does. If it warns anyway, record why, for example because it read the `apply.instruction` text.
-
-### 16c. The `openspec archive` CLI directly
-
-**Steps**: In a terminal, run `openspec archive <name> --yes` on a plan-lite change with decisions in `plan.md`.
-
-**Expected**: the CLI never reads the guidance (`docs/facts.md`), so it archives with no warning. This is a known gap, not a failure. Record it, so that README can warn users.
-
 ## 17. `openspec-lite-apply` after an upgrade
 
 **Steps**:
@@ -395,7 +402,7 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 - The agent stops at the change schema guard. It writes no code and changes no file.
 - It tells the user to run stock `/opsx:apply`, because the change is spec-driven now.
 
-**Variant 17b**: before step 2, put back a `plan.md` with only an open question, as an upgrade keeps it when a section has no slot. Expected: `openspec-lite-apply` still refuses. Only `openspec-lite-upgrade` has the resume exception (D106).
+**Variant 17b**: before step 2, put back a `plan.md` with only an open question, as an upgrade keeps it when a section has no slot. Expected: `openspec-lite-apply` still refuses. Only `openspec-lite-upgrade` has the resume exception (D106). It also says that `plan.md` holds an open question that stock `/opsx:apply` does not read, and tells the user to resolve it first.
 
 ## 18. `openspec-lite-archive` after an upgrade
 
@@ -500,8 +507,9 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 **Steps**:
 
 1. Write `openspec/adr/2026-01-10-fixed-window-rate-limit.md` with `# Fixed Window Rate Limit`, `Status: Accepted`, `Change: add-rate-limit`, and the three sections. Its `## Decision` says: "Use a fixed 60-second window per API key."
-2. Create a plan-lite change `sliding-rate-limit`. Its `plan.md` has a Goal and one `### Decision D1: Use a sliding window` entry: "Chose a sliding 60-second window because the fixed window allows bursts at the window edge. Rejected the fixed window."
-3. Run `openspec-lite-archive`. Approve each draft.
+2. Write `openspec/adr/2026-01-12-store-audit-log.md` with `# Store the Audit Log in the Main Database`, `Status: Accepted`, `Change: add-audit-log`, and the three sections. It is not about rate limits.
+3. Create a plan-lite change `sliding-rate-limit`. Its `plan.md` has a Goal and one `### Decision D1: Use a sliding window` entry: "Chose a sliding 60-second window because the fixed window allows bursts at the window edge. Rejected the fixed window."
+4. Run `openspec-lite-archive`. Approve each draft.
 
 **Expected**:
 
@@ -510,6 +518,7 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 - The new ADR is in `openspec/adr/`, with the `Supersedes:` line.
 - The old ADR has `Status: Superseded by <new file name>`. Each other line of the old ADR is the same as in step 1.
 - The summary lists the old ADR as superseded.
+- The audit log ADR does not change. A wrong `Superseded` mark damages the decision history.
 
 ### 21b. Rerun after a stop between the two writes
 
