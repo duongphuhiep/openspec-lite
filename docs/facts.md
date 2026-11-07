@@ -841,3 +841,15 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, scenario 4: after the `npm test` denials, it fell back to `node --test <file>` this time. Now 2 of 3 runs.
 - Claude Code 2.1.319, scenario allowlist: a `python3 - <<'EOF'` heredoc is denied with "Contains brace with quote character (expansion obfuscation)", as a `cat` heredoc is. The agent then used Edit or Write (`raw/A/4/turn-1.json`, `raw/A/4c-run1/turn-1.json`).
 - Claude Code 2.1.319 on Bedrock: the log of one apply session starts 33 minutes after the process start. Then an `api_error` "Request timed out." and a retry occur. `duration_ms` is 40,776, and `totalDuration` is 2,235,994. The cause is not known (session `914c79ca`).
+
+## D172 Verification on 39feaa1
+
+**Source**: scenarios 1, 3, 4, and 4c ×3, Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, report in `.scenario-runs/20261107-D172/report.md`, 2026-11-07.
+
+- Sonnet 5.5, apply with D172: it asked each open question with a recommended answer before code, and ended the turn, in 4 of 4 sessions. It closed only the questions that the user answered (`c6ae9e42`, `ea29ed22`, `6e30aee4`, `71f097cc`).
+- Sonnet 5.5, apply with D172: after `node --test test/` failed with "Cannot find module", it recorded a fact with the command and the error text (`c6ae9e42`).
+- Sonnet 5.5, 4c preview: when it ran `tools/geo.mjs`, the fact gave no exit code (2 of 2). The allowlist denied `echo "exit $?"`, and the agent did not try another way. When it only read the file, the fact gave exit code 0 (3 of 3 over D171 and D172) (`cebe2e97`, `d50b44bd`, `0eca083a`).
+- Sonnet 5.5, 4c preview: it recorded "geo.mjs is a CLI script, not a module", a fact about repo code, in 3 of 5 runs over D171 and D172.
+- Sonnet 5.5, apply: it changed the code away from a decision, said that the change "follows directly from" the decision, and did not update it. The decision is stale (`6e30aee4`).
+- Sonnet 5.5, apply: it wrote a "Rejected … because" reason that nothing in the run supports ("reports are not large enough", `c6ae9e42`).
+- Claude Code 2.1.319, scenario allowlist: `cd <session folder>; cat >> plan.md <<'EOF' …` ran with no denial (`ea29ed22`). A `Write` to `/tmp/check-lookup.js`, outside the session folder, was denied (`71f097cc`).

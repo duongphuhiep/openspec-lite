@@ -45,7 +45,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - In step 1, the preview summary lists each fact, decision, and open question that the run added to `plan.md`, or says that it added none. After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Non-Goals, and Constraints did not change (D171).
 - Before coding, the agent says that the preview is stale and offers to regenerate it. In the same reply, it asks each open question of `plan.md`, with its recommended answer (D172). An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
-- Do not commit the edit of step 3. In step 4, the agent says in one line that `plan.md` is not committed, and does not stop for it (D171).
+- Do not commit the edit of step 3. In step 4, the agent says in one line that `plan.md` is not committed (D171). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 
 ## 4. Stock apply follows the plan-lite rules
 
@@ -84,13 +84,14 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. On a new plan-lite change `city-lookup`, add `tools/geo.mjs`. For `node tools/geo.mjs Paris`, it prints `{"lat":48.86,"lon":2.35}`. For each other city, it prints `{"error":"city not found"}`, also with exit code 0. Write a `plan.md` with the Goal "Add `lookup(city)` in `src/lookup.js`. It returns the coordinates from `tools/geo.mjs`, or `null` for an unknown city." and the constraint "- C1: Add no npm dependency." Commit.
 2. Run `openspec-lite-tasks-preview city-lookup`. Do not commit after it.
-3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer: "Continue from plan.md. Use your recommended answer for each question."
+3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Continue from plan.md. Use your recommended answer for the first question. Leave the other questions open." If it asks only one question, answer it the same way.
 
 **Expected** (D171, D172):
 
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed.
-- After step 2, `## Facts` has a fact that the tool exits with code 0 and prints an error body for an unknown city, with its source: the command that the agent ran, or the file that it read (D172). The summary lists it. Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
+- After step 2, `## Facts` has a fact that the tool reports an unknown city with an error body in its output, not with a failing exit, with its source: the command that the agent ran, or the file that it read (D172). The summary lists it. Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
+- After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The done check says that `## Open Questions` is not empty (D172).
 - After step 3, the tool fact is still in `## Facts`, also if no decision names it. The summary lists each fact, decision, and open question that apply added, changed, or removed.
 
 ## 5. Archive with promotion

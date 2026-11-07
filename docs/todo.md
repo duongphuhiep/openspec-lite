@@ -114,6 +114,24 @@ The reports are in `.scenario-runs/20261105-3c93237/`. The run passed 38 of 39 r
 - **Evidence**: `group-D.md` (9 run 1, session `18203724`; 11, session `2b7e81dd`).
 - **Recommendation**: not decided. One option: `install.mjs` prints the full report, and the skill tells the agent to copy that output.
 
+## Found in the D171 and D172 verifications
+
+The reports are in `.scenario-runs/20261107-D171/` and `.scenario-runs/20261107-D172/`.
+
+### 29. The tasks preview records facts about repo code
+
+- **Where**: `package/skills/openspec-lite-tasks-preview/SKILL.md`, "Record in plan.md", and the `## Facts` template comment (D171, D172).
+- **Problem**: in 3 of 5 runs of 4c, the preview recorded "geo.mjs is a CLI script, not a module". The skill says "Do not record … a fact that a reader finds in the code of this repo". The tool is in the repo, so the tool rule and this rule overlap. D172 chose to check again before a rule change.
+- **Evidence**: D171 report (4c run 1), D172 report (4c runs 1 and 2).
+- **Recommendation**: not decided. One option: a fact about a file in the repo is allowed only if it states behavior that the code does not show at a glance, for example an error that comes with exit code 0.
+
+### 30. Apply leaves a decision stale, or gives a reason with no support
+
+- **Where**: `apply.instruction` in `schema.yaml` (D171).
+- **Problem**: in 4c run 2 of D172, the code moved away from D1, and the agent did not update D1. It said that the change "follows directly from D1". In scenario 4, a "Rejected … because" reason was a guess. The CRLF choice of scenario 4 was only in a code comment in 2 of 2 runs.
+- **Evidence**: D172 report, sessions `6e30aee4` and `c6ae9e42`. D171 report (CRLF).
+- **Recommendation**: not decided. One option: at the end, before the done check, apply compares each decision with the code, and updates each one that the code no longer matches. A reason must come from the run, the user, or `plan.md`.
+
 ## Other notes from the run
 
 These need no change now. They are here so that a later run does not report them as new.
