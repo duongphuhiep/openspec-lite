@@ -888,3 +888,19 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.319, stock `/opsx:apply`: it loaded no skill in 3 of 3 sessions. Over all runs, it loaded `openspec-lite-apply` in 3 of 11 sessions (group A).
 - The plan-lite template of schema version 5 is about 144 words longer than version 4. The same hand-built plan of 22c has 471 words now, and had 327 on 3c93237 (group H).
 - A background loop can change a file between the Write of archive and its `validate` in print mode. So scenario 13a can run with a real run 1 (group B, `setup/break-delta.sh`).
+
+## Rerun on dd7ad75
+
+**Source**: scenarios 1, 3, 4, 4b, 4c ×2, 4d ×2, 5 ×2, 7, 9 ×2, 17b, 18 ×2, 18b ×2, 20c ×2, Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, reports in `.scenario-runs/20261108-dd7ad75/`, 2026-11-08.
+
+- OpenSpec 1.14.2: with one valid spec and one spec that holds only `# broken`, `openspec validate --specs --json` exits with code 1, and still prints JSON with `{"items":2,"passed":1,"failed":1}` (`/tmp/osl-A4d.Xvdl`, sessions `9e157894`, `37cdc4da`).
+- Claude Code 2.1.319, scenario allowlist: `sh -c '…; echo $?'` and `openspec validate --specs; echo "exit=$?"` are denied (sessions `0a882d98`, `434f6833`). A chain of `cd`, `node openspec-version.mjs`, `cd`, and `cat` runs (`c68d63fa`).
+- Sonnet 5.5 with D192: the version step added no `echo $?` in 6 of 6 sessions (was 9 of 10). It still put the script in a read chain in 3 of 6 (group BDF).
+- Sonnet 5.5 with D192: the schema report copied the `install.mjs` lines in 2 of 2 runs of scenario 9 (was 0 of 2) (`841cad57`, `c36b7b4b`).
+- Sonnet 5.5 with D192: archive made no false 🤖 claim in 2 of 2 runs of scenario 5, but each said a true line such as "No decision heading has a 🤖 mark" (`ba04dc55`, `7d5417c9`).
+- Sonnet 5.5 with D192: upgrade wrote the summary after the prune question in 2 of 2 runs of 20c, also with the rule "the question is the last line" (`be52c596`, `69a3e27b`). Over all runs, about 5 of 10 prune turns.
+- Sonnet 5.5, the "not committed" note: it missed the note with ` M` output in 1 of 2 runs of scenario 3 (`4a01dd6b`), and gave a false note with empty output in 2 of 4 previews (`f2b17ad9` and 4d-1). 3 of 4 previews ran `git status --porcelain` in a chain, against the rule.
+- Sonnet 5.5, apply: for an open question that only the user can answer ("Where is the report page?"), it gave no recommended answer in 3 of 3 sessions, and said why (`4a01dd6b`, `a5ac6e85`, `687fcadf`).
+- Sonnet 5.5, apply with D192: it wrote a test file in 4b (2 turns) and in 2 of 2 runs of 4c, but in 0 of 2 runs of 4d (`51091b94`, `9e157894`, `37cdc4da`).
+- Sonnet 5.5, archive after an upgrade: in 1 of 2 runs of 18b, it removed a 🤖 from `design.md` with no request, against "do not change `design.md`", and did not search for 🤖 after the ADRs (`5e69c51e`). In the other run, its final reply named a 🤖 that the user had removed, with no new search (`3ecfd63b`). Neither run named the open question of the kept `plan.md` before the archive.
+- Sonnet 5.5, upgrade: the "Table is empty" 🤖 scenario of scenario 7 appeared in 2 of 2 runs on 80d076b and in 0 of 1 on dd7ad75 (`c68d63fa`). So it is not a stable input for 18b.
