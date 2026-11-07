@@ -29,7 +29,7 @@ openspec-lite targets medium changes. The workflow is `plan → implement (→ d
 `plan.md` keeps WHY, WHAT, and HOW together while you propose and explore the change. `plan.md` is a living document. It records:
 
 - The context and your proposal.
-- The facts that justify a decision or a constraint, and the non-obvious facts: the facts that need a run, a test, research, or a long analysis of the code to find.
+- The non-obvious facts: the facts that need a run, a test, research, or a long analysis of the code to find. An obvious or well-known reason goes into the "because" part of the decision instead.
 - The current decisions: yours, and the decisions that the AI makes during implementation. When a new decision replaces an old one, the AI removes or updates the old one. `plan.md` is not a history.
 
 Each constraint, open question, fact, and decision has a short ID, such as `C1` or `D2`. The IDs appear only in `plan.md` and `tasks-preview.md`. Specs, ADRs, code comments, and commit messages name an item by its title instead.
@@ -131,7 +131,7 @@ During apply:
 
 The tasks preview and apply both keep `plan.md` up to date while they work:
 
-- **Facts**: each fact that backs a decision or a constraint, and each non-obvious fact, with its source. A non-obvious fact needs a run or a test result, research of remote sources (docs, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. This includes each tool error that makes them change the work. They do not record a fact that you can easily deduce from the code.
+- **Facts**: each non-obvious fact, with its source. An obvious or well-known fact goes into the "because" part of the decision, constraint, or non-goal that it justifies. A non-obvious fact needs a run or a test result, research of remote sources (docs, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. This includes each tool error that makes them change the work. They do not record a fact that you can easily deduce from the code. At the end, apply updates or removes each fact that its work made false, and writes a test for each changed behavior.
 - **Decisions**: each choice between real alternatives, with the reason and the rejected options. A decision that the agent made ends with 🤖, unless it records your answer or your instruction. A decision with no 🤖 is yours: the agent asks before it changes it. Remove the 🤖 to accept a decision of the agent.
 - **Open questions**: at the end, each point that they are unsure or worried about. Before apply writes code, it asks you each open question, with its recommended answer. Only your answer closes a question. An open question makes the done check fail until you answer it.
 

@@ -17,7 +17,7 @@ The living document of a plan-lite change. It holds the goal, an optional backgr
 _Avoid_: Proposal, design
 
 **Fact**:
-An item of `## Facts` in a plan, with its source. It backs a decision or a constraint, or it is a non-obvious fact (D184). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
+An item of `## Facts` in a plan: a non-obvious fact, with its source. An obvious fact or a well-known fact is not a fact of the plan. It goes into the "because" part of the decision, constraint, or non-goal that it justifies (D184, D192). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
 _Avoid_: Finding, note
 
 **Non-obvious fact**:

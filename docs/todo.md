@@ -58,13 +58,6 @@ The reports are in `.scenario-runs/20261105-3c93237/`. The run passed 38 of 39 r
 - **Evidence**: `group-C.md` (7, session `45e99dc1`).
 - **Recommendation**: not decided. One option: scenario 7 writes a fixed `tasks-preview.md` with one preview-only scenario, as 20a does for its `plan.md`.
 
-### 28. The schema skill reply skips the copied files
-
-- **Where**: `package/skills/openspec-lite-schema/SKILL.md`, the report of the status, the copied files, and the backup path.
-- **Problem**: the reply did not list the copied files in 2 of 3 sessions that ran the schema skill. Scenario 9 failed once for this reason, and passed on the rerun. `docs/facts.md` records the same miss on an earlier run.
-- **Evidence**: `group-D.md` (9 run 1, session `18203724`; 11, session `2b7e81dd`).
-- **Recommendation**: not decided. One option: `install.mjs` prints the full report, and the skill tells the agent to copy that output.
-
 ## Found in the scenario audit of 2026-11-07
 
 ### 31. Stock `/opsx:archive` with no archive guidance, and the `openspec archive` CLI
@@ -76,85 +69,7 @@ The reports are in `.scenario-runs/20261105-3c93237/`. The run passed 38 of 39 r
 
 ## Found in the run on 80d076b
 
-The reports are in `.scenario-runs/20261107-80d076b/` (`summary.md` and `group-A.md` to `group-I.md`). Item 28 has new evidence: scenario 9 failed in 2 of 2 runs (`group-D.md`).
-
-### 32. A 🤖 gets into a main spec through the archive offer after an upgrade
-
-- **Where**: `package/skills/openspec-lite-archive/SKILL.md`, the guard (D191 item 5).
-- **Problem**: after the ADR copy, archive ran `openspec archive --yes`. The upgrade delta held `#### Scenario: Table is empty 🤖`, and the CLI copied it into `openspec/specs/report-export/spec.md`. An unconfirmed claim became part of the main spec. D181 says that no spec holds a 🤖.
-- **Evidence**: `group-C.md` (18b, session `467cad8c`).
-- **Recommendation**: not decided. Before the offer, archive lists each 🤖 item in `specs/` and `design.md`, and does not offer the archive while a delta holds a 🤖.
-
-### 33. Archive says "marked 🤖" for a decision with no mark
-
-- **Where**: archive step 6 (D181): "Name each draft that comes from a decision with 🤖".
-- **Problem**: in 3 of 7 sessions, the agent said that a decision of the user was "marked 🤖 in `plan.md`, so you haven't confirmed it yet".
-- **Evidence**: `group-B.md` (sessions `e8b7fcfd`, `c4bd46e5`, `e0b913a6`).
-- **Recommendation**: not decided. Say "If no decision has 🤖, say nothing about marks." Add a check to scenario 5.
-
-### 34. The version step adds `echo $?`
-
-- **Where**: the version step of each workflow skill (D175).
-- **Problem**: the skill acts on the exit code, so the agent adds `; echo rc=$?` in 9 of 10 sessions. The allowlist denies it, and in one session the check did not run.
-- **Evidence**: `group-B.md`, `group-E.md` (session `5fd87fe1`).
-- **Recommendation**: not decided. The skill reads the first word of the printed line (`ok:`, `warn:`, `fail:`), and runs the command alone.
-
-### 35. Upgrade writes the summary in the prune reply
-
-- **Where**: upgrade step 5.3 (D132, D191).
-- **Problem**: 2 of about 6 prune turns wrote the summary before the answer. This adds to item 15.
-- **Evidence**: `group-F.md` (20c run 1, `3d872e81`), `group-C.md` (7 run 1, `2e2fc0f4`).
-- **Recommendation**: not decided. Make the question the last line of the reply, as a rule: "Write nothing after the question."
-
-### 36. An obvious fact that backs a decision
-
-- **Where**: the fact rule (D184, D186, D188).
-- **Problem**: the rules "record a fact that backs a decision" and "do not record a fact that a reader can easily deduce from the code" conflict. In 2 of 2 runs of 4c, the preview recorded "geo.mjs is a CLI script, not a module" as the reason of its 🤖 decision.
-- **Evidence**: `group-I.md` (sessions `9b6906e4`, `67e5b160`).
-- **Recommendation**: not decided. The user must choose which rule wins.
-
-### 37. A choice hidden in a fact
-
-- **Where**: the fact and decision rules of apply.
-- **Problem**: in 4d-1, the agent wrote the JSON parse choice as a fact ("the script must read the item count"), with no 🤖 decision.
-- **Evidence**: `group-I.md` (session `4672e247`).
-- **Recommendation**: not decided. A fact states what is true. A sentence with "must", "so we", or a choice goes to `## Decisions`.
-
-### 38. Facts go stale after apply
-
-- **Where**: `apply.instruction`, the end check (D177).
-- **Problem**: "the repo has no `src/` folder" stayed after apply created `src/`, in 3 of 4 runs of group I and in scenario 4.
-- **Evidence**: `group-I.md`, `group-A.md` (session `e710314b`).
-- **Recommendation**: not decided. The end check compares each fact with the code too, and updates or removes each fact that is no longer true.
-
-### 39. A reason from model knowledge
-
-- **Where**: D177, "each reason must come from this run, the user, or plan.md".
-- **Problem**: in 2 of 2 runs of scenario 4, a "Rejected … because" reason came from model knowledge. One was a guess, and one was a correct platform fact ("browsers block module scripts on `file://`").
-- **Evidence**: `group-A.md` (sessions `952ed726`, `e710314b`).
-- **Recommendation**: not decided. The user must choose if a well-known fact of a platform is an allowed source.
-
-### 40. Apply writes no test for the changed behavior
-
-- **Where**: `apply.instruction`.
-- **Problem**: in 2 of 2 runs of 4b, apply wrote no test for the sliding window. Its check could not tell a sliding window from a fixed window.
-- **Evidence**: `group-A.md` (sessions `aba79d03`, `4d192db7`).
-- **Recommendation**: not decided. Add a rule: write or update a test that fails if the changed behavior breaks, and run it before the done check.
-
-### 41. The apply guard does not read `plan.md`
-
-- **Where**: the change schema guard of `openspec-lite-apply` (scenario 17b, D190).
-- **Problem**: on a spec-driven change that still has `plan.md` with an open question, apply refuses, but it does not say that stock `/opsx:apply` does not read that question.
-- **Evidence**: `group-C.md` (17b, 2 of 2 runs).
-- **Recommendation**: not decided. If `plan.md` exists, the guard names its open questions, and tells the user to answer them first.
-
-### 42. Smaller gaps
-
-- Upgrade missed a 🤖 on a new claim: "A per-instance counter would let a client send up to 4 times the limit" (`group-F.md`, `a9c7d046`).
-- The D182 contract question gave two results for the same start state in scenario 7 (`group-C.md`).
-- Apply read the `ls` output of a chained `git status` as a porcelain line. Tell the agent to run `git status --porcelain` alone (`group-A.md`, `aba79d03`).
-- The schema version 5 template is about 144 words longer than version 4 (`group-H.md`).
-- Scenario text: 20a says "the open question" and "one task", but the preview can add more. The 15 check uses the example of the archive skill. "Running the Scenarios Headless" says that 13 needs a hand-built state, but 13a now runs with `setup/break-delta.sh`.
+The reports are in `.scenario-runs/20261107-80d076b/` (`summary.md` and `group-A.md` to `group-I.md`). D192 closes items 28 and 32 to 42.
 
 ## Other notes from the run
 

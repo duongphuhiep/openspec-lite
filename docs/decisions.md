@@ -2423,6 +2423,8 @@ This revises D93 (the version step of each workflow skill).
 
 **Rationale**: in the run on 3c93237, Sonnet 5.5 said 2 times that OpenSpec 1.14.2 is outside `>=1.9.0 <2.0.0`. It probably compared the versions as text. A script gives the same result each time. Todo item 25 proposed a script next to `install.mjs`. Rejected, because the workflow skills invoke the schema skill by name and do not know its folder, which is different in each harness. The schema assets have a fixed path in the repo, as `plan-hash.mjs` does (D72). The schema check runs before the version step, so the script exists when the skill needs it. This closes todo item 25.
 
+**Status**: Revised by D192: the skill reads the first word of the line, not the exit code.
+
 ---
 
 ## D176: Scenario 4 Runs the Tests With `node --test`
@@ -2445,7 +2447,7 @@ This revises D171.
 
 **Rationale**: in the D172 verification, the code of 4c run 2 moved away from a decision, and the agent did not update it. It said that the change "follows directly from" the decision. The rule "update each decision that it makes stale" runs only when the agent adds a decision, so a code change alone did not trigger it. In scenario 4, a "Rejected … because" reason was a guess: "reports are not large enough to need it". A stale decision or a guessed reason goes to an ADR at archive, and misleads the next reader. This closes todo item 30.
 
-**Status**: Revised by D178: apply updates only the decisions of this run, and plan.md wins over an older decision.
+**Status**: Revised by D178: apply updates only the decisions of this run, and plan.md wins over an older decision. Also revised by D192: a reason can come from the code or a well-known fact, and facts are checked against the code too.
 
 ---
 
@@ -2566,6 +2568,8 @@ This revises D135, D171, D174, D179, and D180.
 
 **Rationale**: the user defined the content of `## Facts`. The old rules had three special cases: a behavior of an external tool, a tool error, and a fact about a repo file that the code does not show at a glance. Each one is a kind of fact that costs work to find again. One category with one definition gives one rule in each skill, and also covers a test result, a log study, and a long code analysis. The user agreed that the prune and archive keep each non-obvious fact, and that each fact keeps its source.
 
+**Status**: Revised by D192: `## Facts` holds only non-obvious facts. An obvious or well-known fact goes into the because part.
+
 ---
 
 ## D185: Fixes From Review Round 6 on cb22fc4..local
@@ -2660,4 +2664,31 @@ The scenarios 15, 18, 18b, 19, 20a, 20c, and 22c, `design.md`, and README follow
 This revises D107, D132, D133, D137, D154, and D155.
 
 **Rationale**: the scenario audit of D190 found six expected results that follow a skill rule that hurts the user. The user decided each one. (1) The finance fact is the real contract of the header row: a rename breaks the import, a new order does not. (2) The old hint answered only the need to add an item, but in scenario 22c the item is in `plan.md` and is not done. (3) The stock skills do not read `plan.md`, so after the upgrade, stock apply never saw the question. (4) With the old order, the user deleted `plan.md` before anyone knew if the artifacts passed. Then a new upgrade run could not help, because upgrade refuses a spec-driven change with no `plan.md`. D132 fixed a summary that came too early, not the place of `validate`. (5) The user asked to archive, and had to start a second skill. (6) The user does not know the step numbers of the skill.
+
+**Status**: Revised by D192: the archive offer does not run while a delta holds a 🤖.
+
+---
+
+## D192: Fixes From the Scenario Run on 80d076b
+
+**Decision**:
+
+1. `## Facts` holds only non-obvious facts. An obvious fact (one that a reader can easily deduce from the code) or a well-known fact is not recorded. If it is the reason of a decision, a constraint, or a non-goal, the agent writes it in the "because" part of that item. The user chose this (todo item 36).
+2. A reason can come from this run, the user, `plan.md`, the code, or a well-known fact. A guess is still not a reason. The user chose this (todo item 39).
+3. A sentence that states a choice, for example "the script must read the item count", is a decision, not a fact (item 37).
+4. At the end, apply compares each fact with the code, and updates or removes each fact that is no longer true (item 38).
+5. When apply changes a behavior, it writes or updates a test that fails if the behavior breaks, and runs the tests before the done check (item 40).
+6. After the ADR copy of a spec-driven change, archive lists each 🤖 line of `specs/` and `design.md`. It does not offer the archive while a delta in `specs/` holds a 🤖, because `openspec archive` copies the mark into the main spec (item 32).
+7. Archive names only the drafts of decisions whose heading ends with 🤖. If no decision has 🤖, it says nothing about marks (item 33).
+8. The version step runs `openspec-version.mjs` alone, and reads the first word of the line (`ok:`, `warn:`, `fail:`), not the exit code (item 34).
+9. The end summary copies the `status:`, `backup:`, and `copied:` lines of `install.mjs` as they are (item 28).
+10. The upgrade prune question is the last line of its reply (item 35).
+11. The apply guard names each open question of a `plan.md` that still exists on a spec-driven change (item 41).
+12. `git status --porcelain` runs alone, not in a chain (item 42). The archive example of a reason in a requirement is from another domain than scenario 15, so that the scenario can test the rule.
+
+The scenarios 4, 4b, 4c, 5, 18b, and 20a, the headless notes, `design.md`, `GLOSSARY.md`, and README follow. The schema stays at version 5, because version 5 is not released yet.
+
+This revises D175, D177, D184, and D191.
+
+**Rationale**: the scenario run on 80d076b found these gaps (todo items 28 and 32 to 42). The user decided items 36 and 39. Each other fix has one logical choice. Item 32 was caused by D191: the offer ran the CLI archive, and an unconfirmed claim reached the main spec.
 

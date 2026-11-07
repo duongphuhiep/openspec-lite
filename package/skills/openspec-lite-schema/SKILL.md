@@ -71,7 +71,7 @@ operations:
 
 Report:
 
-- the status, the copied files, and the backup path, from the script output;
+- the `status:`, `backup:`, and each `copied:` line of the script output, copied as they are;
 - the `config.yaml` line that you added, or why you did not add it.
 
 Do not use `git diff` or `git status` to report changes. The repo may not use git.

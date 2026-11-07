@@ -75,7 +75,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. Each decision that records an answer or an instruction of the user has no 🤖. Each other decision that the agent wrote ends its heading with 🤖, also when its reason comes from `plan.md` (D181, D182). The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - Before the done check, the agent runs the tests with `node --test`, and they pass. The summary gives the result (D176).
 - A test covers the export: the CSV holds the rows that the table shows, in the column order of the table. The test fails if the export writes the wrong rows or the wrong order.
-- At the end, each decision in `## Decisions` matches the code. Each "because" reason comes from the run, the user, or `plan.md`, not from a guess (D177).
+- At the end, each decision in `## Decisions` matches the code, and each fact in `## Facts` is still true (D192). Each "because" reason comes from the run, the user, `plan.md`, the code, or a well-known fact, not from a guess (D177, D192).
 - It ends with the done check (Goal, Constraints, Open Questions). If the run added an open question, the done check says that `## Open Questions` is not empty.
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
 
@@ -90,7 +90,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - `## Decisions` has the sliding window decision. The fixed window decision is removed, or updated to the sliding window (D136). If the agent adds a new decision, its ID number is higher than each other decision ID in the file (D144).
 - If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140). F2 stays, because it is a non-obvious fact (D184).
-- The code uses a sliding window, and a test shows it.
+- The code uses a sliding window. A test file covers it, and the test fails on a fixed window, for example with requests at the end of one window and at the start of the next (D192).
 - The two constraints are the same as in step 1, with no ID (D138).
 - The sliding window decision has no 🤖, because it records an instruction of the user (D181). It gives no "because" reason that the user did not give and that the run does not show (D177).
 
@@ -108,7 +108,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed.
 - After step 2, each decision of the preview ends its heading with 🤖. After step 3, the decision of the answered question has no 🤖 (D181).
-- After step 2, if a decision of the preview says how `lookup` finds an unknown city, `## Facts` has the fact that backs it: the tool reports an unknown city with an error body in its output, not with a failing exit, with its source. The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module" (D184). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
+- After step 2, if a decision of the preview says how `lookup` finds an unknown city, `## Facts` has the fact that backs it: the tool reports an unknown city with an error body in its output, not with a failing exit, with its source. The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module". If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
 - After step 3, if `## Facts` had the fact about the error body after step 2, it is still there, because the decision on how `lookup` finds an unknown city uses it (D184). The summary lists each fact, decision, and open question that apply added, changed, or removed.
@@ -145,7 +145,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Expected**:
 
 - The agent does the done check first. It asks "Archive anyway?" only if an answer is "no".
-- The requirement draft states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR draft holds the reason of the decision and the rejected option. The agent writes nothing before the approval.
+- The requirement draft states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR draft holds the reason of the decision and the rejected option. The agent writes nothing before the approval. `plan.md` has no 🤖, so the agent says nothing about 🤖 marks (D192).
 - `openspec validate` passes. `openspec/adr/YYYY-MM-DD-<slug>.md` exists with Status `Accepted`.
 - `openspec/specs/<capability>/spec.md` holds the requirement. The change is in `openspec/changes/archive/`.
 
@@ -429,13 +429,14 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 1. Start from the end state of scenario 18.
 2. Answer: "Yes, copy the decisions of `design.md` to ADRs." If the agent made no offer in scenario 18, ask for this copy in the same words.
 3. Approve each draft.
+4. If the agent lists 🤖 lines of `specs/` or `design.md`, remove each 🤖 by hand. Then answer yes to the archive question.
 
 **Expected**:
 
 - The agent shows each ADR draft before it writes. Each draft has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
 - After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
 - `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
-- After the ADRs, the agent asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. Answer yes. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
+- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of scenario 7. It does not offer the archive while a delta holds a 🤖 (D192). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
 
 ## 19. Other openspec-lite skills after an upgrade
 
@@ -474,7 +475,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - `proposal.md` holds the two scope items of `## Background`.
 - `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
 - `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title, or a short form of its text, instead (D142).
-- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open question (D158). No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question. `tasks.md` starts with a `## 0. Open questions` group with one task that asks the open question, so that stock `/opsx:apply` meets it first (D191).
+- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open questions that the user could not answer (D158). The tasks preview of step 1 can add more open questions. Answer "I do not know yet" to each one. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question. `tasks.md` starts with a `## 0. Open questions` group, with one task for each open question that the user could not answer, so that stock `/opsx:apply` meets them first (D191).
 
 ### 20b. Archive drafts an item that the user picks
 
@@ -593,7 +594,7 @@ You can run each scenario without a person at the keyboard, with Claude Code in 
 Notes:
 
 - Pin the full model ID, for example `eu.anthropic.claude-sonnet-5-5`. On a Bedrock setup, the alias `sonnet` resolved to `claude-sonnet-4-6`. Check `modelUsage` in the JSON.
-- A scenario that needs an interrupt (7, 13) starts from a hand-built state, because a print-mode run cannot stop at an exact step.
+- A scenario that needs an interrupt (7, 13b) starts from a hand-built state, because a print-mode run cannot stop at an exact step. 13a can run with a real run 1: a background loop removes the `#### Scenario:` blocks right after the agent writes the delta, before `validate` (`.scenario-runs/20261107-80d076b/setup/break-delta.sh`).
 - Use `--setting-sources project,local`. Without it, a skill in `~/.claude/skills/` wins over the project copy with the same name. A global openspec-lite install then hides the release candidate (D131).
 - Check the line `Base directory for this skill:` in the session log. It must name the temp folder, not `~/.claude/skills/`. On macOS, it shows the real path: `/private/var/folders/...` for `mktemp -d`, and `/private/tmp/...` for `mktemp -d /tmp/...`. The session logs are then in `~/.claude/projects/-private-tmp-<name>/`. A slash command such as `/opsx:apply` writes no such line.
 - The flag also skips `~/.claude/settings.json`. On Bedrock, set `CLAUDE_CODE_USE_BEDROCK=1` in the shell.
