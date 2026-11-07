@@ -350,7 +350,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 
    ## Facts
    - F1: The report page loads all rows of the table at page load. [justifies D1: ADR Context]
-   - F2: The import script of the finance team reads the columns by name, not by position. [justifies C3 only: named as not drafted]
+   - F2: The import script of the finance team reads the columns by name, not by position. [justifies C3: reason in the C3 requirement text]
 
    ## Decisions
    ### Decision D1: Build the CSV in the browser
@@ -366,6 +366,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 - Each item tagged `spec` is in a requirement draft. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. Each item tagged `ADR` is in an ADR draft.
 - For each item that the agent does not draft, it names the item and says why it skips it. No item disappears with no word.
 - The reason for the semicolon (French Excel) stays in the requirement text or in the ADR, not only in a scenario title. It is the non-obvious part (D147).
+- The header row requirement gives its reason in its text: the finance import reads the columns by name. So a reader sees that a renamed column breaks the import, and a new column order does not (D191).
 - The ADR of the browser decision has the fact about the page load in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D142).
 - After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items, and `openspec/adr/` has the `ADR` item.
 
@@ -414,11 +415,10 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 **Expected**:
 
 - The agent stops at the change schema guard. It drafts nothing and writes no spec and no ADR.
-- It tells the user to run stock `/opsx:archive`.
 - The decisions from `plan.md` are in `design.md` → `## Decisions` (upgrade moved them, D62).
 - The agent warns that stock `/opsx:archive` does not turn these decisions into ADRs, and says to copy them to `openspec/adr/` first to keep them (D115).
 - The upgrade summary from scenario 7 already gave the same warning.
-- The agent can offer to copy the decisions to ADRs. It writes nothing before a yes (D154).
+- The agent can offer to copy the decisions to ADRs. It writes nothing before a yes (D154). If the user declines, it tells the user to run stock `/opsx:archive`.
 
 ### 18b. Archive copies the decisions to ADRs after the guard
 
@@ -434,8 +434,8 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 
 - The agent shows each ADR draft before it writes. Each draft has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
 - After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
-- `design.md`, the specs, and `.openspec.yaml` are the same as before step 2. The change is not archived.
-- The agent tells the user to run stock `/opsx:archive`.
+- `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
+- After the ADRs, the agent asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. Answer yes. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
 
 ## 19. Other openspec-lite skills after an upgrade
 
@@ -449,7 +449,7 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 
 1. tasks-preview stops and points to stock `/opsx:continue`. It does not write `tasks-preview.md`.
 2. upgrade stops. It points to the stock skills `/opsx:apply` and `/opsx:archive`.
-3. upgrade asks: "Resume the upgrade of <name> at step 4?" Answer no. Then it stops with no file change.
+3. upgrade asks if it can finish the upgrade, and says what is left to do: validate the artifacts, then decide what to delete from `plan.md`. The question names no step number (D191). Answer no. Then it stops with no file change.
 
 In each case, `.openspec.yaml`, `tasks.md`, and the other artifacts do not change.
 
@@ -463,18 +463,18 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, one `## Facts` item that the decision relies on, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change. Run `openspec-lite-tasks-preview`. If the preview names no `plan.md` ID, add one, for example "(D1)", to a task line.
 2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply (D164). At the prune question, answer no.
-3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question.
+3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question. The resume question says what is left to do, with no step number (D191).
 
 **Expected**:
 
 - The agent asks the user to answer the open question before it writes an artifact, in one reply with each planned requirement from the Goal or the tasks preview (D164).
-- Before the prune question, the agent lists each `plan.md` section with its artifact and heading. The open question is "kept".
+- Before the prune question, the agent shows the `openspec validate` result, and lists each `plan.md` section with its artifact and heading. The open question is "kept" (D191).
 - After step 2, `plan.md` is the same as in step 1.
 - At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
 - `proposal.md` holds the two scope items of `## Background`.
 - `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
 - `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title, or a short form of its text, instead (D142).
-- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open question (D158). No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question.
+- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open question (D158). No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `design.md` does not hold the open question. `tasks.md` starts with a `## 0. Open questions` group with one task that asks the open question, so that stock `/opsx:apply` meets it first (D191).
 
 ### 20b. Archive drafts an item that the user picks
 
@@ -493,8 +493,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 - The agent writes no file under `<change>/specs/`.
 - `.openspec.yaml` has `schema: spec-driven` and `skip_specs: true`.
-- Before the delete, the agent shows the list of `plan.md` sections with their destinations, and asks the prune question. It ends the turn there, with no validate and no summary.
-- `openspec validate` passes.
+- Before the delete, the agent runs `openspec validate`, and it passes. In one reply, it shows the result and the list of `plan.md` sections with their destinations, and asks the prune question. It ends the turn there, with no summary (D132, D191).
 - The summary says that `skip_specs` is set at the end, because the change has no spec delta (D153).
 - Only the end state of `skip_specs` counts. The agent can skip the remove and the add-back of the line, because no spec file is written (D160).
 
@@ -568,7 +567,8 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 **Expected**:
 
 - The done check finds the CSV export, and says that the date outcome is not met. It names that outcome.
-- The agent asks only: "Archive anyway?", with no menu of other options (D155). Answer no. The agent stops, and writes no spec, no ADR, and no archive folder. It tells the user to add an item that is not in `plan.md` to `plan.md`, then to run archive again.
+- The agent asks only: "Archive anyway?", with no menu of other options (D155). Answer no. The agent stops, and writes no spec, no ADR, and no archive folder.
+- For the date outcome, it gives two paths: implement it with `openspec-lite-apply`, or remove it from `## Goal` and propose it as a separate change. Then it tells the user to run archive again (D191).
 
 ---
 

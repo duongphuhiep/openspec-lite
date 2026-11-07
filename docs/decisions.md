@@ -1376,6 +1376,8 @@ This revises D58.
 
 Node 20 reached end of life on 2026-04-30, and development uses Node 24.
 
+**Status**: Revised by D191: the resume question says what is left to do.
+
 ---
 
 ## D108: Fixes From Review Round 1
@@ -1790,6 +1792,8 @@ This extends D120.
 
 **Rationale**: In the rerun on cd93c44, both runs of scenario 20c ran step 5 and the summary in the same turn as the prune step. One run showed no list and no question, but its summary said "I'm waiting for your answer to the question above". The other run asked with no list. The step said "in the same reply", but it did not say to stop. `apply.instruction` uses "End your turn, and wait for the answer" for the same case. When propose sets `skip_specs: true` and the upgrade writes no delta, the flag never leaves the file, so "stays" is also correct.
 
+**Status**: Revised by D191: upgrade validates before the prune question.
+
 ---
 
 ## D133: Upgrade Runs Each Instructions Command Alone, and Writes No Pointer to a Kept Question
@@ -1801,7 +1805,7 @@ This extends D120.
 
 This extends D120 and D132.
 
-**Status**: After the rerun on 5af5008, the first bullet is revised. Upgrade does not put the command in a loop or a chain, and does not filter it with `grep`. It reads the full JSON and does not write an artifact without its `template` and `instruction`. After the rerun on 1f0c3b7, "do not filter it with `grep`" becomes "do not pipe it to another command", because a pipe to `head -c 3500` cut off the `template` key. The "stop if denied" rule is removed: in 3 of 3 denials, the agent retried with a plain command, which is correct. In 2 of 4 runs, a pipe to `grep` ran, because the allowlist does not deny it, and one run lost the `instruction` field.
+**Status**: After the rerun on 5af5008, the first bullet is revised. Upgrade does not put the command in a loop or a chain, and does not filter it with `grep`. It reads the full JSON and does not write an artifact without its `template` and `instruction`. After the rerun on 1f0c3b7, "do not filter it with `grep`" becomes "do not pipe it to another command", because a pipe to `head -c 3500` cut off the `template` key. The "stop if denied" rule is removed: in 3 of 3 denials, the agent retried with a plain command, which is correct. In 2 of 4 runs, a pipe to `grep` ran, because the allowlist does not deny it, and one run lost the `instruction` field. Revised by D191: an unanswered open question is also the first task of tasks.md.
 
 **Rationale**: In the rerun on dc3b8c0, the scenario allowlist denied `openspec instructions` calls in a `for` loop or in a pipe to `python3`. The agent then wrote the artifacts with no `template` and no `instruction`. In the same 20a run, `design.md` got a pointer to the kept open question under `## Open Questions`. Step 2.3 forbade the question there, but not a pointer to it. The d05538c run passed this check, so the pointer is model variance that the text did not close.
 
@@ -1865,7 +1869,7 @@ This revises the "append-only" rule of D10 and of `design.md` §4. It extends D1
 
 This extends D134, D135, and D136.
 
-**Status**: D144 replaces "an ID that is not used yet" with "a number higher than each ID of its kind in the file".
+**Status**: D144 replaces "an ID that is not used yet" with "a number higher than each ID of its kind in the file". Revised by D191: a fact that justifies a requirement goes into the requirement text.
 
 **Rationale**: With the literal `D1` in the instruction, apply could write a second `D1` in a file that already has one. The README said "at any time", but the glossary said "when its scope grows". A spec states behavior, not the facts behind it, so a fact has no slot in a spec.
 
@@ -2142,6 +2146,8 @@ This extends D75 and D115.
 
 **Rationale**: In 4 of 4 runs of scenario 18, the agent offered "I can draft both ADRs in the format this skill uses", but no rule covered the offer or the yes path. D115 names the gap: after an upgrade, the decisions are in `design.md`, and stock `/opsx:archive` does not turn them into ADRs. The rule closes the gap with the ADR form and file rules that archive already has. Rejected: forbid the offer, because the user must then copy the decisions by hand, and the agent made the offer in each run anyway.
 
+**Status**: Revised by D191: after the ADR copy, archive offers to run openspec archive.
+
 ---
 
 ## D155: Archive Asks Only "Archive anyway?"
@@ -2155,6 +2161,8 @@ This extends D75 and D115.
 This extends D77.
 
 **Rationale**: In scenario 22c, 2 of 2 runs changed the question. On 627b8fb, the agent showed a menu: "1. Archive anyway", "2. Stop", "3. Record first". Option 3 asked the user for new content from memory, for example the CSV column format, to write as a spec or an ADR before the archive. On f0a5cad, the agent asked "Archive anyway, or finish the time-zone work first?". The done check is a gate, and a gate needs one yes or no answer, also in a headless run. Option 3 also skips `plan.md`, the source of each promotion, and the step 6 rule that lets the user pick only an item that archive skipped. The need behind option 3 is real: a user can see at the last moment that a decision is worth keeping. The hint gives that need a correct path, through `plan.md` and the normal filter and approval. Rejected: accept a menu in the scenario, because each run can invent new options, and the scenario cannot check them.
+
+**Status**: Revised by D191: on no, archive gives the paths for each item that is not met.
 
 ---
 
@@ -2633,4 +2641,23 @@ This completes D186.
 Some new checks can fail on the current skills. D173 says that this is correct when the skill is wrong.
 
 **Rationale**: the audit found that the scenarios check the plan-lite mechanics well, but rarely check that the code works or that the content of `plan.md` arrives in the artifacts. These are the main results for the user. The audit also found six expected results that follow a skill rule that hurts the user (scenarios 15, 22c, 20a, 20c, 18, and 19). Each one changes a skill, so the user decides each one separately.
+
+---
+
+## D191: Six Skill Rules Change for the Result of the User
+
+**Decision**:
+
+1. Archive puts a fact that justifies a requirement into the requirement text, as its reason. Example: "… a header row of the column names, because the finance import reads the columns by name." Before, it listed such a fact as not drafted.
+2. When the archive done check says "no" and the user answers no to "Archive anyway?", archive gives two paths for each outcome or constraint that is not met: implement it with `openspec-lite-apply`, or remove it from `plan.md` and propose it as a separate change. It tells the user to answer each open question that is left. The hint "to keep an item that is not in `plan.md`, add it to `plan.md` first" stays as an extra line. The question is still only "Archive anyway?" (D155).
+3. Upgrade puts each open question that the user cannot answer also into `tasks.md`, as a `## 0. Open questions` group before the first group. The question also stays in `plan.md`.
+4. Upgrade runs `openspec validate` before the prune question. It shows the result with the prune list in one reply. If `validate` failed, it recommends to keep `plan.md`. The turn still ends at the question, and the summary comes after the answer (D132).
+5. After the ADR copy of a spec-driven change, archive asks: "Archive the change now with `openspec archive <name> --yes`?" It names the unchecked tasks of `tasks.md` in the same question, because `--yes` skips the CLI prompt for them (`docs/facts.md`). On yes, it runs the command.
+6. The upgrade resume question says what is left to do, with no step number: "The upgrade of <name> wrote the artifacts, and `plan.md` still exists. Finish the upgrade now: validate the artifacts, then decide what to delete from `plan.md`?"
+
+The scenarios 15, 18, 18b, 19, 20a, 20c, and 22c, `design.md`, and README follow.
+
+This revises D107, D132, D133, D137, D154, and D155.
+
+**Rationale**: the scenario audit of D190 found six expected results that follow a skill rule that hurts the user. The user decided each one. (1) The finance fact is the real contract of the header row: a rename breaks the import, a new order does not. (2) The old hint answered only the need to add an item, but in scenario 22c the item is in `plan.md` and is not done. (3) The stock skills do not read `plan.md`, so after the upgrade, stock apply never saw the question. (4) With the old order, the user deleted `plan.md` before anyone knew if the artifacts passed. Then a new upgrade run could not help, because upgrade refuses a spec-driven change with no `plan.md`. D132 fixed a summary that came too early, not the place of `validate`. (5) The user asked to archive, and had to start a second skill. (6) The user does not know the step numbers of the skill.
 
