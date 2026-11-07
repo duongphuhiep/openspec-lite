@@ -25,6 +25,7 @@ openspec-lite/
 │           └── assets/plan-lite/
 │               ├── schema.yaml
 │               ├── plan-hash.mjs
+│               ├── openspec-version.mjs
 │               └── templates/
 │                   └── plan.md
 ├── scripts/
@@ -107,6 +108,7 @@ openspec-lite/
 - `plan-hash.test.mjs`: CRLF, a UTF-8 BOM, section order, Open Questions, Facts, Decisions, and HTML comments do not change the hash. A stray `<!--` does not hide a heading. A comment inside a fence changes the hash. An absent and an empty `## Background` give the same hash. A changed Constraint or Background changes it. The shipped template hashes with no error. Text before the first `##` heading does not change the hash (D141). A heading with the wrong letter case exits with code 1. A plan with no comments keeps its v1 hash value. A missing required heading or a missing file exits with code 1.
 - `check-version.test.mjs`: runs the script on fixture folders. A match passes. A mismatch fails. A missing marker line fails. A missing skill fails. A skill with CRLF line endings passes. An indented marker passes. A second marker with a wrong number fails. `01` equals `1`. A root with no `package/` prints one `schema.yaml` failure (D106).
 - `install.test.mjs`: a first install copies. A lower repo version moves to a timestamped backup, then copies. An equal version prints `status: current`. A higher version exits with code 2. Missing shipped assets exit with code 3. A second backup with the same timestamp gets a `-2` suffix. A quoted higher version with a comment exits with code 2. A file system error exits with code 1, with an `install:` message and no stack trace (D96, D98, D102, D106).
+- `openspec-version.test.mjs`: with a fake `openspec` on `PATH`, 1.14.2 is in `>=1.9.0 <2.0.0`. A version outside the range and output with no version exit with code 2. A failed command and a `schema.yaml` with no range exit with code 1. The shipped `schema.yaml` has a readable range. It skips on Windows (D175).
 - `run-metrics.test.mjs`: the script sums the tokens, turns, denials, and time of all turns. It takes the cost and the thinking tokens from the last turn of each session, because a `--resume` turn holds the totals of the session (D170). It counts a tool call that is twice in the log once. A turn in a new session is not a user turn. It lists the `.md` files under `openspec/`, except `openspec/schemas/` and `openspec/schemas-backup/` (D162). A missing session log exits with code 1 (D146).
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It also tests the upgrade path (`instructions <artifact> --schema spec-driven` on a plan-lite change), an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs` (D108). It also tests the CLI behavior that the skills rely on: `state: blocked` with no `plan.md`, `root.path` from a subfolder and `root: null` above it, `skipped: true` on `instructions specs` with `skip_specs`, and the failure on a duplicate key in `.openspec.yaml` (D112). The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
 - `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to `docs/todo.md`, or a new decision fixes the skill (D173).
@@ -138,7 +140,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 2. Compare it with the shipped version. Each workflow skill holds the line `Shipped schema version: <n>` (D87). The number must equal `version` in `assets/plan-lite/schema.yaml` (D66).
    - The file is missing, its version is lower, or it has no readable `version` line: run `openspec-lite-schema` (D110). If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions. Otherwise, continue with the next step of the calling skill, in the same turn (D93, D114). The end summary of the calling skill includes the schema report: the status, the copied files, and the backup path (D121).
    - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`." A minor or patch tag can bump the schema, so `apm update` usually fixes it. Only a breaking schema change needs the next major tag (D93, D109).
-3. Run `openspec --version`. If the command fails, stop. Tell the user to install `@fission-ai/openspec` in the `openspec-version` range (D93). If the result is outside the `openspec-version` range, warn the user. Point to the compatibility table at `https://github.com/duongphuhiep/openspec-lite#compatibility`. The installed package has no README.
+3. From the OpenSpec root, run `node openspec/schemas/plan-lite/openspec-version.mjs`. The agent does not compare the versions itself (D175). If it exits with code 1, show its line, and stop (D93). If it exits with code 2, show its line as a warning, and continue. In both cases, point to the compatibility table at `https://github.com/duongphuhiep/openspec-lite#compatibility`. The installed package has no README.
 
 **Plan hash** (D72): From the OpenSpec root, run:
 
@@ -338,6 +340,13 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - End with the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
 - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 ```
+
+`openspec-version.mjs` (D175) is in `package/skills/openspec-lite-schema/assets/plan-lite/openspec-version.mjs`. Its behavior:
+
+- Usage: `node openspec-version.mjs`. It reads `openspec-version` from the `schema.yaml` next to it, and runs `openspec --version`.
+- It compares the numbers of `MAJOR.MINOR.PATCH`, not the text. It accepts the operators `>=`, `<=`, `>`, `<`, and `=`, and joins the comparators with AND.
+- It prints one line. Exit code 0: `ok: OpenSpec <v> is in the range <range>`. Exit code 2: `warn: …`, for a version outside the range or output with no version. Exit code 1: `fail: …`, if the command fails or `schema.yaml` has no `openspec-version` line.
+- `tests/openspec-version.test.mjs` covers each rule with a fake `openspec` on `PATH`.
 
 `plan-hash.mjs` (D72, D91, D107, D124, D125, D126, D128, D129) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-hash.mjs`. Its behavior:
 

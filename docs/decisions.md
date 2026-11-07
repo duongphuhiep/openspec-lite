@@ -2395,3 +2395,17 @@ This revises D171 and D172 ("do not record a fact that a reader finds in the cod
 
 **Rationale**: in 3 of 5 runs of scenario 4c, the preview recorded "geo.mjs is a CLI script, not a module". The old rule banned each fact about repo code, but the tool rule allowed each fact about a tool that the change uses. The tool was in the repo, so the two rules overlapped, and the agent recorded both kinds. The new rule keeps the useful part: a behavior that a reader can miss, such as an error with a success exit. It drops the part that a reader sees in a few seconds. This closes todo item 29.
 
+---
+
+## D175: A Script Compares the OpenSpec Version
+
+**Decision**:
+
+- The schema ships `openspec-version.mjs` next to `plan-hash.mjs`. Each workflow skill runs `node openspec/schemas/plan-lite/openspec-version.mjs` from the OpenSpec root, and does not compare the versions itself.
+- The script reads `openspec-version` from the `schema.yaml` next to it, runs `openspec --version`, and compares the numbers. It prints one line, and exits with code 0 (in the range), 2 (outside the range, or no readable version: warn and continue), or 1 (the command fails, or no range: stop).
+- The schema stays at version 5, because version 5 is not released yet.
+
+This revises D93 (the version step of each workflow skill).
+
+**Rationale**: in the run on 3c93237, Sonnet 5.5 said 2 times that OpenSpec 1.14.2 is outside `>=1.9.0 <2.0.0`. It probably compared the versions as text. A script gives the same result each time. Todo item 25 proposed a script next to `install.mjs`. Rejected, because the workflow skills invoke the schema skill by name and do not know its folder, which is different in each harness. The schema assets have a fixed path in the repo, as `plan-hash.mjs` does (D72). The schema check runs before the version step, so the script exists when the skill needs it. This closes todo item 25.
+
