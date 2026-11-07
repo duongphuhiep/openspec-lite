@@ -99,7 +99,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
 - After step 3, if `## Facts` had the fact about the error body after step 2, it is still there, because the decision on how `lookup` reads the output uses it (D184). The summary lists each fact, decision, and open question that apply added, changed, or removed.
-- In step 4, if `plan.md` has the fact about the error body, it is in the `## Context` of an ADR draft: the ADR of the decision that calls `tools/geo.mjs`, or an ADR for the fact itself. If it is an ADR for the fact, its `## Decision` says how `lookup` handles the error body. After the archive, `openspec/adr/` holds that ADR (D179).
+- In step 4, if archive drafts an ADR for the decision that calls `tools/geo.mjs`, and `plan.md` has the fact about the error body, the fact is in the `## Context` of that ADR. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the fact as not drafted, with a reason (D179, D186).
 - In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
 
 ## 5. Archive with promotion

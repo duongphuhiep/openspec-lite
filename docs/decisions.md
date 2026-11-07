@@ -2587,3 +2587,14 @@ This revises D185.
 
 **Rationale**: review round 7 found that D185 let a run make a fact non-obvious, but the shipped rule says not to record a fact that a reader can easily deduce from the code. The user defined a non-obvious fact as one that "requires" a run or a test result. A fact that the code shows does not require a run, so the code rule wins. The other two fixes have one choice each.
 
+---
+
+## D187: Fixes From Review Round 8 on cb22fc4..local
+
+**Decision**:
+
+- Scenario 4c step 4 expects the error-body fact in the `## Context` of the ADR of the decision that calls `tools/geo.mjs`, only when archive drafts that ADR. Otherwise, archive lists the fact as not drafted. After D186, the fact is not a non-obvious fact, so archive drafts no ADR for the fact itself.
+- README describes the D184 facts of `plan.md`, and the four archive filters of D185.
+
+**Rationale**: review round 8 found that the 4c check could fail on a correct archive, and that README did not follow D184 and D185. Each fix has one logical choice.
+

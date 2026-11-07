@@ -29,7 +29,7 @@ openspec-lite targets medium changes. The workflow is `plan → implement (→ d
 `plan.md` keeps WHY, WHAT, and HOW together while you propose and explore the change. `plan.md` is a living document. It records:
 
 - The context and your proposal.
-- The non-obvious facts that you find during exploration, when they justify a decision or a constraint.
+- The facts that justify a decision or a constraint, and the non-obvious facts: the facts that need a run, a test, research, or a long analysis of the code to find.
 - The current decisions: yours, and the decisions that the AI makes during implementation. When a new decision replaces an old one, the AI removes or updates the old one. `plan.md` is not a history.
 
 Each constraint, open question, fact, and decision has a short ID, such as `C1` or `D2`. The IDs appear only in `plan.md` and `tasks-preview.md`. Specs, ADRs, code comments, and commit messages name an item by its title instead.
@@ -159,11 +159,12 @@ openspec-lite-propose
                         └── plan.md, tasks-preview.md → local archive
 ```
 
-At archive time, the AI uses three filters to select what to promote:
+At archive time, the AI uses four filters to select what to promote:
 
 - **Non-obvious**: a future reader cannot deduce it from the code in 5 minutes.
 - **Surprising**: it would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code.
+- **Non-obvious fact**: a fact of `plan.md` that needed a run, a test, research, or a long analysis of the code to find. It goes to the context of an ADR.
 
 An item needs to pass only one filter. The AI shows the list. You approve, reject, or edit each item in the conversation. You can also pick a skipped item, and the AI drafts it. The AI writes nothing before your approval.
 
