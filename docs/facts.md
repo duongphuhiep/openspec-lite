@@ -828,3 +828,16 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - OpenSpec 1.14.2: when the archive target exists, `openspec archive` prints "Task status: No tasks" before "Error: Archive '<date>-<name>' already exists." (group B, session `b9b59d48`).
 - Claude Code 2.1.318: the session log has `"type":"api-request"` entries. For print-mode Sonnet 5.5, they show `thinking: {type: adaptive, display: omitted}`, `output_config.effort: "medium"`, and `max_tokens` 128000 (group B, session `11ad7ebe`).
 - Sonnet 5.5, D169: 22b passed 3 of 3 on 3c93237, and 6 of 6 with the D169 verification. 22a kept the Goal comment in 3 of 3 (group H).
+
+## D171 Verification on 7f6e069
+
+**Source**: scenarios 1, 3, 4, 4b, and 4c ×2, Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, report in `.scenario-runs/20261107-D171/report.md`, 2026-11-07.
+
+- Sonnet 5.5, tasks preview with D171: in 2 of 2 runs of 4c, it read `tools/geo.mjs` and did not run it. The source of the tool fact was the file (sessions `395ce503`, `cf400e9b`).
+- Sonnet 5.5, apply with D171: in 2 of 2 runs of 4c, it answered the open questions of the preview itself, wrote them as decisions, removed them, and passed the done check. The user did not answer them (sessions `b69dc752`, `914c79ca`).
+- Sonnet 5.5, stock `/opsx:apply` with D171: `node --test <dir>` failed with "Cannot find module". The agent changed the test script for this reason, and recorded no fact (session `997119c4`).
+- Sonnet 5.5, apply with D171, 4b: it recorded the choice of `req.socket.remoteAddress` against `X-Forwarded-For`, and the proxy risk as an open question. On 3c93237, it did not (session `42b513b0`).
+- Claude Code 2.1.319, stock `/opsx:apply`: it loaded no skill in 2 of 2 sessions, and both ran the `git status --porcelain` step of `apply.instruction` (sessions `1fe83c59`, `997119c4`). Over the last 4 runs, it loaded `openspec-lite-apply` in 3 of 8 sessions.
+- Sonnet 5.5, scenario 4: after the `npm test` denials, it fell back to `node --test <file>` this time. Now 2 of 3 runs.
+- Claude Code 2.1.319, scenario allowlist: a `python3 - <<'EOF'` heredoc is denied with "Contains brace with quote character (expansion obfuscation)", as a `cat` heredoc is. The agent then used Edit or Write (`raw/A/4/turn-1.json`, `raw/A/4c-run1/turn-1.json`).
+- Claude Code 2.1.319 on Bedrock: the log of one apply session starts 33 minutes after the process start. Then an `api_error` "Request timed out." and a retry occur. `duration_ms` is 40,776, and `totalDuration` is 2,235,994. The cause is not known (session `914c79ca`).

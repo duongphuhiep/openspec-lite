@@ -209,7 +209,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
 - Do not write code.
 
-### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171)
+### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172)
 
 - If `plan.md` is missing, stop. Tell the user to run `openspec-lite-propose` (D99).
 - Read `plan.md` and explore the code first.
@@ -234,10 +234,10 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - Get `<hash>` with the plan hash command.
 - Overwrite the old file.
 - At the start, run `git status --porcelain` on `plan.md`. If it prints a line, say in one line that `plan.md` is not committed, and continue. With no git repo, say nothing (D171).
-- Record in `plan.md`, with no question (D171): each fact about an external service or tool that the change uses, seen in this run, with its source, when you find it; each choice between real alternatives in the approach, as a decision, when you make it; and at the end, each point that you are unsure or worried about, as an open question. Do not edit Goal, Background, Non-Goals, or Constraints. The plan hash does not cover the other sections, so the preview stays current.
+- Record in `plan.md`, with no question (D171): each fact about an external service or tool that the change uses, seen in this run, with its source (a command that you ran, a file that you read, a doc URL, or an error text), when you find it. This includes each error or output of a tool that makes you change what you do (D172); each choice between real alternatives in the approach, as a decision, when you make it; and at the end, each point that you are unsure or worried about, as an open question. Do not edit Goal, Background, Non-Goals, or Constraints. The plan hash does not cover the other sections, so the preview stays current.
 - In the summary, list each fact, decision, and open question that the run added, changed, or removed (D171).
 
-### openspec-lite-apply (D27, D64, D73, D171)
+### openspec-lite-apply (D27, D64, D73, D171, D172)
 
 - Run `openspec instructions apply --change "<name>" --json`. Follow its `instruction`. The schema `apply.instruction` is the only copy of the plan-lite apply rules.
 - Add one rule to the CLI output: ignore checkbox and task-count text. A plan-lite change has no tracked tasks.
@@ -316,7 +316,7 @@ apply:
 - OpenSpec ignores the `openspec-version` key. Only the skills read it (D48).
 - `version` is an integer. A change to it is a schema **update** (D45).
 
-`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
+`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
 
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
@@ -324,11 +324,12 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - Before you write any code: if the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root, the folder that holds `openspec/`. If the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. If it is stale, stop and ask the user: regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md? End your turn, and wait for the answer.
 - If the plan hash command exits with code 1, show its message and stop.
 - Before you write any code, run `git status --porcelain -- <changeDir>/plan.md` from the OpenSpec root. If it prints a line, tell the user in one line: "plan.md is not committed. Commit it to see the changes of this run in git diff." Then continue. If the command fails, for example with no git repo, say nothing.
+- Before you write any code: if `## Open Questions` holds a question, ask each one in one reply, with your recommended answer, and end your turn. If the preview is also stale, ask both in the same reply. Do not answer an open question yourself.
 - When plan.md and tasks-preview.md conflict, plan.md wins.
 - Record each decision in `## Decisions` of plan.md when you make it. A decision is a choice between real alternatives that another person could make in a different way. A meaningful deviation from the preview, for example to make the code simpler, is also a decision. Do not record a choice that follows directly from the code or from a constraint. Write `### Decision D<n>: <title>`, with `<n>` higher than each decision ID in the file. Then write "Chose X because Y." Add "Rejected Z because W." when there was an alternative. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool.
-- Record each fact in `## Facts` of plan.md when you find it, as `- F<n>: <fact>`: each behavior of an external service or tool that this change uses and that you saw in this run, for example an API response, a library limit, or a CLI error. Give its source: a command, a doc URL, or an error text. Also record each other non-obvious fact that justifies a new decision. Do not record a guess, or a fact that a reader finds in the code of this repo.
+- Record each fact in `## Facts` of plan.md when you find it, as `- F<n>: <fact>`: each behavior of an external service or tool that this change uses and that you saw in this run, for example an API response, a library limit, or a CLI error. When a command, a tool, or a service gives an error or an output that makes you change what you do, record it, with the command and the error text. Give the source of each fact: a command that you ran, a file that you read, a doc URL, or an error text. Also record each other non-obvious fact that justifies a new decision. Do not record a guess, or a fact that a reader finds in the code of this repo.
 - Do not add an ID to an existing item that has none. Use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md` and `tasks-preview.md`. Do not write them in another file, a code comment, a commit message, a pull request, or a ticket. To refer to an item from outside these two files, use the item title, or a short form of its text, with the change name.
-- Record the answer to each open question in `## Decisions`, as a `### Decision D<n>:` entry, and remove the question.
+- Record the answer of the user to each open question in `## Decisions`, as a `### Decision D<n>:` entry, and remove the question. Only an answer of the user closes a question.
 - Do not edit tasks-preview.md.
 - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
 - At the end, before the done check, record in `## Open Questions` each point that you are unsure or worried about and cannot resolve, as `- OQ<n>: <question>`.
@@ -370,7 +371,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 <!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. -->
 
 ## Facts
-<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>". Record a fact that justifies a decision or a constraint of this change. Also record a behavior of an external service or tool that this change uses, seen during the work, with its source: a command, a doc URL, or an error text. Do not record a guess. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
+<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>". Record a fact that justifies a decision or a constraint of this change. Also record a behavior of an external service or tool that this change uses, seen during the work, with its source: a command that you ran, a file that you read, a doc URL, or an error text. Do not record a guess. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
 
 ## Decisions
 <!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool. -->

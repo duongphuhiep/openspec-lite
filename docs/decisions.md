@@ -2358,4 +2358,21 @@ This revises D146 and D162.
 
 This revises D29 (apply records only the deviations), D135 (each fact justifies a decision or a constraint), and D140 (the fact prune).
 
+**Status**: Revised by D172 (open questions, tool errors, and the fact source).
+
 **Rationale**: a fact about an external tool that the agent finds during the preview or apply was lost at the end of the session. The same is true for the reason of a choice that is not a deviation, and for a worry of the agent. `plan.md` is the living record of the change, and archive promotes its decisions. The plan hash covers only Goal, Background, Non-Goals, and Constraints, so these writes do not make the preview stale. Rejected: ask the user to commit or back up `plan.md` before each run, because it adds a question turn to each run, and question turns were the least stable part of the scenario runs. Rejected: mark each new item with ✨, because a mark does not show an update or a removal, and it needs rules for when it goes away and for archive to remove it. A one-line git note, the summary list, and `git diff` show the full change with no new turn.
+
+---
+
+## D172: Only the User Closes an Open Question, and a Tool Error Is a Fact
+
+**Decision**:
+
+- Before apply writes code, it asks each open question of `plan.md` in one reply, with its recommended answer, and ends the turn. If the preview is also stale, it asks both in the same reply. It does not answer an open question itself. Only an answer of the user closes a question.
+- When a command, a tool, or a service gives an error or an output that makes the agent change what it does, the agent records it as a fact, with the command and the error text. This applies to the tasks preview and to apply.
+- The source of a fact can be a command that the agent ran, a file that it read, a doc URL, or an error text.
+- The schema stays at version 5, because version 5 is not released yet.
+
+This revises D171.
+
+**Rationale**: in the D171 verification, apply answered the open questions of the preview itself in 2 of 2 runs of scenario 4c. It wrote them as decisions, removed them, and passed the done check, so the user never saw them. A question in `plan.md` is a question for the user. Rejected: let apply answer and mark each answer in the summary, because the user can miss it in a long summary. In scenario 4, `node --test <dir>` failed with "Cannot find module". The agent changed the test script for this reason, but recorded no fact. The D171 rule named the examples, but not the trigger "an error that changes the work". In 2 of 2 previews, the agent read the tool file and did not run it. A file that the agent read is an honest source. Rejected: require the agent to run each tool, because the preview could then run a tool with side effects. Two facts were over-recorded (one about repo code, one from general knowledge). No rule change for them now. Check them in the next run.

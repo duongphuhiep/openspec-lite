@@ -44,7 +44,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected**:
 
 - In step 1, the preview summary lists each fact, decision, and open question that the run added to `plan.md`, or says that it added none. After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Non-Goals, and Constraints did not change (D171).
-- Before coding, the agent says that the preview is stale and offers to regenerate it. An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
+- Before coding, the agent says that the preview is stale and offers to regenerate it. In the same reply, it asks each open question of `plan.md`, with its recommended answer (D172). An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
 - Do not commit the edit of step 3. In step 4, the agent says in one line that `plan.md` is not committed, and does not stop for it (D171).
 
 ## 4. Stock apply follows the plan-lite rules
@@ -59,6 +59,8 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The agent implements from `plan.md`, and records deviations as `### Decision D<n>:` entries.
 - It does not edit `tasks-preview.md`.
 - No code, test name, test string, code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
+- Before coding, the agent asks each open question of `plan.md`, with its recommended answer, and ends the turn. It closes only the questions that the user answered (D172).
+- If a command failed and the agent changed the work for it, `## Facts` has a fact with the command and the error text (D172).
 - Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - It ends with the done check (Goal, Constraints, Open Questions). If the run added an open question, the done check says that `## Open Questions` is not empty.
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
@@ -82,13 +84,13 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. On a new plan-lite change `city-lookup`, add `tools/geo.mjs`. For `node tools/geo.mjs Paris`, it prints `{"lat":48.86,"lon":2.35}`. For each other city, it prints `{"error":"city not found"}`, also with exit code 0. Write a `plan.md` with the Goal "Add `lookup(city)` in `src/lookup.js`. It returns the coordinates from `tools/geo.mjs`, or `null` for an unknown city." and the constraint "- C1: Add no npm dependency." Commit.
 2. Run `openspec-lite-tasks-preview city-lookup`. Do not commit after it.
-3. Run `openspec-lite-apply city-lookup`. Answer "Continue from plan.md." if it asks.
+3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer: "Continue from plan.md. Use your recommended answer for each question."
 
-**Expected** (D171):
+**Expected** (D171, D172):
 
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed.
-- After step 2, `## Facts` has a fact that the tool exits with code 0 and prints an error body for an unknown city, with its source, for example the command. The summary lists it. Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
-- In step 3, the agent says in one line that `plan.md` is not committed, and continues. It gives no stale warning.
+- After step 2, `## Facts` has a fact that the tool exits with code 0 and prints an error body for an unknown city, with its source: the command that the agent ran, or the file that it read (D172). The summary lists it. Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
+- In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the tool fact is still in `## Facts`, also if no decision names it. The summary lists each fact, decision, and open question that apply added, changed, or removed.
 
 ## 5. Archive with promotion
