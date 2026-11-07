@@ -22,6 +22,7 @@ Write all prose in ASD-STE100 Simplified Technical Language.
 | `docs/facts.md` | Verified facts about OpenSpec and tools, with sources | How external tools behave |
 | `GLOSSARY.md` | Glossary of project terms | What each term means |
 | `docs/todo.md` | Open items with evidence and a recommendation, but no decision yet | What is left to decide. Remove an item when its decision is in `decisions.md`. |
+| `docs/test-scenarios.md` | Agent test scenarios that we run by hand before each release | What a good result is for the end user |
 | `README.md` | User-facing overview and lifecycle | Nothing. It summarizes the files above. |
 
 Rules:
@@ -31,6 +32,16 @@ Rules:
 - When you make a new decision, add it to `decisions.md`. Then update `design.md` in the same commit.
 - When you find a new fact about OpenSpec or another tool, add it to `facts.md` with its source.
 - Use the terms in `GLOSSARY.md`. Do not use the words in its _Avoid_ lists.
+
+## Writing Test Scenarios
+
+`docs/test-scenarios.md` holds the agent test scenarios. We run them by hand, or headless, before each release.
+
+When you write a new scenario or refine an existing one:
+
+- Write the expected result that is best for the end user. Find the most logical and useful result first.
+- Do not copy the current skill behavior into the expected result. Question the skill. If the skill does something that does not help the user, write the better result.
+- A scenario can fail on the current skills. That is correct when the skill is wrong. Then record the gap in `docs/todo.md`, or fix the skill with a new decision.
 
 ## After Each Review, Grilling Round, or Scenario Run
 

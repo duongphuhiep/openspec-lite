@@ -2376,3 +2376,12 @@ This revises D29 (apply records only the deviations), D135 (each fact justifies 
 This revises D171.
 
 **Rationale**: in the D171 verification, apply answered the open questions of the preview itself in 2 of 2 runs of scenario 4c. It wrote them as decisions, removed them, and passed the done check, so the user never saw them. A question in `plan.md` is a question for the user. Rejected: let apply answer and mark each answer in the summary, because the user can miss it in a long summary. In scenario 4, `node --test <dir>` failed with "Cannot find module". The agent changed the test script for this reason, but recorded no fact. The D171 rule named the examples, but not the trigger "an error that changes the work". In 2 of 2 previews, the agent read the tool file and did not run it. A file that the agent read is an honest source. Rejected: require the agent to run each tool, because the preview could then run a tool with side effects. Two facts were over-recorded (one about repo code, one from general knowledge). No rule change for them now. Check them in the next run.
+
+---
+
+## D173: A Scenario Expects the Best Result for the End User
+
+**Decision**: when we write a new scenario in `docs/test-scenarios.md`, or refine an existing one, the expected result is the most logical and useful result for the end user. It is not a copy of the current skill behavior. The author questions the skill. A scenario can fail on the current skills. Then the gap goes to `docs/todo.md`, or a new decision fixes the skill. `CLAUDE.md` holds this rule.
+
+**Rationale**: a scenario that copies the skill behavior passes also when the skill is wrong, so it finds no defect. Examples: the D171 verification found that apply closed open questions itself, and that a tool error gave no fact. The checks passed, because they followed the skill text, not the intent for the user.
+
