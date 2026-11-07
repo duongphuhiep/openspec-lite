@@ -23,7 +23,7 @@ If the outcomes that stay are small (one obvious fix, no constraints or open que
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare it with the shipped version:
 
-   Shipped schema version: 4
+   Shipped schema version: 5
 
    - The file is missing, its version is lower, or it has no readable `version` line: run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions. Otherwise, continue with the next step of this skill. Do not end your turn after `openspec-lite-schema` finishes. In your end summary, include its report: the status, the copied files, and the backup path.
    - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
@@ -41,7 +41,7 @@ If the outcomes that stay are small (one obvious fix, no constraints or open que
 
 A decision entry is `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative.
 
-`## Decisions` holds only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint.
+`## Decisions` holds only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool.
 
 A fact in `## Facts` must not hold statistics that soon go out of date. A number as an example or a reference is OK.
 

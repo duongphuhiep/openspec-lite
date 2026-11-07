@@ -16,8 +16,8 @@
 <!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. -->
 
 ## Facts
-<!-- Non-obvious facts found during exploration or grilling, as "- F<n>: <fact>". Record only facts that justify a decision or a constraint of this change. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
+<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>". Record a fact that justifies a decision or a constraint of this change. Also record a behavior of an external service or tool that this change uses, seen during the work, with its source: a command, a doc URL, or an error text. Do not record a guess. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
 
 ## Decisions
-<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint. -->
+<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool. -->
 <!-- ### Decision D<n>: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. -->

@@ -202,14 +202,14 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - Use the change name from the prompt. Otherwise, derive a kebab-case name of 2 to 10 words. Start the name with the main outcome. You can add words from the other outcomes after it. 10 words is a soft limit: go over it only if a shorter name is not clear. If the name is too long, remove the words of the other outcomes first (D168).
 - Run `openspec new change "<name>" --schema plan-lite`. If it fails because a plan-lite change with that name exists and has no `plan.md`, an earlier run stopped here: offer to resume. In each other case, show the error and ask for another name (D99, D111).
 - Read `.openspec.yaml` before the edit. OpenSpec 1.14.2 already writes `skip_specs: true` (`docs/facts.md`). If the line exists, do not edit the file. If it is missing, add it. A duplicate key breaks each CLI command on the change (D112, D150).
-- Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Do not write an outcome that the user moved out in `plan.md`, also not in `## Non-Goals`. The summary names it (D169). Keep only the current decisions, and no facts with statistics that soon go out of date (D136). Remove each fact that justifies no current decision or constraint (D140).
+- Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Do not write an outcome that the user moved out in `plan.md`, also not in `## Non-Goals`. The summary names it (D169). Keep only the current decisions, and no facts with statistics that soon go out of date (D136). Remove each fact that justifies no current decision or constraint, except a fact about an external service or tool (D140, D171).
 - `## Goal` holds one outcome by preference. If the change has more than one outcome, write one outcome per bullet, in one or two sentences each (D148).
 - If an upgrade signal is present (see §5), suggest an upgrade.
 - In the summary, show the change name. Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it (D148).
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
 - Do not write code.
 
-### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76)
+### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171)
 
 - If `plan.md` is missing, stop. Tell the user to run `openspec-lite-propose` (D99).
 - Read `plan.md` and explore the code first.
@@ -233,8 +233,11 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 - Each task is a meaningful, verifiable result. Do not split into very small subtasks.
 - Get `<hash>` with the plan hash command.
 - Overwrite the old file.
+- At the start, run `git status --porcelain` on `plan.md`. If it prints a line, say in one line that `plan.md` is not committed, and continue. With no git repo, say nothing (D171).
+- Record in `plan.md`, with no question (D171): each fact about an external service or tool that the change uses, seen in this run, with its source, when you find it; each choice between real alternatives in the approach, as a decision, when you make it; and at the end, each point that you are unsure or worried about, as an open question. Do not edit Goal, Background, Non-Goals, or Constraints. The plan hash does not cover the other sections, so the preview stays current.
+- In the summary, list each fact, decision, and open question that the run added, changed, or removed (D171).
 
-### openspec-lite-apply (D27, D64, D73)
+### openspec-lite-apply (D27, D64, D73, D171)
 
 - Run `openspec instructions apply --change "<name>" --json`. Follow its `instruction`. The schema `apply.instruction` is the only copy of the plan-lite apply rules.
 - Add one rule to the CLI output: ignore checkbox and task-count text. A plan-lite change has no tracked tasks.
@@ -292,7 +295,7 @@ If it exits with code 1, show its message and stop. Ask the user to fix `plan.md
 
 ```yaml
 name: plan-lite
-version: 4
+version: 5
 openspec-version: ">=1.9.0 <2.0.0"
 description: Lightweight plan — goal, constraints, facts, decisions. No tasks. Upgradeable to spec-driven.
 artifacts:
@@ -313,18 +316,23 @@ apply:
 - OpenSpec ignores the `openspec-version` key. Only the skills read it (D48).
 - `version` is an integer. A change to it is a schema **update** (D45).
 
-`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
+`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
 
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
 - Implement from plan.md. If <changeDir>/tasks-preview.md exists, use it as a guide. The CLI does not list it in contextFiles.
 - Before you write any code: if the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root, the folder that holds `openspec/`. If the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. If it is stale, stop and ask the user: regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md? End your turn, and wait for the answer.
 - If the plan hash command exits with code 1, show its message and stop.
+- Before you write any code, run `git status --porcelain -- <changeDir>/plan.md` from the OpenSpec root. If it prints a line, tell the user in one line: "plan.md is not committed. Commit it to see the changes of this run in git diff." Then continue. If the command fails, for example with no git repo, say nothing.
 - When plan.md and tasks-preview.md conflict, plan.md wins.
-- The approach may differ from the preview, for example to make the code simpler. Record each meaningful deviation in `## Decisions` of plan.md, as `### Decision D<n>: <title>`, with `<n>` higher than each decision ID in the file. Then write "Chose X because Y." Add "Rejected Z because W." when there was an alternative. List the deviations in the end summary. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale. Then remove each fact that justifies no current decision or constraint. Do not add an ID to an existing item that has none. Use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md` and `tasks-preview.md`. Do not write them in another file, a code comment, a commit message, a pull request, or a ticket. To refer to an item from outside these two files, use the item title, or a short form of its text, with the change name.
+- Record each decision in `## Decisions` of plan.md when you make it. A decision is a choice between real alternatives that another person could make in a different way. A meaningful deviation from the preview, for example to make the code simpler, is also a decision. Do not record a choice that follows directly from the code or from a constraint. Write `### Decision D<n>: <title>`, with `<n>` higher than each decision ID in the file. Then write "Chose X because Y." Add "Rejected Z because W." when there was an alternative. `## Decisions` holds only the current decisions. When you add a decision, remove each decision that it supersedes, and update each decision that it makes stale. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool.
+- Record each fact in `## Facts` of plan.md when you find it, as `- F<n>: <fact>`: each behavior of an external service or tool that this change uses and that you saw in this run, for example an API response, a library limit, or a CLI error. Give its source: a command, a doc URL, or an error text. Also record each other non-obvious fact that justifies a new decision. Do not record a guess, or a fact that a reader finds in the code of this repo.
+- Do not add an ID to an existing item that has none. Use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md` and `tasks-preview.md`. Do not write them in another file, a code comment, a commit message, a pull request, or a ticket. To refer to an item from outside these two files, use the item title, or a short form of its text, with the change name.
 - Record the answer to each open question in `## Decisions`, as a `### Decision D<n>:` entry, and remove the question.
 - Do not edit tasks-preview.md.
 - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
+- At the end, before the done check, record in `## Open Questions` each point that you are unsure or worried about and cannot resolve, as `- OQ<n>: <question>`.
+- In the end summary, list each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID. The plan hash does not cover these three sections, so these edits do not make the preview stale.
 - End with the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
 - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 ```
@@ -341,7 +349,7 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 - It exits with code 1 if the file cannot be read, or if `Goal`, `Non-Goals`, or `Constraints` is missing. `Background` is optional: no error if absent (D125).
 - `tests/plan-hash.test.mjs` covers each rule.
 
-`templates/plan.md` (D10, D124, D125, D134, D135, D136, D137, D140, D142, D144):
+`templates/plan.md` (D10, D124, D125, D134, D135, D136, D137, D140, D142, D144, D171):
 
 ```markdown
 <!-- Each C, OQ, F, and D ID is unique in this file only. Give each new item a number higher than each ID of its kind in this file. Gaps and any order are OK. Use the IDs only in this file and in tasks-preview.md. Outside them, refer to an item by its title, or a short form of its text, with the change name. -->
@@ -362,10 +370,10 @@ This is a plan-lite change. It has no tasks.md and no checkboxes.
 <!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. -->
 
 ## Facts
-<!-- Non-obvious facts found during exploration or grilling, as "- F<n>: <fact>". Record only facts that justify a decision or a constraint of this change. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
+<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>". Record a fact that justifies a decision or a constraint of this change. Also record a behavior of an external service or tool that this change uses, seen during the work, with its source: a command, a doc URL, or an error text. Do not record a guess. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
 
 ## Decisions
-<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint. -->
+<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool. -->
 <!-- ### Decision D<n>: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. -->
 ```
 

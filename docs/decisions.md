@@ -362,6 +362,8 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 
 **Rationale**: A deviation is a decision that the code does not explain. The archive step can promote it (D6). The preview stays as the record of what the user approved.
 
+**Status**: Revised by D171.
+
 ---
 
 ## D30: tasks-preview.md Is Never Promoted (Tasks Round 3)
@@ -1834,6 +1836,8 @@ This revises the entry format of D92.
 
 **Rationale**: Exploration and grilling find facts, for example how a library or an API behaves. Without a slot, the facts are lost, or they mix with the decisions and the constraints. The filter "justifies a decision or a constraint" keeps the section short. Facts change when exploration continues, so a new fact must not make the preview stale.
 
+**Status**: Revised by D171.
+
 ---
 
 ## D136: plan.md Keeps the Current Decisions, and Facts Have No Statistics That Soon Go Out of Date
@@ -1913,6 +1917,8 @@ This extends D137 and D138.
 This extends D135, D136, and D138.
 
 **Rationale**: An agent that fills `## Constraints` first does not read the `## Decisions` comment. The plan hash ignores the text before the first `##` heading, so the top comment does not change the hash. A fact that justifies only a removed decision breaks the `## Facts` filter of D135.
+
+**Status**: Revised by D171.
 
 ---
 
@@ -2334,3 +2340,22 @@ This revises D80 and D161, and supersedes D149.
 This revises D146 and D162.
 
 **Rationale**: in a `--resume` turn, `total_cost_usd` and `modelUsage` give the totals of the session up to that turn. `usage`, `num_turns`, and `duration_ms` give the values of that turn only. The script summed each turn, so it counted the earlier turns again. Each report with a `--resume` turn showed too high a cost. With the fix, the run on 38d9a54 costs 3.445 USD, not 5.643 USD. The comparisons between runs stay valid in direction, because each run had the same error, but not in size.
+
+---
+
+## D171: Tasks Preview and Apply Record Facts, Decisions, and Open Questions in plan.md
+
+**Decision**:
+
+- `openspec-lite-tasks-preview` and apply (the schema `apply.instruction`, so also stock `/opsx:apply`) write to `plan.md` during the work:
+  - **Facts**: each behavior of an external service or tool that the change uses and that the agent saw in this run, with its source: a command, a doc URL, or an error text. Also each other non-obvious fact that justifies a new decision. No guess, and no fact that a reader finds in the code of the repo. The agent writes each fact when it finds it.
+  - **Decisions**: each choice between real alternatives that another person could make in a different way, as "Chose X because Y. Rejected Z because W." A deviation from the preview is also such a choice. No choice that follows directly from the code or from a constraint. The agent writes each decision when it makes it.
+  - **Open questions**: at the end, each point that the agent is unsure or worried about and cannot resolve, as `- OQ<n>: <question>`. In apply, an open question makes the done check fail. That is the intent: the user answers it, or moves it to Non-Goals.
+- The D140 prune ("remove each fact that justifies no current decision or constraint") does not remove a fact about an external service or tool.
+- Tasks preview writes to `plan.md` with no question.
+- Review: at the start, the agent runs `git status --porcelain` on `plan.md`. If it prints a line, the agent says in one line that `plan.md` is not committed, and that a commit lets the user see the diff of this run. It does not stop. With no git repo, it says nothing. The end summary lists each fact, decision, and open question that the run added, changed, or removed.
+- The schema version goes to 5, because `apply.instruction` and the template change (D109).
+
+This revises D29 (apply records only the deviations), D135 (each fact justifies a decision or a constraint), and D140 (the fact prune).
+
+**Rationale**: a fact about an external tool that the agent finds during the preview or apply was lost at the end of the session. The same is true for the reason of a choice that is not a deviation, and for a worry of the agent. `plan.md` is the living record of the change, and archive promotes its decisions. The plan hash covers only Goal, Background, Non-Goals, and Constraints, so these writes do not make the preview stale. Rejected: ask the user to commit or back up `plan.md` before each run, because it adds a question turn to each run, and question turns were the least stable part of the scenario runs. Rejected: mark each new item with ✨, because a mark does not show an update or a removal, and it needs rules for when it goes away and for archive to remove it. A one-line git note, the summary list, and `git diff` show the full change with no new turn.

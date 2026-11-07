@@ -97,7 +97,7 @@ apm update
 
 - **`plan-lite` schema**: one artifact, `plan.md`. It has no design and no `tasks.md`. The opt-in `tasks-preview.md` is outside the schema.
 - **`openspec-lite-propose`**: creates a plan-lite change. It asks if you want a tasks preview.
-- **`openspec-lite-tasks-preview`**: generates or regenerates `tasks-preview.md`.
+- **`openspec-lite-tasks-preview`**: generates or regenerates `tasks-preview.md`. It records the facts, decisions, and open questions that it finds in `plan.md`.
 - **`openspec-lite-apply`**: implements the change from `plan.md`. It uses `tasks-preview.md` as a guide.
 - **`openspec-lite-upgrade`**: upgrades a plan-lite change to spec-driven, at any time.
 - **`openspec-lite-archive`**: archives the change. It promotes selected items to specs and ADRs.
@@ -127,7 +127,15 @@ During apply:
 
 - When the two files conflict, `plan.md` wins.
 - If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply edits the other sections. It ignores HTML comments.
-- Apply records each meaningful deviation as a decision in `plan.md`. It removes each decision that the deviation supersedes, and updates each decision that it makes stale. Then it removes each fact that justifies no current decision or constraint.
+- Apply records each meaningful deviation as a decision in `plan.md`. It removes each decision that the deviation supersedes, and updates each decision that it makes stale. Then it removes each fact that justifies no current decision or constraint, except a fact about an external service or tool.
+
+The tasks preview and apply both keep `plan.md` up to date while they work:
+
+- **Facts**: each behavior of an external service or tool that they see, with its source.
+- **Decisions**: each choice between real alternatives, with the reason and the rejected options.
+- **Open questions**: at the end, each point that they are unsure or worried about. In apply, an open question makes the done check fail until you answer it.
+
+These sections are not in the hash, so the preview stays current. The summary lists each item that the run added, changed, or removed. To see the full change, commit `plan.md` before the run, then run `git diff`. If `plan.md` is not committed, the agent tells you at the start.
 
 ## Lifecycle
 

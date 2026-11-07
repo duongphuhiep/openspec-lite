@@ -41,7 +41,11 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 3. Add or edit a line under `## Constraints` in `plan.md`.
 4. Run stock `/opsx:apply` (or `openspec-lite-apply`).
 
-**Expected**: Before coding, the agent says that the preview is stale and offers to regenerate it. An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
+**Expected**:
+
+- In step 1, the preview summary lists each fact, decision, and open question that the run added to `plan.md`, or says that it added none. After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Non-Goals, and Constraints did not change (D171).
+- Before coding, the agent says that the preview is stale and offers to regenerate it. An edit under `## Open Questions`, `## Facts`, or `## Decisions` alone does not cause this warning.
+- Do not commit the edit of step 3. In step 4, the agent says in one line that `plan.md` is not committed, and does not stop for it (D171).
 
 ## 4. Stock apply follows the plan-lite rules
 
@@ -55,7 +59,8 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The agent implements from `plan.md`, and records deviations as `### Decision D<n>:` entries.
 - It does not edit `tasks-preview.md`.
 - No code, test name, test string, code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
-- It ends with the done check (Goal, Constraints, Open Questions).
+- Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
+- It ends with the done check (Goal, Constraints, Open Questions). If the run added an open question, the done check says that `## Open Questions` is not empty.
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
 
 ### 4b. Apply keeps only the current decisions
@@ -70,6 +75,21 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - `## Decisions` has the sliding window decision. The fixed window decision is removed, or updated to the sliding window (D136). If the agent adds a new decision, its ID number is higher than each other decision ID in the file (D144).
 - If D1 is removed or no longer uses a fixed window, F1 is removed, because it justifies no current decision or constraint (D140).
 - The two constraints still have no ID (D138).
+
+### 4c. Preview and apply record a fact about an external tool
+
+**Steps**:
+
+1. On a new plan-lite change `city-lookup`, add `tools/geo.mjs`. For `node tools/geo.mjs Paris`, it prints `{"lat":48.86,"lon":2.35}`. For each other city, it prints `{"error":"city not found"}`, also with exit code 0. Write a `plan.md` with the Goal "Add `lookup(city)` in `src/lookup.js`. It returns the coordinates from `tools/geo.mjs`, or `null` for an unknown city." and the constraint "- C1: Add no npm dependency." Commit.
+2. Run `openspec-lite-tasks-preview city-lookup`. Do not commit after it.
+3. Run `openspec-lite-apply city-lookup`. Answer "Continue from plan.md." if it asks.
+
+**Expected** (D171):
+
+- In step 2, the agent gives no "not committed" note, because `plan.md` is committed.
+- After step 2, `## Facts` has a fact that the tool exits with code 0 and prints an error body for an unknown city, with its source, for example the command. The summary lists it. Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
+- In step 3, the agent says in one line that `plan.md` is not committed, and continues. It gives no stale warning.
+- After step 3, the tool fact is still in `## Facts`, also if no decision names it. The summary lists each fact, decision, and open question that apply added, changed, or removed.
 
 ## 5. Archive with promotion
 
