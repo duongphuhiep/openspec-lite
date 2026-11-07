@@ -77,7 +77,7 @@ The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 4
 
 ## Found in the run on 5aa0025
 
-The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 to D197 close items 48, 49, 52, and 53.
+The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 to D198 close items 48, 49, 52, 53, and 54.
 
 ### 50. Apply writes a test that does not fail on the old behavior
 
@@ -92,13 +92,6 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 - **Problem**: after the ADRs, the agent did not name the open question. The rule is one sentence in a long paragraph, with no fixed place in the reply. One draft also asked to remove a 🤖 from `design.md`, against the guard.
 - **Evidence**: `group-C.md` (18b, 2 of 2 runs). The 18b step 4 also needs one more user turn ("I removed both marks.").
 - **Recommendation**: not decided. One option: a fixed line in the reply before the archive question, for example "Open in `plan.md`: …".
-
-### 54. A fact that only repeats the code or an `ls` result
-
-- **Where**: the `## Facts` template comment, "A non-obvious fact needs a run".
-- **Problem**: the agent reads this as "each run result is a non-obvious fact". 4c-1 F1 repeats `tools/geo.mjs`. 4d-2 F3 repeats an `ls`.
-- **Evidence**: `group-I.md` (2 of 4 runs).
-- **Recommendation**: not decided. Say that a run is necessary, but not enough: the result must be one that a reader cannot see in the code.
 
 ### 55. The scripts do not run alone
 

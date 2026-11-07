@@ -2747,3 +2747,11 @@ This revises D133 and D191.
 **Decision**: the schema ships `exit-code.mjs`. `node exit-code.mjs <command> [args...]` runs the command with no shell, shows its output, and prints `exit: <code>` as the last line. It always exits with code 0. Apply and the tasks preview use it to know the exit code of a command, alone, not in a chain. They do not add `echo $?`. If the agent did not get an exit code, it records nothing about it. Scenarios 4c and 4d check this. The schema stays at version 5, because version 5 is not released yet.
 
 **Rationale**: in the run on 5aa0025, the allowlist denied each `echo $?` form. In 4d-1, the preview then wrote the fact "The exit code was not checked". In 4c-2, a decision relied on an error body with no exit code fact (todo item 53). The allowlist allows `node`, and many user setups allow it too. A script gives the code in the same form each time, as `plan-status.mjs` does for the git note (D193).
+
+## D198: A Run Alone Does Not Make a Fact Non-Obvious
+
+**Decision**: a run is necessary for a non-obvious fact of this kind, but not enough. If a reader can see the result in the code or in the file list, the fact is obvious, also if a run found it. For example, what a script prints when its code shows it, or which files exist, is obvious. `apply.instruction`, the tasks preview, the `## Facts` template comment, and `GLOSSARY.md` say this. Scenario 4c checks it.
+
+This revises D184 and D186.
+
+**Rationale**: in the run on 5aa0025, 2 of 4 runs of group I wrote a fact that only repeats the code or an `ls` result: 4c-1 "a CLI script with no exports ... prints JSON", and 4d-2 a file list (todo item 54). The template comment begins with "A non-obvious fact needs a run", and the agent read it as "each run result is a non-obvious fact". The rule "also if a run found it" was in the skill text, but not in the template, which the agent reads with `plan.md`.

@@ -21,7 +21,7 @@ An item of `## Facts` in a plan: a non-obvious fact, with its source. An obvious
 _Avoid_: Finding, note
 
 **Non-obvious fact**:
-A fact that needs one of these to find: a run or a test result; research of remote sources, for example documentation on the internet, another repo, logs, or a remote database; a long analysis of the code; or other work that is worth an agent to find it. A fact that a reader can easily deduce from the code is not one, also if a run found it. A plan keeps it also when no decision uses it, and archive keeps it in an ADR if the change depends on it (D179, D184).
+A fact that needs one of these to find: a run or a test result; research of remote sources, for example documentation on the internet, another repo, logs, or a remote database; a long analysis of the code; or other work that is worth an agent to find it. A fact that a reader can easily deduce from the code or the file list is not one, also if a run found it (D198). A plan keeps it also when no decision uses it, and archive keeps it in an ADR if the change depends on it (D179, D184).
 _Avoid_: Tool fact, finding
 
 **Item ID**:
