@@ -904,3 +904,29 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, apply with D192: it wrote a test file in 4b (2 turns) and in 2 of 2 runs of 4c, but in 0 of 2 runs of 4d (`51091b94`, `9e157894`, `37cdc4da`).
 - Sonnet 5.5, archive after an upgrade: in 1 of 2 runs of 18b, it removed a 🤖 from `design.md` with no request, against "do not change `design.md`", and did not search for 🤖 after the ADRs (`5e69c51e`). In the other run, its final reply named a 🤖 that the user had removed, with no new search (`3ecfd63b`). Neither run named the open question of the kept `plan.md` before the archive.
 - Sonnet 5.5, upgrade: the "Table is empty" 🤖 scenario of scenario 7 appeared in 2 of 2 runs on 80d076b and in 0 of 1 on dd7ad75 (`c68d63fa`). So it is not a stable input for 18b.
+
+## Scenario Run on 5aa0025
+
+**Source**: all scenarios, 41 runs, Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261108-5aa0025/`, 2026-11-08.
+
+- openspec-lite 5aa0025: with a repo schema at version 99, upgrade ran `openspec-version.mjs` in a chain before it compared the schema versions, then stopped correctly. So the scenario 8 fact of the 80d076b run ("no skill reaches the script") is not always true (group D, session `0af933d9`).
+- `install.mjs` copies 5 files, with `plan-status.mjs` (groups D, F).
+- Claude Code 2.1.319, scenario allowlist: `grep` and `head` in a pipe or a chain are not denied, although they are not in the allowlist (groups E, H, `permission_denials` in `raw/E/*/turn-1.json`).
+- Claude Code 2.1.319, scenario allowlist: `cat >> f <<'EOF'` with `grep` and `node` after it is not denied (group D, `5bad9d98`). `mkdir -p … && cat > f <<'EOF'` is denied (group I, `564c1a6b`). `env PATH=/nonexistent <node> …` is denied, also with an absolute node path (group I, `89ede6f1`).
+- Claude Code 2.1.319: stock `/opsx:archive` switched to `openspec-lite-archive` with no `openspec instructions archive` call. On 80d076b, it made that call first (group F).
+- Claude Code 2.1.319: stock `/opsx:apply` loaded `openspec-lite-apply` in 1 of 3 sessions (`fdd97ae5`). Over all runs, 4 of 17 (group A).
+- Sonnet 5.5 with D193: the prune question was the last line in 5 of 5 prune turns. In 3 of 5, some summary lines came after the table. The reply after the answer had 2 or 3 sentences (group F).
+- Sonnet 5.5 with D193: `plan-status.mjs` gave a true note in 9 of 9 sessions. It ran in a chain in 3 of 6 previews, and the agent still read it correctly (groups A, F, I).
+- Sonnet 5.5, version step: `openspec-version.mjs` ran in a chain in most archive and upgrade sessions, against "Run it alone". No session misread it (groups D, E, H).
+- Sonnet 5.5, apply with D193 item 3: in 1 of 3 sessions, it gave no recommendation for any open question, also for two questions that the agent can answer (group A, scenario 4 rerun).
+- Sonnet 5.5, apply: 🤖 decisions gave reasons from no source in 2 of 2 runs of scenario 4. One reason is false: "`"type": "module"` makes files load as ES modules in both Node and the browser" (group A).
+- Sonnet 5.5, apply: in 1 of 2 runs of 4b, the new sliding-window test also passes on the fixed window of turn 1. The agent's fixed window starts at the first request of a key, in 2 of 2 runs (group A).
+- Sonnet 5.5, apply: when `node --test <dir>/` failed, the agent changed the command and recorded no fact (group A 2 of 2, group I 1 of 2). This is the D172 gap again.
+- Sonnet 5.5, apply: it wrote no test in 1 of 2 runs of 4d, with the reason "the repo has no test setup" (group I, 4d-2).
+- Sonnet 5.5, tasks preview: when the allowlist denied each `echo $?` form, the agent did not read the exit code of the tool, and wrote "The exit code was not checked" as a fact (group I, 4d-1). In 4d-2, it took exit 0 from a Bash result with no error (`b7a99818`).
+- Sonnet 5.5, tasks preview: it wrote a fact that only repeats the code or an `ls` result in 2 of 4 runs (group I, 4c-1 F1, 4d-2 F3).
+- Sonnet 5.5, upgrade: `design.md` held a note that points to a kept open question in 2 of 2 runs of 20a ("See the open questions in tasks.md"), and in group C. It skipped the resume question of step 1.3 in 1 of 2 runs of 20a (group F).
+- Sonnet 5.5, upgrade resume: after the user said "no", it did not name the open question that stays in `plan.md` (group C, 19-3).
+- Sonnet 5.5, archive after an upgrade: it did not name the open question of the kept `plan.md` after the ADRs in 2 of 2 runs of 18b. One draft asked "I'd remove the 🤖 from `design.md`", against the guard. No write came (group C).
+- Sonnet 5.5, upgrade: the "Table is empty 🤖" scenario appeared again (3 of 4 upgrade runs over three commits) (group C).
+- Sonnet 5.5, propose: the Goal comment stayed in 2 of 2 runs (group H, todo item 21). With the CSV export prompt, propose asked no Level 1 question. On 80d076b, it asked one (group F).

@@ -75,6 +75,74 @@ The reports are in `.scenario-runs/20261107-80d076b/` (`summary.md` and `group-A
 
 The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 47.
 
+## Found in the run on 5aa0025
+
+The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run.
+
+### 48. Apply gives 🤖 decisions a reason with no source, or a false reason
+
+- **Where**: `apply.instruction` of `schema.yaml`, D177. Scenario 4.
+- **Problem**: run 1: "a `package.json` is not wanted", which the user did not say. Rerun: "`"type": "module"` makes files load as ES modules in both Node and the browser". This is false. D192 did not fix this.
+- **Evidence**: `group-A.md` (4, 2 of 2 runs).
+- **Recommendation**: not decided. One option: a 🤖 decision with no source for its reason writes "Reason not checked", not a guess. The scenario text must also say if a 🤖 mark excuses a weak reason.
+
+### 49. D193 item 3 is over-applied
+
+- **Where**: `apply.instruction`, the rule for an open question that only the user can answer.
+- **Problem**: in the scenario 4 rerun, apply gave no recommendation for any open question. Only OQ1 (where the page is) needs the user. Run 1 gave a recommendation for OQ2 and OQ3.
+- **Evidence**: `group-A.md` (4 rerun, 1 of 3 sessions).
+- **Recommendation**: not decided. Say in the rule that each other question still gets a recommendation.
+
+### 50. Apply writes a test that does not fail on the old behavior
+
+- **Where**: `apply.instruction`, the test rule (D192). Scenarios 4b and 4d.
+- **Problem**: in 4b run 1, the sliding-window test also passes on the fixed window of turn 1. In 4d-2, apply wrote no test, with "the repo has no test setup". `node:test` needs no setup.
+- **Evidence**: `group-A.md` (4b), `group-I.md` (4d-2).
+- **Recommendation**: not decided. Options: the agent runs the new test against the old code once, and says that `node:test` needs no setup.
+
+### 51. Archive after an upgrade does not name the open question of a kept `plan.md`
+
+- **Where**: `package/skills/openspec-lite-archive/SKILL.md`, step 3 (D193 item 4). Scenario 18b.
+- **Problem**: after the ADRs, the agent did not name the open question. The rule is one sentence in a long paragraph, with no fixed place in the reply. One draft also asked to remove a 🤖 from `design.md`, against the guard.
+- **Evidence**: `group-C.md` (18b, 2 of 2 runs). The 18b step 4 also needs one more user turn ("I removed both marks.").
+- **Recommendation**: not decided. One option: a fixed line in the reply before the archive question, for example "Open in `plan.md`: …".
+
+### 52. Upgrade writes a pointer to a kept open question in `design.md`
+
+- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, step 2.3 (D133). Scenarios 20a and 19.
+- **Problem**: `design.md` → Risks says "See the open questions in tasks.md" or "See task 0.3". A later session saw this, and did not remove it. In 1 of 2 runs of 20a, upgrade also skipped the resume question of step 1.3. In 19-3, after "no", it did not name the open question that stays in `plan.md`.
+- **Evidence**: `group-F.md` (20a, 2 of 2), `group-C.md` (3 runs, 19-3).
+- **Recommendation**: not decided. One option: a check before `validate` that `design.md` names no task ID and no "open question".
+
+### 53. The preview cannot read an exit code when `echo $?` is denied
+
+- **Where**: `package/skills/openspec-lite-tasks-preview/SKILL.md`, the fact rules (D184). Scenarios 4c and 4d.
+- **Problem**: the allowlist denied each `echo $?` form. In 4d-1, the fact says "The exit code was not checked". In 4c-2, the decision relies on an error body with no exit code fact.
+- **Evidence**: `group-I.md` (4c-2, 4d-1).
+- **Recommendation**: not decided. One option: a small script that runs a command and prints its exit code, as D193 added for the git note.
+
+### 54. A fact that only repeats the code or an `ls` result
+
+- **Where**: the `## Facts` template comment, "A non-obvious fact needs a run".
+- **Problem**: the agent reads this as "each run result is a non-obvious fact". 4c-1 F1 repeats `tools/geo.mjs`. 4d-2 F3 repeats an `ls`.
+- **Evidence**: `group-I.md` (2 of 4 runs).
+- **Recommendation**: not decided. Say that a run is necessary, but not enough: the result must be one that a reader cannot see in the code.
+
+### 55. The scripts do not run alone
+
+- **Where**: the version step of each skill, and `plan-status.mjs` (D175, D192, D193).
+- **Problem**: `openspec-version.mjs` and `plan-status.mjs` ran in a chain in most sessions, against "Run it alone". No session misread the output.
+- **Evidence**: groups D, E, F, H, I.
+- **Recommendation**: not decided. The rule has no effect. Either remove it, or accept the chain.
+
+### 56. Scenario text issues
+
+- 13a and 13b: "shows" the earlier file. The agent gave the path and a summary, not the full text. Say which one passes (group B).
+- 20a: say that a note that points to an open question fails (group F).
+- 20c: "in one line" is strict. "A short reply, with no summary" can be the better text (group F).
+- 4b: say which fixed window the test must catch (group A).
+- 18b step 4: add the user turn "I removed both marks." (group C).
+
 ## Other notes from the run
 
 These need no change now. They are here so that a later run does not report them as new.
