@@ -75,7 +75,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. Each decision that records an answer or an instruction of the user has no 🤖. Each other decision that the agent wrote ends its heading with 🤖, also when its reason comes from `plan.md` (D181, D182). The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - Before the done check, the agent runs the tests with `node --test`, and they pass. The summary gives the result (D176).
 - A test covers the export: the CSV holds the rows that the table shows, in the column order of the table. The test fails if the export writes the wrong rows or the wrong order.
-- At the end, each decision in `## Decisions` matches the code, and each fact in `## Facts` is still true (D192). Each "because" reason comes from the run, the user, `plan.md`, the code, or a well-known fact, not from a guess (D177, D192).
+- At the end, each decision in `## Decisions` matches the code, and each fact in `## Facts` is still true (D192). Each "because" reason comes from the run, the user, `plan.md`, the code, or a well-known fact, not from a guess (D177, D192). A 🤖 mark does not excuse a guess or a false reason. A claim about how a tool, a runtime, or a platform behaves has a run or a doc as its source. If no source supports a reason, the decision says "Reason not checked." (D194).
 - It ends with the done check (Goal, Constraints, Open Questions). If the run added an open question, the done check says that `## Open Questions` is not empty.
 - It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
 

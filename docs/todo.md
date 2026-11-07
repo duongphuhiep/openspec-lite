@@ -77,14 +77,7 @@ The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 4
 
 ## Found in the run on 5aa0025
 
-The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run.
-
-### 48. Apply gives 🤖 decisions a reason with no source, or a false reason
-
-- **Where**: `apply.instruction` of `schema.yaml`, D177. Scenario 4.
-- **Problem**: run 1: "a `package.json` is not wanted", which the user did not say. Rerun: "`"type": "module"` makes files load as ES modules in both Node and the browser". This is false. D192 did not fix this.
-- **Evidence**: `group-A.md` (4, 2 of 2 runs).
-- **Recommendation**: not decided. One option: a 🤖 decision with no source for its reason writes "Reason not checked", not a guess. The scenario text must also say if a 🤖 mark excuses a weak reason.
+The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 closes item 48.
 
 ### 49. D193 item 3 is over-applied
 

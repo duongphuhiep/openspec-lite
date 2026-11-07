@@ -2712,3 +2712,11 @@ This revises D132, D171, D172, and D192.
 
 **Rationale**: the rerun on dd7ad75 found these gaps (todo items 43 to 47). (1) The summary came after the prune question in about 5 of 10 prune turns, and no wording fixed it. D132 was made to stop a question that got lost or never came. With the question as the last line, it does not get lost, and the user sees the review list before the delete. (2) The agent read the `git status` output wrong 3 times in one rerun: a missed change and two false notes. A script gives the same result each time, as `openspec-version.mjs` does for the version (D175). (3) A recommendation for a question that only the user can answer is a guess, which D177 forbids. (4) and (5) have one logical choice each.
 
+
+## D194: A Reason With No Source Says "Reason Not Checked"
+
+**Decision**: apply and the tasks preview give a reason only from this run, the user, `plan.md`, the code, or a well-known fact. A claim about how a tool, a runtime, or a platform behaves is not a well-known fact. It needs a run or a doc as its source. If no source supports a reason, the agent writes "Reason not checked." in its place. A guessed wish of the user is also a guess. A 🤖 mark does not excuse a guess or a false reason. Scenario 4 checks this.
+
+This revises D177 and D192.
+
+**Rationale**: in the run on 5aa0025, 2 of 2 runs of scenario 4 gave 🤖 decisions a reason with no source: "a `package.json` is not wanted", and the false "`"type": "module"` makes files load as ES modules in both Node and the browser" (todo item 48). The agent treated a claim about a runtime as a well-known fact. A claim of this kind is easy to get wrong, and a run or a doc can check it. "Reason not checked." tells the reviewer what to check, and a guess hides it.
