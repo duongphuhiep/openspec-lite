@@ -39,7 +39,7 @@ If the outcomes that stay are small (one obvious fix, no constraints or open que
 
 `## Goal` holds one outcome by preference. If the change has more than one outcome, write one outcome per bullet, in one or two sentences each.
 
-A decision entry is `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative.
+A decision entry is `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. A decision of propose records a choice of the user: write no 🤖.
 
 `## Decisions` holds only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint, except a fact about an external service or tool.
 

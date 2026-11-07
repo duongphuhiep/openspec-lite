@@ -127,12 +127,12 @@ During apply:
 
 - When the two files conflict, `plan.md` wins.
 - If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply edits the other sections. It ignores HTML comments.
-- Apply records each meaningful deviation as a decision in `plan.md`. It removes each decision that the deviation supersedes, and updates each decision that it makes stale. Then it removes each fact that justifies no current decision or constraint, except a fact about an external service or tool.
+- Apply records each meaningful deviation as a decision in `plan.md`. It removes each 🤖 decision that the deviation supersedes, and updates each 🤖 decision that it makes stale. It changes a decision with no 🤖 only when you say so. Then it removes each fact that justifies no current decision or constraint, except a fact about an external service or tool.
 
 The tasks preview and apply both keep `plan.md` up to date while they work:
 
 - **Facts**: each behavior of an external service or tool that they see, with its source. This includes each tool error that makes them change the work.
-- **Decisions**: each choice between real alternatives, with the reason and the rejected options. A decision that the agent made with its own reason ends with 🤖. A decision with no 🤖 is yours: the agent asks before it changes it. Remove the 🤖 to accept a decision of the agent.
+- **Decisions**: each choice between real alternatives, with the reason and the rejected options. A decision that the agent made ends with 🤖, unless it records your answer or your instruction. A decision with no 🤖 is yours: the agent asks before it changes it. Remove the 🤖 to accept a decision of the agent.
 - **Open questions**: at the end, each point that they are unsure or worried about. Before apply writes code, it asks you each open question, with its recommended answer. Only your answer closes a question. An open question makes the done check fail until you answer it.
 
 These sections are not in the hash, so the preview stays current. The summary lists each item that the run added, changed, or removed. To see the full change, commit `plan.md` before the run, then run `git diff`. If `plan.md` is not committed, the agent tells you at the start.

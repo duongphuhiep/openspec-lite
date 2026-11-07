@@ -37,7 +37,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
    The Goal and `tasks-preview.md` alone are not sources. Then ask the user, in one reply, before you write any artifact:
    - each open question in `plan.md` that changes the specs, the approach, or the tasks, as the `design` instruction says;
-   - each requirement that you plan to write from the Goal or from `tasks-preview.md`. Show its text, and ask if you can write it;
+   - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`. Show its text, and ask if you can write it;
    - if you plan no requirement at all, ask the user for at least one.
 
    End the turn, and wait for the answer. If all three lists are empty, do not ask. If the user cannot answer an open question now, keep the question in `plan.md`.
@@ -46,7 +46,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
    In `proposal.md`, `specs/`, and `design.md`, put 🤖 at the end of the line or the heading of each inferred item. An item is inferred only if it holds a new claim: a case, a value, a behavior, a risk, a dependency, a choice, or a reason that no section of `plan.md` and no answer of the user in this upgrade states. `tasks-preview.md` is not a source: a claim that only the preview states is new. An item can be a `#### Scenario:`, a `### Decision`, or a list item. A requirement is never inferred, because step 2 gives each requirement a source.
 
-   Before you mark an item, check each sentence of it, not only its main source. If one sentence holds a new claim, mark the item, and name that claim in a few words. If no sentence holds one, do not mark the item. These are not new claims:
+   Before you mark an item, check each sentence of it, not only its main source. If one sentence holds a new claim, mark the item, and name that claim in a few words. If no sentence holds one, do not mark the item. One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet. These are not new claims:
    - other words for a `plan.md` item or an answer;
    - another form of it, for example a `#### Scenario:` that only restates its requirement;
    - another artifact or section for it;
@@ -79,7 +79,7 @@ In the summary:
 
 - List the files that you wrote and deleted.
 - Ask the user to review all artifacts.
-- If an artifact has 🤖 items, list each one with its new claim. Ask the user to review each one: remove the mark to accept the item, or delete the item.
+- If an artifact has 🤖 items, list each one with its new claim, or as an agent decision of `plan.md`. Ask the user to review each one: remove the mark to accept the item, or delete the item.
 - Ask for an extra review of `tasks.md`, because it is a contract, not a reference.
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.

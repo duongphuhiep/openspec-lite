@@ -2113,7 +2113,7 @@ This extends D112.
 
 This revises D131 and extends D114.
 
-**Status**: D163: an item that restates a part of `plan.md` in other words is not inferred, and gets no mark. D164 moves the requirement question to one question turn before any write, and lets a decision become a requirement only if it is a contract. D166: a fact is not a source of a requirement.
+**Status**: D163: an item that restates a part of `plan.md` in other words is not inferred, and gets no mark. D164 moves the requirement question to one question turn before any write, and lets a decision become a requirement only if it is a contract. D166: a fact is not a source of a requirement. Revised by D182: an agent decision of plan.md keeps its 🤖 in design.md, also with no new claim.
 
 **Rationale**: In scenario 7 of the 627b8fb run, `plan.md` had two constraints. Upgrade wrote 4 distinct requirements with no question: 2 from the constraints, 1 from the Goal, and 1 (RFC 4180 escaping) from the tasks preview. It also wrote scenarios from the tasks preview, for example "Table is empty". A spec is a contract that others depend on after the archive, and the tasks preview is a reference, not a contract. A list of sources in the summary was rejected, because it points to `plan.md` items, and the user usually deletes `plan.md` after the upgrade. A mark in the artifact stays where the reviewer reads. `tasks.md` gets no mark, because the agent writes almost each task from its own preview, so a mark on each line tells the reviewer nothing. If the user forgets a mark, stock `/opsx:archive` merges it into `openspec/specs/`. This is a visible signal, not a silent error, so no skill removes it.
 
@@ -2309,6 +2309,8 @@ This revises D163.
 
 **Rationale**: D163 said "mark … also when it adds a detail to a `plan.md` item". Almost each restatement adds some detail, for example a WHEN/THEN form, a code location, or an effect. So the agent always found a reason to mark it. In the D164 verification and the run on 38d9a54, upgrade marked a scenario that restated its requirement, an Impact line that restated the Goal with the name of the code, and a reworded decision (todo item 14). A closed list of claim types replaces the open "adds a detail" test, so the agent checks a type and does not judge each case. The named claim in the summary makes the check visible to the user and to a scenario run. Rejected: repeat "do not mark a restatement" more strongly, because the rule was already there, and the agent read each case as an added detail. A first version had no sentence check, no reason type, and no Why example. In 6 verification runs, it removed each over-mark, but 3 of 6 runs missed a mark: two Why lines that add who and when, and a preview-only sentence inside a decision from an answer. The agent judged each item by its main source. The sentence check and the Why example close these gaps.
 
+**Status**: Revised by D182: the one exception is an agent decision of plan.md, which keeps its 🤖.
+
 ---
 
 ## D168: Change Names of 2 to 10 Words
@@ -2497,4 +2499,24 @@ This revises D135 and D171.
 This revises D178 and D180, which used "a decision of this run".
 
 **Rationale**: review round 3 found that "a decision of this run" fails in two ways. Apply writes the answer of the user as a decision of this run, so it could change that answer later with no question. And after the user corrects `plan.md`, a new preview run could not replace the old preview decision. `plan.md` does not show who wrote a decision, and git cannot tell, because the user and the agent commit as the same git user. A visible mark can. The mark goes on the agent decisions, not on the user decisions, so that a decision that the user writes by hand is safe by default. A missed mark also fails safe: the agent asks. 🤖 already means "the agent wrote this, and a person did not confirm it" in upgrade (D152). Rejected: the owner from the words of the reason ("because the user answered"), because a decision that the user writes by hand has no such words. Rejected: the strict rule (never change an older decision), because each user correction then costs one more question turn. The user chose the mark.
+
+**Status**: Revised by D182: 🤖 unless the decision records the user, the mark goes away when the agent follows the user, and propose writes no 🤖.
+
+---
+
+## D182: Fixes From Review Round 4 on cb22fc4..local
+
+**Decision**:
+
+- A decision ends with 🤖, unless it records an answer or an instruction of the user. The old words "when the reason is your own" conflicted with "each reason comes from this run, the user, or plan.md", so an agent could skip the mark.
+- When the agent updates a 🤖 decision to follow an answer or an instruction of the user, it removes the 🤖. Without this, a later run could change the choice of the user with no question.
+- The tasks preview, as apply, changes a decision with no 🤖 when the user tells it to in this session.
+- Propose writes no 🤖, because its decisions record choices of the user.
+- Upgrade: a `### Decision` from a 🤖 decision of `plan.md` keeps its 🤖, also with no new claim. This is the one exception to the D167 rule. The summary lists it as an agent decision. A requirement from a 🤖 contract decision is asked in the question turn, as a requirement from the Goal or the preview is.
+- The first template `## Decisions` comment and README limit the change of a decision with no 🤖 to an answer or an instruction of the user.
+- `GLOSSARY.md` ("Agent decision", "Inferred item") and scenario 7 give the upgrade rule. D152, D167, and D181 get Status lines.
+
+This revises D152, D167, and D181.
+
+**Rationale**: review round 4 found these gaps in the D181 text. Each fix has one logical choice. The upgrade rule keeps one meaning of 🤖 in both places: an item that the agent wrote and that a person did not confirm.
 
