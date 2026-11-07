@@ -89,7 +89,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected** (D171, D172):
 
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed.
-- After step 2, `## Facts` has a fact that the tool reports an unknown city with an error body in its output, not with a failing exit, with its source: the command that the agent ran, or the file that it read (D172). The summary lists it. Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
+- After step 2, `## Facts` has a fact that the tool reports an unknown city with an error body in its output, not with a failing exit, with its source: the command that the agent ran, or the file that it read (D172). The summary lists it. No fact only restates what `tools/geo.mjs` shows at a glance, for example "geo.mjs is a CLI script, not a module" (D174). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The done check says that `## Open Questions` is not empty (D172).
 - After step 3, the tool fact is still in `## Facts`, also if no decision names it. The summary lists each fact, decision, and open question that apply added, changed, or removed.

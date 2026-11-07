@@ -2385,3 +2385,13 @@ This revises D171.
 
 **Rationale**: a scenario that copies the skill behavior passes also when the skill is wrong, so it finds no defect. Examples: the D171 verification found that apply closed open questions itself, and that a tool error gave no fact. The checks passed, because they followed the skill text, not the intent for the user.
 
+---
+
+## D174: A Fact About a Repo File States a Behavior That the Code Does Not Show at a Glance
+
+**Decision**: the tasks preview and apply record a fact about a file in the repo only if it states a behavior that the code does not show at a glance, for example an error that comes with exit code 0. The `## Facts` template comment says the same. The schema stays at version 5, because version 5 is not released yet.
+
+This revises D171 and D172 ("do not record a fact that a reader finds in the code of this repo").
+
+**Rationale**: in 3 of 5 runs of scenario 4c, the preview recorded "geo.mjs is a CLI script, not a module". The old rule banned each fact about repo code, but the tool rule allowed each fact about a tool that the change uses. The tool was in the repo, so the two rules overlapped, and the agent recorded both kinds. The new rule keeps the useful part: a behavior that a reader can miss, such as an error with a success exit. It drops the part that a reader sees in a few seconds. This closes todo item 29.
+
