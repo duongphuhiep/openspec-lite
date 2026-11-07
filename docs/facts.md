@@ -853,3 +853,12 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, apply: it changed the code away from a decision, said that the change "follows directly from" the decision, and did not update it. The decision is stale (`6e30aee4`).
 - Sonnet 5.5, apply: it wrote a "Rejected … because" reason that nothing in the run supports ("reports are not large enough", `c6ae9e42`).
 - Claude Code 2.1.319, scenario allowlist: `cd <session folder>; cat >> plan.md <<'EOF' …` ran with no denial (`ea29ed22`). A `Write` to `/tmp/check-lookup.js`, outside the session folder, was denied (`71f097cc`).
+
+## Review Round 10 on cb22fc4..local
+
+**Source**: OpenSpec 1.14.2, a new `openspec init --tools claude` repo with no spec, 2026-11-07. Checked by the round 10 reviewer and again by hand.
+
+- `openspec list --specs --json` prints `{"specs": [], "root": {...}}` and exits with code 0.
+- `openspec list --specs` prints "No specs found." and exits with code 0.
+- `openspec validate --specs` prints "- Validating..." and "No items found to validate.", and exits with code 0. So no `openspec` command fails when a repo has no spec.
+

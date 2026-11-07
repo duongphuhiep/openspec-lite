@@ -108,7 +108,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. On a new plan-lite change `spec-gate`, write a `plan.md` with the Goal "Add `scripts/spec-gate.mjs`. It exits with code 1 when the repo has no spec, and with code 0 otherwise." and the constraint "- C1: Use the `openspec` CLI to find the specs. Do not scan the files." Create no spec. Commit.
+1. On a new plan-lite change `spec-gate`, write a `plan.md` with the Goal "Add `scripts/spec-gate.mjs`. It exits with code 1 when the repo has no spec, and with code 0 otherwise." and the constraint "- C1: Use `openspec validate --specs` to check the specs. Do not scan the files." Create no spec. Commit.
 2. Run `openspec-lite-tasks-preview spec-gate`. Commit.
 3. Run `openspec-lite-apply spec-gate`. When it asks the open questions, answer: "Use your recommended answer for each question."
 

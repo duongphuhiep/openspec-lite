@@ -2612,3 +2612,11 @@ This completes D186.
 
 **Rationale**: review round 9 found that D186 changed the record rule but not the definition, that 4c named its decision in three ways, and that no scenario tested a real non-obvious fact after D186. The 4d fact is in `docs/facts.md`, so the answer key is known. Each fix has one logical choice.
 
+---
+
+## D189: Fix From Review Round 10 on cb22fc4..local
+
+**Decision**: the constraint of scenario 4d names the command: "Use `openspec validate --specs` to check the specs."
+
+**Rationale**: review round 10 found that "use the `openspec` CLI to find the specs" allows `openspec list --specs --json`, which prints `"specs": []`. A correct run with that command never meets the validate fact, so the 4d fact checks fail. With the command named, the agent must learn its exit code with no spec, which only a run shows (`docs/facts.md`).
+
