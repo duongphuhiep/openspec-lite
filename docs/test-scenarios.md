@@ -56,7 +56,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision of scenario 1 (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
 - Before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172).
 - In step 5, the agent says that the preview is current, and gives no stale warning.
-- In step 4, the agent says in one line that `plan.md` is not committed (D171). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
+- In step 4, the agent copies the line of `plan-status.mjs`: "plan.md is not committed, …" (D171, D193). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 
 ## 4. Stock apply follows the plan-lite rules
 
@@ -70,7 +70,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The agent implements from `plan.md`, and records deviations as `### Decision D<n>:` entries.
 - It does not edit `tasks-preview.md`.
 - No code, test name, test string, code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
-- If `plan.md` has open questions, the agent asks each one with its recommended answer before coding, and ends the turn. It closes only the questions that the user answered (D172).
+- If `plan.md` has open questions, the agent asks each one with its recommended answer before coding, and ends the turn. For a question that only the user can answer, for example where some code is, it gives no recommendation and says why (D193). It closes only the questions that the user answered (D172).
 - If a command failed and the agent changed the work for it, `## Facts` has a fact with the command and the error text (D172).
 - Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. Each decision that records an answer or an instruction of the user has no 🤖. Each other decision that the agent wrote ends its heading with 🤖, also when its reason comes from `plan.md` (D181, D182). The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - Before the done check, the agent runs the tests with `node --test`, and they pass. The summary gives the result (D176).
@@ -106,12 +106,12 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected** (D171, D172, D179, D184):
 
-- In step 2, the agent gives no "not committed" note, because `plan.md` is committed.
+- In step 2, the agent gives no "not committed" note, because `plan.md` is committed and `plan-status.mjs` prints nothing (D193).
 - After step 2, each decision of the preview ends its heading with 🤖. After step 3, the decision of the answered question has no 🤖 (D181).
-- After step 2, if a decision of the preview says how `lookup` finds an unknown city, `## Facts` has the fact that backs it: the tool reports an unknown city with an error body in its output, not with a failing exit, with its source. The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module". If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
+- After step 2, if a decision of the preview says how `lookup` finds an unknown city, `plan.md` gives the reason for it: the tool reports an unknown city with an error body in its output, not with a failing exit. If a run showed this, it is a fact in `## Facts`, with the command as its source. If the agent only read the 3 lines of the tool, it is in the "because" part of that decision (D192, D193). The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module". If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
-- After step 3, if `## Facts` had the fact about the error body after step 2, it is still there, because the decision on how `lookup` finds an unknown city uses it (D184). The summary lists each fact, decision, and open question that apply added, changed, or removed.
+- After step 3, if `## Facts` had the fact about the error body after step 2, it is still there, because it is a non-obvious fact that a run showed (D184, D192). The summary lists each fact, decision, and open question that apply added, changed, or removed.
 - In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, and `plan.md` has the fact about the error body, the fact is in the `## Context` of that ADR. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the fact as not drafted, with a reason (D179, D186).
 - After step 3, `lookup('Paris')` returns the coordinates, and `lookup('Atlantis')` returns `null`. The agent checks both with a run or a test.
 - In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
@@ -133,6 +133,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 - After step 3, the fact is still in `## Facts`, also if no decision names it (D184).
 - The script exits with code 1 in this repo, which has no spec. The agent checks it with a run.
 - In step 4, the script exits with code 0.
+- Apply wrote a test for the script, and the test fails if the script gives the wrong exit code (D192).
 - If the script reads the output text of `openspec validate`, `plan.md` has a 🤖 decision or an open question about it, because a new OpenSpec version can change the text.
 
 ## 5. Archive with promotion
@@ -145,7 +146,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Expected**:
 
 - The agent does the done check first. It asks "Archive anyway?" only if an answer is "no".
-- The requirement draft states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR draft holds the reason of the decision and the rejected option. The agent writes nothing before the approval. `plan.md` has no 🤖, so the agent says nothing about 🤖 marks (D192).
+- The requirement draft states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR draft holds the reason of the decision and the rejected option. The agent writes nothing before the approval. `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
 - `openspec validate` passes. `openspec/adr/YYYY-MM-DD-<slug>.md` exists with Status `Accepted`.
 - `openspec/specs/<capability>/spec.md` holds the requirement. The change is in `openspec/changes/archive/`.
 
@@ -169,7 +170,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 - After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a decision that is a contract, or an answer of the user (D166). Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). The quoting decision keeps its 🤖 in `design.md`, and the summary lists it as an agent decision. The question turn asks the requirement that the agent plans from it, because the quoting is a contract of the CSV file (D182). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
 - `specs/` holds the column-order requirement. The answer "no hidden columns" is in `specs/` or in `design.md`. `design.md` holds the browser decision and the "no new server endpoint" constraint.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
-- The agent shows the list of `plan.md` destinations before the prune question. After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
+- In one reply, the agent shows the `validate` result, the summary, and the list of `plan.md` destinations, with the prune question as the last line (D193). After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
 
 ## 8. Newer repo schema
 
@@ -426,7 +427,7 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 
 **Steps**:
 
-1. Start from the end state of scenario 18.
+1. Start from the end state of scenario 18. If no delta in `specs/` holds a 🤖, add one by hand, so that the 🤖 block is always tested: end a `#### Scenario:` heading with 🤖.
 2. Answer: "Yes, copy the decisions of `design.md` to ADRs." If the agent made no offer in scenario 18, ask for this copy in the same words.
 3. Approve each draft.
 4. If the agent lists 🤖 lines of `specs/` or `design.md`, remove each 🤖 by hand. Then answer yes to the archive question.
@@ -436,7 +437,7 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 - The agent shows each ADR draft before it writes. Each draft has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
 - After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
 - `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
-- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of scenario 7. It does not offer the archive while a delta holds a 🤖 (D192). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
+- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of scenario 7. It does not offer the archive while a delta holds a 🤖 (D192). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
 
 ## 19. Other openspec-lite skills after an upgrade
 
@@ -471,7 +472,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - The agent asks the user to answer the open question before it writes an artifact, in one reply with each planned requirement from the Goal or the tasks preview (D164).
 - Before the prune question, the agent shows the `openspec validate` result, and lists each `plan.md` section with its artifact and heading. The open question is "kept" (D191).
 - After step 2, `plan.md` is the same as in step 1.
-- At the end of step 2, the summary says that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth.
+- After the "no" of step 2, the agent says in one line that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth. It does not write the summary again (D193).
 - `proposal.md` holds the two scope items of `## Background`.
 - `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
 - `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title, or a short form of its text, instead (D142).
@@ -494,7 +495,8 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 
 - The agent writes no file under `<change>/specs/`.
 - `.openspec.yaml` has `schema: spec-driven` and `skip_specs: true`.
-- Before the delete, the agent runs `openspec validate`, and it passes. In one reply, it shows the result and the list of `plan.md` sections with their destinations, and asks the prune question. It ends the turn there, with no summary (D132, D191).
+- Before the delete, the agent runs `openspec validate`, and it passes. In one reply, it shows the result, the summary, and the list of `plan.md` sections with their destinations. The prune question is the last line, and the turn ends there. The summary does not say that `plan.md` is deleted or kept (D132, D191, D193).
+- After the answer, the agent says in one line what it deleted or kept. It does not write the summary again (D193).
 - The summary says that `skip_specs` is set at the end, because the change has no spec delta (D153).
 - Only the end state of `skip_specs` counts. The agent can skip the remove and the add-back of the line, because no spec file is written (D160).
 

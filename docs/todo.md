@@ -73,41 +73,7 @@ The reports are in `.scenario-runs/20261107-80d076b/` (`summary.md` and `group-A
 
 ## Found in the rerun on dd7ad75
 
-The reports are in `.scenario-runs/20261108-dd7ad75/`.
-
-### 43. Upgrade writes the summary in the prune reply
-
-- **Where**: upgrade step 5.3 (D132, D192 item 10).
-- **Problem**: the summary came after the prune question in 2 of 2 runs of 20c, also with "the question is the last line". Over all runs, about 5 of 10 prune turns.
-- **Evidence**: `group-BDF.md` (`be52c596`, `69a3e27b`).
-- **Recommendation**: not decided. Allow the summary in the same reply, before the question, and keep the question as the last line.
-
-### 44. The "not committed" note is not stable
-
-- **Where**: the `git status --porcelain` step of apply and the tasks preview (D171, D192).
-- **Problem**: one run missed the note with ` M` output. Two previews gave a false note with empty output. Three previews ran the command in a chain.
-- **Evidence**: `group-A.md` (`4a01dd6b`), `group-I.md` (`f2b17ad9`).
-- **Recommendation**: not decided. A schema script prints the exact note or nothing, as `openspec-version.mjs` does for the version (D175).
-
-### 45. An open question that only the user can answer
-
-- **Where**: the apply rule "ask each one … with your recommended answer" (D172).
-- **Problem**: for "Where is the report page?", a recommendation would be a guess. Apply gave none in 3 of 3 sessions, and said why. The rule does not allow this.
-- **Evidence**: `group-A.md`.
-- **Recommendation**: not decided. Allow "no recommendation, with a reason" when only the user knows the answer.
-
-### 46. Archive after an upgrade: design.md, the final search, and kept open questions
-
-- **Where**: the archive guard (D154, D191, D192).
-- **Problem**: one run removed a 🤖 from `design.md`. One run reported a 🤖 that the user had removed. No run named the open question of the kept `plan.md` before the archive.
-- **Evidence**: `group-C.md` (`5e69c51e`, `3ecfd63b`).
-- **Recommendation**: not decided. Say that a 🤖 is removed only by the user. Search again before the final reply. Name each open question of a kept `plan.md` before the archive offer. Scenario 18b adds a 🤖 scenario to the delta by hand.
-
-### 47. Scenario texts that do not match the rules
-
-- 5: the check rejects a true "no 🤖" line. The user result is fine with a true line.
-- 4c: check 3 asks for the error-body fact in `## Facts`, but D192 puts an obvious reason in the "because" part.
-- 4d: no check that apply writes a test (D192 item 5). The 2 runs wrote none.
+The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 47.
 
 ## Other notes from the run
 

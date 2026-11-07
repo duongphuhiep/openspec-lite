@@ -1792,7 +1792,7 @@ This extends D120.
 
 **Rationale**: In the rerun on cd93c44, both runs of scenario 20c ran step 5 and the summary in the same turn as the prune step. One run showed no list and no question, but its summary said "I'm waiting for your answer to the question above". The other run asked with no list. The step said "in the same reply", but it did not say to stop. `apply.instruction` uses "End your turn, and wait for the answer" for the same case. When propose sets `skip_specs: true` and the upgrade writes no delta, the flag never leaves the file, so "stays" is also correct.
 
-**Status**: Revised by D191: upgrade validates before the prune question.
+**Status**: Revised by D191: upgrade validates before the prune question. Revised by D193: the summary comes before the question, and the question is the last line.
 
 ---
 
@@ -2368,7 +2368,7 @@ This revises D146 and D162.
 
 This revises D29 (apply records only the deviations), D135 (each fact justifies a decision or a constraint), and D140 (the fact prune).
 
-**Status**: Revised by D172 (open questions, tool errors, and the fact source). Also revised by D174 (a fact about a repo file) and D177 (decisions against the code, reasons). Also revised by D178 (ask once, the note, the decisions of this run), D179 (archive), and D180 (the term, the decisions of this run). Revised by D184: one category, the non-obvious fact, replaces the external tool fact.
+**Status**: Revised by D172 (open questions, tool errors, and the fact source). Also revised by D174 (a fact about a repo file) and D177 (decisions against the code, reasons). Also revised by D178 (ask once, the note, the decisions of this run), D179 (archive), and D180 (the term, the decisions of this run). Revised by D184: one category, the non-obvious fact, replaces the external tool fact. Revised by D193: a script gives the git note.
 
 **Rationale**: a fact about an external tool that the agent finds during the preview or apply was lost at the end of the session. The same is true for the reason of a choice that is not a deviation, and for a worry of the agent. `plan.md` is the living record of the change, and archive promotes its decisions. The plan hash covers only Goal, Background, Non-Goals, and Constraints, so these writes do not make the preview stale. Rejected: ask the user to commit or back up `plan.md` before each run, because it adds a question turn to each run, and question turns were the least stable part of the scenario runs. Rejected: mark each new item with ✨, because a mark does not show an update or a removal, and it needs rules for when it goes away and for archive to remove it. A one-line git note, the summary list, and `git diff` show the full change with no new turn.
 
@@ -2387,7 +2387,7 @@ This revises D171.
 
 **Rationale**: in the D171 verification, apply answered the open questions of the preview itself in 2 of 2 runs of scenario 4c. It wrote them as decisions, removed them, and passed the done check, so the user never saw them. A question in `plan.md` is a question for the user. Rejected: let apply answer and mark each answer in the summary, because the user can miss it in a long summary. In scenario 4, `node --test <dir>` failed with "Cannot find module". The agent changed the test script for this reason, but recorded no fact. The D171 rule named the examples, but not the trigger "an error that changes the work". In 2 of 2 previews, the agent read the tool file and did not run it. A file that the agent read is an honest source. Rejected: require the agent to run each tool, because the preview could then run a tool with side effects. Two facts were over-recorded (one about repo code, one from general knowledge). No rule change for them now. Check them in the next run.
 
-**Status**: Revised by D174 (a fact about a repo file). Also revised by D178: apply asks each open question once per session, and continues.
+**Status**: Revised by D174 (a fact about a repo file). Also revised by D178: apply asks each open question once per session, and continues. Revised by D193: no recommendation for a question that only the user can answer.
 
 ---
 
@@ -2691,4 +2691,24 @@ The scenarios 4, 4b, 4c, 5, 18b, and 20a, the headless notes, `design.md`, `GLOS
 This revises D175, D177, D184, and D191.
 
 **Rationale**: the scenario run on 80d076b found these gaps (todo items 28 and 32 to 42). The user decided items 36 and 39. Each other fix has one logical choice. Item 32 was caused by D191: the offer ran the CLI archive, and an unconfirmed claim reached the main spec.
+
+**Status**: Revised by D193 (item 10: the prune reply holds the summary).
+
+---
+
+## D193: The Prune Reply Holds the Summary, a Script Gives the Git Note, and Fixes From the Rerun on dd7ad75
+
+**Decision**:
+
+1. Upgrade writes one reply in this order: the `validate` result, the summary, the list of `plan.md` destinations, and last the prune question. The summary does not say that `plan.md` is deleted or kept. The turn ends at the question. After the answer, upgrade says in one line what it deleted or kept, and does not write the summary again. The user chose this.
+2. The schema ships `plan-status.mjs`. It runs `git status --porcelain` on `plan.md`, and prints the "not committed" note, or nothing. Apply and the tasks preview run it alone, and copy its line. The user chose this.
+3. For an open question that only the user can answer, for example where some code is, apply gives no recommendation, and says why. The user chose this.
+4. Archive after an upgrade: it does not remove a 🤖 itself, it names each open question of a kept `plan.md`, and it searches again before each reply that says what holds a 🤖.
+5. Scenarios: 5 accepts a true "no 🤖" line. 4c accepts the error-body reason in the "because" part of the decision, if no run showed it. 4d checks that apply writes a test. 18b adds a 🤖 scenario to the delta by hand, so that the 🤖 block is always tested. 3, 7, 20a, and 20c check the new rules.
+
+The schema stays at version 5, because version 5 is not released yet.
+
+This revises D132, D171, D172, and D192.
+
+**Rationale**: the rerun on dd7ad75 found these gaps (todo items 43 to 47). (1) The summary came after the prune question in about 5 of 10 prune turns, and no wording fixed it. D132 was made to stop a question that got lost or never came. With the question as the last line, it does not get lost, and the user sees the review list before the delete. (2) The agent read the `git status` output wrong 3 times in one rerun: a missed change and two false notes. A script gives the same result each time, as `openspec-version.mjs` does for the version (D175). (3) A recommendation for a question that only the user can answer is a guess, which D177 forbids. (4) and (5) have one logical choice each.
 

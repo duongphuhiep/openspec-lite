@@ -25,7 +25,7 @@ Write `tasks-preview.md` for a plan-lite change. Record what you learn in `plan.
 ## 2. Write the preview
 
 1. If `openspec/changes/<name>/plan.md` is missing, stop. Tell the user to run `openspec-lite-propose`.
-2. Run `git status --porcelain -- openspec/changes/<name>/plan.md` from the OpenSpec root, alone, not in a chain. If it prints a line, tell the user in one line: "plan.md is not committed, so git diff cannot show the changes of this run alone. Commit plan.md before the next run." Then continue. If the command fails, for example with no git repo, say nothing.
+2. Run `node openspec/schemas/plan-lite/plan-status.mjs openspec/changes/<name>/plan.md` from the OpenSpec root, alone, not in a chain. If it prints a line, copy the line to the user as it is. Then continue. If it prints nothing, say nothing about commits.
 3. Read `plan.md`. Explore the code that the change touches. Record in `plan.md` as you go (see "Record in plan.md").
 4. From the OpenSpec root, run:
 

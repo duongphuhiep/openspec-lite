@@ -70,12 +70,12 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 5. Prune `plan.md`:
    1. List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept". If the items of one section go to different destinations, list each item. Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
    2. If a section has content that is in no artifact and is not kept, say so. Offer to add it to an artifact first.
-   3. Show the result of step 4 and the list from step 5.1 first. If `validate` failed, recommend to keep `plan.md` until the errors are fixed. Then, in the same reply, ask the user: "Delete the moved sections from `plan.md`?" The question is the last line of the reply: write nothing after it. End your turn, and wait for the answer. Do not write the summary before the answer. On no, keep `plan.md` as it is, and go to the summary.
-   4. Delete each section or item whose content moved. Keep each kept item. Keep the ID comment at the top of `plan.md` while a section is left. If no section is left, delete `plan.md`. A section with only an HTML comment counts as no section.
+   3. Write one reply in this order: the result of step 4, the summary of section 3, the list from step 5.1, and last the question "Delete the moved sections from `plan.md`?". If `validate` failed, recommend to keep `plan.md` until the errors are fixed. The summary must not say that `plan.md` is deleted or kept, because the user did not answer yet. The question is the last line of the reply. End your turn, and wait for the answer.
+   4. On no, keep `plan.md` as it is. Say in one line that its moved sections are old copies, and that the artifacts are the source of truth. On yes, delete each section or item whose content moved. Keep each kept item. Keep the ID comment at the top of `plan.md` while a section is left. If no section is left, delete `plan.md`. A section with only an HTML comment counts as no section. Then say in one line what you deleted and what you kept. If a section is kept, tell the user to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`. Do not write the summary again.
 
 ## 3. End
 
-In the summary:
+Write the summary in the reply of step 5.3, before the question. In the summary:
 
 - List the files that you wrote and deleted.
 - Ask the user to review all artifacts.
@@ -83,6 +83,5 @@ In the summary:
 - Ask for an extra review of `tasks.md`, because it is a contract, not a reference.
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
-- If `plan.md` is kept, name each kept section. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`.
-- If the user said no at step 5.3, say that the moved sections in `plan.md` are old copies. The artifacts are the source of truth.
+- Name each `plan.md` item that has no slot and stays in `plan.md`, for example an open question that the user cannot answer now. The stock skills do not read `plan.md`.
 - If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs. To keep them as ADRs, copy them to `openspec/adr/` before the archive. `openspec-lite-archive` can do this copy: run it before `/opsx:archive`.
