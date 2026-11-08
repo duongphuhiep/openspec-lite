@@ -2912,3 +2912,9 @@ The user chose item 1.
 This revises D99, D108, D160, and D207.
 
 **Rationale**: in the run on f5422dd, scenario 7 failed in 2 of 2 runs: the agent kept the flag through the question turn, against step 2.1 (todo item 60). The agent order is better for the user: if the user stops at the question turn with no flag and no delta, `validate` fails with `CHANGE_NO_DELTAS`. In 1 of 2 runs, step 3 wrote a requirement from the Goal with no question. Step 3 is a new session, so the answers of step 2 exist only in the old session. To ask again is the only way to keep the D164 rule on a resumed run.
+
+## D209: The Archive Done Check Searches From the Git Root
+
+**Decision**: the archive done check gets the git root with `git rev-parse --show-toplevel` as its own command. Then it searches with `git -C <git root> grep <word>`. A command substitution such as `$(...)` is not used, because it causes a permission prompt. Scenario 21b checks that the done check passes when the repo holds committed code that meets the Goal.
+
+**Rationale**: in 21b on f5422dd, a `cd openspec && …` stayed in effect, so `git grep` searched only `openspec/`. The agent told the user that the repo has no rate-limit code, but `src/rateLimit.js` was committed (todo item 62). A `cd` stays in effect inside a turn and into the next `--resume` turn (`docs/facts.md`). The default "yes" to "Archive anyway?" hid the false warning, so 21b needs its own check.

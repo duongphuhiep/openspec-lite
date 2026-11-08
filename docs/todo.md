@@ -118,7 +118,7 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 
 ## Found in the run on f5422dd
 
-The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208 closes item 60. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
+The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208 and D209 close items 60 and 62. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
 
 ### 61. The upgrade summary says that `plan.md` stays
 
@@ -126,13 +126,6 @@ The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A
 - **Problem**: in 2 of 3 prune replies, the summary said "Not deleted: `plan.md`" or "still there". Section 3 says "List the files that you wrote and deleted", which pushes the agent to say it.
 - **Evidence**: `group-F.md` (20c run 1, 20a step 2).
 - **Recommendation**: not decided. One option: section 3 says "List the files that you wrote", and the deleted files come after the answer.
-
-### 62. The archive done check can search the wrong folder
-
-- **Where**: archive step 1. Scenario 21b.
-- **Problem**: a `cd openspec && …` stayed in effect, so `git grep` found no code, and the user got a false "Not met" warning. The default "yes" to "Archive anyway?" hid it.
-- **Evidence**: `group-G.md` (21b, `ed3e824d`); `docs/facts.md` (21a on an older run).
-- **Recommendation**: not decided. One option: run the search from the git root, for example `git -C <git root> grep`. Add a 21b check that the done check passes.
 
 ### 63. Archive talks about marks when there is none
 
