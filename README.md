@@ -172,11 +172,10 @@ An item needs to pass only one filter. The AI shows the list. You approve, rejec
 
 To convert a plan-lite change to a stock OpenSpec spec-driven change, run `openspec-lite-upgrade`. It does these steps:
 
-1. It removes `skip_specs: true` from `.openspec.yaml`.
-2. Before it writes a file, it asks you its questions in one reply. It asks each open question that changes the specs, the approach, or the tasks. It also asks about each requirement that it plans to write from the Goal or the tasks preview. A requirement comes from a constraint, a decision that is a contract, or your answer. Then it writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. The `plan.md` decisions and facts go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.
-3. It changes `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. This step comes after the four artifacts, so you can run an interrupted upgrade again.
-4. It runs `openspec validate`.
-5. In one reply, it shows the result, the summary of what to review, and where each `plan.md` section moved. The last line asks before it deletes the moved sections. If `validate` failed, it recommends to keep `plan.md` until you fix the errors. If nothing is left, it deletes `plan.md`.
+1. Before it writes a file, it asks you its questions in one reply. It asks each open question that changes the specs, the approach, or the tasks. It also asks about each requirement that it plans to write from the Goal or the tasks preview. A requirement comes from a constraint, a decision that is a contract, or your answer. Then it writes `proposal.md`, `specs/`, `design.md`, and `tasks.md` in that order, from `plan.md`. Just before the first spec, it removes `skip_specs: true` from `.openspec.yaml`. The `plan.md` decisions and facts go to `design.md`. If `tasks-preview.md` exists, it seeds `tasks.md` and adds checkboxes. Then it deletes the preview.
+2. It changes `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`. This step comes after the four artifacts, so you can run an interrupted upgrade again.
+3. It runs `openspec validate`.
+4. In one reply, it shows the result, the summary of what to review, and where each `plan.md` section moved. The last line asks before it deletes the moved sections. If `validate` failed, it recommends to keep `plan.md` until you fix the errors. If nothing is left, it deletes `plan.md`.
 
 Review all artifacts after the upgrade. Review `tasks.md` carefully, because it is a contract. The AI puts 🤖 at the end of each item that it inferred, that is, an item that is not in `plan.md` or in your answers. Remove the mark to accept the item, or delete the item, before you run `/opsx:archive`.
 

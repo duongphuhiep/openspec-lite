@@ -1384,6 +1384,8 @@ Node 20 reached end of life on 2026-04-30, and development uses Node 24.
 
 ## D108: Fixes From Review Round 1
 
+**Status**: Revised by D208: upgrade keeps the `skip_specs` line until the first spec write, so with no requirement it never removes it.
+
 **Decision**:
 
 - The upgrade guard has three explicit cases: `plan-lite` continues; `spec-driven` with `plan.md` asks to resume; any other case stops, including `spec-driven` with no `plan.md`.
@@ -2214,6 +2216,8 @@ This extends D120, D140, and D142.
 
 ## D160: Scenario 20c Checks Only the End State of skip_specs
 
+**Status**: Revised by D208: upgrade does not remove the line when it writes no spec.
+
 **Decision**: Scenario 20c checks only the end state of `skip_specs`. It says that the agent can skip the remove (upgrade step 1) and the add-back (step 2.2) of the line, because no spec file is written. Upgrade does not change.
 
 **Rationale**: In the 627b8fb run and in 2 of 2 reruns on f15aba0, the agent never removed the line and put it back. Its only edit to `.openspec.yaml` changed the `schema:` line. The end state was correct each time. Step 1 exists because the CLI refuses a spec file while the flag is set, so with no requirement the remove and the add-back have no effect. The user sees no difference, and since D153 the summary reports only the end state. A check on the order needs the tool calls of the session log, for no result that a user can see. Rejected: change step 1 to "remove the line only before the first spec file", because each interrupted run must then find out if a spec file exists, the type of history check that D153 avoids.
@@ -2894,3 +2898,17 @@ This revises D120, D154, D191, D193, and D198.
 This revises D191, D199, D203, and D206.
 
 **Rationale**: review round 18 found these gaps. Each has one logical fix: a check that is required in one line and optional in two others, a rule that also matches a question that step 2 never asks, two reruns with no answer for a question that always comes, and a start state that the tester had to guess. The fixture follows D199.
+
+## D208: Upgrade Removes `skip_specs` Just Before the First Spec Write, and a Resumed Run Asks Again
+
+**Decision**:
+
+1. Upgrade keeps the `skip_specs: true` line until it writes the first delta. Just before it runs `openspec instructions specs` for the first delta, it removes the line. With no requirement, it never removes the line. The step numbers of the skill stay the same.
+2. A resumed upgrade run asks the step 2 questions again before it writes a missing artifact, because the answers of the earlier session are not on disk.
+3. Scenario 7 checks that `skip_specs: true` is still set after the question turn, and that step 3 asks the question turn again. The fixture `interrupted-upgrade` has the line. Step 3 answers the fixture question about the report page. Scenario 20c checks that upgrade keeps the line.
+
+The user chose item 1.
+
+This revises D99, D108, D160, and D207.
+
+**Rationale**: in the run on f5422dd, scenario 7 failed in 2 of 2 runs: the agent kept the flag through the question turn, against step 2.1 (todo item 60). The agent order is better for the user: if the user stops at the question turn with no flag and no delta, `validate` fails with `CHANGE_NO_DELTAS`. In 1 of 2 runs, step 3 wrote a requirement from the Goal with no question. Step 3 is a new session, so the answers of step 2 exist only in the old session. To ask again is the only way to keep the D164 rule on a resumed run.

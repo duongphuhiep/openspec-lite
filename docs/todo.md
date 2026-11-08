@@ -118,14 +118,7 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 
 ## Found in the run on f5422dd
 
-The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
-
-### 60. Upgrade keeps `skip_specs` until the question turn, and writes a Goal requirement with no question
-
-- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, steps 2.1 and 2; scenario 7.
-- **Problem**: in 2 of 2 runs, `skip_specs: true` was still set after the question turn. The skill removes it in step 2.1. Group C notes that if the user stops at the question with no flag, `validate` fails with `CHANGE_NO_DELTAS`. So removing the flag just before the first spec write may be better. In 1 of 2 runs, step 3 wrote "Export shown rows as CSV" from the Goal with no question (D164, D166).
-- **Evidence**: `group-C.md` (7, 2 of 2).
-- **Recommendation**: not decided. Options: move the flag removal to the spec write step and change the scenario 7 check, or keep the order and make the step stronger.
+The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208 closes item 60. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
 
 ### 61. The upgrade summary says that `plan.md` stays
 
