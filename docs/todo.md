@@ -116,6 +116,61 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 - D196: no run tested the re-read, because each first write was already clean. No scenario starts with a pointer in `design.md` (group F).
 - 18b step 1 adds the 🤖 after the scenario 18 turn, so the agent "corrects" a true earlier line. Add the mark before scenario 18 (group C).
 
+## Found in the run on f5422dd
+
+The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
+
+### 60. Upgrade keeps `skip_specs` until the question turn, and writes a Goal requirement with no question
+
+- **Where**: `package/skills/openspec-lite-upgrade/SKILL.md`, steps 2.1 and 2; scenario 7.
+- **Problem**: in 2 of 2 runs, `skip_specs: true` was still set after the question turn. The skill removes it in step 2.1. Group C notes that if the user stops at the question with no flag, `validate` fails with `CHANGE_NO_DELTAS`. So removing the flag just before the first spec write may be better. In 1 of 2 runs, step 3 wrote "Export shown rows as CSV" from the Goal with no question (D164, D166).
+- **Evidence**: `group-C.md` (7, 2 of 2).
+- **Recommendation**: not decided. Options: move the flag removal to the spec write step and change the scenario 7 check, or keep the order and make the step stronger.
+
+### 61. The upgrade summary says that `plan.md` stays
+
+- **Where**: upgrade step 5.3 and section 3 (D193).
+- **Problem**: in 2 of 3 prune replies, the summary said "Not deleted: `plan.md`" or "still there". Section 3 says "List the files that you wrote and deleted", which pushes the agent to say it.
+- **Evidence**: `group-F.md` (20c run 1, 20a step 2).
+- **Recommendation**: not decided. One option: section 3 says "List the files that you wrote", and the deleted files come after the answer.
+
+### 62. The archive done check can search the wrong folder
+
+- **Where**: archive step 1. Scenario 21b.
+- **Problem**: a `cd openspec && …` stayed in effect, so `git grep` found no code, and the user got a false "Not met" warning. The default "yes" to "Archive anyway?" hid it.
+- **Evidence**: `group-G.md` (21b, `ed3e824d`); `docs/facts.md` (21a on an older run).
+- **Recommendation**: not decided. One option: run the search from the git root, for example `git -C <git root> grep`. Add a 21b check that the done check passes.
+
+### 63. Archive talks about marks when there is none
+
+- **Where**: archive step 6 (D192).
+- **Problem**: "say nothing about marks" has no effect: 3 of 3 runs of group E said "No decision heading ends with 🤖", and scenario 6 made a false 🤖 claim.
+- **Evidence**: `group-E.md`, `group-B.md` (`930f60b4`).
+- **Recommendation**: not decided. Options: allow the true line, or remove the sentence, and add a scenario 6 check for a false claim.
+
+### 64. Apply makes a choice with no decision, or changes the code against a user decision
+
+- **Where**: `apply.instruction`, the decision rules.
+- **Problem**: scenario 4 run 1 chose `"type": "module"` and CRLF with no decision. In 4d-2, apply changed the code against the user decision D3 and did not ask.
+- **Evidence**: `group-A.md` (4 run 1), `group-I.md` (4d-2).
+- **Recommendation**: not decided. Related to item 57.
+
+### 65. The obvious error body still goes into `## Facts`
+
+- **Where**: the tasks preview fact rules (D198, D200). Scenario 4c.
+- **Problem**: after an `exit-code.mjs` run, the preview put the error body and exit 0 of `geo.mjs` in `## Facts`. 3 of 4 runs of 4c over two commits. The `plan-hash.mjs` step also does not name `exit-code.mjs`, so 3 of 4 applies added `echo`.
+- **Evidence**: `group-I.md` (4c-2, `3548fe18`).
+- **Recommendation**: not decided.
+
+### 66. Smaller gaps from the run on f5422dd
+
+- Stock `/opsx:apply` loaded no skill and ran no `openspec instructions apply` in 1 of 5 sessions, so no plan-lite rule applied (scenario 3 run 1). This adds evidence to item 31.
+- Archive guard: no rule for "no" to the ADR offer. In 18 run 1, it offered its own `openspec archive --yes`, not stock `/opsx:archive` (group C).
+- Archive: in 16a, the "Archive anyway?" reply did not say that the archive promotes C1 and D1 (group F). In 22c, it gave the "no" paths before the answer (group H).
+- Propose: in scenario 11, the open questions stayed only in the reply (group D).
+- Scenario texts: 7 step 3 gives no answer for the fixture question OQ2. 8 and 9 name no start state under D199. 14 and 15 do not say if `plan.md` keeps the template comments. 16a has no answer for the draft approval. 18 and 18b do not say if an offer or a conditional question passes. 21a and 21b still need old run output. 20a has no "summary does not say deleted or kept" check (groups C, D, E, F, G).
+- `scripts/break-delta.sh` was committed with mode `100644`. Fixed in the same commit as this item.
+
 ### 55. The scripts do not run alone
 
 - **Where**: the version step of each skill, and `plan-status.mjs` (D175, D192, D193).

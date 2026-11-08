@@ -665,7 +665,7 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - A project slash command such as `/opsx:apply` writes `<command-name>/opsx:apply</command-name>` to the session log, but no `Base directory for this skill:` line (session `05fb3430`).
 - On macOS, the `Base directory for this skill:` line shows `/private/var/folders/...`, but `mktemp -d` prints `/var/folders/...` (session `6a1ad918`).
 - `claude -p --resume <session_id>` returns the same `session_id`, so all turns of a scenario are in one log file (session `11c58fdc`).
-- Inside one turn, a `cd <dir>` stays in effect for the later Bash calls. Between `--resume` turns, it does not. In 21a, a stale `cd openspec` made `git grep` miss the code, and the done check gave a false warning (sessions `264b7888`, `aa0e6f98`).
+- Inside one turn, a `cd <dir>` stays in effect for the later Bash calls. **Correction** (runs on 2.1.318 and on f5422dd with 2.1.319): it also stays in effect into the next `--resume` turn. In 21a, a stale `cd openspec` made `git grep` miss the code, and the done check gave a false warning (sessions `264b7888`, `aa0e6f98`).
 - With the scenario allowlist, a command that does `cd <dir>` and then `git` is denied: "This command changes directory before running a version-control command, which can pick up untrusted hooks or repository configuration from the target directory." `sed -i` alone, `npm test`, and a heredoc followed by more statements are also denied. A plain `rm <path in the project>` runs (sessions `cc4735b7`, `e00e49bc`). After a denial, Sonnet 5.5 retried with allowed commands or the Write and Edit tools.
 - The Claude Code `.jsonl` session log can hold the same tool call twice. The second copy has no `uuid` (session `aa0e6f98`).
 - OpenSpec 1.14.2: `openspec validate` on a change with `skip_specs: true` passes, and prints the info line "skip_specs is set in .openspec.yaml: change declares no spec-level behavior changes, zero deltas accepted".
@@ -949,3 +949,23 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, apply: it wrote no test file in 2 of 2 runs of 4d, and took manual `exit-code.mjs` runs as enough (group I).
 - Sonnet 5.5, apply: in 4d-1, the allowlist denied the `cat >> plan.md` write of D3, but the agent had removed OQ1, and the reply said "D3 (added)". So the answer of the user is not in `plan.md` (group I, `d54190d3`).
 - Claude Code 2.1.319, scenario allowlist: `node exit-code.mjs env PATH=/nonexistent <node> …` runs under `Bash(node:*)`, but `env …` alone is denied. `$(command -v node)` in the same form is denied (group I, `2d7da756`). `Bash(node:*)` already allows `node -e` with `child_process`, so the script adds no new power.
+
+## Scenario Run on f5422dd
+
+**Source**: all scenarios, 40 runs, isolated (D199), Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261108-f5422dd/`, 2026-11-08.
+
+- Claude Code 2.1.319, stock `/opsx:apply`: in 5 sessions, 1 loaded no skill and ran no `openspec instructions apply`, 3 ran the command with no skill, and 1 loaded `openspec-lite-apply` (group A).
+- Claude Code 2.1.319, scenario allowlist: a `for …; do openspec …; done` loop is denied, also when each command in it is allowed (group F, `raw/F/20cr/turn-2.json`). `python3 - <<'E'` is denied (group I). `echo "x" >> <file> && cat … && openspec validate` ran with no denial, and a bare `echo` in a `;` chain runs, so `$?` causes the known denial (groups B, I).
+- Claude Code 2.1.319, print mode with `--setting-sources project,local`: the Grep tool is not in the session, "No such tool available: Grep" (group G, `ed3e824d`).
+- Claude Code 2.1.319: a `cd <dir>` of turn 1 stays in effect into the `--resume` turn 2 (group D, `149c301a`).
+- Claude Code 2.1.319: in the archive done check of 21b, a `cd openspec && …` stayed in effect, so `git grep` searched only `openspec/`, and the agent said that the repo has no rate-limit code. `src/rateLimit.js` was committed (group G, `ed3e824d`).
+- `install.mjs` copies 6 files on f5422dd, with `exit-code.mjs` (group D).
+- Sonnet 5.5 with D196: the first run where step 2.5 removed a pointer: `design.md` had "These are tracked in `tasks.md`", and the agent removed it with `Edit` in the same turn (group F, `93f09805`).
+- Sonnet 5.5, upgrade: the summary before the prune question said that `plan.md` stays ("Not deleted", "still there") in 2 of 3 prune replies (group F). `skip_specs: true` was still set after the question turn in 2 of 2 runs of scenario 7 (group C). In 1 of 2 runs of scenario 7, it wrote a requirement from the Goal that the question turn did not ask (group C).
+- Sonnet 5.5, upgrade: each preview-only item had a 🤖 in 20a, also the docs line that had no mark on 5aa0025 and 3c93237 (todo item 22, group F).
+- Sonnet 5.5, archive: it said "No decision heading ends with 🤖" in 3 of 3 runs of group E, against "say nothing about marks". In scenario 6, it said that a decision "ends with 🤖" when it had none (group B, `930f60b4`). In 22c, it gave the "no" paths before the answer to "Archive anyway?" (group H). After "no" to the ADR offer of the guard, it offered its own `openspec archive --yes`, not stock `/opsx:archive`, in 1 of 2 runs of 18 (group C).
+- Sonnet 5.5, apply: in scenario 4 run 1, it made two real choices (`"type": "module"`, CRLF line ends) and recorded no decision (group A). In 4d-2, it changed the code against a user decision (D3) and did not update the decision or ask (group I). It wrote no test in 1 of 2 runs of 4d (3 of 4 over two commits, item 50).
+- Sonnet 5.5, tasks preview: in 4c-2, it read the exit code with `exit-code.mjs`, then put the obvious error body and exit 0 in `## Facts` (3 of 4 runs of 4c over two commits) (group I, `3548fe18`).
+- Sonnet 5.5, apply: 3 of 4 applies of group I added `echo` to the `plan-hash.mjs` command to read its exit code. The rule does not name `exit-code.mjs` (group I).
+- Sonnet 5.5, propose: in scenario 11, it found 3 open questions and named them only in the reply. `## Open Questions` stayed empty (group D). In scenario 1, it wrote 3 open questions (0 of 5 in earlier runs) (group A).
+- Sonnet 5.5, apply: with a version 99 schema, apply offered a hand edit of the `version:` line, but did not do it (group D).
