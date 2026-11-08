@@ -836,6 +836,8 @@ To find its own `assets/` folder, `openspec-lite-schema` uses the base directory
 
 ## D68: Propose Suggests Level 1 for Small Requests
 
+**Status**: Revised by D202: on yes, the agent makes the fix directly, with no file under `openspec/`.
+
 **Decision**: If the request is small (one obvious fix, no constraints or open questions worth recording), `openspec-lite-propose` asks: "This looks small. Implement directly with no change?"
 
 **Rationale**: It applies D1 at the point where the user selects a level.
@@ -2803,3 +2805,18 @@ This revises D172, D193, D196, and D198.
 This revises D191, D198, and D200.
 
 **Rationale**: review round 12 found these gaps. Each has one logical fix: a rule that contradicts the definition before it, a term that the first rule uses before it is defined, two sentences that an agent can read in two ways, and three checks that a correct run fails.
+
+## D202: Fixes From Review Round 13 on cb22fc4..local
+
+**Decision**:
+
+1. Propose, Level 1: on yes, the agent makes the fix directly, with no change and no file under `openspec/`. "Do not write code" has this one exception. D190 already made scenario 2 check that the typo is fixed.
+2. The skills that run `openspec-lite-schema` copy the `config.yaml` line of its report too, not only the lines of `install.mjs`.
+3. Archive and `README.md` use the D198 and D200 wording: a run alone is not enough, and code-visible output is not a non-obvious fact.
+4. `exit-code.mjs` uses a shell on Windows only, as `openspec-version.mjs` does, so that it can start `.cmd` shims such as `openspec.cmd`.
+5. Scenario 4b starts from the new fixture `rate-limit`, the start state of the earlier runs. `scripts/scenario-setup.sh` copies the whole fixture folder, not only `openspec/`.
+6. Scenarios 3 and 4c accept no recommendation for a question that only the user can answer (D195). Scenarios 4 and 4c do not answer a stale-preview question that the fixtures do not cause. Scenario 4d works when apply asks no question. Scenario 5 has a decision with no 🤖.
+
+This revises D68, D197, D199, and D201.
+
+**Rationale**: review round 13 found these gaps. Each has one logical fix. The Level 1 rule "Write no files" contradicted the question "Implement directly?" and the scenario 2 check that the user approved in D190. The other items are a list that an agent can read as complete, two places with an old wording, a script that cannot start the main command on Windows, an under-specified start state, and checks that a correct run fails.

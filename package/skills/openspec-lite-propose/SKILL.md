@@ -5,7 +5,7 @@ description: Create a plan-lite change with openspec-lite. It writes a lightweig
 
 # openspec-lite-propose
 
-Create a plan-lite change. Do not write code.
+Create a plan-lite change. Do not write code, except after a yes to the Level 1 question.
 
 ## 1. Split and Level 1 questions
 
@@ -14,7 +14,7 @@ The first outcome of the request is the main outcome, also when the request has 
 - If it touches the same code as the main outcome, keep it in this change. Do not ask.
 - Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it as an outcome of this change.
 
-If the outcomes that stay are small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it. Then stop. Write no files.
+If the outcomes that stay are small (one obvious fix, no constraints or open questions worth recording), ask: "This looks small. Implement directly with no change?" On yes, make the fix directly, with no change and no file under `openspec/`. Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it. Then stop.
 
 ## 2. Schema check
 
@@ -25,7 +25,7 @@ If the outcomes that stay are small (one obvious fix, no constraints or open que
 
    Shipped schema version: 5
 
-   - The file is missing, its version is lower, or it has no readable `version` line: run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions. Otherwise, continue with the next step of this skill. Do not end your turn after `openspec-lite-schema` finishes. In your end summary, copy its report: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are.
+   - The file is missing, its version is lower, or it has no readable `version` line: run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop. If the user declines the copy, stop. After the copy, read the version again. If it still differs from the shipped version, stop and report both versions. Otherwise, continue with the next step of this skill. Do not end your turn after `openspec-lite-schema` finishes. In your end summary, copy its report: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
    - Its version is higher: stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
 3. From the OpenSpec root, run `node openspec/schemas/plan-lite/openspec-version.mjs`. It compares `openspec --version` with the range in `schema.yaml`, and prints one line that starts with `ok:`, `warn:`, or `fail:`. Run it alone, not in a chain. Read the first word of the line, not the exit code. Do not compare the versions yourself. On `fail:`, show the line, and stop. On `warn:`, show the line as a warning, and continue. In both cases, point to https://github.com/duongphuhiep/openspec-lite#compatibility.
 

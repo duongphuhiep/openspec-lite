@@ -9,10 +9,11 @@ Setup for each scenario, unless it says otherwise:
 3. Install the release candidate: `apm install <path-to-this-repo>/package --target claude` (or your harness). Use the same harness as in step 2.
 4. Start a new agent session in the folder.
 
-`scripts/scenario-setup.sh <label> [fixture]` does steps 1 to 3, commits with the message "setup", and prints the folder. With a fixture, it also installs the schema and copies the `openspec/` folder of `tests/fixtures/scenarios/<fixture>/` (D199):
+`scripts/scenario-setup.sh <label> [fixture]` does steps 1 to 3, commits with the message "setup", and prints the folder. With a fixture, it also installs the schema and copies the folder `tests/fixtures/scenarios/<fixture>/` (D199):
 
 - `after-propose`: the change `add-csv-export-to-report-page` after scenario 1. `plan.md` has only the Goal.
 - `after-preview`: the same change after a tasks preview, with three open questions and a current `tasks-preview.md`.
+- `rate-limit`: a small API server (`src/server.js`, `package.json`) and the change `add-rate-limit`, for scenario 4b.
 - `after-upgrade`: the same change after an upgrade (scenario 7), with no `plan.md`. Its delta holds the 🤖 scenario "Table is empty". `tests/fixtures/scenarios/kept-plan.md` is the `plan.md` that an upgrade keeps when an open question has no slot.
 
 Isolation rules (D199):
@@ -67,7 +68,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected**:
 
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision that `plan.md` had before the run (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
-- In step 4, before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172).
+- In step 4, before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer, except for a question that only the user can answer, for example where the report page is (D172, D195).
 - In step 4, the agent copies the line of `plan-status.mjs`: "plan.md is not committed, …" (D171, D193). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 - In step 5, the agent gives no stale warning.
 
@@ -76,7 +77,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Steps**:
 
 1. Start from the fixture `after-preview`. Run stock `/opsx:apply`.
-2. Answer the questions of apply in one reply: "Continue from `plan.md`. OQ1: the report page does not exist yet; create it in this repo. OQ2: export only the rows that the table shows, after the filters, in the current sort order, with all columns in the column order of the table. OQ3: build the CSV in the browser. Stack: plain HTML and JavaScript under `src/`, tests with `node:test`, run with `node --test`, no npm dependency. Scaffold a minimal report page." Do not write "use the defaults", because apply gives no defaults (D156).
+2. Answer the questions of apply in one reply: "OQ1: the report page does not exist yet; create it in this repo. OQ2: export only the rows that the table shows, after the filters, in the current sort order, with all columns in the column order of the table. OQ3: build the CSV in the browser. Stack: plain HTML and JavaScript under `src/`, tests with `node:test`, run with `node --test`, no npm dependency. Scaffold a minimal report page." Do not write "use the defaults", because apply gives no defaults (D156).
 
 **Expected**:
 
@@ -96,7 +97,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. On a new plan-lite change, write a `plan.md` with no template comments, so that the run checks `apply.instruction` alone. Give it two constraints with no ID, and one decision `### Decision D1: Use a fixed 60-second window`. Add two facts that justify only D1: `- F1: A fixed window needs only one counter for each API key.`, which a reader can deduce, and `- F2: In the access logs, the clients retry after 30 seconds or more.`, which is non-obvious, because it needs a study of the logs.
+1. Start from the fixture `rate-limit`: `src/server.js`, `package.json`, and the change `add-rate-limit`. Its `plan.md` has no template comments, so that the run checks `apply.instruction` alone. It has the Goal "Limit each API key to 100 requests per minute on the API server.", two constraints with no ID ("The limiter must not add an npm dependency." and "A request over the limit gets status 429."), and one decision `### Decision D1: Use a fixed 60-second window`. Two facts justify only D1: `- F1: A fixed window needs only one counter for each API key.`, which a reader can deduce, and `- F2: In the access logs, the clients retry after 30 seconds or more.`, which is non-obvious, because it needs a study of the logs.
 2. Run `openspec-lite-apply`. During the work, tell the agent: "Use a sliding window instead."
 
 **Expected**:
@@ -113,7 +114,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. On a new plan-lite change `city-lookup`, add `tools/geo.mjs`. For `node tools/geo.mjs Paris`, it prints `{"lat":48.86,"lon":2.35}`. For each other city, it prints `{"error":"city not found"}`, also with exit code 0. Write a `plan.md` with the Goal "Add `lookup(city)` in `src/lookup.js`. It returns the coordinates from `tools/geo.mjs`, or `null` for an unknown city." and the constraint "- C1: Add no npm dependency." Commit.
 2. Run `openspec-lite-tasks-preview city-lookup`. Do not commit after it.
-3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Continue from plan.md. Use your recommended answer for the first question. Leave the other questions open." If it asks only one question, answer it the same way. If it asks no question, give no answer.
+3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Use your recommended answer for the first question. Leave the other questions open." If it asks only one question, answer it the same way. If it asks no question, give no answer.
 4. Commit. Run `openspec-lite-archive city-lookup`. If it asks "Archive anyway?", answer yes. Approve each draft.
 
 **Expected** (D171, D172, D179, D184):
@@ -121,7 +122,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed and `plan-status.mjs` prints nothing (D193).
 - After step 2, each decision of the preview ends its heading with 🤖. If apply asked a question in step 3, the decision of the answered question has no 🤖 (D181).
 - After step 2, if a decision of the preview says how `lookup` finds an unknown city, `plan.md` gives the reason for it: the tool reports an unknown city with an error body in its output, not with a failing exit. The 3 lines of `tools/geo.mjs` show this, so it is an obvious fact, also if a run showed it. It is in the "because" part of that decision, not in `## Facts` (D192, D198, D200). If a run read the exit code, it used `exit-code.mjs` (D197). The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module", or what `geo.mjs` prints for Paris, which its code shows (D198). If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
-- In step 3, if step 2 changed `plan.md`, the agent says in one line that `plan.md` is not committed. If step 2 did not change it, the agent gives no such note (D193). It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
+- In step 3, if step 2 changed `plan.md`, the agent says in one line that `plan.md` is not committed. If step 2 did not change it, the agent gives no such note (D193). It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. A question that only the user can answer gets no recommendation (D195). It does not answer a question itself (D172).
 - After step 3, if apply asked a question, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
 - After step 3, `## Facts` holds no fact about the error body. The decision on how `lookup` finds an unknown city still gives the error-body reason (D198, D200). The summary lists each fact, decision, and open question that apply added, changed, or removed.
 - In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, the ADR gives the error-body reason. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the decision as not drafted, with a reason (D179, D186).
@@ -136,7 +137,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 1. On a new plan-lite change `spec-gate`, write a `plan.md` with the Goal "Add `scripts/spec-gate.mjs`. It exits with code 1 when the repo has no spec, and with code 0 otherwise." and the constraint "- C1: Use `openspec validate --specs` to check the specs. Do not scan the files." Create no spec. Commit.
 2. Run `openspec-lite-tasks-preview spec-gate`. Commit.
-3. Run `openspec-lite-apply spec-gate`. When it asks the open questions, answer: "Use your recommended answer for each question."
+3. Run `openspec-lite-apply spec-gate`. When it asks the open questions, answer: "Use your recommended answer for each question." If it asks no question, give no answer.
 4. Add one valid spec under `openspec/specs/`, and run the script.
 
 **Expected**:
@@ -152,7 +153,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. On a finished change, make sure `plan.md` has one non-obvious requirement and one `### Decision D<n>:` entry.
+1. On a finished change, make sure `plan.md` has one non-obvious requirement and one `### Decision D<n>:` entry with no 🤖.
 2. Run `openspec-lite-archive`. Approve both drafts.
 
 **Expected**:
