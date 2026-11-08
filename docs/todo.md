@@ -115,7 +115,6 @@ The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A
 ### 66. Smaller gaps from the run on f5422dd
 
 - Stock `/opsx:apply` loaded no skill and ran no `openspec instructions apply` in 1 of 5 sessions, so no plan-lite rule applied (scenario 3 run 1). This adds evidence to item 31.
-- Archive guard: no rule for "no" to the ADR offer. In 18 run 1, it offered its own `openspec archive --yes`, not stock `/opsx:archive` (group C).
 - Archive: in 16a, the "Archive anyway?" reply did not say that the archive promotes C1 and D1 (group F). In 22c, it gave the "no" paths before the answer (group H).
 - Propose: in scenario 11, the open questions stayed only in the reply (group D).
 - Apply: in 4d-2, it changed the code against the user decision D3, and did not update the decision or ask. The rule "ask the user, and end your turn" exists (group I).

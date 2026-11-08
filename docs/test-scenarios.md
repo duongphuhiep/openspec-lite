@@ -434,7 +434,7 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 - The agent stops at the change schema guard. It drafts nothing and writes no spec and no ADR.
 - The decisions from `plan.md` are in `design.md` → `## Decisions` (upgrade moved them, D62).
 - The agent warns that stock `/opsx:archive` does not turn these decisions into ADRs, and says to copy them to `openspec/adr/` first to keep them (D115).
-- The agent can offer to copy the decisions to ADRs. It writes nothing before a yes (D154). If the user declines, it tells the user to run stock `/opsx:archive`.
+- The agent can offer to copy the decisions to ADRs. It writes nothing before a yes (D154). If the user declines, it tells the user to run stock `/opsx:archive`, and does not offer the `openspec archive` command itself (D215). An offer to copy counts as "says to copy them".
 
 ### 18b. Archive copies the decisions to ADRs after the guard
 
@@ -453,7 +453,7 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 - The draft reply names the draft of "Quote each cell", because its heading in `design.md` ends with 🤖 (D204).
 - After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
 - After step 3, `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
-- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of the fixture. It does not offer the archive while a delta holds a 🤖 (D192). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
+- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of the fixture. It does not offer the archive while a delta holds a 🤖, also not as a question with a condition (D192, D215). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
 
 ## 19. Other openspec-lite skills after an upgrade
 

@@ -2961,3 +2961,15 @@ This revises D192.
 This revises D181 and D182.
 
 **Rationale**: in scenario 4 on 5aa0025 and 743a6f3, apply put its own choices ("ES modules", "download it through a Blob") into a user decision, where the 🤖 rule cannot flag them (todo item 57). On f5422dd, it chose `"type": "module"` and CRLF line ends and recorded no decision (todo item 64). A decision with no 🤖 belongs to the user (D181), so an agent choice in it hides from the review. The 4b check already expected this. The other part of item 64, a code change against a user decision in 4d-2, already has a rule: ask the user, and end the turn. It stays in item 66 as an observation.
+
+## D215: The Archive Guard Path Has a Rule for "No" to the ADR Offer, and No Question With a Condition
+
+**Decision**:
+
+1. On the guard path, if the user says no to the ADR offer, archive tells the user to run stock `/opsx:archive`, and stops. It does not offer the `openspec archive` command itself.
+2. While a delta holds a 🤖, archive asks no archive question, also not with a condition, such as "Do you want me to archive after you remove the marks?". It asks the user to remove the marks, and ends the turn.
+3. Scenario 18 counts an offer to copy as "says to copy them". Scenario 18b checks item 2.
+
+This revises D154, D191, and D192.
+
+**Rationale**: in the run on f5422dd, scenario 18 run 1 offered its own `openspec archive --yes` after "no" to the ADR offer, but the skill had a rule only for "no" to the archive question. Scenario 18b run 1 asked "Do you want me to run it then?" while a delta held a 🤖 (todo item 66). The CLI copies a 🤖 into the main spec, so a yes there loses the review. Each item has one logical fix.
