@@ -980,3 +980,17 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, upgrade: the prune summary said "Not deleted: `plan.md`" in 1 of 2 runs of 20c (todo item 61). In the other run, turn 1 said "I can't proceed without one. The skill needs at least one." about a requirement, but the skill allows no spec (`879e3c9a`).
 - Sonnet 5.5, tasks preview on 4c: each preview that ran `geo.mjs` wrote the obvious error body and exit 0 in `## Facts` (2 of 2 on f5422dd and 765cdec). Each preview that only read the file wrote no fact (todo item 65). 5 of 6 applies over two commits added `echo "$?"` to the `plan-hash.mjs` command (group I).
 - Node v24.13.0 runs a `.js` file with ESM syntax and no `package.json` with no warning, and `require()` of it works (group I, `/tmp/osl-I4c-2.RCXl`).
+
+## Rerun on 26c58ea
+
+**Source**: scenarios 3 ×2, 4 ×2, 18 ×2, 18b ×2, 20c ×3, 4c ×2, 4d ×2, isolated (D199), Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, reports in `.scenario-runs/20261108-26c58ea/`, 2026-11-08.
+
+- Sonnet 5.5 with D210: no prune summary named `plan.md`, and each requirement question gave "none" as a valid answer, in 3 of 3 runs of 20c. In 1 of 3, upgrade wrote a Why line with a new claim and no 🤖, and said "🤖 marks: None" (group F).
+- Sonnet 5.5 with D211: in 2 of 2 runs of 4c, the preview first wrote an obvious fact, and the end check took it out of `## Facts`. In one run, it moved the fact into the "because" part of a decision. In the other, it removed it. 0 of 2 previews wrote a decision on how `lookup` finds an unknown city (group I).
+- Sonnet 5.5 with D212: no session added `echo $?` to `plan-hash.mjs` (0 of 14, groups A and I).
+- Sonnet 5.5 with D213: both 4d applies wrote a test, and the tests failed when the exit code of the script changed. In 4d-1, apply did not run the script in the repo: `node scripts/spec-gate.mjs; echo "rc=$?"` was denied, and it did not try `exit-code.mjs` (group I).
+- Sonnet 5.5 with D214: each apply of group I and both runs of scenario 4 recorded `"type": "module"` as a 🤖 decision. The end check found the choices that the reply names, but not the Blob download (2 of 2) and CRLF line ends (1 of 2) of scenario 4. In scenario 4 run 1, D5 said that `package.json` "holds only `"type": "module"`", but it also holds `private` and a `test` script (group A).
+- Sonnet 5.5 with D215: after "no" to the ADR offer, both runs of 18 named stock `/opsx:archive` and offered no CLI command. Neither run of 18b asked an archive question while a delta held a 🤖. In 1 of 2 runs of 18b, the open question of `plan.md` came one reply later than the ADR reply (group C).
+- Claude Code 2.1.319: stock `/opsx:apply` ran `openspec instructions apply` in 6 of 6 sessions, with no skill (group A). On f5422dd, 1 of 5 ran neither.
+- Claude Code 2.1.319, scenario allowlist: `npm test`, `sed -i ''`, `python3 - <<'EOF'`, and a `for` loop are denied. `cd <dir>; openspec instructions …` is allowed (groups A, F, I).
+- Sonnet 5.5, archive: a spec reason with no source ("callers run from different directories", "callers need a plain return value") in 3 runs of 4c over three commits (group I).

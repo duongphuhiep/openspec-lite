@@ -121,6 +121,26 @@ The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A
 - Scenario texts: 7 step 3 gives no answer for the fixture question OQ2. 8 and 9 name no start state under D199. 14 and 15 do not say if `plan.md` keeps the template comments. 16a has no answer for the draft approval. 18 and 18b do not say if an offer or a conditional question passes. 21a and 21b still need old run output. 20a has no "summary does not say deleted or kept" check (groups C, D, E, F, G).
 - `scripts/break-delta.sh` was committed with mode `100644`. Fixed in the same commit as this item.
 
+## Found in the rerun on 26c58ea
+
+The reports are in `.scenario-runs/20261108-26c58ea/`. 20c (3 of 3), 18, 18b, and 3 pass 2 of 2. 4c and 4d pass 3 of 4. Scenario 4 fails 2 of 2.
+
+### 67. Apply does not record the choices that only the code shows
+
+- **Where**: the D214 end check of `apply.instruction`. Scenario 4.
+- **Problem**: the end check records the choices that the reply names, for example `"type": "module"`, but not a Blob download (2 of 2) or CRLF line ends (1 of 2). The scenario 4 text names "a download method" as an example, so the check is strict. A line ending changes the output file, but a download method is an internal detail.
+- **Evidence**: `.scenario-runs/20261108-26c58ea/group-A.md`.
+- **Recommendation**: not decided. Options: keep the strict check, or limit the rule and the check to choices that change what a user or another program sees (output format, file layout, public interface), and remove "a download method" from the scenario text.
+
+### 68. Smaller gaps from the rerun on 26c58ea
+
+- 4d check 3 says "in this repo". In 4d-1, apply did not run the script, because `echo "rc=$?"` was denied, and it did not try `exit-code.mjs`. Its tests ran the real script on temp repos (group I).
+- 4c: 0 of 2 previews wrote a decision on how `lookup` finds an unknown city, so the obvious-reason check did not apply (group I).
+- 18b check 8 does not say which reply must name the open question of `plan.md` (group C).
+- Archive spec reasons with no source, in 3 runs of 4c over three commits (group I).
+- Upgrade: a Why line with a new claim and no 🤖, in 1 of 3 runs of 20c (group F).
+- Scenario 4 run 1: D5 said that `package.json` holds only `"type": "module"`, which is false (group A).
+
 ### 55. The scripts do not run alone
 
 - **Where**: the version step of each skill, and `plan-status.mjs` (D175, D192, D193).
