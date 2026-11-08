@@ -14,6 +14,7 @@ Setup for each scenario, unless it says otherwise:
 - `after-propose`: the change `add-csv-export-to-report-page` after scenario 1. `plan.md` has only the Goal.
 - `after-preview`: the same change after a tasks preview, with three open questions and a current `tasks-preview.md`.
 - `rate-limit`: a small API server (`src/server.js`, `package.json`) and the change `add-rate-limit`, for scenario 4b.
+- `finished-rate-limit`: `src/rateLimit.js` and the finished change `add-rate-limit`, for scenarios 5, 6, 13a, and 13b.
 - `after-upgrade`: the same change after an upgrade (scenario 7), with no `plan.md`. Its delta holds the 🤖 scenario "Table is empty". `tests/fixtures/scenarios/kept-plan.md` is the `plan.md` that an upgrade keeps when an open question has no slot.
 
 Isolation rules (D199):
@@ -153,7 +154,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. On a finished change, make sure `plan.md` has one non-obvious requirement and one `### Decision D<n>:` entry with no 🤖.
+1. Start from the fixture `finished-rate-limit`. Its `plan.md` has one non-obvious requirement (the `Retry-After` constraint) and one `### Decision D<n>:` entry with no 🤖.
 2. Run `openspec-lite-archive`. Approve both drafts.
 
 **Expected**:
@@ -165,7 +166,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 ## 6. Archive with nothing promoted
 
-**Steps**: Remove `skip_specs` from `.openspec.yaml` of a finished change. Run `openspec-lite-archive`, and reject each draft.
+**Steps**: Start from the fixture `finished-rate-limit`. Remove `skip_specs` from `.openspec.yaml` of the change. Run `openspec-lite-archive`, and reject each draft.
 
 **Expected**: The archive succeeds, and `openspec/specs/` does not change. The agent writes no ADR. It tells the user that the decisions of `plan.md` now exist only in `openspec/changes/archive/`.
 
@@ -253,8 +254,8 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. On a finished change, run `openspec-lite-archive`. Approve one requirement and one decision.
-2. Before step 9, break the delta: remove its `#### Scenario:` block. `validate` fails, and the skill stops before it writes any ADR.
+1. Start from the fixture `finished-rate-limit`. Start `scripts/break-delta.sh openspec/changes/add-rate-limit &`. Run `openspec-lite-archive`. Approve one requirement and one decision.
+2. The script breaks the delta before step 9 of the skill: it removes the `#### Scenario:` blocks right after the agent writes the delta. `validate` fails, and the skill stops before it writes any ADR.
 3. Run `openspec-lite-archive` again.
 
 **Expected**:
@@ -268,7 +269,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. Before the run, create the archive target folder `openspec/changes/archive/<today>-<name>/`. `openspec archive` then fails with "Archive '<today>-<name>' already exists".
+1. Start from the fixture `finished-rate-limit`. Before the run, create the archive target folder `openspec/changes/archive/<today>-<name>/`. `openspec archive` then fails with "Archive '<today>-<name>' already exists".
 2. Run `openspec-lite-archive`. Approve one decision. The ADR is written at step 10, and step 11 fails.
 3. Delete the folder from step 1. Run `openspec-lite-archive` again.
 
@@ -442,7 +443,7 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 1. Start from the fixture `after-upgrade`. Copy `tests/fixtures/scenarios/kept-plan.md` to the change as `plan.md`. Mark each task in `tasks.md` as done (`- [x]`). Commit. The delta holds the 🤖 scenario "Table is empty", so the 🤖 block is always tested.
 2. Run `openspec-lite-archive add-csv-export-to-report-page` in a new session. Answer: "Yes, copy the decisions of `design.md` to ADRs." If the agent made no offer, ask for this copy in the same words.
 3. Approve each draft: "Yes to each draft."
-4. If the agent lists 🤖 lines of `specs/` or `design.md`, remove each 🤖 by hand. Then answer yes to the archive question.
+4. If the agent lists 🤖 lines of `specs/` or `design.md`, remove each 🤖 by hand. Then answer: "I removed the marks." When the agent asks the archive question, answer yes.
 
 **Expected**:
 
@@ -608,7 +609,7 @@ You can run each scenario without a person at the keyboard, with Claude Code in 
 Notes:
 
 - Pin the full model ID, for example `eu.anthropic.claude-sonnet-5-5`. On a Bedrock setup, the alias `sonnet` resolved to `claude-sonnet-4-6`. Check `modelUsage` in the JSON.
-- A scenario that needs an interrupt (7, 13b) starts from a hand-built state, because a print-mode run cannot stop at an exact step. 13a can run with a real run 1: a background loop removes the `#### Scenario:` blocks right after the agent writes the delta, before `validate` (`.scenario-runs/20261107-80d076b/setup/break-delta.sh`).
+- A scenario that needs an interrupt (7, 21b) starts from a hand-built state, because a print-mode run cannot stop at an exact step. 13b needs no interrupt: `openspec archive` fails by itself. 13a can run with a real run 1: `scripts/break-delta.sh` removes the `#### Scenario:` blocks right after the agent writes the delta, before `validate`.
 - Use `--setting-sources project,local`. Without it, a skill in `~/.claude/skills/` wins over the project copy with the same name. A global openspec-lite install then hides the release candidate (D131).
 - Check the line `Base directory for this skill:` in the session log. It must name the temp folder, not `~/.claude/skills/`. On macOS, it shows the real path: `/private/var/folders/...` for `mktemp -d`, and `/private/tmp/...` for `mktemp -d /tmp/...`. The session logs are then in `~/.claude/projects/-private-tmp-<name>/`. A slash command such as `/opsx:apply` writes no such line.
 - The flag also skips `~/.claude/settings.json`. On Bedrock, set `CLAUDE_CODE_USE_BEDROCK=1` in the shell.

@@ -2820,3 +2820,17 @@ This revises D191, D198, and D200.
 This revises D68, D197, D199, and D201.
 
 **Rationale**: review round 13 found these gaps. Each has one logical fix. The Level 1 rule "Write no files" contradicted the question "Implement directly?" and the scenario 2 check that the user approved in D190. The other items are a list that an agent can read as complete, two places with an old wording, a script that cannot start the main command on Windows, an under-specified start state, and checks that a correct run fails.
+
+## D203: Fixes From Review Round 14 on cb22fc4..local
+
+**Decision**:
+
+1. The propose section of `docs/design.md` has the D202 exception to "Do not write code".
+2. Archive drafts an ADR for a non-obvious fact only if no drafted ADR holds it, and no drafted requirement holds it as its reason. D191 already puts such a fact in the requirement text, as scenario 15 expects for F2.
+3. Scenario 18b step 4 gives the message "I removed the marks.", because archive asks the archive question only after a new user message.
+4. Scenarios 5, 6, 13a, and 13b start from the new fixture `finished-rate-limit`, the start state of the earlier runs. The 13a helper is now `scripts/break-delta.sh`, in the repo.
+5. The headless notes name 7 and 21b as the scenarios that need an interrupt. 13b needs none.
+
+This revises D191, D199, and D202.
+
+**Rationale**: review round 14 found these gaps. Each has one logical fix: a design bullet that round 13 did not update, an archive rule that asks for an ADR that scenario 15 does not expect, a step that skips a user turn, four scenarios with no defined start state under D199, and a wrong list. The start state and the helper were only in the git-ignored `.scenario-runs/` folder.
