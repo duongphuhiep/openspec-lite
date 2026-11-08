@@ -2953,3 +2953,11 @@ This revises D93 and D205.
 This revises D192.
 
 **Rationale**: 4d wrote no test in 3 of 4 runs over 743a6f3 and f5422dd, with "the repo has no test setup" or "I checked it by hand". In 4b on 5aa0025, the sliding-window test also passed on the fixed window that it replaced (todo item 50). The D192 rule did not name these two cases.
+
+## D214: Apply Records Each Choice of the Code, and a User Decision Holds Only What the User Said
+
+**Decision**: in the end check of `apply.instruction`, apply also looks for each choice between real alternatives that the code makes and that no decision records, for example a module system, a file format, or a line ending. It records each one as a 🤖 decision. It also checks each decision with no 🤖: such a decision holds only what the user said. Apply moves each choice that it added to it into its own 🤖 decision. Scenarios 4 and 4b check this.
+
+This revises D181 and D182.
+
+**Rationale**: in scenario 4 on 5aa0025 and 743a6f3, apply put its own choices ("ES modules", "download it through a Blob") into a user decision, where the 🤖 rule cannot flag them (todo item 57). On f5422dd, it chose `"type": "module"` and CRLF line ends and recorded no decision (todo item 64). A decision with no 🤖 belongs to the user (D181), so an agent choice in it hides from the review. The 4b check already expected this. The other part of item 64, a code change against a user decision in 4d-2, already has a rule: ask the user, and end the turn. It stays in item 66 as an observation.

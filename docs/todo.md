@@ -86,14 +86,6 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 - **Evidence**: `group-C.md` (18b, 2 of 2 runs). The 18b step 4 also needs one more user turn ("I removed both marks.").
 - **Recommendation**: not decided. One option: a fixed line in the reply before the archive question, for example "Open in `plan.md`: …".
 
-### 57. An agent choice inside a user decision
-
-- **Where**: `apply.instruction` and the tasks preview, the 🤖 rule (D181).
-- **Problem**: a decision with no 🤖 records an answer of the user, but the agent adds its own choice to it. Scenario 4 on 5aa0025: "plain HTML and JavaScript (ES modules) ... as the user instructed". On 743a6f3: "download it through a Blob". The 🤖 check cannot see it.
-- **Evidence**: `.scenario-runs/20261108-5aa0025/group-A.md` (rerun), `.scenario-runs/20261108-743a6f3/group-A.md` (run 1).
-- **Recommendation**: not decided. One option: a decision with no 🤖 holds only what the user said. Each added choice is a separate 🤖 decision.
-- **Related check**: the 4b check "It gives no "because" reason that the user did not give and that the run does not show" assumes this option. It is stricter than D194, which also accepts `plan.md`, the code, or a well-known fact. Review round 17 found this. Decide the item, then align the check.
-
 ### 58. Apply loses an answer of the user when a write is denied
 
 - **Where**: `apply.instruction`, the rule that records an answer and removes the question.
@@ -111,7 +103,7 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 
 ## Found in the run on f5422dd
 
-The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208 to D213 close items 50, 60, 61, 62, and 65. The rerun on 765cdec (`.scenario-runs/20261108-765cdec/`) confirms both: 7 and 21b pass 2 of 2. 20c and 4c pass 1 of 2. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
+The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208 to D214 close items 50, 57, 60, 61, 62, 64, and 65. The rerun on 765cdec (`.scenario-runs/20261108-765cdec/`) confirms both: 7 and 21b pass 2 of 2. 20c and 4c pass 1 of 2. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
 
 ### 63. Archive talks about marks when there is none
 
@@ -120,19 +112,13 @@ The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A
 - **Evidence**: `group-E.md`, `group-B.md` (`930f60b4`).
 - **Recommendation**: not decided. Options: allow the true line, or remove the sentence, and add a scenario 6 check for a false claim.
 
-### 64. Apply makes a choice with no decision, or changes the code against a user decision
-
-- **Where**: `apply.instruction`, the decision rules.
-- **Problem**: scenario 4 run 1 chose `"type": "module"` and CRLF with no decision. In 4d-2, apply changed the code against the user decision D3 and did not ask.
-- **Evidence**: `group-A.md` (4 run 1), `group-I.md` (4d-2).
-- **Recommendation**: not decided. Related to item 57.
-
 ### 66. Smaller gaps from the run on f5422dd
 
 - Stock `/opsx:apply` loaded no skill and ran no `openspec instructions apply` in 1 of 5 sessions, so no plan-lite rule applied (scenario 3 run 1). This adds evidence to item 31.
 - Archive guard: no rule for "no" to the ADR offer. In 18 run 1, it offered its own `openspec archive --yes`, not stock `/opsx:archive` (group C).
 - Archive: in 16a, the "Archive anyway?" reply did not say that the archive promotes C1 and D1 (group F). In 22c, it gave the "no" paths before the answer (group H).
 - Propose: in scenario 11, the open questions stayed only in the reply (group D).
+- Apply: in 4d-2, it changed the code against the user decision D3, and did not update the decision or ask. The rule "ask the user, and end your turn" exists (group I).
 - Scenario texts: 7 step 3 gives no answer for the fixture question OQ2. 8 and 9 name no start state under D199. 14 and 15 do not say if `plan.md` keeps the template comments. 16a has no answer for the draft approval. 18 and 18b do not say if an offer or a conditional question passes. 21a and 21b still need old run output. 20a has no "summary does not say deleted or kept" check (groups C, D, E, F, G).
 - `scripts/break-delta.sh` was committed with mode `100644`. Fixed in the same commit as this item.
 
