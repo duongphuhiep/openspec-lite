@@ -15,6 +15,7 @@ Setup for each scenario, unless it says otherwise:
 - `after-preview`: the same change after a tasks preview, with three open questions and a current `tasks-preview.md`.
 - `rate-limit`: a small API server (`src/server.js`, `package.json`) and the change `add-rate-limit`, for scenario 4b.
 - `finished-rate-limit`: `src/rateLimit.js` and the finished change `add-rate-limit`, for scenarios 5, 6, 13a, and 13b.
+- `interrupted-upgrade`: the same change with a fresh preview, after an upgrade stopped right after it wrote `proposal.md`, for scenario 7 step 3.
 - `after-upgrade`: the same change after an upgrade (scenario 7), with no `plan.md`. Its delta holds the 🤖 scenario "Table is empty". `tests/fixtures/scenarios/kept-plan.md` is the `plan.md` that an upgrade keeps when an open question has no slot.
 
 Isolation rules (D199):
@@ -126,7 +127,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - After step 2, if a decision of the preview says how `lookup` finds an unknown city, `plan.md` gives the reason for it: the tool reports an unknown city with an error body in its output, not with a failing exit. The 3 lines of `tools/geo.mjs` show this, so it is an obvious fact, also if a run showed it. It is in the "because" part of that decision, not in `## Facts` (D192, D198, D200). If a run read the exit code, it used `exit-code.mjs` (D197). The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module", or what `geo.mjs` prints for Paris, which its code shows (D198). If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, if step 2 changed `plan.md`, the agent says in one line that `plan.md` is not committed. If step 2 did not change it, the agent gives no such note (D193). It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. A question that only the user can answer gets no recommendation (D195). It does not answer a question itself (D172).
 - After step 3, if apply asked a question, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
-- After step 3, `## Facts` holds no fact about the error body. The decision on how `lookup` finds an unknown city still gives the error-body reason (D198, D200). The summary lists each fact, decision, and open question that apply added, changed, or removed.
+- After step 3, `## Facts` holds no fact about the error body. If `plan.md` has a decision on how `lookup` finds an unknown city, it still gives the error-body reason (D198, D200). The summary lists each fact, decision, and open question that apply added, changed, or removed.
 - In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, the ADR gives the error-body reason. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the decision as not drafted, with a reason (D179, D186).
 - After step 3, `lookup('Paris')` returns the coordinates, and `lookup('Atlantis')` returns `null`. The agent checks both with a run or a test.
 - In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
@@ -176,8 +177,8 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Steps**:
 
 1. Run this prompt, then answer yes to the tasks preview: "openspec-lite-propose: add a CSV export to the report page. Scope: one Export CSV button on the report page, exporting the rows shown in the table. Source: docs/report-page.md and issue #42. Requirement: the export uses the same column order as the table on screen. Decision: generate the CSV in the browser, because the data is already loaded there. Constraint: no new server endpoint. Open question: should the export include hidden columns? (This changes the tasks.)" (D157) After the preview, add this decision to `## Decisions` of `plan.md`, with the next free ID, to stand for an agent decision: `### Decision D<n>: Quote each cell 🤖`, then "Chose to quote each cell because a cell can hold a comma." Commit.
-2. Run `openspec-lite-upgrade`. Answer its question turn with the answer of step 3. Stop the agent after it writes `proposal.md`.
-3. Run `openspec-lite-upgrade` again. If it asks the question turn again, answer the open question: "No, the export does not include hidden columns." If the agent also asks to write a requirement from the Goal, the tasks preview, or the quoting decision, answer yes in the same reply. At the prune question, answer yes.
+2. Run `openspec-lite-upgrade`. Answer its question turn with the answer of step 3. Stop the agent after it writes `proposal.md`. In a headless run, step 2 ends after the question turn, because print mode cannot stop the agent at an exact step.
+3. Start from the fixture `interrupted-upgrade` in a new folder: the state after step 2, with `proposal.md`, `schema: plan-lite`, no `skip_specs`, and `tasks-preview.md`. In a new session, run `openspec-lite-upgrade` again. If it asks the question turn again, answer the open question: "No, the export does not include hidden columns." If the agent also asks to write a requirement from the Goal, the tasks preview, or the quoting decision, answer yes in the same reply. At the prune question, answer yes.
 
 **Expected**:
 
@@ -257,7 +258,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 1. Start from the fixture `finished-rate-limit`. From the temp folder, start `<path-to-this-repo>/scripts/break-delta.sh openspec/changes/add-rate-limit &`. Run `openspec-lite-archive`. Approve one requirement and one decision.
 2. The script breaks the delta before step 9 of the skill: it removes the `#### Scenario:` blocks right after the agent writes the delta. `validate` fails, and the skill stops before it writes any ADR.
-3. Run `openspec-lite-archive` again. When the agent asks to keep or delete the delta of run 1, answer: "Delete it."
+3. Run `openspec-lite-archive` again. Approve the same drafts as in run 1. When the agent asks to keep or delete the delta of run 1, answer: "Delete it."
 
 **Expected**:
 
@@ -272,7 +273,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 1. Start from the fixture `finished-rate-limit`. Before the run, create the archive target folder `openspec/changes/archive/<today>-<name>/`. `openspec archive` then fails with "Archive '<today>-<name>' already exists".
 2. Run `openspec-lite-archive`. Approve one decision. The ADR is written at step 10, and step 11 fails.
-3. Delete the folder from step 1. Run `openspec-lite-archive` again.
+3. Delete the folder from step 1. Run `openspec-lite-archive` again. Approve each draft.
 
 **Expected**:
 
@@ -611,7 +612,7 @@ You can run each scenario without a person at the keyboard, with Claude Code in 
 Notes:
 
 - Pin the full model ID, for example `eu.anthropic.claude-sonnet-5-5`. On a Bedrock setup, the alias `sonnet` resolved to `claude-sonnet-4-6`. Check `modelUsage` in the JSON.
-- A scenario that needs an interrupt (7, 21b) starts from a hand-built state, because a print-mode run cannot stop at an exact step. 13b needs no interrupt: `openspec archive` fails by itself. 13a can run with a real run 1: `scripts/break-delta.sh` removes the `#### Scenario:` blocks right after the agent writes the delta, before `validate`.
+- A print-mode run cannot stop at an exact step. So scenario 7 step 3 starts from the fixture `interrupted-upgrade`, and 21b from the hand-built state that it describes. 13b needs no interrupt: `openspec archive` fails by itself. 13a can run with a real run 1: `scripts/break-delta.sh` removes the `#### Scenario:` blocks right after the agent writes the delta, before `validate`.
 - Use `--setting-sources project,local`. Without it, a skill in `~/.claude/skills/` wins over the project copy with the same name. A global openspec-lite install then hides the release candidate (D131).
 - Check the line `Base directory for this skill:` in the session log. It must name the temp folder, not `~/.claude/skills/`. On macOS, it shows the real path: `/private/var/folders/...` for `mktemp -d`, and `/private/tmp/...` for `mktemp -d /tmp/...`. The session logs are then in `~/.claude/projects/-private-tmp-<name>/`. A slash command such as `/opsx:apply` writes no such line.
 - The flag also skips `~/.claude/settings.json`. On Bedrock, set `CLAUDE_CODE_USE_BEDROCK=1` in the shell.

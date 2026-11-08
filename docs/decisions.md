@@ -2881,3 +2881,16 @@ This revises D193, D199, and D203.
 This revises D120, D154, D191, D193, and D198.
 
 **Rationale**: review round 17 found these gaps. In upgrade, the offer to add content came in the same reply as the prune question, which must be the last line (D193). The user chose to keep the content: no data is lost, and the reply has one question. The other items have one logical fix each, or wait for item 57.
+
+## D207: Fixes From Review Round 18 on cb22fc4..local
+
+**Decision**:
+
+1. Scenario 4c checks the error-body reason only if `plan.md` has a decision on how `lookup` finds an unknown city.
+2. Upgrade step 2.4 puts in `## 0. Open questions` only each question that step 2 asked and that the user could not answer. A question that is safe to answer later goes to `design.md` only.
+3. Scenarios 13a and 13b give the draft approval of run 2.
+4. Scenario 7 step 3 starts from the new fixture `interrupted-upgrade`, in a new folder and a new session. It is the state after an upgrade stopped right after `proposal.md`, from the run on 743a6f3. In a headless run, step 2 ends after the question turn.
+
+This revises D191, D199, D203, and D206.
+
+**Rationale**: review round 18 found these gaps. Each has one logical fix: a check that is required in one line and optional in two others, a rule that also matches a question that step 2 never asks, two reruns with no answer for a question that always comes, and a start state that the tester had to guess. The fixture follows D199.
