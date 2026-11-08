@@ -2698,6 +2698,8 @@ This revises D175, D177, D184, and D191.
 
 ## D193: The Prune Reply Holds the Summary, a Script Gives the Git Note, and Fixes From the Rerun on dd7ad75
 
+**Status**: Item 5 revised by D200: scenario 4c puts the error-body reason in the "because" part, also if a run showed it.
+
 **Decision**:
 
 1. Upgrade writes one reply in this order: the `validate` result, the summary, the list of `plan.md` destinations, and last the prune question. The summary does not say that `plan.md` is deleted or kept. The turn ends at the question. After the answer, upgrade says in one line what it deleted or kept, and does not write the summary again. The user chose this.
@@ -2730,6 +2732,8 @@ This revises D193 item 3.
 **Rationale**: in the scenario 4 rerun on 5aa0025, apply gave no recommendation for any of three open questions. Only one of them (where the page is) needs the user. The other two had a clear recommendation, which run 1 gave (todo item 49). The D193 rule did not say that it applies to one question, not to the reply.
 
 ## D196: Upgrade Checks the Pointers to a Kept Open Question, and the Resume Question Ends the Turn
+
+**Status**: Wording of item 1 revised by D200: the task is the only place of a kept question in the artifacts. The question also stays in `plan.md`.
 
 **Decision**:
 
@@ -2768,3 +2772,19 @@ This revises D184 and D186.
 The user chose this.
 
 **Rationale**: scenarios 3, 4, 16a, 17, 18, 18b, and 19 ran on the output of scenario 1 or 7, and scenario 4 shared a session with scenario 3. So the start state of each run differed: on 5aa0025 and 743a6f3, propose and the preview wrote two or three open questions, with or without a fact, and upgrade wrote two or three decisions, with or without a 🤖. The 18b failure on 5aa0025 and its pass on 743a6f3 came with no change to the archive skill, so the start state can explain it. One rerun of scenario 4 on 5aa0025 was a `git clone` of the first run, so the two runs were not independent. On 5aa0025, one group overwrote a shared start state with its own output. With a fixed fixture, each scenario tests only its own skill, and two runs start from the same files. Scenarios 4c, 4d, and 20a already used fixed start states, and they gave the most stable results.
+
+## D200: Fixes From Review Round 11 on cb22fc4..local
+
+**Decision**:
+
+1. The rule "record an error or an output that makes you change what you do" yields to the code rule. If a reader can see the same output in the code, it is an obvious fact, and goes into the "because" part of the item that it justifies. `apply.instruction` and the tasks preview say this.
+2. Scenario 4c checks this obvious path. The error body and the exit 0 of the 3-line `tools/geo.mjs` go into the "because" part of the decision, not into `## Facts`, also if a run showed them. Its title is now "Preview and apply put an obvious reason in the decision". Scenario 4d covers a fact that only a run shows. The user chose this.
+3. Scenario 18b checks that `design.md`, the specs, and `.openspec.yaml` did not change after step 3, not at the end. Step 4 removes the 🤖 marks, and the archive moves the change.
+4. Scenario 3, step 5 starts from the fixture `after-preview` in a new folder and a new session (D199).
+5. Scenario 4c, step 3 expects the "not committed" note only if step 2 changed `plan.md`.
+6. Upgrade step 2.4: the `## 0. Open questions` group applies with and without a preview.
+7. Upgrade step 2.5: the `## 0. Open questions` task is the only place of a kept question in the artifacts. The question also stays in `plan.md`.
+
+This revises D172, D193, D196, and D198.
+
+**Rationale**: review round 11 found these gaps. (1) Two fact rules disagreed on code-visible output. D185 and D198 already chose the code rule. (2) With the old 4c text, a run that put an obvious fact in `## Facts` passed. The user chose the obvious path over a new fixture, because 4d already tests a non-obvious fact. (3) to (7) each have one logical fix: a check that a correct run fails, a step that conflicts with D199, a check that ignores a case, and two upgrade sentences that an agent can misread.

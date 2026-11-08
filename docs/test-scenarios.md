@@ -62,7 +62,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 2. Check `tasks-preview.md`: the second line is `<!-- plan-sha256: <64 hex chars> -->`, and the tasks have no checkboxes.
 3. Add or edit a line under `## Constraints` in `plan.md`. Do not commit this edit.
 4. Run stock `/opsx:apply` (or `openspec-lite-apply`).
-5. Negative check: copy the repo of step 2. In the copy, edit only `## Open Questions`, `## Facts`, and `## Decisions` of `plan.md`, and commit. Run stock `/opsx:apply`.
+5. Negative check: start from the fixture `after-preview` in a new folder. Edit only `## Open Questions`, `## Facts`, and `## Decisions` of `plan.md`, and commit. Run stock `/opsx:apply` in a new session.
 
 **Expected**:
 
@@ -107,7 +107,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The two constraints are the same as in step 1, with no ID (D138).
 - The sliding window decision has no 🤖, because it records an instruction of the user (D181). It gives no "because" reason that the user did not give and that the run does not show (D177).
 
-### 4c. Preview and apply record a fact that backs a decision
+### 4c. Preview and apply put an obvious reason in the decision
 
 **Steps**:
 
@@ -121,11 +121,11 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed and `plan-status.mjs` prints nothing (D193).
 - After step 2, each decision of the preview ends its heading with 🤖. After step 3, the decision of the answered question has no 🤖 (D181).
-- After step 2, if a decision of the preview says how `lookup` finds an unknown city, `plan.md` gives the reason for it: the tool reports an unknown city with an error body in its output, not with a failing exit. If a run showed this, it is a fact in `## Facts`, with the command as its source, and the run read the exit code with `exit-code.mjs` (D197). If the agent only read the 3 lines of the tool, it is in the "because" part of that decision (D192, D193). The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module", or what `geo.mjs` prints for Paris, which its code shows (D198). If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
-- In step 3, the agent says in one line that `plan.md` is not committed. It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
+- After step 2, if a decision of the preview says how `lookup` finds an unknown city, `plan.md` gives the reason for it: the tool reports an unknown city with an error body in its output, not with a failing exit. The 3 lines of `tools/geo.mjs` show this, so it is an obvious fact, also if a run showed it. It is in the "because" part of that decision, not in `## Facts` (D192, D198, D200). If a run read the exit code, it used `exit-code.mjs` (D197). The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module", or what `geo.mjs` prints for Paris, which its code shows (D198). If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
+- In step 3, if step 2 changed `plan.md`, the agent says in one line that `plan.md` is not committed. If step 2 did not change it, the agent gives no such note (D193). It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
 - After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
-- After step 3, if `## Facts` had the fact about the error body after step 2, it is still there, because it is a non-obvious fact that a run showed (D184, D192). The summary lists each fact, decision, and open question that apply added, changed, or removed.
-- In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, and `plan.md` has the fact about the error body, the fact is in the `## Context` of that ADR. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the fact as not drafted, with a reason (D179, D186).
+- After step 3, `## Facts` holds no fact about the error body. The decision on how `lookup` finds an unknown city still gives the error-body reason (D198, D200). The summary lists each fact, decision, and open question that apply added, changed, or removed.
+- In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, the ADR gives the error-body reason. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the decision as not drafted, with a reason (D179, D186).
 - After step 3, `lookup('Paris')` returns the coordinates, and `lookup('Atlantis')` returns `null`. The agent checks both with a run or a test.
 - In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
 
@@ -448,7 +448,7 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 
 - The agent shows each ADR draft before it writes. Each draft has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
 - After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
-- `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
+- After step 3, `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
 - After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of the fixture. It does not offer the archive while a delta holds a 🤖 (D192). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
 
 ## 19. Other openspec-lite skills after an upgrade
