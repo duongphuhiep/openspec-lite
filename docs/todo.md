@@ -123,7 +123,7 @@ The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A
 
 ## Found in the rerun on 26c58ea
 
-The reports are in `.scenario-runs/20261108-26c58ea/`. 20c (3 of 3), 18, 18b, and 3 pass 2 of 2. 4c and 4d pass 3 of 4. Scenario 4 fails 2 of 2. D216 closes item 67.
+The reports are in `.scenario-runs/20261108-26c58ea/`. 20c (3 of 3), 18, 18b, and 3 pass 2 of 2. 4c and 4d pass 3 of 4. Scenario 4 fails 2 of 2. D216 closes item 67. Release 1.7.0 ships with scenarios 4 and 4d as known unstable cases: each passed 1 of 2 in its last rerun (`.scenario-runs/20261108-193cd75/`, `.scenario-runs/20261108-26c58ea/`).
 
 ### 68. Smaller gaps from the rerun on 26c58ea
 
