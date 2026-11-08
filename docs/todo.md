@@ -123,14 +123,7 @@ The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A
 
 ## Found in the rerun on 26c58ea
 
-The reports are in `.scenario-runs/20261108-26c58ea/`. 20c (3 of 3), 18, 18b, and 3 pass 2 of 2. 4c and 4d pass 3 of 4. Scenario 4 fails 2 of 2.
-
-### 67. Apply does not record the choices that only the code shows
-
-- **Where**: the D214 end check of `apply.instruction`. Scenario 4.
-- **Problem**: the end check records the choices that the reply names, for example `"type": "module"`, but not a Blob download (2 of 2) or CRLF line ends (1 of 2). The scenario 4 text names "a download method" as an example, so the check is strict. A line ending changes the output file, but a download method is an internal detail.
-- **Evidence**: `.scenario-runs/20261108-26c58ea/group-A.md`.
-- **Recommendation**: not decided. Options: keep the strict check, or limit the rule and the check to choices that change what a user or another program sees (output format, file layout, public interface), and remove "a download method" from the scenario text.
+The reports are in `.scenario-runs/20261108-26c58ea/`. 20c (3 of 3), 18, 18b, and 3 pass 2 of 2. 4c and 4d pass 3 of 4. Scenario 4 fails 2 of 2. D216 closes item 67.
 
 ### 68. Smaller gaps from the rerun on 26c58ea
 

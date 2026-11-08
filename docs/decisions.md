@@ -2973,3 +2973,11 @@ This revises D181 and D182.
 This revises D154, D191, and D192.
 
 **Rationale**: in the run on f5422dd, scenario 18 run 1 offered its own `openspec archive --yes` after "no" to the ADR offer, but the skill had a rule only for "no" to the archive question. Scenario 18b run 1 asked "Do you want me to run it then?" while a delta held a 🤖 (todo item 66). The CLI copies a 🤖 into the main spec, so a yes there loses the review. Each item has one logical fix.
+
+## D216: The End Check Records Only the Choices That a User or Another Program Sees
+
+**Decision**: the D214 end check of `apply.instruction` reads the code that apply wrote. It records as a 🤖 decision each choice that changes what a user or another program sees, and that no decision records: the output format (a line ending, the quoting), the file layout, a public interface, or the module system. An internal detail, for example how a browser downloads a file, needs no decision. Scenario 4 follows: it no longer names the download method. The user chose this.
+
+This revises D214.
+
+**Rationale**: on 26c58ea, scenario 4 failed 2 of 2 runs, because apply did not record the Blob download, and in one run the CRLF line ends (todo item 67). The D214 text "each choice between real alternatives" and the scenario example "a download method" made each internal detail a decision. That makes `plan.md` long, and a reviewer cannot find the choices that matter. A line ending changes the file that a spreadsheet reads, so it stays in scope. The end check also now reads the code, not only the reply, because the missed choices were only in the code.
