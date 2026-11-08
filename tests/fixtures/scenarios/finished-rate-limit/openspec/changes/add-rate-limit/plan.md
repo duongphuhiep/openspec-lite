@@ -19,14 +19,14 @@ Limit each API key to 100 requests per minute on the public HTTP API.
 - C2: Add no new runtime dependency.
 
 ## Open Questions
-<!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. -->
+<!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. Only an answer of the user closes a question. -->
 
 ## Facts
-<!-- Non-obvious facts found during exploration or grilling, as "- F<n>: <fact>". Record only facts that justify a decision or a constraint of this change. Do not record statistics that soon go out of date. A number as an example or a reference is OK. -->
+<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>", with the source. A non-obvious fact needs a run or a test result, research of remote sources (documentation on the internet, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. A run alone is not enough: if a reader can see the result in the code or in the file list, the fact is obvious. Do not record a guess, an obvious fact, or a well-known fact: write such a fact in the "because" part of the decision, constraint, or non-goal that it justifies. Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK. -->
 - F1: The public API runs as a single instance.
 
 ## Decisions
-<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Then remove each fact that justifies no current decision or constraint. -->
-<!-- ### Decision D<n>: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. -->
+<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Change a decision with no 🤖 only on an answer or an instruction of the user. Then remove each fact that justifies no current decision or constraint, except a non-obvious fact. -->
+<!-- ### Decision D<n>: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. An agent ends the heading with 🤖, unless the decision records an answer or an instruction of the user. A decision with no 🤖 belongs to the user. Remove the 🤖 to accept a decision. -->
 ### Decision D1: In-memory fixed window instead of Redis
 Chose an in-memory fixed-window counter because the API runs as a single instance (F1) and C2 forbids a new dependency. Rejected Redis because it adds a runtime dependency and a service to run.

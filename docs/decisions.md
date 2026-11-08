@@ -2848,3 +2848,17 @@ This revises D191, D199, and D202.
 This revises D181, D191, D199, and D203.
 
 **Rationale**: review round 15 found these gaps. Each has one logical fix: a rule with two wordings that skips the 🤖 decisions of the guard path, a check that a correct run fails, a scenario result with no rule behind it, archive scenarios with no answer for a question that their code state always causes, and a helper that cannot start from the temp folder.
+
+## D205: Fixes From Review Round 16 on cb22fc4..local
+
+**Decision**:
+
+1. The upgrade summary in `docs/design.md` follows the skill. It names each `plan.md` item that has no slot. It does not say what happens after a "no" to the delete, because the summary comes before the prune question (D193).
+2. In `apply.instruction`, the exit-code-1 check of `plan-hash.mjs` comes directly after the command, before the stale check, as in the tasks preview. On exit 1, the output is empty, so the stale check would ask a wrong question.
+3. Scenario 20b answers yes to "Archive anyway?" first, then picks the toolbar item, in the order of the archive turns.
+4. Scenarios 4c and 4d write `plan.md` from the template, because `plan-hash.mjs` exits with code 1 when a heading is missing.
+5. The fixture `finished-rate-limit` has the guidance comments of the current template.
+
+This revises D193, D199, and D203.
+
+**Rationale**: review round 16 found these gaps. Each has one logical fix: two design sentences that contradict the order of D193, two rules in the wrong order, a step in an order that cannot happen, a start state that makes a correct run fail, and a fixture with comments of an old rule.
