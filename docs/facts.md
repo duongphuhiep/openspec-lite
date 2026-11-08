@@ -969,3 +969,14 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, apply: 3 of 4 applies of group I added `echo` to the `plan-hash.mjs` command to read its exit code. The rule does not name `exit-code.mjs` (group I).
 - Sonnet 5.5, propose: in scenario 11, it found 3 open questions and named them only in the reply. `## Open Questions` stayed empty (group D). In scenario 1, it wrote 3 open questions (0 of 5 in earlier runs) (group A).
 - Sonnet 5.5, apply: with a version 99 schema, apply offered a hand edit of the `version:` line, but did not do it (group D).
+
+## Rerun on 765cdec
+
+**Source**: scenarios 7 ×2, 21b ×2, 20c ×2, 4c ×2, isolated (D199), Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, reports in `.scenario-runs/20261108-765cdec/`, 2026-11-08.
+
+- Sonnet 5.5 with D208: upgrade kept `skip_specs: true` through the question turn in 2 of 2 runs of scenario 7, and removed it just before `openspec instructions specs` (sessions `1215a1f3`, `85bb7575`). It never removed the line in 2 of 2 runs of 20c, which write no spec. A resumed upgrade asked the step 2 questions again in 2 of 2 runs (`c88bfc79`, `0907c504`).
+- Sonnet 5.5 with D209: the archive done check found the committed code in 2 of 2 runs of 21b. One run used `git rev-parse --show-toplevel` and `git -C <root> grep`. The other ran `cd <git root>; git ls-files` (`6a666dac`, `3808e7e0`).
+- Claude Code 2.1.319, scenario allowlist: `git -C "$(git rev-parse --show-toplevel)" grep …` is denied with "Quoted text in this command can't be checked before it runs" (`6a666dac`). `printf '…' > <file> && …; openspec …` ran with no denial (`c88bfc79`). `cat > file <<'EOF'`, `mkdir -p X && cat > f <<'EOF'`, and `cd openspec; …` are denied (groups F, I).
+- Sonnet 5.5, upgrade: the prune summary said "Not deleted: `plan.md`" in 1 of 2 runs of 20c (todo item 61). In the other run, turn 1 said "I can't proceed without one. The skill needs at least one." about a requirement, but the skill allows no spec (`879e3c9a`).
+- Sonnet 5.5, tasks preview on 4c: each preview that ran `geo.mjs` wrote the obvious error body and exit 0 in `## Facts` (2 of 2 on f5422dd and 765cdec). Each preview that only read the file wrote no fact (todo item 65). 5 of 6 applies over two commits added `echo "$?"` to the `plan-hash.mjs` command (group I).
+- Node v24.13.0 runs a `.js` file with ESM syntax and no `package.json` with no warning, and `require()` of it works (group I, `/tmp/osl-I4c-2.RCXl`).
