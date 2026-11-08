@@ -22,7 +22,8 @@ Isolation rules (D199):
 - Each scenario run starts in a new temp folder, from the setup above or from a fixture. Do not start from the output of another scenario, and do not copy or clone the folder of an earlier run.
 - Each scenario run starts a new agent session. Use `--resume` only for the answers inside one scenario.
 - A setup commit message is neutral, for example "setup". The agent sees the recent commit messages (`docs/facts.md`).
-- A run never writes to `tests/fixtures/`. To change a fixture, edit it in a commit, and run `node --test`.
+- A run never writes to `tests/fixtures/`.
+- If archive asks "Archive anyway?" and the scenario gives no answer for it, answer yes. To change a fixture, edit it in a commit, and run `node --test`.
 
 If a scenario builds a plan-lite change by hand, install the schema first: `node .claude/skills/openspec-lite-schema/scripts/install.mjs .`. Then run `openspec new change <name> --schema plan-lite`. OpenSpec 1.14.2 writes `skip_specs: true` itself. Do not add a second line, because a duplicate key breaks each CLI command on the change (D150). Commit the code before an archive run, because `git grep` searches only tracked files.
 
@@ -92,7 +93,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - A test covers the export: the CSV holds the rows that the table shows, in the column order of the table. The test fails if the export writes the wrong rows or the wrong order.
 - At the end, each decision in `## Decisions` matches the code, and each fact in `## Facts` is still true (D192). Each "because" reason comes from the run, the user, `plan.md`, the code, or a well-known fact, not from a guess (D177, D192). A 🤖 mark does not excuse a guess or a false reason. A claim about how a tool, a runtime, or a platform behaves has a run or a doc as its source. If no source supports a reason, the decision says "Reason not checked." (D194).
 - It ends with the done check (Goal, Constraints, Open Questions). If the run added an open question, the done check says that `## Open Questions` is not empty.
-- It tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
+- If the done check passes, it tells the user to archive with `openspec-lite-archive`, not `/opsx:archive`.
 
 ### 4b. Apply keeps only the current decisions
 
@@ -254,9 +255,9 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. Start from the fixture `finished-rate-limit`. Start `scripts/break-delta.sh openspec/changes/add-rate-limit &`. Run `openspec-lite-archive`. Approve one requirement and one decision.
+1. Start from the fixture `finished-rate-limit`. From the temp folder, start `<path-to-this-repo>/scripts/break-delta.sh openspec/changes/add-rate-limit &`. Run `openspec-lite-archive`. Approve one requirement and one decision.
 2. The script breaks the delta before step 9 of the skill: it removes the `#### Scenario:` blocks right after the agent writes the delta. `validate` fails, and the skill stops before it writes any ADR.
-3. Run `openspec-lite-archive` again.
+3. Run `openspec-lite-archive` again. When the agent asks to keep or delete the delta of run 1, answer: "Delete it."
 
 **Expected**:
 
@@ -448,6 +449,7 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 **Expected**:
 
 - The agent shows each ADR draft before it writes. Each draft has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
+- The draft reply names the draft of "Quote each cell", because its heading in `design.md` ends with 🤖 (D204).
 - After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
 - After step 3, `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
 - After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of the fixture. It does not offer the archive while a delta holds a 🤖 (D192). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).

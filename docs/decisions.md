@@ -2834,3 +2834,17 @@ This revises D68, D197, D199, and D201.
 This revises D191, D199, and D202.
 
 **Rationale**: review round 14 found these gaps. Each has one logical fix: a design bullet that round 13 did not update, an archive rule that asks for an ADR that scenario 15 does not expect, a step that skips a user turn, four scenarios with no defined start state under D199, and a wrong list. The start state and the helper were only in the git-ignored `.scenario-runs/` folder.
+
+## D204: Fixes From Review Round 15 on cb22fc4..local
+
+**Decision**:
+
+1. Archive step 6 names each draft from a 🤖 decision, in `plan.md` or, on the guard path, in `design.md`. Scenario 18b checks that the draft reply names "Quote each cell".
+2. Scenario 4 expects the `openspec-lite-archive` hint only if the done check passes, as `apply.instruction` says.
+3. The archive end summary says that a rejected decision now exists only in `openspec/changes/archive/`. Scenario 6 already expected this, but no rule asked for it.
+4. If archive asks "Archive anyway?" and the scenario gives no answer for it, the tester answers yes. This is one isolation rule at the top of `docs/test-scenarios.md`.
+5. Scenario 13a starts `<path-to-this-repo>/scripts/break-delta.sh` from the temp folder, and answers "Delete it." when run 2 asks about the broken delta of run 1.
+
+This revises D181, D191, D199, and D203.
+
+**Rationale**: review round 15 found these gaps. Each has one logical fix: a rule with two wordings that skips the 🤖 decisions of the guard path, a check that a correct run fails, a scenario result with no rule behind it, archive scenarios with no answer for a question that their code state always causes, and a helper that cannot start from the temp folder.
