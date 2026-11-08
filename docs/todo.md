@@ -77,7 +77,7 @@ The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 4
 
 ## Found in the run on 5aa0025
 
-The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 to D198 close items 48, 49, 52, 53, and 54.
+The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 to D198 close items 48, 49, 52, 53, and 54. The rerun on 743a6f3 is in `.scenario-runs/20261108-743a6f3/`: 18b, 20a, and 4c pass 2 of 2. 4 and 4d fail 2 of 2. Item 50 has new evidence: 4d wrote no test in 2 of 2 runs.
 
 ### 50. Apply writes a test that does not fail on the old behavior
 
@@ -92,6 +92,28 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 - **Problem**: after the ADRs, the agent did not name the open question. The rule is one sentence in a long paragraph, with no fixed place in the reply. One draft also asked to remove a 🤖 from `design.md`, against the guard.
 - **Evidence**: `group-C.md` (18b, 2 of 2 runs). The 18b step 4 also needs one more user turn ("I removed both marks.").
 - **Recommendation**: not decided. One option: a fixed line in the reply before the archive question, for example "Open in `plan.md`: …".
+
+### 57. An agent choice inside a user decision
+
+- **Where**: `apply.instruction` and the tasks preview, the 🤖 rule (D181).
+- **Problem**: a decision with no 🤖 records an answer of the user, but the agent adds its own choice to it. Scenario 4 on 5aa0025: "plain HTML and JavaScript (ES modules) ... as the user instructed". On 743a6f3: "download it through a Blob". The 🤖 check cannot see it.
+- **Evidence**: `.scenario-runs/20261108-5aa0025/group-A.md` (rerun), `.scenario-runs/20261108-743a6f3/group-A.md` (run 1).
+- **Recommendation**: not decided. One option: a decision with no 🤖 holds only what the user said. Each added choice is a separate 🤖 decision.
+
+### 58. Apply loses an answer of the user when a write is denied
+
+- **Where**: `apply.instruction`, the rule that records an answer and removes the question.
+- **Problem**: in 4d-1 on 743a6f3, the allowlist denied the write of D3, but OQ1 was removed, and the reply said "D3 (added)".
+- **Evidence**: `.scenario-runs/20261108-743a6f3/group-I.md` (session `d54190d3`).
+- **Recommendation**: not decided. One option: write the decision first, read `plan.md` again, then remove the question. Use the Edit tool, not a heredoc.
+
+### 59. Smaller gaps from the rerun on 743a6f3
+
+- Archive still uses `echo $?`, because D197 covers only apply and the preview (group I).
+- The done check of scenario 4 run 2 named only the open questions (group A).
+- 2 of 2 runs of scenario 3 wrote the `plan-status.mjs` line in their own words (group A).
+- D196: no run tested the re-read, because each first write was already clean. No scenario starts with a pointer in `design.md` (group F).
+- 18b step 1 adds the 🤖 after the scenario 18 turn, so the agent "corrects" a true earlier line. Add the mark before scenario 18 (group C).
 
 ### 55. The scripts do not run alone
 

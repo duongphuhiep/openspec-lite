@@ -932,3 +932,20 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, apply on an empty repo: in the scenario 4 rerun, it gave no recommendation for all 3 open questions, "because only you know the answers". It took the D193 example "where some code is" as true for each question, because no code exists. In the same run, the user decision D4 (no 🤖) says "plain HTML and JavaScript (ES modules) ... as the user instructed". The user did not ask for ES modules, so an agent choice went into a user decision (group A, `481b1aef`).
 - Sonnet 5.5, apply: in scenario 4 run 1, it read the user instruction "no npm dependency" as "a `package.json` is not wanted", and wrote that as a reason (group A, `fdd97ae5`).
 - Sonnet 5.5, propose: the Goal comment stayed in 2 of 2 runs (group H, todo item 21). With the CSV export prompt, propose asked no Level 1 question. On 80d076b, it asked one (group F).
+
+## Rerun on 743a6f3
+
+**Source**: scenarios 4 ×2 (with 1 and 3), 18b ×2 (with 7 and 18), 20a ×2, 4c ×2, 4d ×2, Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, reports in `.scenario-runs/20261108-743a6f3/`, 2026-11-08.
+
+- Sonnet 5.5 with D194: each 🤖 reason had a source, or said "Reason not checked", in 2 of 2 runs of scenario 4. One run wrote the variant "Reason not checked against alternatives" (group A).
+- Sonnet 5.5 with D195: only the question "where is the page" had no recommendation, in 2 of 2 runs of scenario 4. In 4c-1, apply added a new question with no recommendation (groups A, I).
+- Sonnet 5.5, apply: in scenario 4 run 1, the user decision D4 (no 🤖) holds the agent choice "download it through a Blob". In run 2, the done check named only the open questions, not the Goal and C1 (group A).
+- Sonnet 5.5, apply and preview: in scenario 3 step 4, 2 of 2 runs wrote the `plan-status.mjs` line in their own words, not as it is (group A, `e268c43b`, `f9dcd1b7`).
+- Claude Code 2.1.319: stock `/opsx:apply` loaded `openspec-lite-apply` in 2 of 2 sessions. Over all runs, 6 of 19 (group A).
+- Sonnet 5.5 with D196: in 2 of 2 runs of 20a, and in the scenario 7 run of group C, `proposal.md` and `design.md` held no pointer to a kept open question. The agent did not read the files again after `tasks.md`, so the first write was already clean. The resume question ended the turn before `validate` in 2 of 2 runs (group F, `d75d44b5`, `1b130ce3`; group C, `567715fb`).
+- Sonnet 5.5, archive after an upgrade: it named the open question of the kept `plan.md` in 2 of 2 runs of 18b (was 0 of 2 on 5aa0025). The archive text did not change, so the old result was model variance or the start state (group C, `30a95542`, `31ca0fdd`).
+- Sonnet 5.5 with D197: 4 of 4 previews of 4c and 4d used `exit-code.mjs` and recorded the exit-0 fact with its command. 2 of 4 ran it in a `;` chain. In 1 of 2 runs of 20a, the preview still added `echo "exit: $?"`. Archive still uses `echo $?` (groups F, I).
+- Sonnet 5.5 with D198: 4d wrote no file-list fact. In 2 of 2 runs of 4c, F1 still held obvious parts next to the exit-0 result. In scenario 4 run 2, the preview wrote a `git ls-files` file list as F1 (groups A, I).
+- Sonnet 5.5, apply: it wrote no test file in 2 of 2 runs of 4d, and took manual `exit-code.mjs` runs as enough (group I).
+- Sonnet 5.5, apply: in 4d-1, the allowlist denied the `cat >> plan.md` write of D3, but the agent had removed OQ1, and the reply said "D3 (added)". So the answer of the user is not in `plan.md` (group I, `d54190d3`).
+- Claude Code 2.1.319, scenario allowlist: `node exit-code.mjs env PATH=/nonexistent <node> …` runs under `Bash(node:*)`, but `env …` alone is denied. `$(command -v node)` in the same form is denied (group I, `2d7da756`). `Bash(node:*)` already allows `node -e` with `child_process`, so the script adds no new power.
