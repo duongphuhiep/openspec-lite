@@ -1003,3 +1003,11 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, apply: a decision said that `package.json` "only sets `type: module`", but the file also holds `private` and `scripts.test`, in 1 of 2 runs (also 1 of 2 on 26c58ea). In the same run, the done check named only the open questions, not the Goal and the Constraints (also on 743a6f3).
 - Claude Code 2.1.319: stock `/opsx:apply` ran `openspec instructions apply` in 8 of 8 sessions on 26c58ea and 193cd75, with no skill.
 - Sonnet 5.5, apply: all 4 scaffolds of scenario 4 on 26c58ea and 193cd75 used a Blob download and CRLF line ends.
+
+## Release 1.7.0
+
+**Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
+
+- `gh workflow run apm-install.yml` with the local `gh` login fails with "HTTP 403: Must have admin rights to Repository". A run of the `apm-install` workflow needs a login with admin rights, or the Actions tab.
+- The same check by hand passes: in an empty `git init` folder, `apm install 'duongphuhiep/openspec-lite/package#^1.0.0' --target claude` (APM 0.33.0) writes `resolved_ref: v1.7.0` in `apm.lock.yaml`, the six `openspec-lite-*` skills, and `assets/plan-lite/` with `exit-code.mjs`, `plan-status.mjs`, and `schema.yaml` at `version: 5`. `apm_modules/duongphuhiep/openspec-lite/` holds only `package/`.
+- The `test` workflow passed on the `main` push and on the `v1.7.0` tag push.
