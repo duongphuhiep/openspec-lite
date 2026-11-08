@@ -2937,3 +2937,11 @@ This revises D164 and D193.
 This revises D198 and D200.
 
 **Rationale**: on f5422dd and 765cdec, each preview of 4c that ran `tools/geo.mjs` wrote its error body and exit 0 in `## Facts`, and each preview that only read the file wrote none (todo item 65). The rule "A run alone is not enough" was there in both cases. At the time of the run, the agent sees the run as the source. A check at the end looks at the fact again, next to the code, after the run. Apply already compares each fact with the code at the end, so the check adds one question to an existing step.
+
+## D212: Apply and the Preview Read the Output of `plan-hash.mjs`, Not Its Exit Code
+
+**Decision**: if `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, apply and the tasks preview show the message and stop. They do not need the exit code. The script does not change: on an error, it prints only the message on stderr and exits with code 1.
+
+This revises D93 and D205.
+
+**Rationale**: the rule "if it exits with code 1" made the agent add `echo "$?"` to the command in 5 of 6 applies over f5422dd and 765cdec, and the allowlist denied it. The output alone tells the two cases apart: a 64-character hash, or a `plan-hash:` message. So the rule needs no exit code and no `exit-code.mjs`.

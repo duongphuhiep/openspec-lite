@@ -33,7 +33,7 @@ Write `tasks-preview.md` for a plan-lite change. Record what you learn in `plan.
    node openspec/schemas/plan-lite/plan-hash.mjs openspec/changes/<name>/plan.md
    ```
 
-   If it exits with code 1, show its message and stop. Ask the user to fix `plan.md` as the message says.
+   If it prints a message that starts with `plan-hash:` and no hash, show the message and stop. You do not need its exit code. Ask the user to fix `plan.md` as the message says.
 5. Overwrite `openspec/changes/<name>/tasks-preview.md` with this template. Put the hash in the second line:
 
    ```markdown

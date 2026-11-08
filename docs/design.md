@@ -162,7 +162,7 @@ The five workflow skills are propose, tasks-preview, apply, upgrade, and archive
 node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md
 ```
 
-If it exits with code 1, show its message and stop. Ask the user to fix `plan.md` as the message says (D93, D99).
+If it prints a `plan-hash:` message and no hash (exit code 1), show the message and stop. The agent reads the output, not the exit code. Ask the user to fix `plan.md` as the message says (D93, D99, D212).
 
 ### openspec-lite-schema (D41, D43, D44, D48, D56, D65, D71, D82, D86, D90, D95, D96, D98)
 
@@ -338,13 +338,13 @@ apply:
 - OpenSpec ignores the `openspec-version` key. Only the skills read it (D48).
 - `version` is an integer. A change to it is a schema **update** (D45).
 
-`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172, D174, D177, D178, D180, D181, D182, D183, D184, D186, D194, D195, D197, D198, D211). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
+`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172, D174, D177, D178, D180, D181, D182, D183, D184, D186, D194, D195, D197, D198, D211, D212). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
 
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
 - First, run `node openspec/schemas/plan-lite/plan-status.mjs <changeDir>/plan.md` from the OpenSpec root, the folder that holds `openspec/`, alone, not in a chain. If it prints a line, copy the line to the user as it is. Then continue. If it prints nothing, say nothing about commits.
 - Implement from plan.md. If <changeDir>/tasks-preview.md exists, use it as a guide. The CLI does not list it in contextFiles.
-- Before you write any code: if the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root. If it exits with code 1, show its message and stop. Otherwise, if the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. If it is stale, stop and ask the user: regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md? End your turn, and wait for the answer.
+- Before you write any code: if the preview exists, run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root. If it prints a message that starts with `plan-hash:` and no hash, show the message and stop. You do not need its exit code. Otherwise, if the result differs from `plan-sha256` in the preview header, the preview is stale. It is also stale if the header is missing. If it is stale, stop and ask the user: regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md? End your turn, and wait for the answer.
 - Before you write any code: if `## Open Questions` holds a question that you did not ask yet in this session, ask each one in one reply, with your recommended answer, and end your turn. If only the user can know the answer to a question, for example where some code is, give no recommendation for that question, and say why. Give a recommendation for each other question. If the preview is also stale, ask both in the same reply. Do not answer an open question yourself. If the user leaves a question open, keep it in `## Open Questions`, and continue.
 - Record the answer of the user to each open question in `## Decisions`, as a `### Decision D<n>:` entry with no 🤖, and remove the question. Only an answer of the user closes a question.
 - When plan.md and tasks-preview.md conflict, plan.md wins.
