@@ -2137,6 +2137,8 @@ This revises D108 and D120.
 
 ## D154: Archive Can Copy the Decisions to ADRs After Its Guard
 
+**Status**: Revised by D191 item 5 and D192: after the ADRs, archive lists each 🤖 line, and offers the archive when no delta holds a 🤖.
+
 **Decision**:
 
 - When the archive guard stops on a change that is not plan-lite, archive can offer to copy each `### Decision` of `design.md` to an ADR. It writes nothing before the user says yes.
@@ -2652,6 +2654,8 @@ Some new checks can fail on the current skills. D173 says that this is correct w
 
 ## D191: Six Skill Rules Change for the Result of the User
 
+**Status**: Item 4 revised by D193: the summary comes before the prune question, in the same reply.
+
 **Decision**:
 
 1. Archive puts a fact that justifies a requirement into the requirement text, as its reason. Example: "… a header row of the column names, because the finance import reads the columns by name." Before, it listed such a fact as not drafted.
@@ -2862,3 +2866,18 @@ This revises D181, D191, D199, and D203.
 This revises D193, D199, and D203.
 
 **Rationale**: review round 16 found these gaps. Each has one logical fix: two design sentences that contradict the order of D193, two rules in the wrong order, a step in an order that cannot happen, a start state that makes a correct run fail, and a fixture with comments of an old rule.
+
+## D206: Fixes From Review Round 17 on cb22fc4..local
+
+**Decision**:
+
+1. Upgrade keeps each `plan.md` content that is in no artifact. It lists the content as "kept, in no artifact", and a yes to the prune question does not delete it. The summary names it, and says that the user can ask to add it to an artifact. The prune reply has one question. The user chose this.
+2. `docs/design.md` follows the current rules: 18b offers the archive after the ADRs (D191, D192), and the release list names only 16a, with the other stock-archive cases as known gaps (D190). D154 and D191 have **Status** lines.
+3. Archive step 4 has the full non-obvious fact rule of step 3: "the code or the file list", and "a run alone is not enough". `docs/design.md` follows.
+4. Scenario 20a gives the answer "I do not know yet" for each open question in step 2, where upgrade asks them.
+5. The repo layout tree of `docs/design.md` lists each test file and `scripts/break-delta.sh`.
+6. The 4b check on the reason of a user decision stays as it is, and depends on todo item 57. The item now names this check.
+
+This revises D120, D154, D191, D193, and D198.
+
+**Rationale**: review round 17 found these gaps. In upgrade, the offer to add content came in the same reply as the prune question, which must be the last line (D193). The user chose to keep the content: no data is lost, and the reply has one question. The other items have one logical fix each, or wait for item 57.

@@ -479,7 +479,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 **Steps**:
 
 1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, one `## Facts` item that the decision relies on, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change. Run `openspec-lite-tasks-preview`. If the preview names no `plan.md` ID, add one, for example "(D1)", to a task line.
-2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply (D164). At the prune question, answer no.
+2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". The tasks preview of step 1 can add more open questions. Give the same answer to each one. If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply (D164). At the prune question, answer no.
 3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question. The resume question says what is left to do, with no step number (D191).
 
 **Expected**:
@@ -491,7 +491,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - `proposal.md` holds the two scope items of `## Background`.
 - `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
 - `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title, or a short form of its text, instead (D142).
-- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open questions that the user could not answer (D158). The tasks preview of step 1 can add more open questions. Answer "I do not know yet" to each one. No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `proposal.md` and `design.md` do not restate an open question that stays in `plan.md`, and do not point to it, for example "See the open questions in tasks.md". This also applies to a question that the tasks preview added (D133, D196). In step 3, the turn ends at the resume question, before `validate` (D196). `tasks.md` starts with a `## 0. Open questions` group, with one task for each open question that the user could not answer, so that stock `/opsx:apply` meets them first (D191).
+- After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open questions that the user could not answer (D158). No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `proposal.md` and `design.md` do not restate an open question that stays in `plan.md`, and do not point to it, for example "See the open questions in tasks.md". This also applies to a question that the tasks preview added (D133, D196). In step 3, the turn ends at the resume question, before `validate` (D196). `tasks.md` starts with a `## 0. Open questions` group, with one task for each open question that the user could not answer, so that stock `/opsx:apply` meets them first (D191).
 
 ### 20b. Archive drafts an item that the user picks
 

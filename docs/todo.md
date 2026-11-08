@@ -99,6 +99,7 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 - **Problem**: a decision with no 🤖 records an answer of the user, but the agent adds its own choice to it. Scenario 4 on 5aa0025: "plain HTML and JavaScript (ES modules) ... as the user instructed". On 743a6f3: "download it through a Blob". The 🤖 check cannot see it.
 - **Evidence**: `.scenario-runs/20261108-5aa0025/group-A.md` (rerun), `.scenario-runs/20261108-743a6f3/group-A.md` (run 1).
 - **Recommendation**: not decided. One option: a decision with no 🤖 holds only what the user said. Each added choice is a separate 🤖 decision.
+- **Related check**: the 4b check "It gives no "because" reason that the user did not give and that the run does not show" assumes this option. It is stricter than D194, which also accepts `plan.md`, the code, or a well-known fact. Review round 17 found this. Decide the item, then align the check.
 
 ### 58. Apply loses an answer of the user when a write is denied
 
