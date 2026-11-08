@@ -132,7 +132,7 @@ The reports are in `.scenario-runs/20261108-26c58ea/`. 20c (3 of 3), 18, 18b, an
 - 18b check 8 does not say which reply must name the open question of `plan.md` (group C).
 - Archive spec reasons with no source, in 3 runs of 4c over three commits (group I).
 - Upgrade: a Why line with a new claim and no 🤖, in 1 of 3 runs of 20c (group F).
-- Scenario 4 run 1: D5 said that `package.json` holds only `"type": "module"`, which is false (group A).
+- Scenario 4: a decision says that `package.json` holds only `"type": "module"`, which is false, in 1 of 2 runs on 26c58ea and on 193cd75. On 193cd75, 1 of 2 runs also missed the file layout decision, and gave a done check with no Goal and no Constraints (`.scenario-runs/20261108-193cd75/group-A.md`).
 
 ### 55. The scripts do not run alone
 

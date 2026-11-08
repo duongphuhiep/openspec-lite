@@ -994,3 +994,12 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.319: stock `/opsx:apply` ran `openspec instructions apply` in 6 of 6 sessions, with no skill (group A). On f5422dd, 1 of 5 ran neither.
 - Claude Code 2.1.319, scenario allowlist: `npm test`, `sed -i ''`, `python3 - <<'EOF'`, and a `for` loop are denied. `cd <dir>; openspec instructions …` is allowed (groups A, F, I).
 - Sonnet 5.5, archive: a spec reason with no source ("callers run from different directories", "callers need a plain return value") in 3 runs of 4c over three commits (group I).
+
+## Rerun on 193cd75
+
+**Source**: scenario 4 ×2, isolated (D199), Claude Code 2.1.319 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, report in `.scenario-runs/20261108-193cd75/group-A.md`, 2026-11-08.
+
+- Sonnet 5.5 with D216: CRLF line ends were in a 🤖 decision in 2 of 2 runs (1 of 2 on 26c58ea). In 1 of 2 runs, no decision recorded the file layout or the filter and sort of the page, and the agent did not read its files again in the end check.
+- Sonnet 5.5, apply: a decision said that `package.json` "only sets `type: module`", but the file also holds `private` and `scripts.test`, in 1 of 2 runs (also 1 of 2 on 26c58ea). In the same run, the done check named only the open questions, not the Goal and the Constraints (also on 743a6f3).
+- Claude Code 2.1.319: stock `/opsx:apply` ran `openspec instructions apply` in 8 of 8 sessions on 26c58ea and 193cd75, with no skill.
+- Sonnet 5.5, apply: all 4 scaffolds of scenario 4 on 26c58ea and 193cd75 used a Blob download and CRLF line ends.
