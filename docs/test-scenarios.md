@@ -67,9 +67,9 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Expected**:
 
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision that `plan.md` had before the run (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
-- Before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172).
-- In step 5, the agent says that the preview is current, and gives no stale warning.
+- In step 4, before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172).
 - In step 4, the agent copies the line of `plan-status.mjs`: "plan.md is not committed, …" (D171, D193). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
+- In step 5, the agent gives no stale warning.
 
 ## 4. Stock apply follows the plan-lite rules
 
@@ -84,7 +84,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - It does not edit `tasks-preview.md`.
 - No code, test name, test string, code comment, commit message, or file other than `plan.md` and `tasks-preview.md` holds a `plan.md` ID such as `C1` or `D1` (D142).
 - If `plan.md` has open questions, the agent asks each one with its recommended answer before coding, and ends the turn. For a question that only the user can answer, for example where some code is, it gives no recommendation and says why (D193). Each other question still gets a recommendation (D195). It closes only the questions that the user answered (D172).
-- If a command failed and the agent changed the work for it, `## Facts` has a fact with the command and the error text (D172).
+- If a command failed and the agent changed the work for it, `## Facts` has a fact with the command and the error text (D172). If a reader can see the same output in the code, it is in the "because" part of a decision instead (D200).
 - Each choice between real alternatives that the agent made is a `### Decision D<n>:` entry. Each decision that records an answer or an instruction of the user has no 🤖. Each other decision that the agent wrote ends its heading with 🤖, also when its reason comes from `plan.md` (D181, D182). The end summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md` (D171).
 - Before the done check, the agent runs the tests with `node --test`, and they pass. The summary gives the result (D176).
 - A test covers the export: the CSV holds the rows that the table shows, in the column order of the table. The test fails if the export writes the wrong rows or the wrong order.
@@ -113,17 +113,16 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. On a new plan-lite change `city-lookup`, add `tools/geo.mjs`. For `node tools/geo.mjs Paris`, it prints `{"lat":48.86,"lon":2.35}`. For each other city, it prints `{"error":"city not found"}`, also with exit code 0. Write a `plan.md` with the Goal "Add `lookup(city)` in `src/lookup.js`. It returns the coordinates from `tools/geo.mjs`, or `null` for an unknown city." and the constraint "- C1: Add no npm dependency." Commit.
 2. Run `openspec-lite-tasks-preview city-lookup`. Do not commit after it.
-3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Continue from plan.md. Use your recommended answer for the first question. Leave the other questions open." If it asks only one question, answer it the same way.
-
+3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Continue from plan.md. Use your recommended answer for the first question. Leave the other questions open." If it asks only one question, answer it the same way. If it asks no question, give no answer.
 4. Commit. Run `openspec-lite-archive city-lookup`. If it asks "Archive anyway?", answer yes. Approve each draft.
 
 **Expected** (D171, D172, D179, D184):
 
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed and `plan-status.mjs` prints nothing (D193).
-- After step 2, each decision of the preview ends its heading with 🤖. After step 3, the decision of the answered question has no 🤖 (D181).
+- After step 2, each decision of the preview ends its heading with 🤖. If apply asked a question in step 3, the decision of the answered question has no 🤖 (D181).
 - After step 2, if a decision of the preview says how `lookup` finds an unknown city, `plan.md` gives the reason for it: the tool reports an unknown city with an error body in its output, not with a failing exit. The 3 lines of `tools/geo.mjs` show this, so it is an obvious fact, also if a run showed it. It is in the "because" part of that decision, not in `## Facts` (D192, D198, D200). If a run read the exit code, it used `exit-code.mjs` (D197). The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module", or what `geo.mjs` prints for Paris, which its code shows (D198). If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
 - In step 3, if step 2 changed `plan.md`, the agent says in one line that `plan.md` is not committed. If step 2 did not change it, the agent gives no such note (D193). It gives no stale warning. If `plan.md` has open questions, it asks each one with its recommended answer before it writes code, and ends the turn. It does not answer a question itself (D172).
-- After step 3, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
+- After step 3, if apply asked a question, the answered question is a decision, and each other question is still in `## Open Questions`. The agent does not ask them again, and it writes the code. If a question is still open, the done check says that `## Open Questions` is not empty (D172).
 - After step 3, `## Facts` holds no fact about the error body. The decision on how `lookup` finds an unknown city still gives the error-body reason (D198, D200). The summary lists each fact, decision, and open question that apply added, changed, or removed.
 - In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, the ADR gives the error-body reason. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the decision as not drafted, with a reason (D179, D186).
 - After step 3, `lookup('Paris')` returns the coordinates, and `lookup('Atlantis')` returns `null`. The agent checks both with a run or a test.

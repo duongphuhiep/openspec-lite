@@ -2788,3 +2788,18 @@ The user chose this.
 This revises D172, D193, D196, and D198.
 
 **Rationale**: review round 11 found these gaps. (1) Two fact rules disagreed on code-visible output. D185 and D198 already chose the code rule. (2) With the old 4c text, a run that put an obvious fact in `## Facts` passed. The user chose the obvious path over a new fixture, because 4d already tests a non-obvious fact. (3) to (7) each have one logical fix: a check that a correct run fails, a step that conflicts with D199, a check that ignores a case, and two upgrade sentences that an agent can misread.
+
+## D201: Fixes From Review Round 12 on cb22fc4..local
+
+**Decision**:
+
+1. The D198 rule says "A run alone is not enough" in each place. "A run is necessary" was wrong: research, a long analysis, or other work can also find a non-obvious fact.
+2. The first rule of `apply.instruction` defines the OpenSpec root as the folder that holds `openspec/`. Stock `/opsx:apply` reads only this text.
+3. Archive step 1: on no to "Archive anyway?", archive gives the paths, then stops. "No other options" applies only to the question.
+4. Scenario 4: the tool-error check has the D200 exception for output that the code shows.
+5. Scenario 3: the Expected bullets name their step, in step order. Step 5 checks only that there is no stale warning, because no rule asks the agent to say that the preview is current.
+6. Scenario 4c works also when the preview writes no open question.
+
+This revises D191, D198, and D200.
+
+**Rationale**: review round 12 found these gaps. Each has one logical fix: a rule that contradicts the definition before it, a term that the first rule uses before it is defined, two sentences that an agent can read in two ways, and three checks that a correct run fails.
