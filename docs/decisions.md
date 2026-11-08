@@ -2755,3 +2755,16 @@ This revises D133 and D191.
 This revises D184 and D186.
 
 **Rationale**: in the run on 5aa0025, 2 of 4 runs of group I wrote a fact that only repeats the code or an `ls` result: 4c-1 "a CLI script with no exports ... prints JSON", and 4d-2 a file list (todo item 54). The template comment begins with "A non-obvious fact needs a run", and the agent read it as "each run result is a non-obvious fact". The rule "also if a run found it" was in the skill text, but not in the template, which the agent reads with `plan.md`.
+
+## D199: Each Scenario Run Is Isolated, and a Chained Scenario Starts From a Fixture
+
+**Decision**:
+
+1. Each scenario run starts in a new temp folder and a new agent session. It does not start from the output of another scenario, and it does not copy or clone the folder of an earlier run. `--resume` is only for the answers inside one scenario.
+2. A scenario that needs an earlier state starts from a fixed fixture in `tests/fixtures/scenarios/`: `after-propose` (scenarios 3 and 16a), `after-preview` (scenario 4), and `after-upgrade` with `kept-plan.md` (scenarios 17, 17b, 18, 18b, and 19). The fixtures come from real runs on 743a6f3, cleaned by hand: the obvious fact of the preview is removed (D198), and the delta holds the 🤖 scenario "Table is empty".
+3. `scripts/scenario-setup.sh <label> [fixture]` builds the start state. It commits with the neutral message "setup". A run never writes to `tests/fixtures/`. A test checks that the preview of `after-preview` is current.
+4. Scenario 4 now gives a fixed answer to each of the three open questions of the fixture. Scenario 18b runs archive in its own session, not as the next turn of scenario 18.
+
+The user chose this.
+
+**Rationale**: scenarios 3, 4, 16a, 17, 18, 18b, and 19 ran on the output of scenario 1 or 7, and scenario 4 shared a session with scenario 3. So the start state of each run differed: on 5aa0025 and 743a6f3, propose and the preview wrote two or three open questions, with or without a fact, and upgrade wrote two or three decisions, with or without a 🤖. The 18b failure on 5aa0025 and its pass on 743a6f3 came with no change to the archive skill, so the start state can explain it. One rerun of scenario 4 on 5aa0025 was a `git clone` of the first run, so the two runs were not independent. On 5aa0025, one group overwrote a shared start state with its own output. With a fixed fixture, each scenario tests only its own skill, and two runs start from the same files. Scenarios 4c, 4d, and 20a already used fixed start states, and they gave the most stable results.

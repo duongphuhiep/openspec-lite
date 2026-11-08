@@ -9,6 +9,19 @@ Setup for each scenario, unless it says otherwise:
 3. Install the release candidate: `apm install <path-to-this-repo>/package --target claude` (or your harness). Use the same harness as in step 2.
 4. Start a new agent session in the folder.
 
+`scripts/scenario-setup.sh <label> [fixture]` does steps 1 to 3, commits with the message "setup", and prints the folder. With a fixture, it also installs the schema and copies the `openspec/` folder of `tests/fixtures/scenarios/<fixture>/` (D199):
+
+- `after-propose`: the change `add-csv-export-to-report-page` after scenario 1. `plan.md` has only the Goal.
+- `after-preview`: the same change after a tasks preview, with three open questions and a current `tasks-preview.md`.
+- `after-upgrade`: the same change after an upgrade (scenario 7), with no `plan.md`. Its delta holds the 🤖 scenario "Table is empty". `tests/fixtures/scenarios/kept-plan.md` is the `plan.md` that an upgrade keeps when an open question has no slot.
+
+Isolation rules (D199):
+
+- Each scenario run starts in a new temp folder, from the setup above or from a fixture. Do not start from the output of another scenario, and do not copy or clone the folder of an earlier run.
+- Each scenario run starts a new agent session. Use `--resume` only for the answers inside one scenario.
+- A setup commit message is neutral, for example "setup". The agent sees the recent commit messages (`docs/facts.md`).
+- A run never writes to `tests/fixtures/`. To change a fixture, edit it in a commit, and run `node --test`.
+
 If a scenario builds a plan-lite change by hand, install the schema first: `node .claude/skills/openspec-lite-schema/scripts/install.mjs .`. Then run `openspec new change <name> --schema plan-lite`. OpenSpec 1.14.2 writes `skip_specs: true` itself. Do not add a second line, because a duplicate key breaks each CLI command on the change (D150). Commit the code before an archive run, because `git grep` searches only tracked files.
 
 Record the agent, the model, the OpenSpec version, and the result of each scenario.
@@ -45,7 +58,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. Run scenario 1. Commit. Then answer yes to the tasks preview. Commit again after the preview.
+1. Start from the fixture `after-propose`. Run `openspec-lite-tasks-preview add-csv-export-to-report-page`. Commit after the preview.
 2. Check `tasks-preview.md`: the second line is `<!-- plan-sha256: <64 hex chars> -->`, and the tasks have no checkboxes.
 3. Add or edit a line under `## Constraints` in `plan.md`. Do not commit this edit.
 4. Run stock `/opsx:apply` (or `openspec-lite-apply`).
@@ -53,7 +66,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Expected**:
 
-- In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision of scenario 1 (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
+- In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision that `plan.md` had before the run (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
 - Before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has open questions, it asks each one in the same reply, with its recommended answer (D172).
 - In step 5, the agent says that the preview is current, and gives no stale warning.
 - In step 4, the agent copies the line of `plan-status.mjs`: "plan.md is not committed, …" (D171, D193). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
@@ -62,8 +75,8 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 **Steps**:
 
-1. On the change from scenario 1, run stock `/opsx:apply`.
-2. Answer the questions of apply in one reply: "Continue from `plan.md`. Do not regenerate the preview. <one answer for each open question>. Stack: plain HTML and JavaScript under `src/`, tests with `node:test`, run with `node --test`, no npm dependency. Scaffold a minimal report page." Write a real answer for each open question in `plan.md`. Do not write "use the defaults", because apply gives no defaults (D156).
+1. Start from the fixture `after-preview`. Run stock `/opsx:apply`.
+2. Answer the questions of apply in one reply: "Continue from `plan.md`. OQ1: the report page does not exist yet; create it in this repo. OQ2: export only the rows that the table shows, after the filters, in the current sort order, with all columns in the column order of the table. OQ3: build the CSV in the browser. Stack: plain HTML and JavaScript under `src/`, tests with `node:test`, run with `node --test`, no npm dependency. Scaffold a minimal report page." Do not write "use the defaults", because apply gives no defaults (D156).
 
 **Expected**:
 
@@ -170,7 +183,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 - After step 3, the agent keeps `proposal.md` and writes the rest. Before any write, the agent asks the open question and each planned requirement from the Goal or the tasks preview in one reply (D164). Each requirement comes from a constraint, a decision that is a contract, or an answer of the user (D166). Each other item in `proposal.md`, `specs/`, and `design.md` that comes from neither `plan.md` nor an answer ends with 🤖, for example a scenario "Table is empty" from the tasks preview. `tasks.md` has no 🤖. The summary lists each 🤖 item (D152). The quoting decision keeps its 🤖 in `design.md`, and the summary lists it as an agent decision. The question turn asks the requirement that the agent plans from it, because the quoting is a contract of the CSV file (D182). `tasks.md` has `- [ ]` tasks seeded from the preview. The agent deletes `tasks-preview.md`.
 - `specs/` holds the column-order requirement. The answer "no hidden columns" is in `specs/` or in `design.md`. `design.md` holds the browser decision and the "no new server endpoint" constraint.
 - `.openspec.yaml` has `schema: spec-driven`. `openspec validate` passes or the agent reports each error.
-- In one reply, the agent shows the `validate` result, the summary, and the list of `plan.md` destinations, with the prune question as the last line (D193). After the yes, `plan.md` is deleted. If a section is still kept, delete `plan.md` before scenarios 17 and 19.
+- In one reply, the agent shows the `validate` result, the summary, and the list of `plan.md` destinations, with the prune question as the last line (D193). After the yes, `plan.md` is deleted, or holds only the open questions that have no slot.
 
 ## 8. Newer repo schema
 
@@ -381,7 +394,7 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 
 **Steps**:
 
-1. Run scenario 1, so that `openspec/config.yaml` has the openspec-lite archive guidance item.
+1. Start from the fixture `after-propose`. Its `openspec/config.yaml` has the openspec-lite archive guidance item.
 2. Add one non-obvious constraint and one decision to `plan.md`.
 3. Run stock `/opsx:archive <name>`.
 
@@ -396,7 +409,7 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 
 **Steps**:
 
-1. Run scenario 7 to its end. The change is `spec-driven`, with `tasks.md`, and has no `plan.md`.
+1. Start from the fixture `after-upgrade`. The change is `spec-driven`, with `tasks.md`, and has no `plan.md`.
 2. Run `openspec-lite-apply <name>`.
 
 **Expected**:
@@ -404,13 +417,13 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 - The agent stops at the change schema guard. It writes no code and changes no file.
 - It tells the user to run stock `/opsx:apply`, because the change is spec-driven now.
 
-**Variant 17b**: before step 2, put back a `plan.md` with only an open question, as an upgrade keeps it when a section has no slot. Expected: `openspec-lite-apply` still refuses. Only `openspec-lite-upgrade` has the resume exception (D106). It also says that `plan.md` holds an open question that stock `/opsx:apply` does not read, and tells the user to resolve it first.
+**Variant 17b**: before step 2, copy `tests/fixtures/scenarios/kept-plan.md` to the change as `plan.md`, and commit. It holds only an open question, as an upgrade keeps it when a section has no slot. Expected: `openspec-lite-apply` still refuses. Only `openspec-lite-upgrade` has the resume exception (D106). It also says that `plan.md` holds an open question that stock `/opsx:apply` does not read, and tells the user to resolve it first.
 
 ## 18. `openspec-lite-archive` after an upgrade
 
 **Steps**:
 
-1. Run scenario 7 to its end. Mark each task in `tasks.md` as done (`- [x]`).
+1. Start from the fixture `after-upgrade`. Mark each task in `tasks.md` as done (`- [x]`). Commit.
 2. Run `openspec-lite-archive <name>`.
 
 **Expected**:
@@ -418,7 +431,6 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 - The agent stops at the change schema guard. It drafts nothing and writes no spec and no ADR.
 - The decisions from `plan.md` are in `design.md` → `## Decisions` (upgrade moved them, D62).
 - The agent warns that stock `/opsx:archive` does not turn these decisions into ADRs, and says to copy them to `openspec/adr/` first to keep them (D115).
-- The upgrade summary from scenario 7 already gave the same warning.
 - The agent can offer to copy the decisions to ADRs. It writes nothing before a yes (D154). If the user declines, it tells the user to run stock `/opsx:archive`.
 
 ### 18b. Archive copies the decisions to ADRs after the guard
@@ -427,9 +439,9 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 
 **Steps**:
 
-1. Start from the end state of scenario 18. If no delta in `specs/` holds a 🤖, add one by hand, so that the 🤖 block is always tested: end a `#### Scenario:` heading with 🤖.
-2. Answer: "Yes, copy the decisions of `design.md` to ADRs." If the agent made no offer in scenario 18, ask for this copy in the same words.
-3. Approve each draft.
+1. Start from the fixture `after-upgrade`. Copy `tests/fixtures/scenarios/kept-plan.md` to the change as `plan.md`. Mark each task in `tasks.md` as done (`- [x]`). Commit. The delta holds the 🤖 scenario "Table is empty", so the 🤖 block is always tested.
+2. Run `openspec-lite-archive add-csv-export-to-report-page` in a new session. Answer: "Yes, copy the decisions of `design.md` to ADRs." If the agent made no offer, ask for this copy in the same words.
+3. Approve each draft: "Yes to each draft."
 4. If the agent lists 🤖 lines of `specs/` or `design.md`, remove each 🤖 by hand. Then answer yes to the archive question.
 
 **Expected**:
@@ -437,15 +449,15 @@ This scenario checks the yes path of the offer in scenario 18 (D154).
 - The agent shows each ADR draft before it writes. Each draft has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
 - After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
 - `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
-- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of scenario 7. It does not offer the archive while a delta holds a 🤖 (D192). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
+- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of the fixture. It does not offer the archive while a delta holds a 🤖 (D192). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
 
 ## 19. Other openspec-lite skills after an upgrade
 
-**Steps**: On the change from scenario 7, run each of these:
+**Steps**: Start from the fixture `after-upgrade`. Run each of these in a new session:
 
 1. `openspec-lite-tasks-preview <name>`
 2. `openspec-lite-upgrade <name>` (the change has no `plan.md`)
-3. `openspec-lite-upgrade <name>`, after you put back a `plan.md` with only an open question
+3. `openspec-lite-upgrade <name>`, after you copy `tests/fixtures/scenarios/kept-plan.md` to the change as `plan.md`, and commit
 
 **Expected**:
 
@@ -579,7 +591,7 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 
 You can run each scenario without a person at the keyboard, with Claude Code in print mode. This is how the scenarios ran on 2026-10-15.
 
-1. Build the start state of the scenario in a temp folder (see each scenario's Steps).
+1. Build the start state of the scenario in a new temp folder, with `scripts/scenario-setup.sh` (see each scenario's Steps and the isolation rules at the top).
 2. Run the first prompt from inside that folder:
 
    ```sh
@@ -605,7 +617,7 @@ Notes:
 
 ## Metrics
 
-Each report has a metrics table, with one row for each session and one total row for the group. If scenarios share a session, as scenarios 1, 3, and 4 can, name each of them in the label, for example `--label 1+3` (D162). The numbers are useful only in a comparison, for example the same scenario on the last tag and on the new commit.
+Each report has a metrics table, with one row for each session and one total row for the group. Each scenario has its own sessions (D199). The numbers are useful only in a comparison, for example the same scenario on the last tag and on the new commit.
 
 1. Save the JSON of each turn in its own file, in order, for example `> turn-1.json`, then `> turn-2.json` for the first `--resume` turn.
 2. After the last turn, run this command from the repo root. Use the OpenSpec root of the scenario for `--dir`. It is the temp folder, except in scenario 11, where it is `<temp>/svc` (D162):

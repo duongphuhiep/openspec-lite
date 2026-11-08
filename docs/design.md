@@ -32,8 +32,10 @@ openspec-lite/
 │                   └── plan.md
 ├── scripts/
 │   ├── check-version.mjs
-│   └── run-metrics.mjs
+│   ├── run-metrics.mjs
+│   └── scenario-setup.sh  # isolated start state for one scenario run
 ├── tests/
+│   ├── fixtures/scenarios/  # fixed start states of the scenarios
 │   ├── plan-hash.test.mjs
 │   ├── check-version.test.mjs
 │   ├── install.test.mjs
@@ -115,7 +117,8 @@ openspec-lite/
 - `openspec-version.test.mjs`: with a fake `openspec` on `PATH`, 1.14.2 is in `>=1.9.0 <2.0.0`. A version outside the range and output with no version exit with code 2. A failed command and a `schema.yaml` with no range exit with code 1. The shipped `schema.yaml` has a readable range. It skips on Windows (D175).
 - `run-metrics.test.mjs`: the script sums the tokens, turns, denials, and time of all turns. It takes the cost and the thinking tokens from the last turn of each session, because a `--resume` turn holds the totals of the session (D170). It counts a tool call that is twice in the log once. A turn in a new session is not a user turn. It lists the `.md` files under `openspec/`, except `openspec/schemas/` and `openspec/schemas-backup/` (D162). A missing session log exits with code 1 (D146).
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It also tests the upgrade path (`instructions <artifact> --schema spec-driven` on a plan-lite change), an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs` (D108). It also tests the CLI behavior that the skills rely on: `state: blocked` with no `plan.md`, `root.path` from a subfolder and `root: null` above it, `skipped: true` on `instructions specs` with `skip_specs`, and the failure on a duplicate key in `.openspec.yaml` (D112). The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
-- `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to `docs/todo.md`, or a new decision fixes the skill (D173).
+- `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to `docs/todo.md`, or a new decision fixes the skill (D173). Each scenario run is isolated: a new temp folder from `scripts/scenario-setup.sh`, a new session, and no output of another scenario or of an earlier run. A scenario that needs an earlier state starts from a fixture in `tests/fixtures/scenarios/` (D199).
+- `scenario-fixtures.test.mjs`: the `tasks-preview.md` of the `after-preview` fixture has the `plan-sha256` of its `plan.md` (D199).
 
 ## 3. Skill Rules
 
