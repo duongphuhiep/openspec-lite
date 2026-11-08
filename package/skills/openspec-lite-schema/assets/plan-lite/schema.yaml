@@ -27,7 +27,7 @@ apply:
     - Do not edit tasks-preview.md.
     - Suggest running openspec-lite-upgrade when one of these is true: another person or agent must continue the work; the change touches more than one capability; the change touches more than one repo; a contract (spec) becomes necessary.
     - When you change a behavior, write or update a test that fails if the behavior breaks. Run the tests before the done check.
-    - At the end, before the done check, compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
+    - At the end, before the done check, compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true. Also check each fact that you added in this run: if a reader can see it in the code or the file list, it is obvious, also if you found it with a run. Move it to the "because" part of the item that it justifies, or remove it.
     - At the end, before the done check, compare each decision in `## Decisions` with the code. If the code no longer matches a 🤖 decision, update the decision. If it does not match a decision with no 🤖, plan.md wins: fix the code. If the code cannot follow that decision, ask the user, and end your turn.
     - At the end, before the done check, record in `## Open Questions` each point that you are unsure or worried about and cannot resolve, as `- OQ<n>: <question>`.
     - In the end summary, list each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID. The plan hash does not cover these three sections, so these edits do not make the preview stale.

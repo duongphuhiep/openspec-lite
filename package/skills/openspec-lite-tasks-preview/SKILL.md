@@ -74,4 +74,6 @@ Give each new item a number higher than each ID of its kind in the file. Do not 
 
 ## 4. End
 
+Before the list, check each fact that you added in this run. Read the code or the file list that the fact is about. If a reader can see the fact there, it is obvious, also if you found it with a run: move it to the "because" part of the item that it justifies, or remove it.
+
 List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID. Tell the user to read the preview. If they disagree, they put the correction in `plan.md` and run this skill again. They do not edit `tasks-preview.md`.

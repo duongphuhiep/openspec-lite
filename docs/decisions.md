@@ -2929,3 +2929,11 @@ This revises D99, D108, D160, and D207.
 This revises D164 and D193.
 
 **Rationale**: the rule "the summary does not say that `plan.md` is deleted or kept" was only in step 5.3. Section 3 said "List the files that you wrote and deleted", which pushed the agent to write "Not deleted: `plan.md`" in 3 of 5 prune replies on f5422dd and 765cdec (todo item 61). The words "ask the user for at least one" made the agent say "I can't proceed without one", but step 2.2 allows no spec. Each item has one logical fix.
+
+## D211: Preview and Apply Check Each New Fact at the End
+
+**Decision**: at the end, the tasks preview and apply check each fact that they added in the run. They read the code or the file list that the fact is about. If a reader can see the fact there, it is obvious, also after a run. They move it to the "because" part of the item that it justifies, or remove it. The fact rules stay as they are.
+
+This revises D198 and D200.
+
+**Rationale**: on f5422dd and 765cdec, each preview of 4c that ran `tools/geo.mjs` wrote its error body and exit 0 in `## Facts`, and each preview that only read the file wrote none (todo item 65). The rule "A run alone is not enough" was there in both cases. At the time of the run, the agent sees the run as the source. A check at the end looks at the fact again, next to the code, after the run. Apply already compares each fact with the code at the end, so the check adds one question to an existing step.

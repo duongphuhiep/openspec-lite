@@ -118,7 +118,7 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 
 ## Found in the run on f5422dd
 
-The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208, D209, and D210 close items 60, 61, and 62. The rerun on 765cdec (`.scenario-runs/20261108-765cdec/`) confirms both: 7 and 21b pass 2 of 2. 20c and 4c pass 1 of 2. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
+The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208, D209, D210, and D211 close items 60, 61, 62, and 65. The rerun on 765cdec (`.scenario-runs/20261108-765cdec/`) confirms both: 7 and 21b pass 2 of 2. 20c and 4c pass 1 of 2. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
 
 ### 63. Archive talks about marks when there is none
 
@@ -133,13 +133,6 @@ The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A
 - **Problem**: scenario 4 run 1 chose `"type": "module"` and CRLF with no decision. In 4d-2, apply changed the code against the user decision D3 and did not ask.
 - **Evidence**: `group-A.md` (4 run 1), `group-I.md` (4d-2).
 - **Recommendation**: not decided. Related to item 57.
-
-### 65. The obvious error body still goes into `## Facts`
-
-- **Where**: the tasks preview fact rules (D198, D200). Scenario 4c.
-- **Problem**: after an `exit-code.mjs` run, the preview put the error body and exit 0 of `geo.mjs` in `## Facts`. 3 of 4 runs of 4c over two commits. The `plan-hash.mjs` step also does not name `exit-code.mjs`, so 3 of 4 applies added `echo`.
-- **Evidence**: `group-I.md` (4c-2, `3548fe18`). Rerun on 765cdec: each preview that ran `geo.mjs` wrote the fact (2 of 2 over two commits), and each preview that only read it wrote none.
-- **Recommendation**: not decided. The run result seems to make the agent see the fact as non-obvious. One option: an example in the rule, "the output of a script whose code shows it, also after a run".
 
 ### 66. Smaller gaps from the run on f5422dd
 
