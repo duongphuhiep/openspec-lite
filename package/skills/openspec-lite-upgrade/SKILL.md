@@ -38,7 +38,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
    The Goal and `tasks-preview.md` alone are not sources. Then ask the user, in one reply, before you write any artifact:
    - each open question in `plan.md` that changes the specs, the approach, or the tasks, as the `design` instruction says;
    - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`. Show its text, and ask if you can write it;
-   - if you plan no requirement at all, ask the user for at least one.
+   - if you plan no requirement at all, ask the user if the change has a requirement. "None" is a valid answer: then upgrade writes no spec (step 2.2).
 
    End the turn, and wait for the answer. If all three lists are empty, do not ask. If the user cannot answer an open question now, keep the question in `plan.md`.
 
@@ -78,7 +78,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
 Write the summary in the reply of step 5.3, before the question. In the summary:
 
-- List the files that you wrote and deleted.
+- List the files that you wrote, and `tasks-preview.md` if you deleted it. Do not name `plan.md` in this list, as deleted or as kept: step 5.4 says what happens to it after the answer.
 - Ask the user to review all artifacts.
 - If an artifact has 🤖 items, list each one with its new claim, or as an agent decision of `plan.md`. Ask the user to review each one: remove the mark to accept the item, or delete the item.
 - Ask for an extra review of `tasks.md`, because it is a contract, not a reference.

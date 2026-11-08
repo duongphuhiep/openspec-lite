@@ -2918,3 +2918,14 @@ This revises D99, D108, D160, and D207.
 **Decision**: the archive done check gets the git root with `git rev-parse --show-toplevel` as its own command. Then it searches with `git -C <git root> grep <word>`. A command substitution such as `$(...)` is not used, because it causes a permission prompt. Scenario 21b checks that the done check passes when the repo holds committed code that meets the Goal.
 
 **Rationale**: in 21b on f5422dd, a `cd openspec && …` stayed in effect, so `git grep` searched only `openspec/`. The agent told the user that the repo has no rate-limit code, but `src/rateLimit.js` was committed (todo item 62). A `cd` stays in effect inside a turn and into the next `--resume` turn (`docs/facts.md`). The default "yes" to "Archive anyway?" hid the false warning, so 21b needs its own check.
+
+## D210: The Upgrade Summary Lists Only the Files That It Wrote, and "None" Is a Valid Requirement Answer
+
+**Decision**:
+
+1. The upgrade summary lists the files that upgrade wrote, and `tasks-preview.md` if it deleted it. It does not name `plan.md` in this list, as deleted or as kept. Step 5.4 says what happens to `plan.md` after the answer.
+2. If upgrade plans no requirement, it asks if the change has one. "None" is a valid answer, and then upgrade writes no spec. Scenario 20c checks that the question does not say that upgrade cannot go on.
+
+This revises D164 and D193.
+
+**Rationale**: the rule "the summary does not say that `plan.md` is deleted or kept" was only in step 5.3. Section 3 said "List the files that you wrote and deleted", which pushed the agent to write "Not deleted: `plan.md`" in 3 of 5 prune replies on f5422dd and 765cdec (todo item 61). The words "ask the user for at least one" made the agent say "I can't proceed without one", but step 2.2 allows no spec. Each item has one logical fix.

@@ -118,15 +118,7 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 
 ## Found in the run on f5422dd
 
-The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208 and D209 close items 60 and 62. The rerun on 765cdec (`.scenario-runs/20261108-765cdec/`) confirms both: 7 and 21b pass 2 of 2. 20c and 4c pass 1 of 2. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
-
-### 61. The upgrade summary says that `plan.md` stays
-
-- **Where**: upgrade step 5.3 and section 3 (D193).
-- **Problem**: in 2 of 3 prune replies, the summary said "Not deleted: `plan.md`" or "still there". Section 3 says "List the files that you wrote and deleted", which pushes the agent to say it.
-- **Evidence**: `group-F.md` (20c run 1, 20a step 2).
-- **Recommendation**: not decided. One option: section 3 says "List the files that you wrote", and the deleted files come after the answer.
-- **Rerun on 765cdec**: 1 of 2 runs of 20c said "Not deleted: `plan.md`" again. The other run said "I can't proceed without one. The skill needs at least one." about a requirement, because step 2 says "ask the user for at least one". Add a "none" answer to that step.
+The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208, D209, and D210 close items 60, 61, and 62. The rerun on 765cdec (`.scenario-runs/20261108-765cdec/`) confirms both: 7 and 21b pass 2 of 2. 20c and 4c pass 1 of 2. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
 
 ### 63. Archive talks about marks when there is none
 

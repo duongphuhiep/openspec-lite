@@ -505,7 +505,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 **Steps**:
 
 1. Create a plan-lite change with a Goal and one `### Decision D<n>:` entry in `plan.md`. The decision must not be a contract, for example "Store the audit log in the main database". Do not write a requirement or a constraint (D164).
-2. Run `openspec-lite-upgrade`. When the agent asks for a requirement, answer "none".
+2. Run `openspec-lite-upgrade`. When the agent asks for a requirement, answer "none". The question does not say that upgrade cannot go on without a requirement (D210).
 
 **Expected**:
 
