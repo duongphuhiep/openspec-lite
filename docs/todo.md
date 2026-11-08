@@ -79,13 +79,6 @@ The reports are in `.scenario-runs/20261108-dd7ad75/`. D193 closes items 43 to 4
 
 The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A.md` to `group-I.md`). 30 of 41 runs pass. Scenarios 4, 18b, 20a, 4c, and 4d fail in each run. D194 to D198 close items 48, 49, 52, 53, and 54. The rerun on 743a6f3 is in `.scenario-runs/20261108-743a6f3/`: 18b, 20a, and 4c pass 2 of 2. 4 and 4d fail 2 of 2. Item 50 has new evidence: 4d wrote no test in 2 of 2 runs.
 
-### 50. Apply writes a test that does not fail on the old behavior
-
-- **Where**: `apply.instruction`, the test rule (D192). Scenarios 4b and 4d.
-- **Problem**: in 4b run 1, the sliding-window test also passes on the fixed window of turn 1. In 4d-2, apply wrote no test, with "the repo has no test setup". `node:test` needs no setup.
-- **Evidence**: `group-A.md` (4b), `group-I.md` (4d-2).
-- **Recommendation**: not decided. Options: the agent runs the new test against the old code once, and says that `node:test` needs no setup.
-
 ### 51. Archive after an upgrade does not name the open question of a kept `plan.md`
 
 - **Where**: `package/skills/openspec-lite-archive/SKILL.md`, step 3 (D193 item 4). Scenario 18b.
@@ -118,7 +111,7 @@ The reports are in `.scenario-runs/20261108-5aa0025/` (`summary.md` and `group-A
 
 ## Found in the run on f5422dd
 
-The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208, D209, D210, and D211 close items 60, 61, 62, and 65. The rerun on 765cdec (`.scenario-runs/20261108-765cdec/`) confirms both: 7 and 21b pass 2 of 2. 20c and 4c pass 1 of 2. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
+The reports are in `.scenario-runs/20261108-f5422dd/` (`summary.md` and `group-A.md` to `group-I.md`). 31 of 40 runs pass. Scenario 7 fails in each run. 3, 4, 18, 18b, 20c, 4c, and 4d fail once and pass once. D208 to D213 close items 50, 60, 61, 62, and 65. The rerun on 765cdec (`.scenario-runs/20261108-765cdec/`) confirms both: 7 and 21b pass 2 of 2. 20c and 4c pass 1 of 2. Items 50 and 57 have new evidence: 4d wrote no test in 3 of 4 runs over two commits, and in scenario 4 an agent choice went into no decision at all.
 
 ### 63. Archive talks about marks when there is none
 

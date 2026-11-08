@@ -2945,3 +2945,11 @@ This revises D198 and D200.
 This revises D93 and D205.
 
 **Rationale**: the rule "if it exits with code 1" made the agent add `echo "$?"` to the command in 5 of 6 applies over f5422dd and 765cdec, and the allowlist denied it. The output alone tells the two cases apart: a 64-character hash, or a `plan-hash:` message. So the rule needs no exit code and no `exit-code.mjs`.
+
+## D213: A Manual Run Is Not a Test, and a Test of a Replaced Behavior Fails on the Old One
+
+**Decision**: in `apply.instruction`, a manual run is not a test. Apply writes the test in a file that the test command of the repo runs. If the repo has no test setup, apply adds the smallest one that needs no new dependency, for example `node:test` for JavaScript. If the change replaces an old behavior, the test must also fail on the old behavior. Scenarios 4b and 4d already check both.
+
+This revises D192.
+
+**Rationale**: 4d wrote no test in 3 of 4 runs over 743a6f3 and f5422dd, with "the repo has no test setup" or "I checked it by hand". In 4b on 5aa0025, the sliding-window test also passed on the fixed window that it replaced (todo item 50). The D192 rule did not name these two cases.
