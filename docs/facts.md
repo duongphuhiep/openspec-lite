@@ -1004,6 +1004,23 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.319: stock `/opsx:apply` ran `openspec instructions apply` in 8 of 8 sessions on 26c58ea and 193cd75, with no skill.
 - Sonnet 5.5, apply: all 4 scaffolds of scenario 4 on 26c58ea and 193cd75 used a Blob download and CRLF line ends.
 
+## Scenario Run on bdd9b0e
+
+**Source**: all scenarios, 41 runs, isolated (D199), Claude Code 2.1.321 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261109-bdd9b0e/`, 2026-11-09.
+
+- Claude Code 2.1.321, scenario allowlist: the heredoc rule depends on the form. `cat >> <file> <<'EOF' … EOF` and then `node <script>` on a new line ran with no denial (group D, `raw/D/11/turn-2.json`; group H, `9b2afa0f`, also with `grep`). `mkdir -p <dir> && cat > <file> <<'EOF'` and `cd <dir>; …; cat > <file> <<'EOF'` are denied (groups E, I). So the 2.1.318 fact "a heredoc followed by more commands on new lines is denied" does not hold for an append heredoc on 2.1.321.
+- Claude Code 2.1.321, scenario allowlist: also denied are `cd "$(git rev-parse --show-toplevel)" && …` (groups B, H), `R=$(git rev-parse --show-toplevel); git -C "$R" grep …` (group F), `cd openspec; …; git -C .. grep …` (group G), `PATH=/nonexistent "$(command -v node)" …` and `N=$(command -v node); …` (group I), and a chain that starts with `rm` (group B). `cd svc && openspec list --json; ls; cat … | head` ran (group D).
+- Claude Code 2.1.321: a denied Bash call does not change the working folder of the next call (group G, `0c873c1e`). A `cd <abs>/svc && …` of turn 1 stays in effect in the `--resume` turn 2, as on 2.1.319 (group D, `0358e295`).
+- Claude Code 2.1.321: the Input tok of a propose session went from about 17,000 (2.1.319, f5422dd) to about 27,000. The cause is not known (group H, metrics tables).
+- Claude Code 2.1.321: stock `/opsx:apply` ran `openspec instructions apply` in 6 of 6 sessions. 5 of 6 called no skill, and 1 loaded `openspec-lite-apply` (group A). Stock `/opsx:archive` switched to `openspec-lite-archive` after `openspec list --json; cat .openspec.yaml`, with no `openspec instructions archive` (group F, `76027862`).
+- OpenSpec 1.14.2: `openspec validate` passes on a spec-driven change whose `design.md` has no `## Risks / Trade-offs` section (group F, session `fd988eae`).
+- Sonnet 5.5 with D217: in groups A and I, 1 of 6 applies made a plumbing detail into its own 🤖 decision (scenario 4 run 1, `visibleRows`). 3 of 6 put a plumbing detail inside a decision that a user sees, for example "Download as `report.csv` through a Blob link". 2 of 6 missed a choice that another program sees: the 429 response body (4b run 1) and the field `summary.totals.items` that the script reads from `openspec` (4d-2).
+- Sonnet 5.5, apply: a plan that the agent states in the question turn, not as a question, is recorded with no 🤖 after "Use your recommended answer for each question." (group I, `5931bbee`). The answer "Leave the other questions open." with no other question makes it hold back the done check (group I, `66480c1f`). In 4b, after the `npm test` denial, it did not try `node --test` in 2 of 2 runs (group A).
+- Sonnet 5.5, tasks preview: it refused to write a preview in 1 of 2 runs of scenario 3, because the repo has no code (group A, `dff6d64b`).
+- Sonnet 5.5, upgrade with D208: `skip_specs: true` stays through the question turn, and the `Edit` that removes it comes before the first spec `Write`, in 2 of 2 runs of scenario 7 (group C). 3 of 9 upgrade runs over three commits wrote the "Table is empty" scenario. Step 2.5 removed the full `## Risks / Trade-offs` section, which held only a pointer to the kept questions (group F, `7ee5261a`).
+- Sonnet 5.5, archive with D215: both runs of 18 named stock `/opsx:archive` after "no" to the ADR offer, and neither run of 18b asked an archive question while a delta held a 🤖 (group C). In 20b, the written ADR held a sentence that the approved draft did not hold (group E).
+- `scripts/break-delta.sh` has mode `100755` on bdd9b0e, and the watcher of 13a broke the delta (group B).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.

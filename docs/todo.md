@@ -134,6 +134,37 @@ The reports are in `.scenario-runs/20261108-26c58ea/`. 20c (3 of 3), 18, 18b, an
 - Upgrade: a Why line with a new claim and no 🤖, in 1 of 3 runs of 20c (group F).
 - Scenario 4: a decision says that `package.json` holds only `"type": "module"`, which is false, in 1 of 2 runs on 26c58ea and on 193cd75. On 193cd75, 1 of 2 runs also missed the file layout decision, and gave a done check with no Goal and no Constraints (`.scenario-runs/20261108-193cd75/group-A.md`).
 
+## Found in the run on bdd9b0e
+
+The reports are in `.scenario-runs/20261109-bdd9b0e/` (`summary.md` and `group-A.md` to `group-I.md`). 35 of 41 runs pass. 3, 4, 7, 4c, and 4d fail once and pass once. 20a fails. 18, 18b, and 20c pass in each run.
+
+### 69. The D217 rule mixes plumbing into visible decisions, and misses inputs from other programs
+
+- **Where**: the decision rule of `apply.instruction` and of the tasks-preview skill (D217).
+- **Problem**: a decision heading names a visible choice, but its text also holds plumbing, for example "Download as `report.csv` through a Blob link". The reviewer must split it. Also, the rule names only what a user or another program sees. It does not name what the code reads from another program, so apply missed the field `summary.totals.items` of the `openspec` output.
+- **Evidence**: `group-A.md` (4 run 1: D4 `visibleRows`, D7), `group-I.md` (4d-2 check 6, two runs with plumbing in a visible decision), `group-A.md` (4b run 1: no decision on the 429 body).
+- **Recommendation**: not decided. Add two sentences: "Record only the part that a user or another program sees." and "An input that the code reads from another program, for example a field of its output, is also a choice that another program sees."
+
+### 70. Apply records a plan of the agent as a user answer
+
+- **Where**: the 🤖 rule of `apply.instruction` (D181, D217).
+- **Problem**: in 4d-2, apply stated "exit 2 when openspec cannot be run" as its plan in the question turn. After "Use your recommended answer for each question.", it wrote this as a decision with no 🤖. The user never chose it.
+- **Evidence**: `group-I.md` (session `5931bbee`).
+- **Recommendation**: not decided. Say that only an answer to a question that the agent asked removes the 🤖. A plan in the same reply keeps it.
+
+### 71. Smaller gaps from the run on bdd9b0e
+
+- 20a: the step 2 section list gives no heading for Background, Non-Goals, and Constraints (group F). Upgrade missed a 🤖 in 2 of 3 runs (20a docs line, 20c run 2 claim), and its summary said that no item has a mark (group F).
+- 7 step 3 run 2: a `design.md` reason from `tasks-preview.md` with no 🤖 (D152, group C).
+- 4c-2: D1 maps the `error` key to `null` with no reason in `plan.md` (group I). Archive spec reasons with no source, now 4 runs over four commits (group I, item 68).
+- 4b: apply ran no test after the `npm test` denial, in 2 of 2 runs, and its `node --test test/` script fails on Node 24 (group A).
+- 3 run 1: the tasks preview wrote no file, because the repo has no code (group A).
+- 20b: the written ADR differs from the approved draft (group E). 21a: the new ADR `## Consequences` holds a process line in the future tense (group G). 21b: archive asked "Yes or no?" before the `Status:` edit, against step 10 (group G).
+- 13a run 2: the summary says "I also removed `skip_specs`", but run 1 removed it (group B). 13a run 1: the agent did not quote the `validate` error (group B).
+- 11: propose asked the Level 1 question and also wrote two open questions (group D).
+- Scenario texts: 4c "Leave the other questions open" holds back the done check (group I). 21b gives no answer for two archive questions (group G). 20b has no check that the written ADR equals the approved draft (group E).
+- Item 55 again in groups D and H. Item 63 again in group E (3 of 3). The ID rule: "OQ2" in a reply in 17b and 18b run 1 (group C).
+
 ### 55. The scripts do not run alone
 
 - **Where**: the version step of each skill, and `plan-status.mjs` (D175, D192, D193).
