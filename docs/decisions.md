@@ -2981,3 +2981,18 @@ This revises D154, D191, and D192.
 This revises D214.
 
 **Rationale**: on 26c58ea, scenario 4 failed 2 of 2 runs, because apply did not record the Blob download, and in one run the CRLF line ends (todo item 67). The D214 text "each choice between real alternatives" and the scenario example "a download method" made each internal detail a decision. That makes `plan.md` long, and a reviewer cannot find the choices that matter. A line ending changes the file that a spreadsheet reads, so it stays in scope. The end check also now reads the code, not only the reply, because the missed choices were only in the code.
+
+## D217: A Decision Is a Choice That a Consumer Sees, or a Close Call, and Never a Plumbing Detail
+
+**Decision**: one rule defines a decision in `apply.instruction` and in the tasks-preview skill. The agent makes a decision when it weighs two or more options and picks one. It records the decision in `## Decisions` when one of these is true:
+
+1. A user or another program sees the result, for example a UI, a public interface, a function signature, a data format, a file name or path, a config key, an error message, or a new dependency.
+2. The options are close, and no option is a clear winner.
+
+It does not record a plumbing detail: an internal detail that it can change later with no effect outside its module. A close call on a plumbing detail is also not recorded. The user chose this.
+
+The end check of apply no longer has its own list. It reads the code, finds each decision of this rule that `## Decisions` does not hold, and records it as a 🤖 decision. The rule "a decision with no 🤖 holds only what the user said" moves to the 🤖 rule, and the end check keeps a short reminder. The schema `version` goes from 5 to 6.
+
+This revises D214 and D216.
+
+**Rationale**: the D216 examples (a line ending, the quoting, the module system, how a browser downloads a file) all came from the CSV export of scenario 4. They taught the agent to look for things like a CSV file, not to ask whether a consumer sees the choice. Also, the rule during the run still used the wide D214 text "each choice between real alternatives", so it disagreed with the end check. Now both use one rule, with examples that apply to each project. A scenario cannot see the hesitation of the model, only `plan.md`. So scenario 4 checks criterion 1 with confidence, and criterion 2 only as a soft check.
