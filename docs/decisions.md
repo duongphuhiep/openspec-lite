@@ -3037,3 +3037,11 @@ Scenarios 4b and 4d now check the results on an error. The user chose this.
 This revises D219. It closes todo item 74.
 
 **Rationale**: in the rerun on 5eaf25d, the separate sentence read like a third criterion. In 4d-3, apply read it in reverse: "You didn't ask for that, so it isn't recorded". "Fix" also meant "set" there and "repair" in the end check. Apply missed the result on an error in each scenario: the 429 and 401 bodies, an exit 2 path, and a throw. "An error message" alone did not make the agent check the other error results. In 4 of 4 runs of 4c, D1 named `execFileSync`, but the agent often needs such a detail to explain the reason.
+
+## D221: The End Summary Shows a Table of Each Added 🤖 Decision and Its Criterion
+
+**Decision**: at the end of apply and of the tasks preview, after the list of changed items, the agent shows a table of each 🤖 decision that it added: `| Decision | Criterion | Why |`. Criterion is (1) or (2) of the decision rule. Why is the visible result for (1), or the close options for (2). If a 🤖 decision matches neither, the agent removes it from `plan.md`, and does not list it. Scenario 4 checks the table. The user chose this.
+
+This revises D171. It closes todo item 76.
+
+**Rationale**: in the rerun on b299124, no run of scenario 4 read its files again in the end check, and 4 of 4 runs of 4c kept a decision about the call method. A step that only says "read" or "record only the part" is easy to skip. A table that the user sees makes the agent check each decision against the two criteria, and it shows the reviewer why each 🤖 decision is there. The user asked for a table of decisions, not of files.

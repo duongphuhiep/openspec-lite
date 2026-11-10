@@ -189,13 +189,6 @@ The reports are in `.scenario-runs/20261110-5eaf25d/`. 9 of 16 runs pass: 4 (2 o
 
 The reports are in `.scenario-runs/20261110-b299124/`. 6 of 16 runs pass: 4 (1 of 4), 4b (1 of 4), 4c (1 of 4), 4d (3 of 4). On 5eaf25d: 9 of 16. With 4 runs per scenario, the difference is within noise.
 
-### 76. The apply end check does not read the files
-
-- **Where**: the end check of `apply.instruction` (D219, D220).
-- **Problem**: no run of scenario 4 read its code files again in the end check. So criterion 1 depends on what the agent remembers, and a thing that it wrote with no thought, such as a page path or an error body, is missed. In 4c-4, apply named the throw and still did not record it. Also, D220 item 3 (an internal detail only in the "because" part) has no effect in 4c: 4 of 4 runs name the call method in a title.
-- **Evidence**: `group-A4.md`, `group-A4b.md`, `group-I4c.md`.
-- **Recommendation**: not decided. Make the end check give an output that the user sees: a table in the end summary with one row for each file that apply added or changed, its visible results, and the decision ID of each. A step with an output is harder to skip than a step that only says "read".
-
 ### 77. Smaller gaps from the rerun on b299124
 
 - 4b: F2 removed with F1 in 1 of 4 runs (D184). 2 of 4 runs ran no test. The 4b Expected list has no check that the agent runs the tests (group A4b).
