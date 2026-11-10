@@ -3010,3 +3010,16 @@ The text says "result", not "outcome", because the glossary gives "outcome" anot
 This revises D217. It closes todo item 69.
 
 **Rationale**: "a user or another program sees the result" was not clear. In the run on bdd9b0e, 4d-2 picked the field `summary.totals.items` of `openspec validate --specs --json` and recorded no decision. No user sees that field, but a new OpenSpec version can break the script. Also, 3 of 6 applies put a plumbing part into a visible decision, for example "Download as `report.csv` through a Blob link", so the reviewer still read plumbing.
+
+## D219: Two Criteria for a Decision: a Visible Result That the Agent Picked, or a Close Call
+
+**Decision**: the decision rule of `apply.instruction` and of the tasks-preview skill records a decision when one of these is true:
+
+1. The agent picked something that changes a visible result. The list of D218 stays, and the path item becomes "a file name or path that a user or another program uses". The agent picked it when `plan.md`, the user, and the constraints do not fix it. This test uses the source of the thing, not the thinking of the agent.
+2. The agent weighed two or more close options, and no option was a clear winner, also for an internal choice.
+
+The agent records no other choice. A decision holds only the part that matches 1 or 2. The plumbing rule and "Do not record a choice that follows directly from the code or from a constraint" are removed: plumbing is hard to tell apart from other internal choices, and the source test of 1 covers the second sentence. The end check of apply reads each file that apply added or changed, and finds each thing that matches 1 and that no decision holds. It does not check 2, because the code does not show which options were close. The user chose this.
+
+This revises D217 and D218. It closes todo item 72.
+
+**Rationale**: in the rerun on a71a5eb, apply missed a visible choice in 5 of 8 runs: a page path, a filter and sort UI, a 429 body, and an env var. The D218 rule started with "You make a decision when you weigh two or more options". The agent picks a page path with no thought of other options, so by the letter of the rule it made no decision, and the end check found nothing. Only the agent at the moment of a choice knows that it weighed options, so criterion 2 can be checked only then, and a scenario can check it only as a soft check.

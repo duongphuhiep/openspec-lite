@@ -162,13 +162,6 @@ The reports are in `.scenario-runs/20261109-bdd9b0e/` (`summary.md` and `group-A
 
 The reports are in `.scenario-runs/20261110-a71a5eb/`. 3 of 8 runs pass: 4 fails 2 of 2, 4b and 4c fail 1 and 2 of 2, 4d passes 2 of 2. D218 removed the plumbing parts in 4 and 4b and caught the JSON field in 4d, but apply now misses more visible choices.
 
-### 72. Apply misses visible choices after D218
-
-- **Where**: the decision rule of `apply.instruction` (D218).
-- **Problem**: in 5 of 8 runs, apply recorded no decision for a choice that changes a visible result: a page path, a filter and sort UI, a 429 body, an env var that the script reads. Before D218, apply recorded too much. Also, "a file name or path" has no scope, so a test file path is a visible result by the letter of the rule. And 4c D1 still holds the plumbing part `execFileSync`.
-- **Evidence**: `group-A.md`, `group-I.md` of `.scenario-runs/20261110-a71a5eb/`.
-- **Recommendation**: not decided. The end check reads the code but has no list to check against. Options: (a) the end check walks each file that apply added or changed, and asks for each one: "Does a user or another program read, run, or call it?"; (b) scope the path item: "a path that a user or another program uses". Rerun 4 runs of each scenario, because 2 runs do not show a trend.
-
 ### 73. Smaller gaps from the rerun on a71a5eb
 
 - 4c: 2 of 2 previews wrote the obvious `geo.mjs` result as a fact (0 of 2 on bdd9b0e, item 65, D211) (group I).
