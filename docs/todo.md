@@ -143,7 +143,7 @@ The reports are in `.scenario-runs/20261109-bdd9b0e/` (`summary.md` and `group-A
 - **Where**: the decision rule of `apply.instruction` and of the tasks-preview skill (D217).
 - **Problem**: a decision heading names a visible choice, but its text also holds plumbing, for example "Download as `report.csv` through a Blob link". The reviewer must split it. Also, the rule names only what a user or another program sees. It does not name what the code reads from another program, so apply missed the field `summary.totals.items` of the `openspec` output.
 - **Evidence**: `group-A.md` (4 run 1: D4 `visibleRows`, D7), `group-I.md` (4d-2 check 6, two runs with plumbing in a visible decision), `group-A.md` (4b run 1: no decision on the 429 body).
-- **Recommendation**: not decided. Add two sentences: "Record only the part that a user or another program sees." and "An input that the code reads from another program, for example a field of its output, is also a choice that another program sees."
+- **Recommendation**: the user approved the wording of the first criterion on 2026-11-10. Replace "Record it when a user or another program sees the result, for example …" with: "Record a decision when it changes a visible result: a UI, a public interface, the input or output of a program, a function signature, a data format, a file name or path, a config key, an error message, or a new dependency." "The input or output of a program" also covers the field that the code reads from another program. The text does not use "outcome", because the glossary gives it another meaning. For the plumbing in a visible decision, not decided: add "Record only the part of the decision that changes the visible result."
 
 ### 70. Apply records a plan of the agent as a user answer
 
