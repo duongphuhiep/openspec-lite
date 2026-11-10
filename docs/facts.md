@@ -1032,6 +1032,19 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.321, scenario allowlist: a single `cat >> <file> <<'EOF' … EOF` runs under `Bash(cat:*)`, also on `plan.md` (group I, `09b21010`). `cd <dir> && python3 - <<'EOF'` is denied (group A).
 - Node v24.13.0: `node --test src/` and `node --test test/` fail. `node --test` with no argument, or with a file path, passes (group I). Not checked in the Node docs.
 
+## Rerun on 5eaf25d
+
+**Source**: scenarios 4, 4b, 4c, 4d, 4 runs each, isolated (D199), Claude Code 2.1.322 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261110-5eaf25d/`, 2026-11-10.
+
+- Sonnet 5.5 with D219, criterion 1: the main visible choices are recorded: the filter and sort UI in 4 of 4 runs of 4 (1 of 2 on a71a5eb), the `x-api-key` header, the no-key behavior, and `Retry-After` in 4 of 4 runs of 4b, and the field `summary.totals.items` in 4 of 4 runs of 4d. The behavior on an error or an edge case is missed most: the 429 body (3 of 4), the 401 body (2 of 4), an exit 2 path (2 of 4 runs of 4d), and a throw when `geo.mjs` fails (4 of 4 runs of 4c). The page path `src/report.html` has no decision in 2 of 4 runs of 4 (groups A4, A4b, I4c, I4d).
+- Sonnet 5.5 with D219: the file-by-file end check found none of the gaps of 4b (group A4b). In 4d-3, apply said "You didn't ask for that, so it isn't recorded" about an exit code that it picked (session `055fab68`). The rule says "You picked it when plan.md, the user, and the constraints do not fix it", and the same paragraph uses "fix" in the sense "repair".
+- Sonnet 5.5 with D219, "Record only the part of the decision that matches (1) or (2)": in 4 of 4 runs of 4c, D1 names `execFileSync` or "spawn and parse stdout", and each archive ADR copies it. In 2 of 4 runs of 4, a decision holds a sentence about the internal function that the table and the export share (groups A4, I4c).
+- Sonnet 5.5, tasks preview on 5eaf25d: 0 of 4 previews of 4c wrote the obvious `geo.mjs` result as a fact (2 of 2 on a71a5eb) (group I4c).
+- Sonnet 5.5, apply: the non-obvious fact F2 was removed with F1 in 2 of 4 runs of 4b, against D184 (group A4b). Apply skipped the done check in 4c-3. In 4d-4, the code exits 2 for an invalid spec against the Goal "exit 0 otherwise", and the done check said "The goal is met" (groups I4c, I4d).
+- OpenSpec 1.14.2: `openspec validate --specs --json` with one invalid spec and one valid spec exits 1, and it still prints the full JSON on stdout, with `summary.totals` = `{"items": 2, "passed": 1, "failed": 1}` (group I4d, `exit-code.mjs` run in `/tmp/osl-I4d-4.hiUr`).
+- Claude Code 2.1.322 (2.1.321 before): the scenario allowlist denials stay the same: `npm test`, `python3 - <<'E'`, `mkdir -p <dir> && cat > <file> <<'EOF'`, `cd <dir> && cat >> plan.md <<'EOF'`, and a chain with `echo $?` (groups A4, A4b, I4c, I4d).
+- Node v24.13.0: `node --test "test/*.test.js"`, with the glob in quotes, passes (group A4b, `ce8a0378`).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.

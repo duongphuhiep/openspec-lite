@@ -172,6 +172,26 @@ The reports are in `.scenario-runs/20261110-a71a5eb/`. 3 of 8 runs pass: 4 fails
 - Scenario texts: 4c expects no decision for the `error` key, and 4d expects one for the JSON field. The difference is that 4d has real options (text or JSON). 4c could say so (group I).
 - Item 70 did not occur: the plan of 4d-2 got a 🤖 (group I).
 
+## Found in the rerun on 5eaf25d
+
+The reports are in `.scenario-runs/20261110-5eaf25d/`. 9 of 16 runs pass: 4 (2 of 4), 4b (2 of 4), 4c (1 of 4), 4d (4 of 4). On a71a5eb: 3 of 8.
+
+### 74. Apply misses the visible behavior on an error, and keeps the "how" in a decision
+
+- **Where**: the decision rule and the end check of `apply.instruction` (D219).
+- **Problem**: criterion 1 catches the main visible choices, but not the behavior on an error or an edge case: a 429 or 401 body, an exit code on a failure, a throw. The file-by-file end check finds none of them. In 4d-3, apply read the rule in reverse: "You didn't ask for that, so it isn't recorded". The word "fix" has two meanings in the paragraph ("do not fix it", "fix the code"). Also, 4 of 4 runs of 4c keep `execFileSync` in D1, against "Record only the part".
+- **Evidence**: `group-A4b.md`, `group-I4c.md`, `group-I4d.md`, `group-A4.md`.
+- **Recommendation**: not decided. (a) Replace "do not fix it" with "do not give it". (b) Name the error behavior in criterion 1, for example "also the result on an error: a status code, an exit code, an error message, or a throw". (c) Allow the "how" only in the "because" part.
+
+### 75. Smaller gaps from the rerun on 5eaf25d
+
+- 4b: F2 removed with F1 in 2 of 4 runs (D184, also on a71a5eb) (group A4b).
+- 4c-3: apply skipped the done check. 4d-4: the done check said "The goal is met", but the code breaks the Goal (groups I4c, I4d).
+- 4c-2: D2 "Use node:test" matches neither criterion, because C1 gives it (group I4c).
+- 4c-3: D1 does not match the code (group I4c).
+- 4 run 4: OQ5 asks the user to click the button to test it, and it blocks the done check (group A4).
+- Scenario texts: "its own 🤖 decision" in scenario 4 can mean "not in a user decision" or "one choice per decision" (group A4). D219 lists "an error message", but no scenario says if a diagnostic text on stderr counts (group I4d).
+
 ### 55. The scripts do not run alone
 
 - **Where**: the version step of each skill, and `plan-status.mjs` (D175, D192, D193).
