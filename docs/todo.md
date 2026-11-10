@@ -138,13 +138,6 @@ The reports are in `.scenario-runs/20261108-26c58ea/`. 20c (3 of 3), 18, 18b, an
 
 The reports are in `.scenario-runs/20261109-bdd9b0e/` (`summary.md` and `group-A.md` to `group-I.md`). 35 of 41 runs pass. 3, 4, 7, 4c, and 4d fail once and pass once. 20a fails. 18, 18b, and 20c pass in each run.
 
-### 69. The D217 rule mixes plumbing into visible decisions, and misses inputs from other programs
-
-- **Where**: the decision rule of `apply.instruction` and of the tasks-preview skill (D217).
-- **Problem**: a decision heading names a visible choice, but its text also holds plumbing, for example "Download as `report.csv` through a Blob link". The reviewer must split it. Also, the rule names only what a user or another program sees. It does not name what the code reads from another program, so apply missed the field `summary.totals.items` of the `openspec` output.
-- **Evidence**: `group-A.md` (4 run 1: D4 `visibleRows`, D7), `group-I.md` (4d-2 check 6, two runs with plumbing in a visible decision), `group-A.md` (4b run 1: no decision on the 429 body).
-- **Recommendation**: the user approved the wording of the first criterion on 2026-11-10. Replace "Record it when a user or another program sees the result, for example …" with: "Record a decision when it changes a visible result: a UI, a public interface, the input or output of a program, a function signature, a data format, a file name or path, a config key, an error message, or a new dependency." "The input or output of a program" also covers the field that the code reads from another program. The text does not use "outcome", because the glossary gives it another meaning. For the plumbing in a visible decision, not decided: add "Record only the part of the decision that changes the visible result."
-
 ### 70. Apply records a plan of the agent as a user answer
 
 - **Where**: the 🤖 rule of `apply.instruction` (D181, D217).

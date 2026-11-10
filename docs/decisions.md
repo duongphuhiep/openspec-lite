@@ -2996,3 +2996,17 @@ The end check of apply no longer has its own list. It reads the code, finds each
 This revises D214 and D216.
 
 **Rationale**: the D216 examples (a line ending, the quoting, the module system, how a browser downloads a file) all came from the CSV export of scenario 4. They taught the agent to look for things like a CSV file, not to ask whether a consumer sees the choice. Also, the rule during the run still used the wide D214 text "each choice between real alternatives", so it disagreed with the end check. Now both use one rule, with examples that apply to each project. A scenario cannot see the hesitation of the model, only `plan.md`. So scenario 4 checks criterion 1 with confidence, and criterion 2 only as a soft check.
+
+## D218: A Decision Is Recorded When It Changes a Visible Result, and It Holds Only That Part
+
+**Decision**: in the decision rule of `apply.instruction` and of the tasks-preview skill:
+
+1. The first criterion is: "Record a decision when it changes a visible result: a UI, a public interface, the input or output of a program, a function signature, a data format, a file name or path, a config key, an error message, or a new dependency." The user wrote this text.
+2. "The input or output of a program" covers both directions: what the code gives to others, and what it reads from another program, for example a field of the JSON output of `openspec`.
+3. A recorded decision holds only the part that changes the visible result, or that makes the options close. A plumbing part stays in the code.
+
+The text says "result", not "outcome", because the glossary gives "outcome" another meaning. The schema stays at version 6, because version 6 is not yet released. The user chose this.
+
+This revises D217. It closes todo item 69.
+
+**Rationale**: "a user or another program sees the result" was not clear. In the run on bdd9b0e, 4d-2 picked the field `summary.totals.items` of `openspec validate --specs --json` and recorded no decision. No user sees that field, but a new OpenSpec version can break the script. Also, 3 of 6 applies put a plumbing part into a visible decision, for example "Download as `report.csv` through a Blob link", so the reviewer still read plumbing.
