@@ -3074,3 +3074,11 @@ The sentences "Only an answer of the user closes a question." and "Do not answer
 This revises D172 and D183.
 
 **Rationale**: in the 4d-3 preview on 98e421c, the agent wrote OQ1 and also D2 🤖 about the same point, so `plan.md` said both "the user must decide" and "decided". The user said that a question exists only because the agent cannot decide it or lacks the information. When the agent can decide, the question is no longer open. D172 forbade this, because in its verification the user did not see the answers of the agent. Since then, D181 marks each agent decision with 🤖, which the user must accept, and D221 lists each added 🤖 decision in a table of the end summary. So the user still sees each answer.
+
+## D224: The Tasks Preview Records What It Plans for the Code
+
+**Decision**: in the decision rule of the tasks-preview skill, criterion 1 starts with "you plan something for the code that changes a visible result", not "you put something in the code". The apply rule keeps "put something in the code". The preview has no rule to look for each edge case: apply records each one that the preview misses. The user chose this.
+
+This revises D220 for the tasks preview.
+
+**Rationale**: the preview writes no code, so "put something in the code" did not apply to it by the letter. On 98e421c, 2 of 4 previews of 4d did not plan the exit code for a tool failure (4 of 4 on b299124). In 4d-3, apply recorded it as a 🤖 decision, so apply is the safety net.
