@@ -1056,6 +1056,16 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, apply on 4b: after the `npm test` denials, 2 of 4 runs did not try `node --test` (0 of 4 on 5eaf25d) (group A4b). In 4d-3, the test covers only the exported `decide()`, so a script that always exits 0 passes 5 of 5 tests (group I4d).
 - Claude Code 2.1.322: the agent calls the denial "Parser skipped input between top-level statements" a parser error in its reply, not a permission denial (group I4c). Denied: `python3 -I - <<'EOF'`, and a chain with `mkdir -p /tmp/<dir> && cd /tmp/<dir> && rm -rf *` or `D=$(mktemp -d) && cd $D` (group I4d). Allowed: a `;` chain of allowed commands, for example two `exit-code.mjs` calls (groups A4, I4d).
 
+## Rerun on 98e421c
+
+**Source**: scenarios 4, 4b, 4c, 4d, 4 runs each, isolated (D199), Claude Code 2.1.322 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261110-98e421c/`, 2026-11-10.
+
+- Sonnet 5.5 with D221: the end summary shows the decision table in 4 of 4 runs of 4, 7 of 8 turns of 4b, and 4 of 4 previews of 4d. 32 of 35 rows give a correct criterion. No run removed a 🤖 decision that matches neither criterion. In 4c, 2 of 8 rows give criterion (2) to a call-method decision whose text shows that the other option does not work (groups A4, A4b, I4c, I4d).
+- Sonnet 5.5 with D221: the table does not find a missed visible result. The page path of scenario 4 has no decision in 4 of 4 runs. In each run, a user decision says "under `src/`", and the agent picks only the file name (group A4).
+- Sonnet 5.5, apply: in 4d-2, the reply says "That fallback isn't in the plan." about an exit code that apply added, and the table says "none added" (group I4d). This is the second run that reads "plan.md and the user did not say it" as a reason not to record (also 4d-3 on 5eaf25d).
+- Sonnet 5.5, apply on 4b: the 429 body is recorded in 3 of 4 runs (2 of 4 on b299124). In run 4, apply renumbered F2 to F1 and F3 to F2 (group A4b).
+- Sonnet 5.5: unsourced claims about the module format of Node in 4c (3 decisions) and scenario 4 (run 3 D8). "ESM needs `package.json` or `.mjs`" is false on Node 24.13.0 (groups A4, I4c).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
