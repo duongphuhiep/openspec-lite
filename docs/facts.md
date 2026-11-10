@@ -1021,6 +1021,17 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, archive with D215: both runs of 18 named stock `/opsx:archive` after "no" to the ADR offer, and neither run of 18b asked an archive question while a delta held a 🤖 (group C). In 20b, the written ADR held a sentence that the approved draft did not hold (group E).
 - `scripts/break-delta.sh` has mode `100755` on bdd9b0e, and the watcher of 13a broke the delta (group B).
 
+## Rerun on a71a5eb
+
+**Source**: scenarios 4 ×2, 4b ×2, 4c ×2, 4d ×2, isolated (D199), Claude Code 2.1.321 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261110-a71a5eb/`, 2026-11-10.
+
+- Sonnet 5.5 with D218: no decision in scenarios 4 and 4b holds a plumbing part (0 of 4 runs; 2 of 4 on bdd9b0e). In 4c, D1 holds `execFileSync` in 2 of 2 runs, and both archive ADRs copy it. Both 4d runs record the JSON field `summary.totals.items` as a 🤖 decision (0 of 2 on bdd9b0e) (groups A, I).
+- Sonnet 5.5 with D218: apply missed a visible choice in 5 of 8 runs: the page path `src/report.html` (2 of 2 runs of 4), the filter and sort UI (1 of 2 runs of 4), the 429 body `rate limit exceeded` (2 of 2 runs of 4b), and the env var `OPENSPEC_BIN` that 4d-1 reads (groups A, I).
+- Sonnet 5.5, apply: a plan that the agent adds in apply and does not ask gets a 🤖 in 4d-2 (session `09b21010`). On bdd9b0e, 1 of 2 runs wrote it with no 🤖. Both 4b runs ran the tests (0 of 2 on bdd9b0e) (groups A, I).
+- Sonnet 5.5, tasks preview: after `exit-code.mjs node tools/geo.mjs Atlantis`, 2 of 2 previews of 4c wrote the obvious result as a fact (0 of 2 on bdd9b0e) (group I, sessions `15d113e6`, `168feaec`).
+- Claude Code 2.1.321, scenario allowlist: a single `cat >> <file> <<'EOF' … EOF` runs under `Bash(cat:*)`, also on `plan.md` (group I, `09b21010`). `cd <dir> && python3 - <<'EOF'` is denied (group A).
+- Node v24.13.0: `node --test src/` and `node --test test/` fail. `node --test` with no argument, or with a file path, passes (group I). Not checked in the Node docs.
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
