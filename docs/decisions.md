@@ -3082,3 +3082,22 @@ This revises D172 and D183.
 This revises D220 for the tasks preview.
 
 **Rationale**: the preview writes no code, so "put something in the code" did not apply to it by the letter. On 98e421c, 2 of 4 previews of 4d did not plan the exit code for a tool failure (4 of 4 on b299124). In 4d-3, apply recorded it as a 🤖 decision, so apply is the safety net.
+
+## D225: Fixes From Review Round 1 on 99d8656..local
+
+**Decision**:
+
+1. A deviation from the preview is a decision only when it matches criterion (1) or (2). The sentence "A meaningful deviation from the preview … is also a decision." is removed. The user chose this.
+2. "You cannot decide a question when its answer depends on information that only the user has, for example an intent, a priority, or where some code is." Apply asks such a question with a recommended answer. It gives no recommendation only when the answer is a fact that only the user knows. This keeps D193 and D195 with D223.
+3. A 🤖 decision that answers an open question stays in the end table, with "open question" as its criterion.
+4. The stale-preview question goes in the same reply as the open questions, and then apply ends the turn.
+5. The end step keeps each question that the user said to keep open. "Resolve" is replaced by "decide or find the answer".
+6. The tasks preview tries to answer each existing open question before it writes the tasks, and records each new question after it writes the preview.
+7. "A function signature" becomes "the signature of an exported function". "Do not record other choices" becomes "Do not record your other choices".
+8. The hash sentence of the end summary comes right after the list that it refers to.
+9. Scenario 4: the download file name is an output of the program. Step 2 gives only the answers to the questions that apply asks. A later user answer replaces a 🤖 decision on the same point. OQ2 depends on an intent of the user.
+10. `GLOSSARY.md` has entries for Decision, Visible result, and Open question. README describes the decision table and the closed questions.
+
+This revises D219, D221, D223, and D224.
+
+**Rationale**: review round 1 found 15 remarks. Remark 2 had two options, and the user chose. Each other remark had one logical fix. Item 2 follows the split that the user agreed to for D223: a close call is a 🤖 decision, and a point that needs information of the user is a question.

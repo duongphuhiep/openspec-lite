@@ -37,7 +37,7 @@ The `tasks.md` artifact of a spec-driven change. The apply phase follows it and 
 _Avoid_: Tasks preview
 
 **Deviation**:
-A meaningful change of approach during apply, compared to the tasks preview. Apply records it in the `## Decisions` section of the plan.
+A change of approach during apply, compared to the tasks preview. Apply records it in the `## Decisions` section of the plan only when it is a decision: it changes a visible result, or it was a close call (D225).
 _Avoid_: Drift, divergence
 
 **Promotion**:
@@ -55,6 +55,18 @@ _Avoid_: Objective
 **Inferred item**:
 An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that comes from no section of `plan.md` and from no answer of the user. A restatement of a `plan.md` item in other words is not an inferred item. It has a 🤖 mark at the end of its line or heading. An agent decision of the plan keeps its 🤖 in `design.md`, also when it is not inferred. The user removes the mark to accept the item.
 _Avoid_: Guess, assumption
+
+**Decision**:
+An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own. An answer or an instruction of the user is also a decision (D219, D222).
+_Avoid_: Choice log, rationale
+
+**Visible result**:
+What a user or another program sees or uses: a UI, a public interface, the input or output of a program, the signature of an exported function, a data format, a file name or path that another program, a config, or a doc refers to, a config key, a new dependency, or the result on an error or an edge case (D218, D220, D222).
+_Avoid_: Observable behavior
+
+**Open question**:
+An item of `## Open Questions` in a plan: a point that the agent cannot decide and cannot find the answer to, because the answer depends on information that only the user has. A point that the agent can decide is a decision, not a question (D223).
+_Avoid_: Pending item, TODO
 
 **Agent decision**:
 A decision in a plan that an agent wrote, and that records no answer and no instruction of the user. Its heading ends with 🤖. Upgrade keeps the mark in `design.md`. A decision with no 🤖 belongs to the user: one that the user wrote, or one that records an answer or an instruction of the user. An agent changes only an agent decision with no question. The user removes the 🤖 to accept it (D181).
