@@ -13,7 +13,7 @@
 <!-- Rules the implementation must follow. One item per line, as "- C<n>: <rule>". -->
 
 ## Open Questions
-<!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. Only an answer of the user closes a question. -->
+<!-- Points that the agent cannot decide or resolve, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Facts or ## Decisions. -->
 
 ## Facts
 <!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>", with the source. A non-obvious fact needs a run or a test result, research of remote sources (documentation on the internet, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. A run alone is not enough: if a reader can see the result in the code or in the file list, the fact is obvious. Do not record a guess, an obvious fact, or a well-known fact: write such a fact in the "because" part of the decision, constraint, or non-goal that it justifies. Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK. -->

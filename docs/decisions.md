@@ -3058,3 +3058,19 @@ Scenario 4 no longer expects a decision for the file name of the new page. The u
 This revises D220. It closes todo items 78 and 79.
 
 **Rationale**: in the rerun on 98e421c, scenario 4 failed in 4 of 4 runs only on the page file name. The user answer gives the folder `src/`, the reviewer sees the file name in the diff, and nothing refers to a new scaffold page. Such a decision makes `plan.md` long and hides the choices that matter. A file name that another program, a config, or a doc refers to is a contract, so it stays. In 4d-2 on 98e421c and in 4d-3 on 5eaf25d, apply said "That fallback isn't in the plan." and "You didn't ask for that", and recorded no decision. The positive sentence gives the direction of the rule.
+
+## D223: A Question Is Open Only While the Agent Cannot Decide It or Find Its Answer
+
+**Decision**: in apply and in the tasks preview:
+
+1. A question is open only while the agent cannot decide it and cannot find its answer, for example because only the user has the information.
+2. If the agent can decide a point, also when no option is a clear winner, it records a 🤖 decision, and does not also record the point as a question.
+3. Before apply writes code, it tries to resolve each open question from the code, the docs, or a run. It records each answer that it finds as a fact with its source, or as a 🤖 decision, and removes the question. It asks only the questions that are still open. The tasks preview does the same for an existing question.
+4. The agent keeps a question that the user said to keep open, also if it can decide it later.
+5. The answer of the user to a question is a decision with no 🤖, as before.
+
+The sentences "Only an answer of the user closes a question." and "Do not answer an open question yourself." are removed. The `plan.md` template comment of `## Open Questions` changes, also in the scenario fixtures. The user chose this.
+
+This revises D172 and D183.
+
+**Rationale**: in the 4d-3 preview on 98e421c, the agent wrote OQ1 and also D2 🤖 about the same point, so `plan.md` said both "the user must decide" and "decided". The user said that a question exists only because the agent cannot decide it or lacks the information. When the agent can decide, the question is no longer open. D172 forbade this, because in its verification the user did not see the answers of the agent. Since then, D181 marks each agent decision with 🤖, which the user must accept, and D221 lists each added 🤖 decision in a table of the end summary. So the user still sees each answer.

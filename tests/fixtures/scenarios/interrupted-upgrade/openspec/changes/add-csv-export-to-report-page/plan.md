@@ -18,7 +18,7 @@ Add one Export CSV button to the report page. It exports the rows shown in the t
 - C2: No new server endpoint.
 
 ## Open Questions
-<!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. Only an answer of the user closes a question. -->
+<!-- Points that the agent cannot decide or resolve, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Facts or ## Decisions. -->
 - OQ1: Should the export include hidden columns? (This changes the tasks.)
 - OQ2: The repo has no app code and no `docs/report-page.md`, so the preview names no real files. Where does the report page live?
 

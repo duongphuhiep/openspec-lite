@@ -14,7 +14,7 @@ Add a CSV export to the report page, so a user can download the report data as a
 <!-- Rules the implementation must follow. One item per line, as "- C<n>: <rule>". -->
 
 ## Open Questions
-<!-- Unresolved questions, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Decisions. Only an answer of the user closes a question. -->
+<!-- Points that the agent cannot decide or resolve, as "- OQ<n>: <question>". Remove each question when its answer goes to ## Facts or ## Decisions. -->
 - OQ1: Where is the report page? The repo has no application code, so is this the wrong repo or folder?
 - OQ2: Which columns does the export hold, and does it respect the filters of the page?
 - OQ3: Is the CSV built in the browser or on the server?
