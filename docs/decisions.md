@@ -3023,3 +3023,17 @@ The agent records no other choice. A decision holds only the part that matches 1
 This revises D217 and D218. It closes todo item 72.
 
 **Rationale**: in the rerun on a71a5eb, apply missed a visible choice in 5 of 8 runs: a page path, a filter and sort UI, a 429 body, and an env var. The D218 rule started with "You make a decision when you weigh two or more options". The agent picks a page path with no thought of other options, so by the letter of the rule it made no decision, and the end check found nothing. Only the agent at the moment of a choice knows that it weighed options, so criterion 2 can be checked only then, and a scenario can check it only as a soft check.
+
+## D220: Criterion 1 Says "and plan.md and the User Did Not Say It", and Names the Result on an Error
+
+**Decision**: in the decision rule of `apply.instruction` and of the tasks-preview skill:
+
+1. Criterion 1 reads: "you put something in the code that changes a visible result, and plan.md and the user did not say it: …". The separate sentence "You picked it when plan.md, the user, and the constraints do not fix it." is removed.
+2. The list of criterion 1 ends with "or the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error".
+3. After "Record only the part of the decision that matches (1) or (2).", the rule adds: "If you need an internal detail to explain the reason, write it in the "because" part, not in the title or in "Chose X"."
+
+Scenarios 4b and 4d now check the results on an error. The user chose this.
+
+This revises D219. It closes todo item 74.
+
+**Rationale**: in the rerun on 5eaf25d, the separate sentence read like a third criterion. In 4d-3, apply read it in reverse: "You didn't ask for that, so it isn't recorded". "Fix" also meant "set" there and "repair" in the end check. Apply missed the result on an error in each scenario: the 429 and 401 bodies, an exit 2 path, and a throw. "An error message" alone did not make the agent check the other error results. In 4 of 4 runs of 4c, D1 named `execFileSync`, but the agent often needs such a detail to explain the reason.

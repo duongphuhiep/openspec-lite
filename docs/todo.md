@@ -176,13 +176,6 @@ The reports are in `.scenario-runs/20261110-a71a5eb/`. 3 of 8 runs pass: 4 fails
 
 The reports are in `.scenario-runs/20261110-5eaf25d/`. 9 of 16 runs pass: 4 (2 of 4), 4b (2 of 4), 4c (1 of 4), 4d (4 of 4). On a71a5eb: 3 of 8.
 
-### 74. Apply misses the visible behavior on an error, and keeps the "how" in a decision
-
-- **Where**: the decision rule and the end check of `apply.instruction` (D219).
-- **Problem**: criterion 1 catches the main visible choices, but not the behavior on an error or an edge case: a 429 or 401 body, an exit code on a failure, a throw. The file-by-file end check finds none of them. In 4d-3, apply read the rule in reverse: "You didn't ask for that, so it isn't recorded". The word "fix" has two meanings in the paragraph ("do not fix it", "fix the code"). Also, 4 of 4 runs of 4c keep `execFileSync` in D1, against "Record only the part".
-- **Evidence**: `group-A4b.md`, `group-I4c.md`, `group-I4d.md`, `group-A4.md`.
-- **Recommendation**: not decided. (a) Replace "do not fix it" with "do not give it". (b) Name the error behavior in criterion 1, for example "also the result on an error: a status code, an exit code, an error message, or a throw". (c) Allow the "how" only in the "because" part.
-
 ### 75. Smaller gaps from the rerun on 5eaf25d
 
 - 4b: F2 removed with F1 in 2 of 4 runs (D184, also on a71a5eb) (group A4b).
