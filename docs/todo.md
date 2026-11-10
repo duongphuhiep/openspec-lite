@@ -185,6 +185,25 @@ The reports are in `.scenario-runs/20261110-5eaf25d/`. 9 of 16 runs pass: 4 (2 o
 - 4 run 4: OQ5 asks the user to click the button to test it, and it blocks the done check (group A4).
 - Scenario texts: "its own 🤖 decision" in scenario 4 can mean "not in a user decision" or "one choice per decision" (group A4). D219 lists "an error message", but no scenario says if a diagnostic text on stderr counts (group I4d).
 
+## Found in the rerun on b299124
+
+The reports are in `.scenario-runs/20261110-b299124/`. 6 of 16 runs pass: 4 (1 of 4), 4b (1 of 4), 4c (1 of 4), 4d (3 of 4). On 5eaf25d: 9 of 16. With 4 runs per scenario, the difference is within noise.
+
+### 76. The apply end check does not read the files
+
+- **Where**: the end check of `apply.instruction` (D219, D220).
+- **Problem**: no run of scenario 4 read its code files again in the end check. So criterion 1 depends on what the agent remembers, and a thing that it wrote with no thought, such as a page path or an error body, is missed. In 4c-4, apply named the throw and still did not record it. Also, D220 item 3 (an internal detail only in the "because" part) has no effect in 4c: 4 of 4 runs name the call method in a title.
+- **Evidence**: `group-A4.md`, `group-A4b.md`, `group-I4c.md`.
+- **Recommendation**: not decided. Make the end check give an output that the user sees: a table in the end summary with one row for each file that apply added or changed, its visible results, and the decision ID of each. A step with an output is harder to skip than a step that only says "read".
+
+### 77. Smaller gaps from the rerun on b299124
+
+- 4b: F2 removed with F1 in 1 of 4 runs (D184). 2 of 4 runs ran no test. The 4b Expected list has no check that the agent runs the tests (group A4b).
+- 4d-3: the test covers only `decide()`, so it does not fail when the script exit code breaks (D213, group I4d).
+- 4c: 3 of 4 previews wrote the obvious error body as a fact (D211, group I4c). Three reasons about the module format of Node have no source, and one is false on Node 24.13.0 (D194, group I4c).
+- 4 runs 2 and 4: an open question asks for a manual test, and it blocks the done check (also on 5eaf25d, group A4).
+- 4c-1: the ADR holds the `plan.md` ID "OQ2" (D142, group I4c).
+
 ### 55. The scripts do not run alone
 
 - **Where**: the version step of each skill, and `plan-status.mjs` (D175, D192, D193).
