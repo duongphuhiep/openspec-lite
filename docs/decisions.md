@@ -3045,3 +3045,16 @@ This revises D219. It closes todo item 74.
 This revises D171. It closes todo item 76.
 
 **Rationale**: in the rerun on b299124, no run of scenario 4 read its files again in the end check, and 4 of 4 runs of 4c kept a decision about the call method. A step that only says "read" or "record only the part" is easy to skip. A table that the user sees makes the agent check each decision against the two criteria, and it shows the reviewer why each 🤖 decision is there. The user asked for a table of decisions, not of files.
+
+## D222: A File Name Is a Decision Only When Something Refers to It, and a Choice That plan.md Does Not Say Is Recorded
+
+**Decision**: in criterion 1 of the decision rule of `apply.instruction` and of the tasks-preview skill:
+
+1. The item "a file name or path that a user or another program uses" becomes "a file name or path that another program, a config, or a doc refers to".
+2. After the list, the rule adds: "If plan.md and the user did not say it, it is your choice: record it."
+
+Scenario 4 no longer expects a decision for the file name of the new page. The user chose this.
+
+This revises D220. It closes todo items 78 and 79.
+
+**Rationale**: in the rerun on 98e421c, scenario 4 failed in 4 of 4 runs only on the page file name. The user answer gives the folder `src/`, the reviewer sees the file name in the diff, and nothing refers to a new scaffold page. Such a decision makes `plan.md` long and hides the choices that matter. A file name that another program, a config, or a doc refers to is a contract, so it stays. In 4d-2 on 98e421c and in 4d-3 on 5eaf25d, apply said "That fallback isn't in the plan." and "You didn't ask for that", and recorded no decision. The positive sentence gives the direction of the rule.

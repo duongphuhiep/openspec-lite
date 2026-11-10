@@ -201,20 +201,6 @@ The reports are in `.scenario-runs/20261110-b299124/`. 6 of 16 runs pass: 4 (1 o
 
 The reports are in `.scenario-runs/20261110-98e421c/`. 6 of 16 runs pass: 4 (0 of 4), 4b (3 of 4), 4c (0 of 4), 4d (3 of 4). The same count as on b299124.
 
-### 78. Apply reads "plan.md and the user did not say it" as a reason not to record
-
-- **Where**: criterion 1 of the decision rule (D220).
-- **Problem**: in 4d-2, apply said "That fallback isn't in the plan.", and then recorded no decision. 4d-3 on 5eaf25d did the same. The rule means the opposite.
-- **Evidence**: `group-I4d.md` of 98e421c and of 5eaf25d.
-- **Recommendation**: not decided. Add a positive sentence: "If plan.md and the user did not say it, it is your choice: record it."
-
-### 79. Scenario 4 expects a decision for the page file name
-
-- **Where**: `docs/test-scenarios.md`, scenario 4 (D219).
-- **Problem**: the user answer gives the folder `src/`. The agent picks only the file name. A decision for the file name has little value for the reviewer, and 4 of 4 runs fail on it.
-- **Evidence**: `group-A4.md` of 98e421c.
-- **Recommendation**: not decided. Count the page path as recorded when a decision or a user answer names its folder.
-
 ### 80. Smaller gaps from the rerun on 98e421c
 
 - 4c: 4 of 4 runs name the call method in a title or "Chose X", and 3 ADRs copy it (D220 item 3). 2 of 4 previews wrote obvious facts, and apply kept them (D211). 4c-4 spec says "SHALL be synchronous" while the open question is not answered (group I4c).
