@@ -208,6 +208,34 @@ The reports are in `.scenario-runs/20261110-98e421c/`. 6 of 16 runs pass: 4 (0 o
 - 4d-3: the script exits 0 with no output when it runs from another path, and the tests do not find it (D213, group I4d).
 - Unsourced claims about Node in 4 decisions, one of them false (D194, groups A4, I4c).
 
+## Found in the rerun on f31dfd1
+
+The reports are in `.scenario-runs/20261110-f31dfd1/`. 10 of 16 runs pass: 4 (1 of 4), 4b (4 of 4), 4c (1 of 4), 4d (4 of 4). On 98e421c: 6 of 16.
+
+### 81. A decision goes stale after the user changes the approach
+
+- **Where**: the "Keep current" rule of `apply.instruction` (D136).
+- **Problem**: in 4b, after "Use a sliding window instead.", a decision still said that `Retry-After` is "seconds until the window ends" in 3 of 4 runs. The same in the runs on b299124 and 98e421c.
+- **Evidence**: `group-A4b.md` of f31dfd1, b299124, and 98e421c.
+- **Recommendation**: not decided. The end check compares each decision with the code, but the agent does not see the stale part. A 4b check can catch it.
+
+### 82. Archive puts 🤖 content into a spec draft with no 🤖 note
+
+- **Where**: `openspec-lite-archive`, the promotion of decisions to a spec (D152, D179).
+- **Problem**: 3 of 4 spec drafts of 4c hold content from a 🤖 decision, and the archive names only the ADR drafts as 🤖. 4 of 4 ADRs copy `execFileSync` from D1.
+- **Evidence**: `group-I4c.md` of f31dfd1, check 9.
+- **Recommendation**: not decided.
+
+### 83. Smaller gaps from the rerun on f31dfd1
+
+- 4c: 4 of 4 runs still put the call method in the D1 title (D220 item 3). 3 of 4 have no decision for the throw (group I4c).
+- 4c-4: OQ1 and D3 on the same point after a denied command. Apply resolved OQ1 only after coding, and removed its user-only part with no answer (D223, group I4c).
+- 4d: the table criterion does not match the decision text in 2 runs. No decision names exit 2 for JSON with no `summary.totals.items` (4 of 4). No run records an error message text (group I4d).
+- 4b: 2 of 4 runs show no table in turn 2 (D221, group A4b).
+- 4 run 2: OQ2 and OQ3 have no recommendation (D195, group A4).
+- Unsourced or false claims about Node: 4 run 3 D6, 4c-1 D2 (D194).
+- Scenario 4 cannot test the resolve path of D223, because each question depends on the user. 4c and 4d asked no question, so the "leave open" case did not run.
+
 ### 55. The scripts do not run alone
 
 - **Where**: the version step of each skill, and `plan-status.mjs` (D175, D192, D193).

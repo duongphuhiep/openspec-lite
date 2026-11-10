@@ -1066,6 +1066,18 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, apply on 4b: the 429 body is recorded in 3 of 4 runs (2 of 4 on b299124). In run 4, apply renumbered F2 to F1 and F3 to F2 (group A4b).
 - Sonnet 5.5: unsourced claims about the module format of Node in 4c (3 decisions) and scenario 4 (run 3 D8). "ESM needs `package.json` or `.mjs`" is false on Node 24.13.0 (groups A4, I4c).
 
+## Rerun on f31dfd1
+
+**Source**: scenarios 4, 4b, 4c, 4d, 4 runs each, isolated (D199), Claude Code 2.1.322 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261110-f31dfd1/`, 2026-11-10.
+
+- Sonnet 5.5 with D223: no point was both an open question and a decision in 15 of 16 runs. 4 of 4 previews of 4d recorded the invalid-spec result as a 🤖 decision, not as a question. In 4c-4, the preview wrote OQ1 and D3 🤖 on the same point after a denied command. In scenario 4, apply checked the repo with `git ls-files` and then asked OQ1 to OQ3, because each one depends on the user (groups A4, I4c, I4d).
+- Sonnet 5.5 with D224: 4 of 4 previews of 4d planned exit 2 for an `openspec` failure as a 🤖 decision (2 of 4 on 98e421c). In 3 of 4 runs of 4c, no preview and no apply recorded the throw when `geo.mjs` fails (group I4c, I4d).
+- Sonnet 5.5 with D222: no run of scenario 4 recorded the page file name. The module system is a 🤖 decision in 4 of 4 runs (2 of 4 on 98e421c) (group A4).
+- Sonnet 5.5, apply on 4b: after the turn 2 change to a sliding window, a decision still said that `Retry-After` is "seconds until the window ends" in 3 of 4 runs (also on b299124 and 98e421c) (group A4b).
+- Sonnet 5.5, archive on 4c: 3 of 4 spec drafts hold content from a 🤖 decision and do not name it as 🤖. 4 of 4 ADRs copy `execFileSync` from D1 (group I4c).
+- Claude Code 2.1.322: when a Bash command exits with a code other than 0, the tool result starts with "Exit code <n>" (group I4d, `bf097c7e`). So an agent can read the exit code of one command with no `echo $?` and no `exit-code.mjs`.
+- OpenSpec 1.14.2: with only one spec, which is `# broken`, `openspec validate --specs --json` exits with code 1 (group I4d, 4 repos).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
