@@ -226,7 +226,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
 - Do not write code, except after a yes to the Level 1 question (D202).
 
-### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172, D174, D177, D180, D181, D182, D183, D184, D193, D211, D217, D218, D219, D220, D221, D222, D223, D224, D225, D226, D227, D228, D229, D230, D231)
+### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172, D174, D177, D180, D181, D182, D183, D184, D193, D211, D217, D218, D219, D220, D221, D222, D223, D224, D225, D226, D227, D228, D229, D230, D231, D236)
 
 - If `plan.md` is missing, stop. Tell the user to run `openspec-lite-propose` (D99).
 - Read `plan.md` and explore the code first.

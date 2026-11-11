@@ -3267,3 +3267,17 @@ The rules do not change. Each rule of D217 to D234 is still in the text. The tex
 This revises the form of the text of D171 to D234. It does not revise their content.
 
 **Rationale**: many bullets had become walls of text, and an agent or a reader could miss a rule in them. Review rounds found order errors, for example the stale question that ended the turn before the open-question step. A fixed order of steps makes the flow clear, and a named rule can be used by more than one step, for example the question rule in steps 3, 4, and 5.
+
+## D236: The Tasks-Preview Skill Is Eight Ordered Steps and Separate Rules
+
+**Decision**: sections 2 to 4 of `openspec-lite-tasks-preview/SKILL.md` follow the form of D235:
+
+1. Eight steps, in the order of the work: Check plan.md, Start, Explore and close the open questions, Get the plan hash, Check plan.md, Write the preview, Record the new open questions, End.
+2. Separate rules that the steps name: plan.md rule, preview rule, question rule, answer rule, decision rule, decision format, mark rule, current-decisions rule, fact rule, fact format, exit-code rule, ID rule. The rule names are the same as in `apply.instruction`.
+3. Each bullet holds one instruction or one short group of related sentences.
+
+The rules do not change. The longest line has 47 words in place of 486. Section 1, "Common checks", does not change, because four skills hold the same text, and a change in one skill only makes them drift. The user chose this.
+
+This revises the form of the text of D171 to D234. It does not revise their content.
+
+**Rationale**: the same as for D235. The preview and apply now use the same rule names, so a reader can compare the two skills rule by rule.
