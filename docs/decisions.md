@@ -3296,3 +3296,18 @@ The rules do not change. The user chose this.
 This revises the form of the text of D93, D99, D110, D131, D162, and later decisions on the common checks. It does not revise their content.
 
 **Rationale**: the four copies were long bullets of up to 200 words, and no test kept them equal, so a fix in one skill could miss the others. A shared block with a test is like one function that each skill calls.
+
+## D238: The Archive and Upgrade Bodies Use Small Bullets, With the Same Step Numbers
+
+**Decision**:
+
+1. Section 2 of `openspec-lite-archive` and of `openspec-lite-upgrade` keeps each step number, because the guard path, `docs/design.md`, and the scenarios refer to them, for example "step 10" or "step 2.4".
+2. Each long step is split into small bullets and sub-bullets. Each bullet holds one instruction, and each case is a sub-bullet.
+3. Upgrade step 2 has named parts in bold, in the order of the work: requirement sources, open questions, question turn, IDs, inferred items, write the artifacts. Then the artifact list 2.1 to 2.5 follows.
+4. Archive step 3 holds the only copy of the list of sources of a non-obvious fact. Step 4 no longer repeats it.
+
+The rules do not change. The longest line of archive has 50 words in place of 208, and the longest line of upgrade has 60 in place of 171. The user chose this.
+
+This revises the form of the text of the archive and upgrade decisions. It does not revise their content.
+
+**Rationale**: the same as for D235 and D237.
