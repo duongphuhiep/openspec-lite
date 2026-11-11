@@ -3342,3 +3342,13 @@ This revises D234, D235, D236, and D237.
 This revises D226, D229, D234, D235, D236, D237, and D239.
 
 **Rationale**: review loop 3, round 2 found 8 remarks. Remarks 3 and 7 had two options each, and the user chose. Each other remark had one logical fix.
+
+## D241: The Glossary Defines a Constraint, and the Template Tells It From a Decision
+
+**Decision**:
+
+1. `GLOSSARY.md` has a **Constraint** entry. A constraint is a rule that the implementation must follow, from the user, a ticket, or the platform. It is not a choice.
+2. The `## Constraints` comment of the `plan.md` template gives the test: if the result breaks the rule, the change is not done. A choice of how to meet the goal is a decision.
+3. Schema version 6 is not released yet, so this template edit needs no new bump.
+
+**Rationale**: the user asked how a constraint differs from a decision. The glossary defined only a decision, and the template comment did not show the difference. An agent can then record a rule of the user as a decision, or a choice as a constraint.

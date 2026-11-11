@@ -56,6 +56,10 @@ _Avoid_: Objective
 An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that comes from no section of `plan.md` and from no answer of the user. A restatement of a `plan.md` item in other words is not an inferred item. It has a 🤖 mark at the end of its line or heading. An agent decision of the plan keeps its 🤖 in `design.md`, also when it is not inferred. The user removes the mark to accept the item.
 _Avoid_: Guess, assumption
 
+**Constraint**:
+An item of `## Constraints` in a plan: a rule that the implementation must follow. It comes from the user, a ticket, or the platform. It is not a choice, so it has no "because" part to weigh and no 🤖. Test: if the result breaks it, the change is not done. A choice of how to meet the goal is a decision. The plan hash covers `## Constraints`, so an edit makes the tasks preview stale. The done check asks if each constraint is met (D226, D240, D241).
+_Avoid_: Requirement, rule set
+
 **Decision**:
 An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, also not a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts`. In propose and apply, a rule in that answer that the change must follow is a constraint. The tasks preview cannot edit `## Constraints`, so there it is a decision (D219, D222, D225, D226, D229, D240).
 _Avoid_: Choice log, rationale
