@@ -118,7 +118,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. On a new plan-lite change `city-lookup`, add `tools/geo.mjs`. For `node tools/geo.mjs Paris`, it prints `{"lat":48.86,"lon":2.35}`. For each other city, it prints `{"error":"city not found"}`, also with exit code 0. Write a `plan.md` from the template `openspec/schemas/plan-lite/templates/plan.md`, because `plan-hash.mjs` needs each of its headings. Give it the Goal "Add `lookup(city)` in `src/lookup.js`. It returns the coordinates from `tools/geo.mjs`, or `null` for an unknown city." and the constraint "- C1: Add no npm dependency." Commit.
 2. Run `openspec-lite-tasks-preview city-lookup`. Do not commit after it.
-3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Use your recommended answer for the first question. Leave the other questions open." If it asks only one question, answer it the same way. If it asks no question, give no answer.
+3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Use your recommended answer for the first question. Leave the other questions open." If the first question has no recommended answer, answer: "Keep the first question open. Leave the other questions open." If it asks only one question, answer it the same way. If it asks no question, give no answer.
 4. Commit. Run `openspec-lite-archive city-lookup`. If it asks "Archive anyway?", answer yes. Approve each draft.
 
 **Expected** (D171, D172, D179, D184):
@@ -141,7 +141,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 1. On a new plan-lite change `spec-gate`, write a `plan.md` from the template `openspec/schemas/plan-lite/templates/plan.md`, because `plan-hash.mjs` needs each of its headings. Give it the Goal "Add `scripts/spec-gate.mjs`. It exits with code 1 when the repo has no spec, and with code 0 otherwise." and the constraint "- C1: Use `openspec validate --specs` to check the specs. Do not scan the files." Create no spec. Commit.
 2. Run `openspec-lite-tasks-preview spec-gate`. Commit.
-3. Run `openspec-lite-apply spec-gate`. When it asks the open questions, answer: "Use your recommended answer for each question." If it asks no question, give no answer.
+3. Run `openspec-lite-apply spec-gate`. When it asks the open questions, answer: "Use your recommended answer for each question. Keep open each question that has no recommended answer." If it asks no question, give no answer.
 4. Add one valid spec under `openspec/specs/`, and run the script.
 
 **Expected**:

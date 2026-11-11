@@ -3223,3 +3223,18 @@ This revises D184, D218, D228, and D230.
 This revises D227, D230, and D231.
 
 **Rationale**: review loop 2, round 3 found 7 remarks. Each one had one logical fix. Remarks 1 and 2 were text that the fixes of D226 to D231 did not reach.
+
+## D233: Fixes From Review Loop 2, Round 4, on 99d8656..local
+
+**Decision**:
+
+1. If apply records a new open question at the end, it asks it in the end reply, with its recommended answer, except when the answer is a fact that only the user knows. The done check tells the user to answer each open question that is left, not only a marked one.
+2. Apply and the preview keep a marked question, unless the user answers it now.
+3. Upgrade step 2.5 names "each question of `## 0`" as the question whose only place is the task.
+4. Upgrade puts a found answer in `design.md` → `## Context` only when it is a non-obvious fact. An obvious answer goes only to the summary.
+5. Propose decides no open point, because it does not explore the code: it records each one as an open question, and the tasks preview tries to decide it. Propose writes a fact so that it stays true after the change.
+6. Scenarios 4c and 4d give the tester an answer for a question that has no recommendation: keep it open.
+
+This revises D223, D227, D228, D230, and D231.
+
+**Rationale**: review loop 2, round 4 found 7 remarks. Each one had one logical fix.
