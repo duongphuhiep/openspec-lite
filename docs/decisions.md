@@ -3451,3 +3451,18 @@ The rules do not change, except for the new branches of item 7. The user chose t
 This revises the form of D235. It adds the branches of item 7.
 
 **Rationale**: `CLAUDE.md` now says that an instruction is code that an agent runs with no human to fix a misread. A unit that depends on another unit, a bullet with two jobs, and a missing branch are the bugs of such code.
+
+## D249: The Shared Blocks Follow the Rules of "Write Instructions as Code"
+
+**Decision**: the shared blocks `### OpenSpec root`, `### Change selection`, and `### Schema check` follow the rules of the section "Write Instructions as Code" of `CLAUDE.md`, in each skill that holds them:
+
+1. Each block names its input and its output.
+2. Each bullet names its subject, and does one job. The sub-bullets of a case are flat bullets.
+3. Each branch is written. Change selection says what to do when no active change exists: stop, and tell the user. The schema check says what to do when the version equals the shipped version, and on `ok:`.
+4. The schema check names "item 3 of the schema check", so that an agent does not read it as step 3 of the skill.
+
+The other rules do not change. `tests/skills.test.mjs` still checks that the copies are equal. The user chose this.
+
+This revises the form of D237. It adds the branches of item 3.
+
+**Rationale**: the same as for D248.

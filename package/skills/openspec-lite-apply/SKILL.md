@@ -13,21 +13,29 @@ Do these checks in order.
 
 ### OpenSpec root
 
-- Run `openspec list --json`, and read `root.path`. This folder is the OpenSpec root.
-- Run each command from the OpenSpec root, and read each `openspec/...` path from it.
-- If the OpenSpec root is not the current folder, start each `openspec` command with `cd <root> && `. This also applies to the first command after the user confirms a root.
+- Input: the output of `openspec list --json`.
+- Output: the OpenSpec root, the folder that holds `openspec/`.
+- Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
+- Run each command from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
+- If the OpenSpec root is not the current folder, start each `openspec` command with `cd <root> && `.
+- After the user confirms a root, also start the first command with `cd <root> && `.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
-  - If one folder matches, ask the user to confirm it as the root.
-  - If more than one folder matches, ask the user to pick one.
-  - Only if no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
+- If one folder matches, ask the user to confirm the folder as the root.
+- If more than one folder matches, ask the user to pick one folder.
+- If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.
 
 ### Change selection
 
-- Use the change named in the prompt.
-- If no name is given, use the `changes` list from the same `openspec list --json`. The list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
-- If only one active change exists, use it. Otherwise, ask.
+- Input: the prompt, and the `changes` list of `openspec list --json`.
+- Output: the name of the change, written `<name>` in this skill.
+- If the prompt names a change, use that change.
+- If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
+- The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
+- If only one active change exists, use that change.
+- If more than one active change exists, ask the user to pick one change.
+- If no active change exists, stop. Tell the user that no active change exists.
 
 ### Guard
 
@@ -39,24 +47,25 @@ Do these checks in order.
 ### Schema check
 
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
-2. Compare it with the shipped version:
+2. Compare the version with the shipped version:
 
    Shipped schema version: 6
 
-   - If the file is missing, its version is lower, or it has no readable `version` line:
-     - Run the `openspec-lite-schema` skill. If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
-     - If the user declines the copy, stop.
-     - After the copy, read the version again. If it still differs from the shipped version, stop, and report both versions.
-     - Otherwise, continue with the next step of this skill. Do not end your turn after `openspec-lite-schema` finishes.
-     - In your end summary, copy the report of `openspec-lite-schema`: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
-   - If its version is higher, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-3. From the OpenSpec root, run `node openspec/schemas/plan-lite/openspec-version.mjs`.
-   - It compares `openspec --version` with the range in `schema.yaml`, and prints one line that starts with `ok:`, `warn:`, or `fail:`.
-   - Run it alone, not in a chain.
+   - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
+   - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
+   - If the user declines the copy of the schema, stop.
+   - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
+   - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
+   - In your end summary, copy the report of `openspec-lite-schema`: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
+   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
+   - If the version equals the shipped version, go to item 3 of the schema check.
+3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
+   - The script compares `openspec --version` with the range in `schema.yaml`. The script prints one line that starts with `ok:`, `warn:`, or `fail:`.
+   - Run the script alone, not in a chain.
    - Read the first word of the line, not the exit code. Do not compare the versions yourself.
-   - On `fail:`, show the line, and stop.
-   - On `warn:`, show the line as a warning, and continue.
-   - In both cases, point to https://github.com/duongphuhiep/openspec-lite#compatibility.
+   - On `ok:`, continue with the next step of this skill.
+   - On `warn:`, show the line as a warning. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Continue with the next step of this skill.
+   - On `fail:`, show the line. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Stop.
 
 ## 2. Apply
 
