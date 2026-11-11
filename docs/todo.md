@@ -275,13 +275,6 @@ The reports are in `.scenario-runs/20261111-a98437d/` (`summary.md` and `group-A
 - **Evidence**: `group-B.md`, `group-E.md`.
 - **Recommendation**: not decided. Give the fixture facts emojis and the current template comments. Say what archive does for a fact with no emoji: copy no emoji.
 
-### 89. Stock apply paraphrases the plan-status line
-
-- **Where**: `apply.instruction` step 1 (D193).
-- **Problem**: 2 of 2 runs of scenario 3 paraphrased the line (2 of 2 copied it on bdd9b0e). Scenario 3 fails on it.
-- **Evidence**: `group-A.md`.
-- **Recommendation**: not decided. The refactor of D235 may have made the rule less visible.
-
 ### 90. The preview writes an intent question as a 🤖 decision
 
 - **Where**: tasks-preview question rule (D223).

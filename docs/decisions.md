@@ -3417,3 +3417,11 @@ The rules do not change. The longest line of the skill outside the shared blocks
 This revises the form of the text of the propose decisions. It does not revise their content.
 
 **Rationale**: the same as for D235 to D238. Propose was the last skill with long paragraphs.
+
+## D246: Scenario 3 Accepts the Plan-Status Note in Other Words
+
+**Decision**: scenario 3, step 4, passes when apply tells the user the two facts of the `plan-status.mjs` line: `plan.md` is not committed, so a diff cannot show the changes of this run alone, and the user must commit it before the next run. The exact line or the same facts in other words both pass. The skill keeps "copy the line to the user as it is" as the preferred behavior. The user chose this.
+
+This revises the scenario check of D171 and D193. It closes todo item 89.
+
+**Rationale**: in the run on a98437d, 2 of 2 runs of scenario 3 gave both facts in other words, and failed only for that. The rule text did not change in the refactor of D235, so this is variance of the model. A word-for-word copy helps the user only when the exact text matters, and here it does not. The expected result must be the best one for the user, not a copy of the skill text (CLAUDE.md).

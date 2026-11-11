@@ -72,7 +72,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision that `plan.md` had before the run (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
 - In step 4, before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has an open question that the agent cannot decide and cannot find the answer to, it asks it in the same reply, with its recommended answer. It gives no recommendation when the answer is a fact that only the user knows, for example where the report page is (D195, D223, D225).
-- In step 4, the agent copies the line of `plan-status.mjs`: "plan.md is not committed, …" (D171, D193). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
+- In step 4, the agent tells the user the two facts of the `plan-status.mjs` line: `plan.md` is not committed, so a diff cannot show the changes of this run alone, and the user must commit it before the next run. The exact line or the same facts in other words both pass (D171, D193, D246). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 - In step 5, the agent gives no stale warning.
 
 ## 4. Stock apply follows the plan-lite rules
