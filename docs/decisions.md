@@ -3121,3 +3121,23 @@ This revises D219, D221, D223, and D224.
 This revises D172, D184, D219, D223, and D225.
 
 **Rationale**: review round 2 found 15 remarks. Remark 11 asked where a fact in a user answer goes, and the user chose the split and the emojis. Each other remark had one logical fix, or no fix, as for remark 15.
+
+## D227: Fixes From Review Round 3 on 99d8656..local
+
+**Decision**:
+
+1. A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to it. Archive, GLOSSARY, `docs/design.md`, and README list "an answer of the user" as a source of a non-obvious fact.
+2. The agent writes a fact so that it stays true after the change, for example "Before this change, the report page did not exist."
+3. The agent does not change an existing fact only to add an emoji. The user chose this.
+4. Archive keeps the source emoji when it copies a fact into an ADR. Upgrade keeps it in `design.md`. The user chose this.
+5. Apply first checks the preview hash, then tries to answer the open questions, and then asks the stale question and the open questions in one reply.
+6. "Where some code is" is information of the user only when a search of the repo does not find it.
+7. The end summary gives the answer of each removed question. The removal step before the summary no longer removes facts, because each fact left there is non-obvious.
+8. The Mark rule puts an added choice in its own 🤖 decision only when the decision rule records it.
+9. The emoji labels are the same in the skills, the template, and GLOSSARY. The template comment of `## Open Questions` names the kept questions and the obvious answers.
+10. Propose names the source emoji and the split of a user answer.
+11. Scenario 4 gives the expected result for OQ1, OQ2, and OQ3, and a user fact that stays true.
+
+This revises D184, D223, D225, and D226.
+
+**Rationale**: review round 3 found 17 remarks. Remarks 8 and 10 had two options each, and the user chose. Each other remark had one logical fix.

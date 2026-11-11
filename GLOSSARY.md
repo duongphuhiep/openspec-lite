@@ -21,7 +21,7 @@ An item of `## Facts` in a plan: a non-obvious fact, with its source. Its text s
 _Avoid_: Finding, note
 
 **Non-obvious fact**:
-A fact that needs one of these to find: a run or a test result; research of remote sources, for example documentation on the internet, another repo, logs, or a remote database; a long analysis of the code; or other work that is worth an agent to find it. A fact that a reader can easily deduce from the code or the file list is not one, also if a run found it (D198). A plan keeps it also when no decision uses it, and archive keeps it in an ADR if the change depends on it (D179, D184).
+A fact that needs one of these to find: an answer of the user; a run or a test result; research of remote sources, for example documentation on the internet, another repo, logs, or a remote database; a long analysis of the code; or other work that is worth an agent to find it. A fact that a reader can easily deduce from the code or the file list is not one, also if a run found it (D198). A plan keeps it also when no decision uses it, and archive keeps it in an ADR if the change depends on it (D179, D184).
 _Avoid_: Tool fact, finding
 
 **Item ID**:
@@ -65,7 +65,7 @@ What a user or another program sees or uses: a UI, a public interface, the input
 _Avoid_: Observable behavior
 
 **Open question**:
-An item of `## Open Questions` in a plan: a point that the agent cannot decide and cannot find the answer to, because the answer depends on information that only the user has. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it (D223, D225).
+An item of `## Open Questions` in a plan: a point that the agent cannot decide and cannot find the answer to, for example because only the user has the information. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it (D223, D225).
 _Avoid_: Pending item, TODO
 
 **Agent decision**:
