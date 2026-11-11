@@ -3281,3 +3281,18 @@ The rules do not change. The longest line has 47 words in place of 486. Section 
 This revises the form of the text of D171 to D234. It does not revise their content.
 
 **Rationale**: the same as for D235. The preview and apply now use the same rule names, so a reader can compare the two skills rule by rule.
+
+## D237: The Common Checks Are Shared Blocks With Small Bullets, and a Test Keeps Them Equal
+
+**Decision**:
+
+1. Section 1, "Common checks", of apply, archive, tasks-preview, and upgrade has four blocks in this order: `### OpenSpec root`, `### Change selection`, `### Guard`, `### Schema check`. Propose has `### OpenSpec root` and `### Schema check` in its section 2.
+2. The OpenSpec root, Change selection, and Schema check blocks are the same text in each skill that has them. Each bullet holds one instruction, and each case is a sub-bullet.
+3. The Guard block is different in each skill, as before, and now uses small bullets too. The archive guard path is a numbered list of six steps.
+4. `tests/skills.test.mjs` fails if one copy of a shared block differs from the others.
+
+The rules do not change. The user chose this.
+
+This revises the form of the text of D93, D99, D110, D131, D162, and later decisions on the common checks. It does not revise their content.
+
+**Rationale**: the four copies were long bullets of up to 200 words, and no test kept them equal, so a fix in one skill could miss the others. A shared block with a test is like one function that each skill calls.
