@@ -3425,3 +3425,11 @@ This revises the form of the text of the propose decisions. It does not revise t
 This revises the scenario check of D171 and D193. It closes todo item 89.
 
 **Rationale**: in the run on a98437d, 2 of 2 runs of scenario 3 gave both facts in other words, and failed only for that. The rule text did not change in the refactor of D235, so this is variance of the model. A word-for-word copy helps the user only when the exact text matters, and here it does not. The expected result must be the best one for the user, not a copy of the skill text (CLAUDE.md).
+
+## D247: Only an Explicit "Keep It Open" Adds the Kept-Open Marker
+
+**Decision**: apply, the tasks preview, propose, and upgrade add "(kept open by the user)" to a question only when the user says to keep it open, for example "keep it open" or "leave it open". An answer such as "I do not know yet" leaves the question open with no marker. In upgrade, a question that the user cannot answer now stays in `plan.md` with no marker. GLOSSARY and scenario 20a say the same. The user chose this.
+
+This revises D228, D230, D241, and D243. It closes todo item 84.
+
+**Rationale**: in the run on a98437d, upgrade added the marker to OQ1 after "I do not know yet", and 20a failed. A kept question blocks the code that depends on it, and the agent does not ask it again. So a marker that the user did not ask for hides the question from later sessions.

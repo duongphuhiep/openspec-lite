@@ -339,7 +339,7 @@ apply:
 - OpenSpec ignores the `openspec-version` key. Only the skills read it (D48).
 - `version` is an integer. A change to it is a schema **update** (D45).
 
-`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172, D174, D177, D178, D180, D181, D182, D183, D184, D186, D194, D195, D197, D198, D211, D212, D213, D214, D216, D217, D218, D219, D220, D221, D222, D223, D225, D226, D227, D228, D229, D230, D231, D232, D233, D234, D235, D239, D240, D241, D242, D243, D244). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
+`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172, D174, D177, D178, D180, D181, D182, D183, D184, D186, D194, D195, D197, D198, D211, D212, D213, D214, D216, D217, D218, D219, D220, D221, D222, D223, D225, D226, D227, D228, D229, D230, D231, D232, D233, D234, D235, D239, D240, D241, D242, D243, D244, D247). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
 
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
@@ -454,7 +454,7 @@ Do these checks in this order, before the done check.
 ## Answer rule: record an answer of the user
 
 - If the reply answers an open question, remove the question.
-- If the user says to keep a question open, keep it in `## Open Questions`, and end its text with "(kept open by the user)".
+- If the user says to keep a question open, keep it in `## Open Questions`, and end its text with "(kept open by the user)". Add the marker only when the user says to keep the question open, for example "keep it open" or "leave it open". An answer such as "I do not know yet" leaves the question open with no marker.
 - Split the reply as well as you can:
   - Record each fact in it in `## Facts`, with 👤 and "Source: the user".
   - Record each rule in it that the change must follow in `## Constraints`. Test: if the result breaks it, the change is not done, for example "add no npm dependency" or "a request over the limit gets status 429". A choice of how to meet the goal is a decision, for example "use a sliding window". This edit makes the preview stale, which is correct, because the preview does not know the rule yet.

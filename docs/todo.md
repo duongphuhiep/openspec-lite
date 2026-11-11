@@ -240,13 +240,6 @@ The reports are in `.scenario-runs/20261110-f31dfd1/`. 10 of 16 runs pass: 4 (1 
 
 The reports are in `.scenario-runs/20261111-a98437d/` (`summary.md` and `group-A.md` to `group-I.md`). 32 of 42 runs pass. 3, 4b, 4c, and 20a fail in each run. 4, 13a, and 4d fail once.
 
-### 84. Upgrade takes "I do not know yet" as "keep it open"
-
-- **Where**: upgrade step 2, open questions (D228, D241).
-- **Problem**: after "I do not know yet", upgrade added "(kept open by the user)" to OQ1. The user did not ask to keep it open. 20a fails on it.
-- **Evidence**: `group-F.md`.
-- **Recommendation**: not decided. Say that the marker needs an explicit "keep it open" of the user. "I do not know" leaves the question open, with no marker.
-
 ### 85. Apply misses error bodies and does not run the tests in 4b
 
 - **Where**: apply step 4 and the test rule (D220, D213).

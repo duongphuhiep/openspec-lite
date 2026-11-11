@@ -181,7 +181,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 - Then remove the question.
 - Do not record a point that you can decide as an open question.
 - Write a new open question as `- OQ<n>: <question>`.
-- If the user says to keep a question open, end its text with "(kept open by the user)".
+- If the user says to keep a question open, end its text with "(kept open by the user)". Add the marker only when the user says to keep the question open, for example "keep it open" or "leave it open". An answer such as "I do not know yet" leaves the question open with no marker.
 
 ### Answer rule: record an answer of the user
 

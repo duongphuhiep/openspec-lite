@@ -94,7 +94,7 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
 
    In the same reply, give the answer of each question that you closed. End the turn, and wait for the answer.
    - If all three lists are empty, do not ask.
-   - If the user cannot answer an open question now, keep the question in `plan.md`.
+   - If the user cannot answer an open question now, keep the question in `plan.md`, with no marker. Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open". An answer such as "I do not know yet" leaves the question open with no marker.
 
    **IDs.** Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact. To refer to an item, use its title, or a short form of its text, with the change name.
 

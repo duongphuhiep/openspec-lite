@@ -69,7 +69,7 @@ What a user or another program sees or uses: a UI, a public interface, the input
 _Avoid_: Observable behavior
 
 **Open question**:
-An item of `## Open Questions` in a plan: a point that is still open. Propose records each open point, because it does not explore the code. Apply, the tasks preview, and upgrade keep only a point that they cannot decide and cannot find the answer to, for example because only the user has the information. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it. Its text ends with "(kept open by the user)", so that a later session also keeps it (D223, D225, D228).
+An item of `## Open Questions` in a plan: a point that is still open. Propose records each open point, because it does not explore the code. Apply, the tasks preview, and upgrade keep only a point that they cannot decide and cannot find the answer to, for example because only the user has the information. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it. Its text ends with "(kept open by the user)", so that a later session also keeps it. Only an explicit "keep it open" of the user adds the marker. "I do not know yet" leaves the question open with no marker (D223, D225, D228, D247).
 _Avoid_: Pending item, TODO
 
 **Agent decision**:
