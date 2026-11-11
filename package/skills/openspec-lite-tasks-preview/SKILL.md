@@ -128,12 +128,14 @@ Do these two checks before you write the preview, so that no task refers to an i
 
 - Record each point that you cannot close with the question rule as an open question.
 - Keep each kept question.
+- If a task of the preview depends on a new open question, add to that task that it waits for the answer.
 
 ### Step 8: End
 
 - If you added a fact or a decision after step 5, do the two checks of step 5 for it.
 - List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
 - For each open question that you removed, also give its answer.
+- Ask each new open question, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
 - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`.
   - In Criterion, write (1) or (2) of the decision rule.
   - In Why, write the visible result for (1), or the close options for (2).
@@ -159,7 +161,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 - Do not split the work into very small subtasks.
 - Do not specify details that the coding agent can find itself.
 - Pseudo-diffs are permitted.
-- A task that depends on a kept question says that it waits for the answer.
+- A task that depends on an open question, also a kept question, says that it waits for the answer.
 
 ### Question rule: close an open question
 
@@ -184,7 +186,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 - If the user answers a question in this session, remove the question.
 - Split the answer as well as you can:
   - Record each fact in it in `## Facts`, with 👤 and "Source: the user".
-  - Record each choice or instruction in it in `## Decisions`, as a decision with no 🤖.
+  - Record each choice or instruction in it in `## Decisions`, as a decision with no 🤖. You cannot edit `## Constraints`, so a rule that the change must follow is also a decision. In the summary, say that the user can move it to `## Constraints`.
 
 ### Decision rule: when to record a decision
 

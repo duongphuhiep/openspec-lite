@@ -81,10 +81,10 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
 
    **Open questions.** Before you ask, look at each open question of `plan.md`:
    - Keep a question that ends with "(kept open by the user)", also if you can decide it. Do not ask it again.
-   - For each other question, try to decide it or find its answer, as apply does. A question is open only while you cannot decide it and cannot find its answer.
+   - For each other question, try to decide it or find its answer, with the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. A question is open only while you cannot decide it and cannot find its answer.
    - Plan a found answer that is a non-obvious fact as a fact in `design.md` → `## Context`.
    - Give an obvious answer only in the summary.
-   - Plan a decided point as a decision with 🤖 in `design.md` only when it changes a visible result or was a close call, as the decision rule of apply says. Otherwise, give the answer only in the summary. If the decided point is a contract, ask its requirement in the question turn below, as for a decision with 🤖 in `plan.md`.
+   - Plan a decided point as a decision with 🤖 in `design.md` only when it changes a visible result or was a close call, as the decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says. Otherwise, give the answer only in the summary. If the decided point is a contract, ask its requirement in the question turn below, as for a decision with 🤖 in `plan.md`.
    - Do not ask a question that you closed.
 
    **Question turn.** Ask the user, in one reply, before you write any artifact:
@@ -103,6 +103,7 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
    - `tasks-preview.md` is not a source: a claim that only the preview states is new.
    - An item can be a `#### Scenario:`, a `### Decision`, or a list item.
    - A requirement is never inferred, because step 2 gives each requirement a source.
+   - A fact with a source, for example a run, a doc, or an analysis of the code, is not inferred. It gets no 🤖, and it keeps its source emoji.
    - Before you mark an item, check each sentence of it, not only its main source. If one sentence holds a new claim, mark the item, and name that claim in a few words. If no sentence holds one, do not mark the item.
    - One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet.
    - These are not new claims:
@@ -140,7 +141,7 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
       - Facts go to `## Context`.
       - An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says.
       - An open question that changes the specs, the approach, or the tasks has no slot. Do not put it, or a note that points to it, in `design.md`.
-      - Split the answer of such a question as apply does: a fact goes to `## Context`, with 👤 and "Source: the user", and a choice goes to the specs or to `## Decisions`.
+      - Split the answer of such a question, as the answer rule of `apply.instruction` says: a fact goes to `## Context`, with 👤 and "Source: the user", and a choice goes to the specs or to `## Decisions`.
       - If the user has no answer, or the question ends with "(kept open by the user)", keep the question in `plan.md`, and also put it as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
    4. `tasks.md`:
       - If `<dir>/tasks-preview.md` exists, use it as the seed:
@@ -162,6 +163,7 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
 4. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
 5. Prune `plan.md`:
    1. List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept".
+      - A question that step 2 closed has the destination "closed", with its answer. A yes to the prune question deletes it.
       - If the items of one section go to different destinations, list each item.
       - Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
    2. If a section has content that is in no artifact, list it as "kept, in no artifact".

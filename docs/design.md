@@ -125,6 +125,7 @@ openspec-lite/
 - `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to `docs/todo.md`, or a new decision fixes the skill (D173). Each scenario run is isolated: a new temp folder from `scripts/scenario-setup.sh`, a new session, and no output of another scenario or of an earlier run. A scenario that needs an earlier state starts from a fixture in `tests/fixtures/scenarios/` (D199).
 - `exit-code.test.mjs` skips the missing-command case on Windows, where the shell reports it (D202).
 - `scripts/break-delta.sh` is the 13a helper: it removes the `#### Scenario:` blocks of the first delta that the agent writes (D203).
+- `skills.test.mjs`: the shared blocks `### OpenSpec root`, `### Change selection`, and `### Schema check` are the same text in each skill that has them. When you edit one copy, edit each other copy (D237).
 - `scenario-fixtures.test.mjs`: the `tasks-preview.md` of the `after-preview` fixture has the `plan-sha256` of its `plan.md` (D199).
 
 ## 3. Skill Rules
@@ -338,7 +339,7 @@ apply:
 - OpenSpec ignores the `openspec-version` key. Only the skills read it (D48).
 - `version` is an integer. A change to it is a schema **update** (D45).
 
-`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172, D174, D177, D178, D180, D181, D182, D183, D184, D186, D194, D195, D197, D198, D211, D212, D213, D214, D216, D217, D218, D219, D220, D221, D222, D223, D225, D226, D227, D228, D229, D230, D231, D232, D233, D234, D235, D239). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
+`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172, D174, D177, D178, D180, D181, D182, D183, D184, D186, D194, D195, D197, D198, D211, D212, D213, D214, D216, D217, D218, D219, D220, D221, D222, D223, D225, D226, D227, D228, D229, D230, D231, D232, D233, D234, D235, D239, D240). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
 
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
@@ -374,10 +375,12 @@ The work has six steps. Do them in order. The rules after the steps say how to r
     - each open question, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows, for example where some code is. Then say why you give none.
   - In the same reply, give the answer of each question that you closed.
   - End your turn, and wait for the answer.
+- If the preview is not stale, and no question is left to ask, go to step 4.
 - When the user answers:
   - Record each answer with the answer rule.
   - If the user says to keep a question open, keep it in `## Open Questions`, and end its text with "(kept open by the user)".
   - If the user says to continue from plan.md, go to step 4.
+  - A question that the user did not answer stays open. Do not write the code that depends on it.
   - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
 
 ## Step 4: Write the code
@@ -406,9 +409,6 @@ The work has six steps. Do them in order. The rules after the steps say how to r
 Do these checks in this order, before the done check.
 
 - Run the tests.
-- Check the facts:
-  - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
-  - Check each fact that you added in this run, except a fact that the user gave (👤). If a reader can see it in the code or the file list, it is obvious, also if you found it with a run. Move it to the "because" part of the decision that it justifies, or remove it.
 - Check the decisions:
   - Compare each decision in `## Decisions` with the code.
   - If the code no longer matches a 🤖 decision, update the decision.
@@ -419,13 +419,16 @@ Do these checks in this order, before the done check.
   - Record each point that you cannot close with the question rule as an open question.
   - Keep each kept question.
 - Check each 🤖 decision that you added, also in the open-question check above. If it matches neither criterion (1) nor criterion (2), remove it.
+- Check the facts, last, because the checks above can add facts:
+  - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
+  - Check each fact that you added in this run, except a fact that the user gave (👤). If a reader can see it in the code or the file list, it is obvious, also if you found it with a run. Move it to the "because" part of the decision that it justifies, or remove it.
 
 ## Step 6: End
 
 - Give the end summary:
   - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
   - For each open question that you removed, also give its answer.
-  - The plan hash does not cover these three sections, so these edits do not make the preview stale.
+  - The plan hash does not cover these three sections, so these edits do not make the preview stale. An edit of `## Constraints` makes the preview stale: say so.
   - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In Criterion, write (1) or (2) of the decision rule. In Why, write the visible result for (1), or the close options for (2).
   - Ask each new open question of step 5, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
 - Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
@@ -452,7 +455,8 @@ Do these checks in this order, before the done check.
 - Remove the question that the user answered.
 - Split the answer as well as you can:
   - Record each fact in it in `## Facts`, with 👤 and "Source: the user".
-  - Record each choice or instruction in it in `## Decisions`, as a decision with no 🤖.
+  - Record each rule in it that the change must follow in `## Constraints`. This edit makes the preview stale, which is correct, because the preview does not know the rule yet.
+  - Record each other choice or instruction in it in `## Decisions`, as a decision with no 🤖.
 
 ## Decision rule: when to record a decision
 

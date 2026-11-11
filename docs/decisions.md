@@ -3326,3 +3326,19 @@ This revises the form of the text of the archive and upgrade decisions. It does 
 This revises D234, D235, D236, and D237.
 
 **Rationale**: review loop 3, round 1 found 7 remarks. Each one had one logical fix. Remarks 1, 2, and 6 came from the refactor of D235 to D237.
+
+## D240: Fixes From Review Loop 3, Round 2, on 99d8656..local
+
+**Decision**:
+
+1. In apply, a rule in an answer of the user that the change must follow goes to `## Constraints`, as in propose. The end summary says that this edit makes the preview stale. The tasks preview cannot edit `## Constraints`, so it records such a rule as a decision with no 🤖, and says in the summary that the user can move it. The user chose this. This revises D226 and D229.
+2. In upgrade, a fact with a source, for example a run, a doc, or an analysis of the code, is not inferred. It gets no 🤖 in `design.md`, and it keeps its source emoji. The user chose this. This revises D152 for facts.
+3. Upgrade names where the question rule, the decision rule, and the answer rule are: in `apply.instruction` of `openspec/schemas/plan-lite/schema.yaml`. At the prune, a question that step 2 closed has the destination "closed", and a yes deletes it.
+4. In apply step 3, a question that the user did not answer stays open, and apply writes no code that depends on it. If the preview is not stale, and no question is left to ask, apply goes to step 4.
+5. Apply step 5 checks the facts last, because the decision check and the open-question check can add facts.
+6. In the tasks preview, a task that depends on any open question says that it waits for the answer. Step 7 adds this note for a new question. Step 8 asks each new question with a recommended answer.
+7. `docs/design.md` names `tests/skills.test.mjs` in section 2a.
+
+This revises D226, D229, D234, D235, D236, D237, and D239.
+
+**Rationale**: review loop 3, round 2 found 8 remarks. Remarks 3 and 7 had two options each, and the user chose. Each other remark had one logical fix.

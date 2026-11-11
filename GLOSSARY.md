@@ -57,7 +57,7 @@ An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that
 _Avoid_: Guess, assumption
 
 **Decision**:
-An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, also not a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts`. In propose, a rule in that answer that the change must follow is a constraint (D219, D222, D225, D226, D229).
+An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, also not a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts`. In propose and apply, a rule in that answer that the change must follow is a constraint. The tasks preview cannot edit `## Constraints`, so there it is a decision (D219, D222, D225, D226, D229, D240).
 _Avoid_: Choice log, rationale
 
 **Visible result**:
