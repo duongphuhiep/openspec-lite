@@ -57,11 +57,11 @@ An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that
 _Avoid_: Guess, assumption
 
 **Decision**:
-An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, except a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts` (D219, D222, D225, D226).
+An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, except a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts`. In propose, a rule in that answer that the change must follow is a constraint (D219, D222, D225, D226, D229).
 _Avoid_: Choice log, rationale
 
 **Visible result**:
-What a user or another program sees or uses: a UI, a public interface, the input or output of a program, the signature of an exported function, a data format, a file name or path that another program, a config, or a doc refers to, a config key, a new dependency, or the result on an error or an edge case (D218, D220, D222).
+What a user or another program sees or uses: a UI, a public interface, the input or output of a program, the signature of an exported function, a data format, a file name or path in the repo that another program, a config, or a doc outside this change refers to, a config key, a new dependency, or the result on an error or an edge case (D218, D220, D222).
 _Avoid_: Observable behavior
 
 **Open question**:

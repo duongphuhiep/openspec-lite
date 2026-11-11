@@ -3157,3 +3157,20 @@ This revises D184, D223, D225, and D226.
 This revises D164, D223, D225, and D227.
 
 **Rationale**: review round 4 found 8 remarks. Each remark had one logical fix. Item 2 makes the keep-open rule of D223 work across sessions, because a session cannot see an answer of an earlier session. Item 6 applies the rule of D223 to the last skill that asked each question with no try first.
+
+## D229: Fixes From Review Round 5 on 99d8656..local
+
+**Decision**:
+
+1. When the user says to keep a question open, the agent also adds "(kept open by the user)" to it. A later session does not ask such a question again, and continues.
+2. On "regenerate", apply first records the answers of the user to the open questions, gives the end summary of its edits to `plan.md`, and then tells the user to run the tasks preview.
+3. If upgrade decides an open question and the decided point is a contract, upgrade asks its requirement, as for a 🤖 decision of `plan.md`.
+4. In propose, a rule in an answer of the user that the change must follow is a constraint, not a decision.
+5. Criterion 1 says that a name that the program gives to its output, for example a download file name, is an output of the program.
+6. The end table and scenario 4 allow the criterion "open question".
+7. Scenario 4b accepts a 🤖 decision or an open question for the API-key header, because only the user knows how the existing clients send the key. Step 2 gives an answer for that question. The user chose this.
+8. GLOSSARY "Visible result" and the tasks-preview section of `docs/design.md` match the text of D228.
+
+This revises D221, D222, D226, and D228.
+
+**Rationale**: review round 5 found 9 remarks. Remark 7 had two options, and the user chose. Each other remark had one logical fix.
