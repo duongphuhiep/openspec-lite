@@ -3141,3 +3141,19 @@ This revises D172, D184, D219, D223, and D225.
 This revises D184, D223, D225, and D226.
 
 **Rationale**: review round 3 found 17 remarks. Remarks 8 and 10 had two options each, and the user chose. Each other remark had one logical fix.
+
+## D228: Fixes From Review Round 4 on 99d8656..local
+
+**Decision**:
+
+1. A stale preview stops the code only until the user answers. If the user says to continue from `plan.md`, apply writes the code. If the user says to regenerate, apply tells the user to run `openspec-lite-tasks-preview`, and ends its turn.
+2. A question that the user said to keep open ends with "(kept open by the user)" in `plan.md`. A later session of apply, the preview, or upgrade keeps such a question. The template comment names the marker.
+3. Archive step 4 lists "an answer of the user" as a source of a non-obvious fact, and says that a 👤 fact is always non-obvious.
+4. The end check of apply and step 4 of the preview skip a 👤 fact by name.
+5. The file-name item of criterion 1 says "outside this change", so a test import or a `<script src>` of the same change makes no decision.
+6. Upgrade tries to decide or find the answer to each open question before its question turn, as apply does. A found answer goes to `design.md` → `## Context`, and a decided point is a decision with 🤖 in `design.md`. It asks only the questions that are still open.
+7. `docs/design.md` and GLOSSARY match the fact rules of D227 and the emoji labels.
+
+This revises D164, D223, D225, and D227.
+
+**Rationale**: review round 4 found 8 remarks. Each remark had one logical fix. Item 2 makes the keep-open rule of D223 work across sessions, because a session cannot see an answer of an earlier session. Item 6 applies the rule of D223 to the last skill that asked each question with no try first.

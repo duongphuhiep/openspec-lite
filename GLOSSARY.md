@@ -17,7 +17,7 @@ The living document of a plan-lite change. It holds the goal, an optional backgr
 _Avoid_: Proposal, design
 
 **Fact**:
-An item of `## Facts` in a plan: a non-obvious fact, with its source. Its text starts with a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research, 🔬 a test run or a probe, 🔍 a long analysis of the code (D226). The emoji does not replace the source in words. An obvious fact or a well-known fact is not a fact of the plan. It goes into the "because" part of the decision, constraint, or non-goal that it justifies (D184, D192). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
+An item of `## Facts` in a plan: a non-obvious fact, with its source. Its text starts with a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code (D226). The emoji does not replace the source in words. An obvious fact or a well-known fact is not a fact of the plan. It goes into the "because" part of the decision, constraint, or non-goal that it justifies (D184, D192). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
 _Avoid_: Finding, note
 
 **Non-obvious fact**:
@@ -65,7 +65,7 @@ What a user or another program sees or uses: a UI, a public interface, the input
 _Avoid_: Observable behavior
 
 **Open question**:
-An item of `## Open Questions` in a plan: a point that the agent cannot decide and cannot find the answer to, for example because only the user has the information. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it (D223, D225).
+An item of `## Open Questions` in a plan: a point that the agent cannot decide and cannot find the answer to, for example because only the user has the information. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it. Its text ends with "(kept open by the user)", so that a later session also keeps it (D223, D225, D228).
 _Avoid_: Pending item, TODO
 
 **Agent decision**:
