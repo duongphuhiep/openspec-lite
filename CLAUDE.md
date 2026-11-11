@@ -13,6 +13,27 @@ Write all prose in ASD-STE100 Simplified Technical Language.
 - Apply these rules to all prose: chat replies, code comments, commit messages, and docs.
 - Do not apply these rules to code identifiers.
 
+## Write Instructions as Code
+
+The instructions in `SKILL.md`, `schema.yaml`, and the template comments are code in natural language. An agent runs them with no human to fix a misread.
+
+- A file is a program.
+- An ordered step is a statement. A rule is a function that the steps call.
+- A term in `GLOSSARY.md` is a type. Use the same term each time, as code uses the same name.
+
+Apply the best practices of programming:
+
+- **Isolate each unit.** Write each bullet or paragraph so that it is correct when an agent reads only that bullet or paragraph. Do not depend on "above" or "as before".
+- **Be explicit, not short.** Clarity is more important than few words. Repeat the subject in each sentence. Do not use "it" or "this" when the reader can misread them.
+- **Give one job to each unit.** If a bullet does two jobs, split it into two bullets.
+- **Refactor when a unit grows.** A bullet can start simple and grow complex as you add rules. Then move a rule to a separate bullet, or split the bullet by its logic.
+- **Keep the nesting flat.** If a bullet has three or more sub-levels, flatten it if you can.
+- **Keep the order of execution clear.** Use numbered steps for the order. Put the rules that apply at all times in a separate list, not inside a step (D235, D236).
+- **Write each branch.** For each "If..." condition, say what to do. Also say what to do in the other case, when it is not obvious.
+- **Name the inputs and outputs.** Say which file, section, or command output a step reads, and what it writes.
+- **Keep shared blocks equal.** An agent loads one skill at a time, so a skill cannot call a block in another skill. If two skills need the same rule, write the same block in each skill. `tests/skills.test.mjs` fails if one copy differs. When you edit one copy, edit each other copy (D237).
+- **Remove dead code.** If a rule no longer applies, delete it. Do not keep it as history. `docs/decisions.md` keeps the history.
+
 ## Project Files and Source of Truth
 
 | File | Purpose | Source of truth for |
