@@ -3190,3 +3190,20 @@ This revises D221, D222, D226, and D228.
 This revises D223, D226, D228, and D229.
 
 **Rationale**: review loop 2, round 1 found 8 remarks. Remark 4 had two options, and the user chose. Each other remark had one logical fix.
+
+## D231: Fixes From Review Loop 2, Round 2, on 99d8656..local
+
+**Decision**:
+
+1. An obvious fact goes into the "because" part of the decision that it justifies. If it justifies only a constraint or a non-goal, the agent does not record it, because an edit of those sections makes the preview stale.
+2. The item "the input or output of a program" also names "the output of another tool that the code reads, for example a field of its JSON output" (D218).
+3. A new point found during the work gets no recommendation when its answer is a fact that only the user knows.
+4. When apply ends its turn to ask, the same reply gives the answer of each question that it closed.
+5. In upgrade, a question with the marker goes to `## 0. Open questions` only when it changes the specs, the approach, or the tasks. Step 2.5 names "a question of `## 0. Open questions`", not "a kept question".
+6. The fact rule of the preview names "the fact check of "4. End"". The tasks-preview section of `docs/design.md` runs both checks before the preview file.
+7. Scenario 4c accepts a 👤 fact for an answer. Scenario 4d accepts only a 🤖 decision for the output that the script reads.
+8. Remark 9 needs no change: archive drafts an ADR for a 👤 fact only if the change depends on it.
+
+This revises D184, D218, D228, and D230.
+
+**Rationale**: review loop 2, round 2 found 10 remarks. Each one had one logical fix, or no fix.
