@@ -3402,3 +3402,18 @@ This revises D240 and D242.
 This revises D226, D227, D239, D240, D242, and D243.
 
 **Rationale**: review loop 3, round 5 found 10 remarks. Each one had one logical fix, or an earlier choice of the user decided it.
+
+## D245: The Propose Skill Uses Small Bullets and Named Rules
+
+**Decision**:
+
+1. Section 1 of `openspec-lite-propose` has three blocks: `### Main outcome`, `### Split check`, and `### Level 1 question`. Each case is a sub-bullet.
+2. Section 3 keeps its five numbered steps, with sub-bullets. Step 5 names five rules after it: goal rule, question rule, answer rule, fact rule, and decision rule. The names match the rules of apply and of the tasks preview.
+3. Section 5 has sub-bullets.
+4. Section 2 holds the shared blocks of D237, and section 4 is a short list, so both do not change.
+
+The rules do not change. The longest line of the skill outside the shared blocks has 40 words or fewer, in place of 212. The user chose this.
+
+This revises the form of the text of the propose decisions. It does not revise their content.
+
+**Rationale**: the same as for D235 to D238. Propose was the last skill with long paragraphs.
