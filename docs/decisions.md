@@ -3174,3 +3174,19 @@ This revises D164, D223, D225, and D227.
 This revises D221, D222, D226, and D228.
 
 **Rationale**: review round 5 found 9 remarks. Remark 7 had two options, and the user chose. Each other remark had one logical fix.
+
+## D230: Fixes From Review Loop 2, Round 1, on 99d8656..local
+
+**Decision**:
+
+1. If apply finds a new point during the work that it cannot decide and cannot find the answer to, it records an open question before it writes the code that depends on it, asks it with a recommended answer, and ends its turn. The user chose this.
+2. Apply does not count a question with the "(kept open by the user)" marker when it decides to ask and end its turn.
+3. If a kept question is left at the done check, apply tells the user to answer it in the next message. Archive says the same.
+4. Upgrade keeps a kept question also if it can decide it, and puts it in `## 0. Open questions` of `tasks.md`. Upgrade splits an answer of the user as apply does: a fact goes to `design.md` → `## Context` with 👤.
+5. The tasks preview does the fact check and the 🤖 decision check before it writes `tasks-preview.md`.
+6. Criterion 1 says "a key in a config file that a program or a user reads, for example a field of `package.json` or an env var", in place of "a config key".
+7. Scenario 4c accepts a fact with 👤 or a decision with no 🤖 for an answer.
+
+This revises D223, D226, D228, and D229.
+
+**Rationale**: review loop 2, round 1 found 8 remarks. Remark 4 had two options, and the user chose. Each other remark had one logical fix.

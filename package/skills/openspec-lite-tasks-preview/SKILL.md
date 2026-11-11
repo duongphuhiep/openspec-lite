@@ -34,7 +34,7 @@ Write `tasks-preview.md` for a plan-lite change. Record what you learn in `plan.
    ```
 
    If it prints a message that starts with `plan-hash:` and no hash, show the message and stop. You do not need its exit code. Ask the user to fix `plan.md` as the message says.
-5. Overwrite `openspec/changes/<name>/tasks-preview.md` with this template. Put the hash in the second line:
+5. First, do the fact check and the 🤖 decision check of "4. End", so that no task refers to an item that the checks move or remove. Then overwrite `openspec/changes/<name>/tasks-preview.md` with this template. Put the hash in the second line:
 
    ```markdown
    <!-- Generated. Edit plan.md, not this file. -->
@@ -70,7 +70,7 @@ Write to `plan.md` with no question. Edit only `## Facts`, `## Decisions`, and `
     - a UI, a public interface, or the signature of an exported function
     - the input or output of a program, or a data format
     - a file name or path in the repo that another program, a config, or a doc outside this change refers to. A name that the program gives to its output, for example a download file name, is an output of the program
-    - a config key, or a new dependency
+    - a key in a config file that a program or a user reads, for example a field of `package.json` or an env var, or a new dependency
     - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
   - (2) You weighed two or more close options, and no option was a clear winner, also for an internal choice.
   Do not record your other choices. Record only the part of the decision that matches (1) or (2). If you need an internal detail to explain the reason, write it in the "because" part, not in the title or in "Chose X". Write `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. Each reason must come from this run, the user, plan.md, the code, or a well-known fact. A claim about how a tool, a runtime, or a platform behaves is not a well-known fact: check it with a run or a doc, and give the source. If no source supports a reason, write "Reason not checked." in its place. Do not guess a reason, also not a wish of the user.
