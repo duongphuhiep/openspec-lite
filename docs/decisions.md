@@ -3207,3 +3207,19 @@ This revises D223, D226, D228, and D229.
 This revises D184, D218, D228, and D230.
 
 **Rationale**: review loop 2, round 2 found 10 remarks. Each one had one logical fix, or no fix.
+
+## D232: Fixes From Review Loop 2, Round 3, on 99d8656..local
+
+**Decision**:
+
+1. The `## Facts` template comment, GLOSSARY, README, and `docs/design.md` put an obvious fact only in the "because" part of a decision (D231 item 1).
+2. `docs/design.md` matches the skills for propose (source emoji, split of a user answer), upgrade (source emoji, split, marked questions in `## 0`), and archive (source emoji in an ADR, a 👤 fact is non-obvious, the left-question path).
+3. Apply and the preview handle a question with "(kept open by the user)" first, before they try to decide the other questions. In apply, the recommendation rule comes before "End your turn".
+4. A 👤 fact skips only the obvious-fact check. The other checks still apply, for example the check of a fact that is no longer true.
+5. The preview names its "Fact check" and "🤖 decision check". Step 5 runs them before the preview file, and section 4 runs them again for each item that the run added after step 5.
+6. Propose records a user fact with 👤 and "Source: the user".
+7. For a question that is left at its done check, archive tells the user to run `openspec-lite-apply` with the answer.
+
+This revises D227, D230, and D231.
+
+**Rationale**: review loop 2, round 3 found 7 remarks. Each one had one logical fix. Remarks 1 and 2 were text that the fixes of D226 to D231 did not reach.

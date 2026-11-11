@@ -17,7 +17,7 @@ The living document of a plan-lite change. It holds the goal, an optional backgr
 _Avoid_: Proposal, design
 
 **Fact**:
-An item of `## Facts` in a plan: a non-obvious fact, with its source. Its text starts with a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code (D226). The emoji does not replace the source in words. An obvious fact or a well-known fact is not a fact of the plan. It goes into the "because" part of the decision, constraint, or non-goal that it justifies (D184, D192). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
+An item of `## Facts` in a plan: a non-obvious fact, with its source. Its text starts with a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code (D226). The emoji does not replace the source in words. An obvious fact or a well-known fact is not a fact of the plan. It goes into the "because" part of the decision that it justifies (D184, D192, D231). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
 _Avoid_: Finding, note
 
 **Non-obvious fact**:
