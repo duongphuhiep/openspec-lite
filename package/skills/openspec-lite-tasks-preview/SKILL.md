@@ -7,6 +7,14 @@ description: Generate or regenerate tasks-preview.md for a plan-lite change. It 
 
 Write `tasks-preview.md` for a plan-lite change. Record what you learn in `plan.md`. Do not write code.
 
+How to read this skill:
+
+- Do the checks of section 1 in order. Then do steps 1 to 8 of section 2 in order.
+- The general rules of section 2 apply at all times, in each step.
+- A named rule of section 3, for example the question rule, applies in each step where its topic comes up, also when the step does not name the rule.
+- The OpenSpec root is the folder that holds `openspec/`. Run each command from the OpenSpec root.
+- `<name>` is the name of the change.
+
 ## 1. Common checks
 
 Do these checks in order.
@@ -39,9 +47,10 @@ Do these checks in order.
 
 ### Guard
 
+- Input: `openspec/changes/<name>/.openspec.yaml`.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
-- If it is `plan-lite`, continue.
-- If it is not `plan-lite`, stop. A spec-driven change has `tasks.md` instead. Point the user to stock `/opsx:continue`.
+- If the schema is `plan-lite`, go to the schema check.
+- If the schema is not `plan-lite`, stop. A spec-driven change has `tasks.md` instead. Point the user to stock `/opsx:continue`.
 
 ### Schema check
 
@@ -68,53 +77,76 @@ Do these checks in order.
 
 ## 2. Steps
 
-Do these steps in order. The rules of section 3 say how to record each item in `plan.md`. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, or gives a fact, a rule, or a choice for the change in another reply, record it with the answer rule.
+### General rules
 
-### Step 1: Check plan.md
+- Edit `plan.md` only as the plan.md rule says.
+- Each time the user answers an open question, record the answer with the answer rule.
+- Each time the user gives a fact, a rule, or a choice for the change in a reply, record the reply with the answer rule.
+- When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
+- When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
+- When you find a fact, record the fact with the fact rule and the fact format.
+- When you need the exit code of a command, use the exit-code rule.
+- When you add an item to `plan.md`, give the item an ID with the ID rule.
+- If the user answers a question that a task of the preview waits for, remove the "waits for the answer" note from that task. Then change the task to follow the answer.
+- If the user moves a rule to `## Constraints`, the preview is stale. Tell the user to run this skill again.
 
-- If `openspec/changes/<name>/plan.md` is missing, stop.
-- Tell the user to run `openspec-lite-propose`.
+### Step 1: Check that plan.md exists
 
-### Step 2: Start
+- Input: `openspec/changes/<name>/plan.md`.
+- If `openspec/changes/<name>/plan.md` is missing, stop. Tell the user to run `openspec-lite-propose`.
+- If `openspec/changes/<name>/plan.md` exists, go to step 2.
 
+### Step 2: Report the commit state of plan.md
+
+- Input: `openspec/changes/<name>/plan.md`.
 - Run `node openspec/schemas/plan-lite/plan-status.mjs openspec/changes/<name>/plan.md` from the OpenSpec root.
-- Run it alone, not in a chain.
-- If it prints a line, copy the line to the user as it is. Then continue.
-- If it prints nothing, say nothing about commits.
+- Run the `plan-status.mjs` command alone, not in a chain.
+- If `plan-status.mjs` prints a line, copy the line to the user as it is.
+- If `plan-status.mjs` prints nothing, say nothing about commits.
+- Go to step 3.
 
 ### Step 3: Explore, and close the open questions
 
+- Input: `plan.md`, and the code that the change touches.
+- Output: the updates of `## Facts`, `## Decisions`, and `## Open Questions` in `plan.md`.
 - Read `plan.md`.
 - Explore the code that the change touches.
-- Before you write the tasks, try to close each open question with the question rule.
-- When you make a decision, record it with the decision rule, the decision format, and the mark rule. Keep `## Decisions` current with the current-decisions rule.
-- When you find a fact, record it with the fact rule and the fact format. To know an exit code, use the exit-code rule.
-- Edit `plan.md` only as the plan.md rule says.
+- A question that ends with "(kept open by the user)" is a kept question.
+- Keep each kept question, also if you can decide the kept question, unless the user answers the kept question now.
+- Before you write the tasks, try to close each question that is not a kept question with the question rule.
+- Go to step 4.
 
 ### Step 4: Get the plan hash
 
+- Input: `openspec/changes/<name>/plan.md`.
+- Output: the plan hash.
 - From the OpenSpec root, run:
 
   ```sh
   node openspec/schemas/plan-lite/plan-hash.mjs openspec/changes/<name>/plan.md
   ```
 
-- You do not need its exit code.
-- If it prints a message that starts with `plan-hash:` and no hash, show the message, and stop. Ask the user to fix `plan.md` as the message says.
+- You do not need the exit code of `plan-hash.mjs`.
+- If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, show the message, and stop. Ask the user to fix `plan.md` as the message says.
+- If `plan-hash.mjs` prints a hash, keep the hash for step 6. Go to step 5.
 
-### Step 5: Check plan.md
+### Step 5: Check the facts and the 🤖 decisions
 
 Do these two checks before you write the preview, so that no task refers to an item that the checks move or remove.
 
-- Fact check: check each fact that you added in this run, except a fact that the user gave (👤).
-  - Read the code or the file list that the fact is about.
-  - If a reader can see the fact there, it is obvious, also if you found it with a run.
-  - Move it to the "because" part of the decision that it justifies, or remove it.
-- 🤖 decision check: check each 🤖 decision that you added.
-  - If it matches neither criterion (1) nor criterion (2) of the decision rule, remove it from `plan.md`.
+1. Fact check: check each fact that you added in this run, except a fact that the user gave (👤).
+   - Read the code or the file list that the fact is about.
+   - If a reader can see the fact in the code or in the file list, the fact is obvious, also if you found the fact with a run.
+   - Move each obvious fact to the "because" part of the decision that the fact justifies, or remove the obvious fact.
+2. 🤖 decision check: check each 🤖 decision that you added in this run.
+   - If a 🤖 decision matches neither criterion (1) nor criterion (2) of the decision rule, remove the 🤖 decision from `plan.md`.
+
+When the checks are done, go to step 6.
 
 ### Step 6: Write the preview
 
+- Input: `plan.md`, and the plan hash of step 4.
+- Output: `openspec/changes/<name>/tasks-preview.md`.
 - Overwrite `openspec/changes/<name>/tasks-preview.md` with this template.
 - Put the hash of step 4 in the second line:
 
@@ -131,27 +163,33 @@ Do these two checks before you write the preview, so that no task refers to an i
   ## 2. <next group, depends on 1>
   ```
 
-- Follow the preview rule.
+- Write the tasks with the preview rule.
+- Go to step 7.
 
 ### Step 7: Record the new open questions
 
+- Input: the points that you found in steps 3 to 6.
+- Output: the new questions in `## Open Questions` of `plan.md`, and the updates of `tasks-preview.md`.
 - Record each point that you cannot close with the question rule as an open question.
 - Keep each kept question.
-- If a task of the preview depends on a new open question, add to that task that it waits for the answer.
+- If a task of the preview depends on a new open question, add to that task that the task waits for the answer.
+- Go to step 8.
 
 ### Step 8: End
 
-- If you added a fact or a decision after step 5, do the two checks of step 5 for it. If a check moves or removes an item that a task of the preview names, update that task.
-- If the user answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer.
-- If the user moves a rule to `## Constraints`, the preview is stale. Tell the user to run this skill again.
-- List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
-- For each open question that you removed, also give its answer.
-- Ask each open question that is still open, also an existing one, with your recommended answer. Do not ask a kept question again. Give no recommendation when the answer is a fact that only the user knows.
-- Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`.
-  - In Criterion, write (1) or (2) of the decision rule.
-  - In Why, write the visible result for (1), or the close options for (2).
-- Tell the user to read the preview.
-- If the user disagrees, they put the correction in `plan.md`, and run this skill again. They do not edit `tasks-preview.md`.
+1. If you added a fact or a decision after step 5, do the two checks of step 5 for that fact or decision.
+2. If a check of item 1 moves or removes an item that a task of the preview names, update that task.
+3. Give the end summary:
+   - List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
+   - If you added, changed, or removed no item in `plan.md`, say that you changed no item.
+   - For each open question that you removed, give its answer.
+   - Ask each open question that is still open, also an existing one, with your recommended answer.
+   - Do not ask a kept question again.
+   - Give no recommendation when the answer is a fact that only the user knows.
+   - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
+   - If you added no 🤖 decision, show no table.
+4. Tell the user to read the preview.
+5. Tell the user what to do on disagreement: put the correction in `plan.md`, and run this skill again. The user does not edit `tasks-preview.md`.
 
 ## 3. Rules
 
@@ -159,7 +197,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 
 - Write to `plan.md` with no question.
 - Edit only `## Facts`, `## Decisions`, and `## Open Questions`.
-- The plan hash does not cover these sections, so the preview stays current.
+- The plan hash does not cover `## Facts`, `## Decisions`, and `## Open Questions`, so your edits of these sections do not make the preview stale.
 - Do not edit Goal, Background, Non-Goals, or Constraints.
 
 ### Preview rule: the tasks
@@ -172,93 +210,97 @@ Do these two checks before you write the preview, so that no task refers to an i
 - Do not split the work into very small subtasks.
 - Do not specify details that the coding agent can find itself.
 - Pseudo-diffs are permitted.
-- A task that depends on an open question, also a kept question, says that it waits for the answer.
+- A task that depends on an open question, also a kept question, says that the task waits for the answer.
 
 ### Question rule: close an open question
 
-- A question is open only while you cannot decide it and cannot find its answer.
-- You cannot decide a question when its answer depends on information that only the user has. Examples: an intent, or where some code is when a search of the repo does not find it.
-- A question that ends with "(kept open by the user)" is a kept question:
-  - Keep it, also if you can decide it, unless the user answers it now.
-- For each other question, read the code and the docs, or run a command.
-- If you find the answer:
-  - If it is a non-obvious fact, record it with the fact rule.
-  - If it is obvious, give it in the summary of step 8.
-- If you can decide the question, also when no option is a clear winner:
-  - If the decision rule records the choice, record a 🤖 decision.
-  - If not, record no decision, and give the answer in the summary of step 8.
-- Then remove the question.
+- A question is open only while you cannot decide the question and cannot find its answer.
+- You cannot decide a question when its answer depends on information that only the user has. Examples: an intent, or where some code is when a search of the repo does not find the code.
+- To close a question, read the code and the docs, or run a command.
+- If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
+- If you find the answer, and the answer is obvious, give the answer in the end summary of step 8.
+- If you can decide the question, also when no option is a clear winner, and the decision rule records the choice, record a 🤖 decision.
+- If you can decide the question, and the decision rule does not record the choice, record no decision. Give the answer in the end summary of step 8.
+- When you close a question, remove the question from `## Open Questions`.
 - Do not record a point that you can decide as an open question.
 - Write a new open question as `- OQ<n>: <question>`.
-- If the user says to keep a question open, end its text with "(kept open by the user)". Add the marker only when the user says to keep the question open, for example "keep it open" or "leave it open". An answer such as "I do not know yet" leaves the question open with no marker.
 
-### Answer rule: record an answer of the user
+### Answer rule: record a reply of the user
 
-- If the user answers a question in this session, remove the question.
-- Split the answer as well as you can:
-  - Record each fact in it in `## Facts`, with 👤 and "Source: the user".
-  - Record each choice or instruction in it in `## Decisions`, as a decision with no 🤖. You cannot edit `## Constraints`, so a rule that the change must follow is also a decision. A rule passes this test: if the result breaks it, the change is not done. In the summary, say that the user can move it to `## Constraints`.
+- If a reply of the user in this session answers an open question, remove the question from `## Open Questions`.
+- If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
+- Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
+- An answer such as "I do not know yet" leaves the question open with no marker.
+- Split the reply of the user as well as you can into facts, rules, and choices.
+- Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
+- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
+- You cannot edit `## Constraints`, so record each rule of the reply that the change must follow in `## Decisions`, as a decision with no 🤖.
+- A rule passes this test: if the result breaks the rule, the change is not done.
+- For each rule that you record as a decision, say in the end summary that the user can move the rule to `## Constraints`.
 
 ### Decision rule: when to record a decision
 
-- Record a decision when one of these is true:
-  - (1) You plan something for the code that changes a visible result, and plan.md and the user did not say it. Then it is your choice: record it. A visible result is one of these:
-    - a UI, a public interface, or the signature of an exported function
-    - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a field of its JSON output
-    - a file name or path in the repo that another program, a config, or a doc outside this change refers to. A name that the program gives to its output, for example a download file name, is an output of the program
-    - a key in a config file that a program or a user reads, for example a field of `package.json` or an env var, or a new dependency
-    - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
-  - (2) You weighed two or more close options, and no option was a clear winner, also for an internal choice.
+- Record a decision when criterion (1) or criterion (2) is true.
+- Criterion (1): you plan something for the code that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
+- A visible result is one of these things:
+  - a UI, a public interface, or the signature of an exported function
+  - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a field of its JSON output
+  - a file name or path in the repo that another program, a config, or a doc outside this change refers to
+  - a name that the program gives to its output, for example a download file name
+  - a key in a config file that a program or a user reads, for example a field of `package.json` or an env var
+  - a new dependency
+  - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
+- Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
 - Do not record your other choices.
-- Record only the part of the decision that matches (1) or (2).
-- If you need an internal detail to explain the reason, write it in the "because" part, not in the title or in "Chose X".
+- Record only the part of the decision that matches criterion (1) or criterion (2).
+- If you need an internal detail to explain the reason, write the detail in the "because" part, not in the title or in "Chose X".
 
 ### Decision format
 
-- Write `### Decision D<n>: <title>`.
-- Then write "Chose X because Y."
+- Write `### Decision D<n>: <title>`, with `<n>` higher than each decision ID in the file.
+- After the heading, write "Chose X because Y."
 - Add "Rejected Z because W." when there was an alternative.
 - Each reason must come from this run, the user, plan.md, the code, or a well-known fact.
-- A claim about how a tool, a runtime, or a platform behaves is not a well-known fact. Check it with a run or a doc, and give the source.
-- If no source supports a reason, write "Reason not checked." in its place.
+- A claim about how a tool, a runtime, or a platform behaves is not a well-known fact. Check the claim with a run or a doc, and give the source.
+- If no source supports a reason, write "Reason not checked." in place of the reason.
 - Do not guess a reason, also not a wish of the user.
 
 ### Mark rule: the 🤖 mark
 
-- End the heading with 🤖, unless the decision records an answer or an instruction of the user.
-- A decision with no 🤖 belongs to the user, also one that the user wrote by hand.
+- End the heading of a decision with 🤖, unless the decision records an answer or an instruction of the user.
+- A decision with no 🤖 belongs to the user, also a decision that the user wrote by hand.
 - A decision with no 🤖 holds only what the user said. Put each choice that you add, and that the decision rule records, in its own 🤖 decision.
-- When you update a 🤖 decision to follow an answer or an instruction of the user, remove its 🤖.
+- When you update a 🤖 decision to follow an answer or an instruction of the user, remove the 🤖 of that decision.
 - The user removes the 🤖 to accept a decision.
 
 ### Current-decisions rule: keep `## Decisions` current
 
 - `## Decisions` holds only the current decisions.
-- You can update or remove a 🤖 decision:
-  - Remove each one that a new decision supersedes.
-  - Update each one that a new decision makes stale.
-  - Update or remove each one that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`.
+- Remove each 🤖 decision that a new decision supersedes.
+- Update each 🤖 decision that a new decision makes stale.
+- Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`.
 - Change a decision with no 🤖 only when the user tells you to in this session.
 - If your approach conflicts with a decision with no 🤖, record an open question.
-- Then remove each fact that justifies no current decision or constraint, except a non-obvious fact.
+- After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
 
 ### Fact rule: when to record a fact
 
-- Record each non-obvious fact when you find it.
-- A non-obvious fact needs one of these to find:
+- Record each non-obvious fact when you find the fact.
+- A non-obvious fact needs one of these sources to find:
   - an answer of the user
   - a run or a test result
   - research of remote sources, for example documentation on the internet, another repo, logs, or a remote database
   - a long analysis of the code
-  - other work that is worth an agent to find it
-- A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found it:
-  - A run alone is not enough. The result must be one that a reader cannot see in the code or in the file list.
-  - For example, what a script prints when its code shows it, or which files exist, is obvious.
-- A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to it, also not the fact check of step 5.
-- When a command, a tool, or a service gives an error or an output that makes you change what you do, record it, with the command and the error text. If a reader can see the same output in the code, it is an obvious fact.
-- Do not record an obvious fact or a well-known fact in `## Facts`:
-  - If it is the reason of a decision, write it in the "because" part of that decision.
-  - If it justifies only a constraint or a non-goal, do not record it, because an edit of those sections makes the preview stale.
+  - other work that is worth an agent to find the fact
+- A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found the fact.
+- A run alone does not make a fact non-obvious. The result must be one that a reader cannot see in the code or in the file list.
+- For example, the output of a script is obvious when the code of the script shows the output. The list of files that exist is obvious too.
+- A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact, also not the fact check of step 5.
+- When a command, a tool, or a service gives an error or an output that makes you change what you do, record the output as a fact, with the command and the error text.
+- If a reader can see the same output in the code, the output is an obvious fact.
+- Do not record an obvious fact or a well-known fact in `## Facts`.
+- If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
+- If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact. The preview cannot edit `## Constraints` or `## Non-Goals`, so the fact has no place.
 - Do not record a guess.
 - A sentence that states a choice, for example "the script must read the item count", is a decision, not a fact.
 - Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK.
@@ -276,14 +318,15 @@ Do these two checks before you write the preview, so that no task refers to an i
   - 🔍 a long analysis of the code
 - Also give the source in words: a command or a test that you ran, the files that you analyzed, a doc URL, a log, or an error text.
 - Do not change an existing fact only to add an emoji.
-- Write a fact so that it stays true after the change, for example "Before this change, the report page did not exist."
+- Write a fact so that the fact stays true after the change, for example "Before this change, the report page did not exist."
 
 ### Exit-code rule
 
 - To know the exit code of a command, run `node openspec/schemas/plan-lite/exit-code.mjs <command> <args...>` from the OpenSpec root.
-- Run it alone, not in a chain. Read its last line `exit: <code>`.
+- Run the `exit-code.mjs` command alone, not in a chain.
+- Read the last line of the output: `exit: <code>`.
 - Do not add `echo $?`.
-- If you did not get the exit code, record nothing about it.
+- If you did not get the exit code, record nothing about the exit code.
 
 ### ID rule
 

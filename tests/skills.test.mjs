@@ -17,7 +17,7 @@ const block = (text, title) => {
 };
 
 const shared = {
-  "OpenSpec root": ["apply", "archive", "tasks-preview", "upgrade", "propose"],
+  "OpenSpec root": ["apply", "archive", "tasks-preview", "upgrade", "propose", "schema"],
   "Change selection": ["apply", "archive", "tasks-preview", "upgrade"],
   "Schema check": ["apply", "archive", "tasks-preview", "upgrade", "propose"],
 };

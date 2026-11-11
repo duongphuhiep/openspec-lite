@@ -3466,3 +3466,19 @@ The other rules do not change. `tests/skills.test.mjs` still checks that the cop
 This revises the form of D237. It adds the branches of item 3.
 
 **Rationale**: the same as for D248.
+
+## D250: Each Skill Body Follows the Rules of "Write Instructions as Code"
+
+**Decision**: the bodies of all six skills follow the rules of the section "Write Instructions as Code" of `CLAUDE.md`, as `apply.instruction` does (D248):
+
+1. Each skill has a "How to read this skill" part and a "General rules" list. A rule that applies at all times is in the list, not in a step.
+2. Each step names its input and its output, and ends with its next step. The step numbers that other files refer to stay the same: archive 1 to 11 and the guard path 1 to 6, upgrade 1 to 5, 2.1 to 2.5, and 5.1 to 5.4, the preview 1 to 8.
+3. Each bullet names its subject, and does one job. The nesting is flat.
+4. Each branch is written. The new branches are listed in the four reports of this change, for example: the archive guard path does not run section 3; archive step 11 lists the written ADRs when `openspec archive` fails; propose ends its turn on no to the preview question; the preview shows no table when it added no 🤖 decision; upgrade does not ask the question turn when each artifact exists.
+5. Four fixes from the rewrite: the apply skill names its three added rules, not "only one rule". In upgrade, a rule from an answer is written as a requirement with no new question, because the answer of the user is its source. The preview fact rule gives its own reason: the preview cannot edit `## Constraints` or `## Non-Goals`. `tests/skills.test.mjs` also checks the `### OpenSpec root` copy of the schema skill.
+
+Each command, each code span, each quoted text, and each decision ID of the old text is still in the new text, except the pointer "newer schema" of the schema skill, which now holds the full message. The user chose this.
+
+This revises the form of D236 to D238 and D245. It adds the branches of item 4 and the fixes of item 5.
+
+**Rationale**: the same as for D248. The user asked to review all skills with the new rules.

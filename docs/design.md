@@ -139,6 +139,8 @@ openspec-lite/
 
 ### Common rules for all workflow skills
 
+- Each skill and `apply.instruction` follow the section "Write Instructions as Code" of `CLAUDE.md`: a "How to read" part, a "General rules" list, steps with Input and Output lines that end with the next step, one job per bullet, a named subject in each bullet, flat nesting, and each branch written (D248, D249, D250).
+
 The five workflow skills are propose, tasks-preview, apply, upgrade, and archive.
 
 **OpenSpec root** (D111): Each skill runs `openspec list --json` first and reads `root.path`. It runs each command from that folder, and reads each `openspec/...` path from it. If that folder is not the current folder, each `openspec` command starts with `cd <root> && `, also the first one after the user confirms a root (D121). OpenSpec finds the nearest `openspec/` folder, which can be a subfolder of the git root. OpenSpec searches only up from the current folder, so an agent that starts at the git root of a monorepo gets `root: null`. Then the skill searches the subfolders for an initialized `openspec/` (with `config.yaml`, `changes/`, or `specs/`), and skips `.git/`, `node_modules/`, and `apm_modules/`. It asks the user to confirm one match, or to pick one of several. Only with no match does it stop and tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/` (D113).

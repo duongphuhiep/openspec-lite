@@ -5,37 +5,60 @@ description: Create a plan-lite change with openspec-lite. It writes a lightweig
 
 # openspec-lite-propose
 
-Create a plan-lite change. Do not write code, except after a yes to the Level 1 question.
+Create a plan-lite change.
+
+How to read this skill:
+
+- Do sections 1 to 5 in order.
+- The general rules apply at all times, in each section.
+- A named rule, for example the question rule, applies in each step where its topic comes up, also when the step does not name the rule.
+- `<name>` is the change name that step 1 of section 3 picks.
+
+## General rules
+
+- Do not write code, except after a yes to the Level 1 question.
+- When you write `## Goal`, follow the goal rule.
+- When you record an open point, follow the question rule.
+- Each time the user answers a question of `plan.md`, record the answer with the answer rule.
+- When you record a fact, follow the fact rule.
+- When you record a decision, follow the decision rule.
 
 ## 1. Split and Level 1 questions
 
 ### Main outcome
 
+- Input: the request of the user.
+- Output: the main outcome, and the list of the other outcomes.
 - The first outcome of the request is the main outcome, also when the request has only one outcome.
 - If the request has more than one outcome, do the split check for each other outcome.
+- If the request has only one outcome, go to the Level 1 question.
 
 ### Split check
 
-For each outcome that is not the main outcome:
-
-- If it touches the same code as the main outcome, keep it in this change. Do not ask.
-- Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?"
-  - On yes, leave it out of this change.
-  - On no, keep it as an outcome of this change.
+- Input: each outcome that is not the main outcome.
+- Output: the outcomes that stay in this change, and the outcomes that the user moved out.
+- Do the split check for each outcome that is not the main outcome.
+- If the outcome touches the same code as the main outcome, keep the outcome in this change. Do not ask.
+- If the outcome does not touch the same code as the main outcome, and the outcome can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?"
+- If the outcome does not touch the same code as the main outcome, and the outcome cannot ship alone, keep the outcome in this change. Do not ask.
+- On yes to the split question, leave the outcome out of this change. The outcome is an outcome that the user moved out.
+- On no to the split question, keep the outcome as an outcome of this change.
+- When the split check is done for each outcome, go to the Level 1 question.
 
 ### Level 1 question
 
-- Ask this question only if the outcomes that stay are small: one obvious fix, and no constraints or open questions worth recording.
+- Input: the outcomes that stay in this change.
+- Ask the Level 1 question only if the outcomes that stay are small: one obvious fix, and no constraints or open questions worth recording.
+- If the outcomes that stay are not small, do not ask the Level 1 question. Go to section 2.
 - Ask: "This looks small. Implement directly with no change?"
-- On yes:
-  - Make the fix directly, with no change and no file under `openspec/`.
-  - Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it.
-  - Then stop.
+- On yes, make the fix directly, with no change and no file under `openspec/`.
+- On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
+- On yes, stop after the fix and the names.
 - On no, continue with section 2.
 
 ## 2. Schema check
 
-Do these checks in order.
+Do these checks in order. When the checks are done, go to section 3.
 
 ### OpenSpec root
 
@@ -78,77 +101,103 @@ Do these checks in order.
 ## 3. Create the change
 
 1. Pick the change name:
-   - Use the change name from the prompt.
-   - Otherwise, derive a kebab-case name of 2 to 10 words.
-   - Start the name with the main outcome. You can add words from the other outcomes after it.
-   - 10 words is a soft limit: go over it only if a shorter name is not clear.
-   - If the name is too long, remove the words of the other outcomes first.
+   - Input: the prompt, and the outcomes that stay in this change.
+   - Output: `<name>`, a kebab-case change name.
+   - If the prompt gives a change name, use the change name from the prompt.
+   - If the prompt gives no change name, derive a kebab-case name of 2 to 10 words.
+   - Start a derived name with the main outcome. You can add words from the other outcomes after the main outcome.
+   - The limit of 10 words is a soft limit. Go over the limit only if a shorter name is not clear.
+   - If the derived name is too long, remove the words of the other outcomes first.
+   - Go to step 2.
 2. Run `openspec new change "<name>" --schema plan-lite`.
-   - If it fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`.
-   - If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped here. Ask: "Resume the change <name>?" On yes, go to step 3.
-   - In each other case, show the error, and ask for another name.
-3. Read `openspec/changes/<name>/.openspec.yaml` before you edit it.
-   - OpenSpec 1.14.2 already writes `skip_specs: true` there.
-   - If the line exists, do not edit the file. If it is missing, add it.
-   - A second `skip_specs` line is a duplicate key, and it breaks each CLI command on the change.
-4. Run `openspec instructions plan --change "<name>" --json`. Write `openspec/changes/<name>/plan.md` from its `template` field.
+   - If the command succeeds, go to step 3.
+   - If the command fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`.
+   - If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped at step 2. Ask: "Resume the change <name>?"
+   - On yes to the resume question, go to step 3.
+   - On no to the resume question, ask for another name. Then do step 2 again with the new name.
+   - In each other failure case, show the error, and ask for another name. Then do step 2 again with the new name.
+3. Read `openspec/changes/<name>/.openspec.yaml` before you edit the file.
+   - OpenSpec 1.14.2 already writes `skip_specs: true` in `.openspec.yaml`.
+   - If the `skip_specs: true` line exists, do not edit `.openspec.yaml`.
+   - If the `skip_specs: true` line is missing, add the line.
+   - Do not add a second `skip_specs` line. A second `skip_specs` line is a duplicate key, and the duplicate key breaks each CLI command on the change.
+   - Go to step 4.
+4. Run `openspec instructions plan --change "<name>" --json`.
+   - Write `openspec/changes/<name>/plan.md` from the `template` field of the output.
+   - Go to step 5.
 5. Fill `plan.md`:
+   - Input: the request, the answers of the user, and the outcomes that stay in this change.
+   - Output: `openspec/changes/<name>/plan.md`.
    - Fill only what is known. Leave the other sections empty.
-   - Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment.
+   - Keep each `<!-- ... -->` guidance comment, also in a section that you fill.
+   - Write the content of a section on the lines under the guidance comment.
    - Do not invent non-goals, constraints, facts, or decisions.
-   - Do not write an outcome that the user moved out, also not in `## Non-Goals`. The summary names it.
-   - Follow the rules below for the goal, the open questions, the answers of the user, the facts, and the decisions.
+   - Do not write an outcome that the user moved out, also not in `## Non-Goals`. The summary of section 5 names the outcome.
+   - Write `## Goal` with the goal rule.
+   - Write `## Open Questions` with the question rule.
+   - Write `## Facts` with the fact rule.
+   - Write `## Decisions` with the decision rule.
+   - Go to section 4.
 
 ### Goal rule
 
 - `## Goal` holds one outcome by preference.
-- If the change has more than one outcome, write one outcome per bullet, in one or two sentences each.
+- If the change has more than one outcome, write one outcome per bullet in `## Goal`.
+- Write each outcome of `## Goal` in one or two sentences.
 
 ### Question rule
 
-- Propose does not explore the code, so it decides no open point.
-- Record each open point as an open question. The tasks preview tries to decide it later.
-- If the user says to keep a question open, end its text with "(kept open by the user)". Add the marker only when the user says to keep the question open, for example "keep it open" or "leave it open". An answer such as "I do not know yet" leaves the question open with no marker.
+- Propose does not explore the code, so propose decides no open point.
+- Record each open point as an open question in `## Open Questions`. The tasks preview tries to decide the open question later.
+- If the user says to keep a question open, end the text of the question with "(kept open by the user)".
+- Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
+- An answer such as "I do not know yet" leaves the question open with no marker.
 
 ### Answer rule
 
-When the user answers a question:
-
-- Remove the question.
+- If the user answers a question, remove the question from `## Open Questions`.
+- If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
-- Record each rule in the answer that the change must follow as a constraint. Test: if the result breaks it, the change is not done.
+- Record each rule in the answer that the change must follow as a constraint in `## Constraints`.
+- A rule passes this test: if the result breaks the rule, the change is not done.
 - Record each other choice or instruction in the answer as a decision with no 🤖.
 
 ### Fact rule
 
 - Start each fact with a source emoji, as the template comment of `## Facts` says, for example 👤 for a fact that the user gave.
-- Write a fact so that it stays true after the change, for example "Before this change, the report page did not exist."
-- Do not record statistics that soon go out of date. A number as an example or a reference is OK.
+- Write a fact so that the fact stays true after the change, for example "Before this change, the report page did not exist."
+- Do not record statistics that soon go out of date.
+- A number as an example or a reference is OK in a fact.
 
 ### Decision rule
 
 - Write `### Decision D<n>: <title>`, then "Chose X because Y."
-- Add "Rejected Z because W." when there was an alternative.
-- A decision of propose records a choice of the user: write no 🤖.
-- `## Decisions` holds only the current decisions, not a history. When you add a decision, check the others:
-  - Remove each superseded decision.
-  - Update each stale decision.
-  - Then remove each fact that justifies no current decision or constraint, except a non-obvious fact.
+- If there was an alternative, add "Rejected Z because W."
+- A decision of propose records a choice of the user. Write no 🤖 on a decision of propose.
+- `## Decisions` holds only the current decisions, not a history.
+- When you add a decision, remove each superseded decision.
+- When you add a decision, update each stale decision.
+- After you remove the superseded decisions and update the stale decisions, remove each fact that justifies no current decision or constraint.
+- Do not remove a non-obvious fact, also when the non-obvious fact justifies no current decision or constraint.
 
 ## 4. Upgrade signals
 
-Suggest `openspec-lite-upgrade` if one of these is true:
-
-- Another person or agent must continue the work.
-- The change touches more than one capability.
-- The change touches more than one repo.
-- A contract (spec) becomes necessary.
+- Input: `plan.md`, and the request of the user.
+- Suggest `openspec-lite-upgrade` if one of these conditions is true:
+  - Another person or agent must continue the work.
+  - The change touches more than one capability.
+  - The change touches more than one repo.
+  - A contract (spec) becomes necessary.
+- If no condition is true, do not suggest `openspec-lite-upgrade`.
+- Go to section 5.
 
 ## 5. End
 
 1. Give the summary:
    - Show the change name and the path of `plan.md`.
-   - Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it.
+   - Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
+   - Go to step 2.
 2. Ask: "Do you want a tasks preview?"
    - On yes, run the `openspec-lite-tasks-preview` skill.
-   - If you cannot invoke a skill, tell the user to run it.
+   - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
+   - On no, end your turn.

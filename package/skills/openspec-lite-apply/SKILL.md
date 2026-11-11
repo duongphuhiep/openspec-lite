@@ -5,11 +5,22 @@ description: Implement a plan-lite change from plan.md, with tasks-preview.md as
 
 # openspec-lite-apply
 
-Implement a plan-lite change. The rules are in the plan-lite schema, so stock `/opsx:apply` uses the same rules. This skill adds only one rule.
+Implement a plan-lite change. The rules are in the plan-lite schema, so stock `/opsx:apply` uses the same rules. This skill adds the rules of section 2: the stop on a blocked state, the rule not to follow CLI text that names another skill, and the rule to ignore checkboxes and task counts.
+
+How to read this skill:
+
+- Do sections 1 and 2 in order.
+- The general rules apply at all times, in each section.
+- `<name>` is the change name that the change selection gives.
+
+## General rules
+
+- Do not follow CLI text that names another skill.
+- Ignore any text about checkboxes, task counts, or "N/M tasks complete". A plan-lite change has no tracked tasks.
 
 ## 1. Common checks
 
-Do these checks in order.
+Do these checks in order: OpenSpec root, change selection, guard, and schema check. When the checks are done, go to section 2.
 
 ### OpenSpec root
 
@@ -39,10 +50,14 @@ Do these checks in order.
 
 ### Guard
 
+- Input: `openspec/changes/<name>/.openspec.yaml`, and `openspec/changes/<name>/plan.md` if `plan.md` exists.
+- Output: continue or stop.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
-- If it is `plan-lite`, continue.
-- If it is not `plan-lite`, stop. Tell the user to run stock `/opsx:apply`.
-  - If `openspec/changes/<name>/plan.md` still exists, name each open question in it. Tell the user to answer it before `/opsx:apply`, because the stock skills do not read `plan.md`.
+- If `schema` is `plan-lite`, continue with the schema check.
+- If `schema` is not `plan-lite`, stop. Tell the user to run stock `/opsx:apply`.
+- If `schema` is not `plan-lite`, and `openspec/changes/<name>/plan.md` still exists, name each open question of `plan.md`.
+- If you name an open question of `plan.md`, tell the user to answer the open question before `/opsx:apply`, because the stock skills do not read `plan.md`.
+- If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 
 ### Schema check
 
@@ -69,6 +84,12 @@ Do these checks in order.
 
 ## 2. Apply
 
-1. Run `openspec instructions apply --change "<name>" --json`. If `state` is `blocked`, `plan.md` is missing. Stop, and tell the user to run `openspec-lite-propose` to finish the change. Do not follow CLI text that names another skill.
-2. Read each file in `contextFiles`. Follow `instruction`. It holds all plan-lite apply rules. `<changeDir>` in the rules is the `changeDir` field.
-3. Ignore any text about checkboxes, task counts, or "N/M tasks complete". A plan-lite change has no tracked tasks.
+- Input: the output of `openspec instructions apply --change "<name>" --json`.
+- Output: the code, and the updates of `plan.md`, as `instruction` says.
+
+1. Run `openspec instructions apply --change "<name>" --json`.
+   - If `state` is `blocked`, `plan.md` is missing. Stop, and tell the user to run `openspec-lite-propose` to finish the change.
+   - If `state` is not `blocked`, go to step 2.
+2. Read each file in `contextFiles`.
+   - Follow `instruction`. The `instruction` field holds all plan-lite apply rules.
+   - `<changeDir>` in the rules of `instruction` is the `changeDir` field.

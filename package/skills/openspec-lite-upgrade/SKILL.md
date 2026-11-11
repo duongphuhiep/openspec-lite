@@ -7,6 +7,30 @@ description: Upgrade a plan-lite change to a full spec-driven OpenSpec change, a
 
 Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 writes the four artifacts, so an interrupted run can run again and resume.
 
+## How to read this skill
+
+- Do section 1, then section 2.
+- In section 1, do the checks in this order: OpenSpec root, Change selection, Guard, Schema check.
+- In section 2, do steps 1 to 5 in order. Each step names its next step.
+- Step 2 has the sub-steps 2.1 to 2.5. Step 5 has the sub-steps 5.1 to 5.4. For example, "step 2.4" is the sub-step 4 of step 2.
+- Section 3 gives the content of the summary. Step 5.3 writes the summary.
+- Section 4 holds the named rules of this skill, for example the requirement-source rule.
+- The general rules apply at all times, in each step.
+- A named rule applies in each step where its topic comes up, also when the step does not name the rule.
+- The question rule, the decision rule, and the answer rule are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these three rules in that file.
+- `<name>` is the name of the change. The change selection check gives `<name>`.
+- `<dir>` is `openspec/changes/<name>`.
+
+## General rules
+
+- When you write `proposal.md`, `specs/`, `design.md`, or `tasks.md`, follow the ID rule.
+- When you write `proposal.md`, `specs/`, or `design.md`, mark each inferred item with the inferred-item rule.
+- Do not mark an item of `tasks.md` with 🤖.
+- When you run `openspec instructions`, follow the instructions rule.
+- If an artifact already exists from an earlier run, follow the resume rule.
+- In step 2, edit `plan.md` only to add the "(kept open by the user)" marker, when the user keeps a question open.
+- A closed question stays in `plan.md` until the prune of step 5.
+
 ## 1. Common checks
 
 Do these checks in order.
@@ -39,15 +63,17 @@ Do these checks in order.
 
 ### Guard
 
-Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cases:
-
-- `plan-lite`: continue.
-- `spec-driven`, and `plan.md` still exists: an earlier run may have stopped after step 3. A finished upgrade can also keep `plan.md`.
-  - Ask the user: "The upgrade of <name> wrote the artifacts, and `plan.md` still exists. Finish the upgrade now: validate the artifacts, then decide what to delete from `plan.md`?"
-  - End your turn, and wait for the answer. Do not run `validate` before the answer.
-  - On no, name each open question that stays in `plan.md`, and stop.
-  - On yes, do the schema check, then go to step 4 of the upgrade.
-- Any other case, including `spec-driven` with no `plan.md`: stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
+- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, and the file `openspec/changes/<name>/plan.md`.
+- Output: the next check or step, or a stop.
+- Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
+- If `schema` is `plan-lite`, go to the schema check.
+- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
+- If `schema` has any other value, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
+- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question. An earlier run may have stopped after step 3. A finished upgrade can also keep `plan.md`.
+- The resume question is: "The upgrade of <name> wrote the artifacts, and `plan.md` still exists. Finish the upgrade now: validate the artifacts, then decide what to delete from `plan.md`?"
+- After the resume question, end your turn, and wait for the answer. Do not run `validate` before the answer.
+- If the user answers no to the resume question, name each open question that stays in `plan.md`, and stop.
+- If the user answers yes to the resume question, do the schema check. Then go to step 4 of section 2, not to step 1.
 
 ### Schema check
 
@@ -74,136 +100,279 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
 
 ## 2. Upgrade
 
-`<dir>` is `openspec/changes/<name>`.
+### Step 1: Keep the `skip_specs` line
 
-1. Keep the `skip_specs: true` line of `<dir>/.openspec.yaml` for now.
-   - Step 2.2 removes it just before the first spec write.
-   - So a run that stops before the specs leaves a change that still passes `validate`.
-2. Before you write an artifact, plan the requirements, close the open questions, and ask the user. Then write the four artifacts.
+- Input: `<dir>/.openspec.yaml`.
+- Keep the `skip_specs: true` line of `<dir>/.openspec.yaml` for now.
+- Step 2.2 removes the `skip_specs: true` line just before the first spec write.
+- So a run that stops before the specs leaves a change that still passes `validate`.
+- Go to step 2.
 
-   **Requirement sources.** A requirement can come only from these sources:
-   - a constraint of `plan.md`. A fact is not a source of a requirement, so it goes to `design.md` → `## Context`, with its source emoji.
-   - a decision of `plan.md` that is also a contract: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. A decision that is not a contract goes only to `design.md` → `## Decisions`.
-   - an answer of the user.
+### Step 2: Plan the requirements, close the open questions, and ask the user
 
-   The Goal and `tasks-preview.md` alone are not sources.
+- Input: `<dir>/plan.md`, `<dir>/tasks-preview.md` if it exists, and each artifact that already exists in `<dir>`.
+- Output: the planned requirements, the closed questions with their answers, and the answers of the user.
+- Do step 2 before you write an artifact. Steps 2.1 to 2.4 then write the four artifacts.
 
-   **Open questions.** Before you ask, look at each open question of `plan.md`:
-   - Keep a question that ends with "(kept open by the user)", also if you can decide it. Do not ask it again.
-   - For each other question, try to decide it or find its answer, with the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. A question is open only while you cannot decide it and cannot find its answer.
-   - Plan a found answer that is a non-obvious fact as a fact in `design.md` → `## Context`.
-   - Give an obvious answer only in the summary.
-   - Plan a decided point as a decision with 🤖 in `design.md` only when it changes a visible result or was a close call, as the decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says. Otherwise, give the answer only in the summary. If the decided point is a contract, ask its requirement in the question turn below, as for a decision with 🤖 in `plan.md`.
-   - Do not ask a question that you closed.
+Plan the requirements:
 
-   **Question turn.** Ask the user, in one reply, before you write any artifact:
-   - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks, as the `design` instruction says. Give your recommended answer, except when the answer is a fact that only the user knows.
-   - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`. Show its text, and ask if you can write it.
-   - if you plan no requirement at all, ask the user if the change has a requirement. "None" is a valid answer: then upgrade writes no spec (step 2.2).
+- Plan each requirement with the requirement-source rule.
 
-   In the same reply, give the answer of each question that you closed. End the turn, and wait for the answer.
-   - If all three lists are empty, do not ask.
-   - If the user cannot answer an open question now, keep the question in `plan.md`, with no marker. Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open". An answer such as "I do not know yet" leaves the question open with no marker.
+Close the open questions of `plan.md`:
 
-   **IDs.** Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact. To refer to an item, use its title, or a short form of its text, with the change name.
+- Read each question in `## Open Questions` of `plan.md`.
+- A question that ends with "(kept open by the user)" is a kept question.
+- Keep each kept question, also if you can decide the kept question. Do not ask a kept question again.
+- For each question that is not a kept question, try to decide the question or find its answer. Use the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`.
+- A question is open only while you cannot decide the question and cannot find its answer.
+- If you find an answer that is a non-obvious fact, plan the answer as a fact in `design.md` → `## Context`.
+- If you find an answer that is obvious, give the answer only in the summary.
+- If you decide a point, and the point changes a visible result or was a close call, plan a decision with 🤖 in `design.md`. The decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` gives these two criteria.
+- If you decide a point, and the point matches neither criterion of the decision rule, give the answer only in the summary.
+- If a decided point is a contract, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
+- Do not ask a question that you closed.
 
-   **Inferred items.** In `proposal.md`, `specs/`, and `design.md`, put 🤖 at the end of the line or the heading of each inferred item.
-   - An item is inferred only if it holds a new claim: a case, a value, a behavior, a risk, a dependency, a choice, or a reason that no section of `plan.md` and no answer of the user in this upgrade states.
-   - `tasks-preview.md` is not a source: a claim that only the preview states is new.
-   - An item can be a `#### Scenario:`, a `### Decision`, or a list item.
-   - A requirement is never inferred, because step 2 gives each requirement a source.
-   - A fact with a source, for example a run, a doc, or an analysis of the code, is not inferred. It gets no 🤖, and it keeps its source emoji.
-   - Before you mark an item, check each sentence of it, not only its main source. If one sentence holds a new claim, mark the item, and name that claim in a few words. If no sentence holds one, do not mark the item.
-   - One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet.
-   - These are not new claims:
-     - other words for a `plan.md` item or an answer;
-     - another form of it, for example a `#### Scenario:` that only restates its requirement;
-     - another artifact or section for it;
-     - the code, file, or module that a `plan.md` item clearly touches.
-   - Examples: the scenario "Table is empty" gets 🤖, because `plan.md` does not say what the export does for an empty table. The Why line "no trace of who changed what" gets 🤖, because `plan.md` does not say that an entry records the user. The scenario "Columns follow the on-screen order" gets no 🤖, because it restates the column-order constraint.
-   - One mark per item. Do not mark `tasks.md`.
+Ask the question turn:
 
-   **Write the artifacts.** Write the four artifacts in this order: `proposal`, `specs`, `design`, `tasks`.
-   - For each one, run `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`.
-   - Run it as one plain command. Do not put it in a loop or a chain, and do not pipe it to another command.
-   - Read the full JSON output. Do not write the artifact without its `template` and `instruction`. Use its `template`, and follow its `instruction`.
-   - If an artifact already exists from an earlier run, keep it, and go to the next one.
-   - On such a resumed run, ask the questions of step 2 again before you write a missing artifact, because the answers of the earlier session are not on disk.
-   - If a kept artifact looks incomplete, for example a template section that is still empty, tell the user, and offer to complete it.
+- Make the question list from these items:
+  - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks, as the `design` instruction says;
+  - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`;
+  - if you plan no requirement at all, the question if the change has a requirement.
+- If the question list is empty, do not ask. Go to step 2.1.
+- If each of the four artifacts already exists, do not ask. Go to step 2.1.
+- If the question list is not empty, ask all items of the question list in one reply, before you write any artifact.
+- For each open question in the reply, give your recommended answer.
+- If the answer to an open question is a fact that only the user knows, give no recommendation for that question.
+- For each planned requirement in the reply, show its text, and ask if you can write it.
+- For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", upgrade writes no spec (step 2.2).
+- In the same reply, give the answer of each question that you closed.
+- End the turn, and wait for the answer.
 
-   1. `proposal.md`: from the Goal and the scope in `plan.md`.
-      - If the Goal has more than one outcome, give each outcome its own item in What Changes.
-      - If `## Background` exists, use its scope items and source links for the proposal context.
-   2. `specs/<capability>/spec.md`: one delta per capability, for the requirements of step 2.
-      - If you write at least one delta, first remove the `skip_specs: true` line from `<dir>/.openspec.yaml`, then run `openspec instructions specs`. While the line is set, the CLI forbids spec files.
-      - To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new one only when none matches.
-      - For a new capability, start the delta with a `## Purpose` section of one or two sentences on what the capability covers. Without it, the CLI writes "TBD" as the Purpose of the new main spec.
-      - Use the headers `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`, or `## RENAMED Requirements`.
-      - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
-      - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit it.
-      - Write only the requirements of step 2. After a yes in step 2, the user is the source of a requirement, so it gets no 🤖 mark.
-      - If no requirement is left after step 2, write no spec, and keep `skip_specs: true` in `<dir>/.openspec.yaml`. Without a delta and without the flag, `validate` fails.
-   3. `design.md`:
-      - Non-Goals go to `## Goals / Non-Goals`.
-      - Each `### Decision` entry of `plan.md` goes to `## Decisions`. A decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet.
-      - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
-      - Facts go to `## Context`.
-      - An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says.
-      - An open question that changes the specs, the approach, or the tasks has no slot. Do not put it, or a note that points to it, in `design.md`.
-      - Split the answer of such a question, as the answer rule of `apply.instruction` says, but write each part to an artifact, not to `plan.md`. In step 2, edit `plan.md` only to add the "(kept open by the user)" marker when the user keeps a question open. A closed question stays in `plan.md` until the prune of step 5:
-        - A fact goes to `## Context`, with 👤 and "Source: the user".
-        - A rule that the change must follow (test: if the result breaks it, the change is not done) is a requirement source, like a constraint of `plan.md`. Plan its requirement, and ask it in the question turn.
-        - A choice goes to the specs only when it is a contract. Otherwise, it goes to `## Decisions`.
-      - If the user has no answer to such a question, or it ends with "(kept open by the user)", keep the question in `plan.md`, and also put it as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
-      - A question with the "(kept open by the user)" marker that is safe to answer later goes to `## Open Questions`, like each other such question. It also stays in `plan.md`.
-   4. `tasks.md`:
-      - If `<dir>/tasks-preview.md` exists, use it as the seed:
-        - Remove its two header comment lines.
-        - Replace each `plan.md` ID in it with the item title, or a short form of its text.
-        - Add `[ ]` to each task line, for example `- [ ] 1.1 <task>`.
-        - If an answer from step 2 changes the tasks, edit the seed to match it, and say so in the summary.
-        - Then delete `tasks-preview.md`.
-      - If no preview exists, write `tasks.md` from the template.
-      - In both cases, put these questions before the first group, as `## 0. Open questions`, with one task each: `- [ ] 0.1 Answer: <question> The answer can change the specs.`
-        - each open question that step 2 asked and that the user could not answer;
-        - each question with the "(kept open by the user)" marker that changes the specs, the approach, or the tasks.
-      - If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here. Keep `tasks.md`, and delete `tasks-preview.md`.
-   5. Check the pointers: read `proposal.md` and `design.md` again.
-      - Remove each sentence that restates a question of `## 0. Open questions`, or points to it, for example "See the open questions in tasks.md" or "See task 0.2".
-      - Do this also for a question that the tasks preview added.
-      - In the artifacts, the task in `## 0. Open questions` is the only place of each question of `## 0`. The question also stays in `plan.md`.
-3. Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
-4. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently.
-5. Prune `plan.md`:
-   1. List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept".
-      - A question that step 2 closed has the destination "closed", with its answer. A yes to the prune question deletes it.
-      - If the items of one section go to different destinations, list each item.
-      - Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
-   2. If a section has content that is in no artifact, list it as "kept, in no artifact".
-      - A yes to the prune question does not delete it.
-      - In the summary, name it, and say that the user can ask you to add it to an artifact.
-   3. Write one reply in this order: the result of step 4, the summary of section 3, the list from step 5.1, and last the question "Delete the moved sections from `plan.md`?".
-      - If `validate` failed, recommend to keep `plan.md` until the errors are fixed.
-      - The summary must not say that `plan.md` is deleted or kept, because the user did not answer yet.
-      - The question is the last line of the reply. End your turn, and wait for the answer.
-   4. Act on the answer:
-      - On no, keep `plan.md` as it is. Say in one line that its moved sections are old copies, and that the artifacts are the source of truth.
-      - On yes, delete each section or item whose content moved. Keep each kept item.
-        - Keep the ID comment at the top of `plan.md` while a section is left.
-        - If no section is left, delete `plan.md`. A section with only an HTML comment counts as no section.
-        - Then say in one line what you deleted and what you kept.
-        - If a section is kept, tell the user to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`.
-      - Do not write the summary again.
+Read the answer of the user:
+
+- Split each answer of the user with the split rule.
+- If the user says yes to a planned requirement, the user is the source of that requirement.
+- If the user says no to a planned requirement, do not write that requirement.
+- If the user cannot answer an open question now, keep the question in `plan.md`, with no marker.
+- An answer such as "I do not know yet" leaves the question open with no marker.
+- If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
+- Examples of such a reply: "keep it open" or "leave it open".
+- Add the "(kept open by the user)" marker only when the user says to keep the question open.
+- Go to step 2.1.
+
+### Step 2.1: Write `proposal.md`
+
+- Input: the Goal and the scope in `plan.md`, and `## Background` of `plan.md` if it exists.
+- Output: `<dir>/proposal.md`.
+- If `<dir>/proposal.md` already exists, follow the resume rule, and go to step 2.2.
+- Run the instructions command for `proposal` with the instructions rule.
+- Write `proposal.md` from the Goal and the scope in `plan.md`.
+- If the Goal has more than one outcome, give each outcome its own item in What Changes.
+- If `## Background` exists, use its scope items and source links for the proposal context.
+- Go to step 2.2.
+
+### Step 2.2: Write `specs/<capability>/spec.md`
+
+- Input: the requirements of step 2, and the list of `openspec/specs/`.
+- Output: one delta per capability in `<dir>/specs/`, and the `skip_specs` state of `<dir>/.openspec.yaml`.
+- If `<dir>/specs/` already holds a delta, follow the resume rule, and go to step 2.3.
+- If no requirement is left after step 2, write no spec, and keep `skip_specs: true` in `<dir>/.openspec.yaml`. Without a delta and without the flag, `validate` fails. Go to step 2.3.
+- If you write at least one delta, first remove the `skip_specs: true` line from `<dir>/.openspec.yaml`. While the line is set, the CLI forbids spec files.
+- After you remove the `skip_specs: true` line, run `openspec instructions specs`, in the full form of the instructions rule.
+- Write one delta per capability, for the requirements of step 2.
+- To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new capability only when none matches.
+- For a new capability, start the delta with a `## Purpose` section of one or two sentences on what the capability covers. Without a `## Purpose` section, the CLI writes "TBD" as the Purpose of the new main spec.
+- Use the headers `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`, or `## RENAMED Requirements`.
+- Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
+- For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit the copy.
+- Write only the requirements of step 2.
+- After a yes in step 2, the user is the source of a requirement, so the requirement gets no 🤖 mark.
+- Go to step 2.3.
+
+### Step 2.3: Write `design.md`
+
+- Input: `plan.md`, the planned facts and decisions of step 2, and the answers of the user.
+- Output: `<dir>/design.md`.
+- If `<dir>/design.md` already exists, follow the resume rule, and go to step 2.4.
+- Run the instructions command for `design` with the instructions rule.
+- Non-Goals go to `## Goals / Non-Goals`.
+- Each `### Decision` entry of `plan.md` goes to `## Decisions`.
+- A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet.
+- Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
+- Facts go to `## Context`.
+- An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says.
+- A kept question that is safe to answer later goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
+- An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
+- If the user answered a question that changes the specs, the approach, or the tasks, split the answer with the split rule.
+- If the user has no answer to a question that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
+- If a kept question changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
+- Go to step 2.4.
+
+### Step 2.4: Write `tasks.md`
+
+- Input: `<dir>/tasks-preview.md` if it exists, the answers of step 2, and the open questions of step 2.3.
+- Output: `<dir>/tasks.md`, and no `<dir>/tasks-preview.md`.
+- If `tasks.md` already exists and `tasks-preview.md` is still there, an earlier run stopped here. Keep `tasks.md`, delete `tasks-preview.md`, and go to step 2.5.
+- If `tasks.md` already exists and `tasks-preview.md` does not exist, follow the resume rule, and go to step 2.5.
+- Run the instructions command for `tasks` with the instructions rule.
+- If `<dir>/tasks-preview.md` exists, use the preview as the seed:
+  - Remove its two header comment lines.
+  - Replace each `plan.md` ID in the seed with the item title, or a short form of its text.
+  - Add `[ ]` to each task line, for example `- [ ] 1.1 <task>`.
+  - If an answer from step 2 changes the tasks, edit the seed to match the answer, and say so in the summary.
+  - Then delete `tasks-preview.md`.
+- If no preview exists, write `tasks.md` from the template.
+- In both cases, put these questions before the first group, as `## 0. Open questions`:
+  - each open question that step 2 asked and that the user could not answer;
+  - each question with the "(kept open by the user)" marker that changes the specs, the approach, or the tasks.
+- Give each question of `## 0. Open questions` one task: `- [ ] 0.1 Answer: <question> The answer can change the specs.`
+- Go to step 2.5.
+
+### Step 2.5: Check the pointers
+
+- Input: `<dir>/proposal.md`, `<dir>/design.md`, and `## 0. Open questions` of `<dir>/tasks.md`.
+- Output: `proposal.md` and `design.md` with no pointer to a question of `## 0`.
+- Read `proposal.md` and `design.md` again.
+- Remove each sentence that restates a question of `## 0. Open questions`, or points to it, for example "See the open questions in tasks.md" or "See task 0.2".
+- Also remove such a sentence for a question that the tasks preview added.
+- In the artifacts, the task in `## 0. Open questions` is the only place of each question of `## 0`. The question also stays in `plan.md`.
+- Go to step 3.
+
+### Step 3: Switch the schema
+
+- Input: `<dir>/.openspec.yaml`.
+- Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
+- Go to step 4.
+
+### Step 4: Validate
+
+- Run `openspec validate "<name>"`.
+- Report each error. Do not fix errors silently.
+- Go to step 5.
+
+### Step 5: Prune `plan.md`
+
+Do steps 5.1 to 5.4 in order.
+
+### Step 5.1: List the destinations
+
+- Input: `plan.md`, and the four artifacts.
+- Output: the destination list.
+- List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept".
+- A question that step 2 closed has the destination "closed", with its answer. A yes to the prune question deletes the closed question.
+- If the items of one section go to different destinations, list each item.
+- Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
+- Go to step 5.2.
+
+### Step 5.2: Find the content in no artifact
+
+- If a section has content that is in no artifact, list the content as "kept, in no artifact".
+- A yes to the prune question does not delete content that is "kept, in no artifact".
+- In the summary, name each content that is "kept, in no artifact". Say that the user can ask you to add it to an artifact.
+- Go to step 5.3.
+
+### Step 5.3: Ask the prune question
+
+- Write one reply in this order: the result of step 4, the summary of section 3, the list from step 5.1, and last the prune question.
+- The prune question is: "Delete the moved sections from `plan.md`?"
+- If `validate` failed, recommend to keep `plan.md` until the errors are fixed.
+- The summary must not say that `plan.md` is deleted or kept, because the user did not answer yet.
+- The prune question is the last line of the reply.
+- End your turn, and wait for the answer. Then go to step 5.4.
+
+### Step 5.4: Act on the answer
+
+- If the user answers no, keep `plan.md` as it is. Say in one line that its moved sections are old copies, and that the artifacts are the source of truth.
+- If the user answers yes, delete each section or item whose content moved. Keep each kept item.
+- After a yes, keep the ID comment at the top of `plan.md` while a section is left.
+- After a yes, if no section is left, delete `plan.md`. A section with only an HTML comment counts as no section.
+- After a yes, say in one line what you deleted and what you kept.
+- After a yes, if a section is kept, tell the user to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`.
+- Do not write the summary again.
+- Upgrade ends here.
 
 ## 3. End
 
-Write the summary in the reply of step 5.3, before the question. In the summary:
+Write the summary in the reply of step 5.3, before the prune question. In the summary:
 
-- List the files that you wrote, and `tasks-preview.md` if you deleted it. Do not name `plan.md` in this list, as deleted or as kept: step 5.4 says what happens to it after the answer.
+- List the files that you wrote, and `tasks-preview.md` if you deleted it.
+- Do not name `plan.md` in the file list, as deleted or as kept. Step 5.4 says what happens to `plan.md` after the answer.
 - Ask the user to review all artifacts.
-- If an artifact has 🤖 items, list each one with its new claim, or as an agent decision of `plan.md`. Ask the user to review each one: remove the mark to accept the item, or delete the item.
-- Ask for an extra review of `tasks.md`, because it is a contract, not a reference.
+- If an artifact has 🤖 items, list each 🤖 item with its new claim, or as an agent decision of `plan.md`.
+- Ask the user to review each 🤖 item: remove the mark to accept the item, or delete the item.
+- Ask for an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference.
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
 - Name each `plan.md` item that has no slot and stays in `plan.md`, for example an open question that the user cannot answer now. The stock skills do not read `plan.md`.
-- If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs. To keep them as ADRs, copy them to `openspec/adr/` before the archive. `openspec-lite-archive` can do this copy: run it before `/opsx:archive`.
+- If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs.
+- If `design.md` has `### Decision` entries, say: to keep them as ADRs, copy them to `openspec/adr/` before the archive. `openspec-lite-archive` can do this copy: run it before `/opsx:archive`.
+
+## 4. Rules
+
+### Requirement-source rule
+
+- A requirement can come only from one of these sources:
+  - a constraint of `plan.md`;
+  - a decision of `plan.md` that is also a contract;
+  - an answer of the user.
+- A contract is externally observable behavior that a client or another team depends on.
+- Internal helpers, log text, and UI layout are not contracts.
+- A decision of `plan.md` that is not a contract goes only to `design.md` → `## Decisions`.
+- A fact is not a source of a requirement. A fact goes to `design.md` → `## Context`, with its source emoji.
+- The Goal and `tasks-preview.md` alone are not sources.
+- If you plan a requirement from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`, ask the user in the question turn of step 2.
+
+### Split rule
+
+- Split the answer of the user, as the answer rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says.
+- Write each part of the answer to an artifact, not to `plan.md`.
+- A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
+- A rule of the answer is a rule that the change must follow. Test: if the result breaks the rule, the change is not done.
+- A rule of the answer is a requirement source, like a constraint of `plan.md`. Write its requirement with no new question, because the answer of the user is the source of the requirement.
+- A choice of the answer goes to the specs only when the choice is a contract.
+- A choice of the answer that is not a contract goes to `## Decisions` of `design.md`.
+
+### Inferred-item rule
+
+- In `proposal.md`, `specs/`, and `design.md`, put 🤖 at the end of the line or the heading of each inferred item.
+- An item is inferred only if the item holds a new claim.
+- A new claim is a case, a value, a behavior, a risk, a dependency, a choice, or a reason.
+- A claim is new only when no section of `plan.md` and no answer of the user in this upgrade states the claim.
+- `tasks-preview.md` is not a source: a claim that only the preview states is new.
+- An item can be a `#### Scenario:`, a `### Decision`, or a list item.
+- A requirement is never inferred, because step 2 gives each requirement a source.
+- A fact with a source, for example a run, a doc, or an analysis of the code, is not inferred. The fact gets no 🤖, and the fact keeps its source emoji.
+- Before you mark an item, check each sentence of the item, not only its main source.
+- If one sentence holds a new claim, mark the item, and name that claim in a few words.
+- If no sentence holds a new claim, do not mark the item.
+- One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet.
+- These are not new claims:
+  - other words for a `plan.md` item or an answer;
+  - another form of a `plan.md` item, for example a `#### Scenario:` that only restates its requirement;
+  - another artifact or section for a `plan.md` item;
+  - the code, file, or module that a `plan.md` item clearly touches.
+- Example: the scenario "Table is empty" gets 🤖, because `plan.md` does not say what the export does for an empty table.
+- Example: the Why line "no trace of who changed what" gets 🤖, because `plan.md` does not say that an entry records the user.
+- Example: the scenario "Columns follow the on-screen order" gets no 🤖, because it restates the column-order constraint.
+- Put one mark per item.
+- Do not mark `tasks.md`.
+
+### ID rule
+
+- Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact.
+- To refer to a `plan.md` item in an artifact, use its title, or a short form of its text, with the change name.
+
+### Instructions rule
+
+- Write the four artifacts in this order: `proposal`, `specs`, `design`, `tasks`.
+- For each artifact, run `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`.
+- Run the `openspec instructions` command as one plain command. Do not put it in a loop or a chain, and do not pipe it to another command.
+- Read the full JSON output.
+- Do not write the artifact without its `template` and `instruction`.
+- Use the `template` of the JSON output, and follow its `instruction`.
+
+### Resume rule
+
+- If an artifact already exists from an earlier run, keep the artifact, and go to the next artifact.
+- On a resumed run, ask the questions of step 2 again before you write a missing artifact, because the answers of the earlier session are not on disk.
+- If a kept artifact looks incomplete, for example a template section that is still empty, tell the user, and offer to complete it.
