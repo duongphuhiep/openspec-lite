@@ -57,7 +57,7 @@ An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that
 _Avoid_: Guess, assumption
 
 **Decision**:
-An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, except a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts`. In propose, a rule in that answer that the change must follow is a constraint (D219, D222, D225, D226, D229).
+An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, also not a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts`. In propose, a rule in that answer that the change must follow is a constraint (D219, D222, D225, D226, D229).
 _Avoid_: Choice log, rationale
 
 **Visible result**:
@@ -65,7 +65,7 @@ What a user or another program sees or uses: a UI, a public interface, the input
 _Avoid_: Observable behavior
 
 **Open question**:
-An item of `## Open Questions` in a plan: a point that the agent cannot decide and cannot find the answer to, for example because only the user has the information. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it. Its text ends with "(kept open by the user)", so that a later session also keeps it (D223, D225, D228).
+An item of `## Open Questions` in a plan: a point that is still open. Propose records each open point, because it does not explore the code. Apply, the tasks preview, and upgrade keep only a point that they cannot decide and cannot find the answer to, for example because only the user has the information. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it. Its text ends with "(kept open by the user)", so that a later session also keeps it (D223, D225, D228).
 _Avoid_: Pending item, TODO
 
 **Agent decision**:

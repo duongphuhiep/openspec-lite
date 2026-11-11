@@ -36,11 +36,11 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
    - an answer of the user.
 
    The Goal and `tasks-preview.md` alone are not sources. Before you ask, try to decide or find the answer to each open question of `plan.md`, as apply does. A question is open only while you cannot decide it and cannot find its answer. Plan a found answer that is a non-obvious fact as a fact in `design.md` → `## Context`, and a decided point as a decision with 🤖 in `design.md`. Give an obvious answer only in the summary. Do not ask those questions. If a decided point is a contract, ask its requirement in the list below, as for a decision with 🤖 in `plan.md`. Keep a question that ends with "(kept open by the user)", also if you can decide it, and do not ask it again. Then ask the user, in one reply, before you write any artifact:
-   - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks, as the `design` instruction says;
+   - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks, as the `design` instruction says, with your recommended answer, except when the answer is a fact that only the user knows;
    - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`. Show its text, and ask if you can write it;
    - if you plan no requirement at all, ask the user if the change has a requirement. "None" is a valid answer: then upgrade writes no spec (step 2.2).
 
-   End the turn, and wait for the answer. If all three lists are empty, do not ask. If the user cannot answer an open question now, keep the question in `plan.md`.
+   In the same reply, give the answer of each question that you closed. End the turn, and wait for the answer. If all three lists are empty, do not ask. If the user cannot answer an open question now, keep the question in `plan.md`.
 
    Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact. To refer to an item, use its title, or a short form of its text, with the change name.
 

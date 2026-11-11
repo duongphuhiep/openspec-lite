@@ -3238,3 +3238,18 @@ This revises D227, D230, and D231.
 This revises D223, D227, D228, D230, and D231.
 
 **Rationale**: review loop 2, round 4 found 7 remarks. Each one had one logical fix.
+
+## D234: Fixes From Review Loop 2, Round 5, on 99d8656..local
+
+**Decision**:
+
+1. Apply does not write the code that depends on a question with "(kept open by the user)". The done check names the part of the Goal that waits for its answer. In the tasks preview, a task that depends on a kept question says that it waits for the answer. The user chose this.
+2. When apply, the preview, or upgrade decides an open question, it records a 🤖 decision only when the decision rule records it. If not, it records no decision, and gives the answer in the end summary. So the 🤖 decision check has no exception for an answer to a question, and the table criterion is (1) or (2) only. The user chose this. This revises D225 item 3 and D229 item 6.
+3. The template comment of `## Open Questions` and GLOSSARY say that propose records each open point, and that apply, the preview, and upgrade keep only a point that they cannot decide. The answer of a question goes to another section of the plan, or only to the summary.
+4. The upgrade question turn gives a recommended answer for each open question, except when the answer is a fact that only the user knows. The same reply gives the answer of each question that it closed.
+5. Scenario 4c checks the branch where the user keeps the first question open. Scenario 4b accepts a question about the API-key header before apply writes the code that reads the key.
+6. `docs/design.md` names "a question of `## 0. Open questions`" in the upgrade pointer check (D231 item 5).
+
+This revises D221, D225, D229, D231, and D233.
+
+**Rationale**: review loop 2, round 5 found 7 remarks. Remarks 1 and 2 had two or more options each, and the user chose. Each other remark had one logical fix.
