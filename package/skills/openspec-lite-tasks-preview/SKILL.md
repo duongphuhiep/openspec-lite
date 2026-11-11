@@ -133,6 +133,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 ### Step 8: End
 
 - If you added a fact or a decision after step 5, do the two checks of step 5 for it. If a check moves or removes an item that a task of the preview names, update that task.
+- If the user answers a question that a task waits for, remove the "waits for the answer" note from that task.
 - List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
 - For each open question that you removed, also give its answer.
 - Ask each new open question, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
@@ -186,7 +187,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 - If the user answers a question in this session, remove the question.
 - Split the answer as well as you can:
   - Record each fact in it in `## Facts`, with 👤 and "Source: the user".
-  - Record each choice or instruction in it in `## Decisions`, as a decision with no 🤖. You cannot edit `## Constraints`, so a rule that the change must follow is also a decision. In the summary, say that the user can move it to `## Constraints`.
+  - Record each choice or instruction in it in `## Decisions`, as a decision with no 🤖. You cannot edit `## Constraints`, so a rule that the change must follow is also a decision. A rule passes this test: if the result breaks it, the change is not done. In the summary, say that the user can move it to `## Constraints`.
 
 ### Decision rule: when to record a decision
 

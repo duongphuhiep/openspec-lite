@@ -97,7 +97,7 @@ apply:
     - Give the end summary:
       - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
       - For each open question that you removed, also give its answer.
-      - The plan hash does not cover these three sections, so these edits do not make the preview stale. An edit of `## Constraints` makes the preview stale: say so.
+      - The plan hash does not cover these three sections, so these edits do not make the preview stale. If you added a constraint, list it with its ID. If a preview exists, say that the edit makes it stale, and that the next run of apply asks to regenerate it.
       - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In Criterion, write (1) or (2) of the decision rule. In Why, write the visible result for (1), or the close options for (2).
       - Ask each new open question of step 5, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
     - Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
@@ -125,7 +125,7 @@ apply:
     - If the user says to keep a question open, keep it in `## Open Questions`, and end its text with "(kept open by the user)".
     - Split the reply as well as you can:
       - Record each fact in it in `## Facts`, with 👤 and "Source: the user".
-      - Record each rule in it that the change must follow in `## Constraints`. A rule is a limit that each part of the code must obey, for example "add no npm dependency" or "a request over the limit gets status 429". A choice picks one option for one part, for example "use a sliding window". This edit makes the preview stale, which is correct, because the preview does not know the rule yet.
+      - Record each rule in it that the change must follow in `## Constraints`. Test: if the result breaks it, the change is not done, for example "add no npm dependency" or "a request over the limit gets status 429". A choice of how to meet the goal is a decision, for example "use a sliding window". This edit makes the preview stale, which is correct, because the preview does not know the rule yet.
       - Record each other choice or instruction in it in `## Decisions`, as a decision with no 🤖.
 
     ## Decision rule: when to record a decision

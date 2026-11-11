@@ -3353,7 +3353,7 @@ This revises D226, D229, D234, D235, D236, D237, and D239.
 
 **Rationale**: the user asked how a constraint differs from a decision. The glossary defined only a decision, and the template comment did not show the difference. An agent can then record a rule of the user as a decision, or a choice as a constraint.
 
-## D241: Fixes From Review Loop 3, Round 3, on 99d8656..local
+## D242: Fixes From Review Loop 3, Round 3, on 99d8656..local
 
 **Decision**:
 
@@ -3368,3 +3368,20 @@ This revises D226, D229, D234, D235, D236, D237, and D239.
 This revises D226, D229, D230, D236, and D240.
 
 **Rationale**: review loop 3, round 3 found 7 remarks. Each one had one logical fix. For remarks 1 and 4, the review gave two options, but one option of each undid an earlier choice of the user.
+
+## D243: Fixes From Review Loop 3, Round 4, on 99d8656..local
+
+**Decision**:
+
+1. The decision of review loop 3, round 3 is D242, because another session wrote D241 (the Constraint entry of GLOSSARY) in the meantime.
+2. Apply, the tasks preview, propose, and upgrade use the one test of D241 to tell a rule from a choice: if the result breaks it, the change is not done. A choice of how to meet the goal is a decision.
+3. If apply adds a constraint, the end summary lists it with its ID. Only if a preview exists, the summary says that the edit makes it stale, and that the next run of apply asks to regenerate it.
+4. Upgrade sends a rule from an answer to the specs only when it is a contract. Otherwise, the rule goes to `design.md` → `## Context`, like a constraint.
+5. In step 2, upgrade edits `plan.md` only to add the "(kept open by the user)" marker. A closed question stays in `plan.md` until the prune.
+6. When the user answers a question that a task of the preview waits for, the preview removes the note from that task.
+7. Propose adds the "(kept open by the user)" marker when the user keeps a question open.
+8. Scenario 4c accepts a constraint for an answer. `docs/design.md` matches the preview and upgrade rules of D240 and D242.
+
+This revises D240 and D242.
+
+**Rationale**: review loop 3, round 4 found 9 remarks. Each one had one logical fix. For remark 2, the test of D241 from the user's other session is the one test.
