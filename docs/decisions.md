@@ -3101,3 +3101,23 @@ This revises D220 for the tasks preview.
 This revises D219, D221, D223, and D224.
 
 **Rationale**: review round 1 found 15 remarks. Remark 2 had two options, and the user chose. Each other remark had one logical fix. Item 2 follows the split that the user agreed to for D223: a close call is a 🤖 decision, and a point that needs information of the user is a question.
+
+## D226: Fixes From Review Round 2 on 99d8656..local, a Split of User Answers, and Source Emojis for Facts
+
+**Decision**:
+
+1. When the user answers a question, the agent splits the answer as well as it can. Each fact goes to `## Facts`, with 👤 and "Source: the user". Each choice or instruction goes to `## Decisions`, with no 🤖. A wrong split is acceptable, as long as the answer is recorded. An answer of the user is now a valid source of a non-obvious fact. The user chose this.
+2. Each fact text starts with one source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code. The source in words stays. No scenario checks the emoji. `## Facts` still holds no guess and no well-known fact, so no fact gets 🤖, and 🤖 keeps one meaning. The user chose this, also 🔍.
+3. The stale-preview step does the open-question step first, then asks both in one reply.
+4. A non-obvious answer to a question is a fact. An obvious answer goes into the end summary, where the agent lists the removed question.
+5. "A priority" is removed from the examples of "information that only the user has", because a close call is a 🤖 decision (D223).
+6. "If you can decide a point" records a 🤖 decision only when the decision rule records it.
+7. Before the end summary, the agent removes each added 🤖 decision that answers no question and matches no criterion, and each fact that justified only it. Then it lists and shows the table.
+8. Criterion 1 is a sub-list. The file-name item says "in the repo".
+9. "Resolve" is gone from the template, README, and scenarios. The GLOSSARY entries name the exceptions of D225. The README sentence about the table is in the Decisions bullet.
+10. Scenario 4 step 2 always gives the stack. Scenario 4d uses "plan.md and the user did not say".
+11. Remark 15 is not applied: propose writes no agent decision (scenario 1), and the tasks preview answers the existing questions before it writes the tasks (D225).
+
+This revises D172, D184, D219, D223, and D225.
+
+**Rationale**: review round 2 found 15 remarks. Remark 11 asked where a fact in a user answer goes, and the user chose the split and the emojis. Each other remark had one logical fix, or no fix, as for remark 15.

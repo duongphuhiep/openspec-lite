@@ -17,7 +17,7 @@ The living document of a plan-lite change. It holds the goal, an optional backgr
 _Avoid_: Proposal, design
 
 **Fact**:
-An item of `## Facts` in a plan: a non-obvious fact, with its source. An obvious fact or a well-known fact is not a fact of the plan. It goes into the "because" part of the decision, constraint, or non-goal that it justifies (D184, D192). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
+An item of `## Facts` in a plan: a non-obvious fact, with its source. Its text starts with a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research, 🔬 a test run or a probe, 🔍 a long analysis of the code (D226). The emoji does not replace the source in words. An obvious fact or a well-known fact is not a fact of the plan. It goes into the "because" part of the decision, constraint, or non-goal that it justifies (D184, D192). It is not an entry of `docs/facts.md`, which holds the facts about the tools that openspec-lite uses.
 _Avoid_: Finding, note
 
 **Non-obvious fact**:
@@ -57,7 +57,7 @@ An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that
 _Avoid_: Guess, assumption
 
 **Decision**:
-An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own. An answer or an instruction of the user is also a decision (D219, D222).
+An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, except a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts` (D219, D222, D225, D226).
 _Avoid_: Choice log, rationale
 
 **Visible result**:
@@ -65,7 +65,7 @@ What a user or another program sees or uses: a UI, a public interface, the input
 _Avoid_: Observable behavior
 
 **Open question**:
-An item of `## Open Questions` in a plan: a point that the agent cannot decide and cannot find the answer to, because the answer depends on information that only the user has. A point that the agent can decide is a decision, not a question (D223).
+An item of `## Open Questions` in a plan: a point that the agent cannot decide and cannot find the answer to, because the answer depends on information that only the user has. A point that the agent can decide is a decision, not a question. A question that the user said to keep open stays open, also if the agent can decide it (D223, D225).
 _Avoid_: Pending item, TODO
 
 **Agent decision**:
