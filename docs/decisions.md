@@ -3253,3 +3253,17 @@ This revises D223, D227, D228, D230, and D231.
 This revises D221, D225, D229, D231, and D233.
 
 **Rationale**: review loop 2, round 5 found 7 remarks. Remarks 1 and 2 had two or more options each, and the user chose. Each other remark had one logical fix.
+
+## D235: `apply.instruction` Is Six Ordered Steps and Separate Rules
+
+**Decision**: `apply.instruction` in `schema.yaml` is split like a program into small functions:
+
+1. Six steps, in the order of the work: Start, Check the preview, Close the open questions before you write code, Write the code, Check plan.md against the code, End.
+2. Separate rules that the steps name: question rule, answer rule, decision rule, decision format, mark rule, current-decisions rule, fact rule, fact format, exit-code rule, test rule, ID rule.
+3. Each bullet holds one instruction or one short group of related sentences. A list of items is a sub-list.
+
+The rules do not change. Each rule of D217 to D234 is still in the text. The text is longer (about 2,600 words in place of 2,400), but its longest line has 57 words in place of 511. The user chose this.
+
+This revises the form of the text of D171 to D234. It does not revise their content.
+
+**Rationale**: many bullets had become walls of text, and an agent or a reader could miss a rule in them. Review rounds found order errors, for example the stale question that ended the turn before the open-question step. A fixed order of steps makes the flow clear, and a named rule can be used by more than one step, for example the question rule in steps 3, 4, and 5.
