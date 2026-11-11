@@ -110,7 +110,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The code uses a sliding window. A test file covers it, and the test fails on a fixed window, for example with requests at the end of one window and at the start of the next (D192).
 - The two constraints are the same as in step 1, with no ID (D138).
 - The sliding window decision has no 🤖, because it records an instruction of the user (D181). It gives no "because" reason that the user did not give and that the run does not show, because a decision with no 🤖 holds only what the user said (D177, D214).
-- Each visible result that the agent put in the code and that `plan.md` and the user did not say is in a 🤖 decision: the behavior for a request with no key, and the body of the 429 response and of any other error response (D219, D220). The header that names the API key is a 🤖 decision, or an open question before apply writes the code that reads the key, because only the user knows how the existing clients send the key. After the answer, it is a fact with 👤 or a decision with no 🤖 (D229).
+- Each visible result that the agent put in the code and that `plan.md` and the user did not say is in a 🤖 decision: the behavior for a request with no key, and the body of the 429 response and of any other error response (D219, D220). The header that names the API key is a 🤖 decision, or an open question before apply writes the code that reads the key, because only the user knows how the existing clients send the key. After the answer, it is a fact with 👤, a constraint, or a decision with no 🤖 (D229, D240).
 
 ### 4c. Preview and apply put an obvious reason in the decision
 

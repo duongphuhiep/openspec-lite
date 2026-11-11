@@ -141,8 +141,12 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
       - Facts go to `## Context`.
       - An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says.
       - An open question that changes the specs, the approach, or the tasks has no slot. Do not put it, or a note that points to it, in `design.md`.
-      - Split the answer of such a question, as the answer rule of `apply.instruction` says: a fact goes to `## Context`, with 👤 and "Source: the user", and a choice goes to the specs or to `## Decisions`.
-      - If the user has no answer, or the question ends with "(kept open by the user)", keep the question in `plan.md`, and also put it as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
+      - Split the answer of such a question, as the answer rule of `apply.instruction` says, but write each part to an artifact, not to `plan.md`:
+        - A fact goes to `## Context`, with 👤 and "Source: the user".
+        - A rule that the change must follow goes to the specs, as a requirement, because an answer of the user is a requirement source.
+        - A choice goes to the specs or to `## Decisions`.
+      - If the user has no answer to such a question, or it ends with "(kept open by the user)", keep the question in `plan.md`, and also put it as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
+      - A question with the "(kept open by the user)" marker that is safe to answer later goes to `## Open Questions`, like each other such question. It also stays in `plan.md`.
    4. `tasks.md`:
       - If `<dir>/tasks-preview.md` exists, use it as the seed:
         - Remove its two header comment lines.

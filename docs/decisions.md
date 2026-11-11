@@ -3352,3 +3352,19 @@ This revises D226, D229, D234, D235, D236, D237, and D239.
 3. Schema version 6 is not released yet, so this template edit needs no new bump.
 
 **Rationale**: the user asked how a constraint differs from a decision. The glossary defined only a decision, and the template comment did not show the difference. An agent can then record a rule of the user as a decision, or a choice as a constraint.
+
+## D241: Fixes From Review Loop 3, Round 3, on 99d8656..local
+
+**Decision**:
+
+1. The answer rule of apply and of the tasks preview applies to each reply of the user that answers an open question or gives a fact, a rule, or a choice for the change. Apply gives a test: a rule is a limit that each part of the code must obey, for example "add no npm dependency". A choice picks one option for one part, for example "use a sliding window". The other option of the review, to let scenario 4 accept a decision for a rule, was rejected, because it undoes D240.
+2. The answer rule of apply holds the "(kept open by the user)" marker, so it works for a question of each step, not only of step 3.
+3. Upgrade writes each part of a split answer to an artifact, not to `plan.md`. A rule that the change must follow goes to the specs as a requirement, because an answer of the user is a requirement source.
+4. In upgrade, a kept question that is safe to answer later goes to `design.md` → `## Open Questions`, like each other such question, and it stays in `plan.md`.
+5. Propose removes a question that the user answered.
+6. If the late check of tasks-preview step 8 moves or removes an item that a task names, the preview updates that task.
+7. Scenario 4b accepts a constraint for an answer.
+
+This revises D226, D229, D230, D236, and D240.
+
+**Rationale**: review loop 3, round 3 found 7 remarks. Each one had one logical fix. For remarks 1 and 4, the review gave two options, but one option of each undid an earlier choice of the user.

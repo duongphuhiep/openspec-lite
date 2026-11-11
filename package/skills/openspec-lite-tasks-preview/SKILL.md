@@ -59,7 +59,7 @@ Do these checks in order.
 
 ## 2. Steps
 
-Do these steps in order. The rules of section 3 say how to record each item in `plan.md`. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, record the answer with the answer rule.
+Do these steps in order. The rules of section 3 say how to record each item in `plan.md`. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, or gives a fact, a rule, or a choice for the change in another reply, record it with the answer rule.
 
 ### Step 1: Check plan.md
 
@@ -132,7 +132,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 
 ### Step 8: End
 
-- If you added a fact or a decision after step 5, do the two checks of step 5 for it.
+- If you added a fact or a decision after step 5, do the two checks of step 5 for it. If a check moves or removes an item that a task of the preview names, update that task.
 - List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
 - For each open question that you removed, also give its answer.
 - Ask each new open question, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.

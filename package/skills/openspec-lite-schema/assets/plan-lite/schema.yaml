@@ -14,7 +14,7 @@ apply:
   instruction: |
     This is a plan-lite change. It has no tasks.md and no checkboxes.
 
-    The work has six steps. Do them in order. The rules after the steps say how to record each item in plan.md. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, record the answer with the answer rule.
+    The work has six steps. Do them in order. The rules after the steps say how to record each item in plan.md. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, or gives a fact, a rule, or a choice for the change in another reply, record it with the answer rule.
 
     ## Step 1: Start
 
@@ -48,7 +48,6 @@ apply:
     - If the preview is not stale, and no question is left to ask, go to step 4.
     - When the user answers:
       - Record each answer with the answer rule.
-      - If the user says to keep a question open, keep it in `## Open Questions`, and end its text with "(kept open by the user)".
       - If the user says to continue from plan.md, go to step 4.
       - A question that the user did not answer stays open. Do not write the code that depends on it.
       - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
@@ -122,10 +121,11 @@ apply:
 
     ## Answer rule: record an answer of the user
 
-    - Remove the question that the user answered.
-    - Split the answer as well as you can:
+    - If the reply answers an open question, remove the question.
+    - If the user says to keep a question open, keep it in `## Open Questions`, and end its text with "(kept open by the user)".
+    - Split the reply as well as you can:
       - Record each fact in it in `## Facts`, with 👤 and "Source: the user".
-      - Record each rule in it that the change must follow in `## Constraints`. This edit makes the preview stale, which is correct, because the preview does not know the rule yet.
+      - Record each rule in it that the change must follow in `## Constraints`. A rule is a limit that each part of the code must obey, for example "add no npm dependency" or "a request over the limit gets status 429". A choice picks one option for one part, for example "use a sliding window". This edit makes the preview stale, which is correct, because the preview does not know the rule yet.
       - Record each other choice or instruction in it in `## Decisions`, as a decision with no 🤖.
 
     ## Decision rule: when to record a decision
