@@ -344,183 +344,218 @@ apply:
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
 
-The work has six steps. Do them in order. The rules after the steps say how to record each item in plan.md. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, or gives a fact, a rule, or a choice for the change in another reply, record it with the answer rule.
+How to read this instruction:
 
-## Step 1: Start
+- Do steps 1 to 6 in order.
+- The general rules apply at all times, in each step.
+- A named rule, for example the question rule, applies in each step where its topic comes up, also when the step does not name the rule.
+- The OpenSpec root is the folder that holds `openspec/`. Run each command from the OpenSpec root.
+- `<changeDir>` is the folder of the change.
 
-- Run `node openspec/schemas/plan-lite/plan-status.mjs <changeDir>/plan.md` from the OpenSpec root. The OpenSpec root is the folder that holds `openspec/`.
-- Run it alone, not in a chain.
-- If it prints a line, copy the line to the user as it is. Then continue.
-- If it prints nothing, say nothing about commits.
+## General rules
 
-## Step 2: Check the preview
-
-- Do this step only if `<changeDir>/tasks-preview.md` exists.
-- Run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md` from the OpenSpec root. You do not need its exit code.
-- If it prints a message that starts with `plan-hash:` and no hash, show the message, and stop.
-- The preview is stale if the hash differs from `plan-sha256` in the preview header. It is also stale if the header is missing.
-- If the preview is stale, do not write code yet. Step 3 asks the stale question.
-
-## Step 3: Close the open questions before you write code
-
-- Read each question in `## Open Questions`.
-- A question that ends with "(kept open by the user)" is a kept question:
-  - Keep it, also if you can decide it.
-  - Do not ask it again, unless the user answers it now.
-  - Do not write the code that depends on it.
-- Try to close each other question with the question rule.
-- Then ask, if the preview is stale, or if a question is still open that has no marker and that you did not ask yet in this session:
-  - Ask in one reply:
-    - the stale question: "Regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md?"
-    - each open question, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows, for example where some code is. Then say why you give none.
-  - In the same reply, give the answer of each question that you closed.
-  - End your turn, and wait for the answer.
-- If the preview is not stale, and no question is left to ask, go to step 4.
-- When the user answers:
-  - Record each answer with the answer rule.
-  - If the user says to continue from plan.md, go to step 4.
-  - If the preview is not stale, go to step 4 after you record the answers.
-  - If the preview is stale, and the user does not answer the stale question, ask it again, and end your turn.
-  - A question that the user did not answer stays open. Do not write the code that depends on it.
-  - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
-
-## Step 4: Write the code
-
-- Implement from plan.md.
-- If `<changeDir>/tasks-preview.md` exists, use it as a guide. The CLI does not list it in contextFiles.
-- If plan.md and tasks-preview.md conflict, plan.md wins.
+- If plan.md and tasks-preview.md conflict, follow plan.md.
 - Do not edit tasks-preview.md.
-- When you make a decision, record it with the decision rule, the decision format, and the mark rule. Keep `## Decisions` current with the current-decisions rule.
-- When you find a fact, record it with the fact rule and the fact format. To know an exit code, use the exit-code rule.
-- If your work conflicts with a decision with no 🤖, ask the user, and end your turn.
-- If you find a new point that you cannot close with the question rule:
-  - Record it as an open question before you write the code that depends on it.
-  - Ask it with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
-  - End your turn.
+- Each time the user answers an open question, record the answer with the answer rule.
+- Each time the user gives a fact, a rule, or a choice for the change in a reply, record the reply with the answer rule.
+- When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
+- When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
+- When you find a fact, record the fact with the fact rule and the fact format.
+- When you need the exit code of a command, use the exit-code rule.
 - When you change a behavior, follow the test rule.
-- When you write any file other than plan.md and tasks-preview.md, or a commit message, follow the ID rule.
-- Suggest running openspec-lite-upgrade when one of these is true:
+- When you write a file other than plan.md and tasks-preview.md, or a commit message, follow the ID rule.
+- Suggest running openspec-lite-upgrade when one of these conditions is true:
   - Another person or agent must continue the work.
   - The change touches more than one capability.
   - The change touches more than one repo.
   - A contract (spec) becomes necessary.
 
+## Step 1: Report the commit state of plan.md
+
+- Input: `<changeDir>/plan.md`.
+- Run `node openspec/schemas/plan-lite/plan-status.mjs <changeDir>/plan.md`.
+- Run the `plan-status.mjs` command alone, not in a chain.
+- If `plan-status.mjs` prints a line, copy the line to the user as it is.
+- If `plan-status.mjs` prints nothing, say nothing about commits.
+- Go to step 2.
+
+## Step 2: Check if the preview is stale
+
+- Input: `<changeDir>/tasks-preview.md`, and the output of `plan-hash.mjs`.
+- Output: the preview is current, stale, or absent.
+- If `<changeDir>/tasks-preview.md` does not exist, the preview is absent. Go to step 3.
+- Run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md`. You do not need the exit code of `plan-hash.mjs`.
+- If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, show the message to the user, and stop.
+- If the hash differs from the `plan-sha256` line in the preview header, the preview is stale.
+- If the preview header has no `plan-sha256` line, the preview is stale.
+- If the hash equals the `plan-sha256` line, the preview is current.
+- If the preview is stale, do not write code yet. Step 3 asks the stale question.
+- Go to step 3.
+
+## Step 3: Close the open questions before you write code
+
+- Input: `## Open Questions` of plan.md, and the result of step 2.
+- Read each question in `## Open Questions`.
+- A question that ends with "(kept open by the user)" is a kept question.
+- Keep each kept question, also if you can decide the kept question.
+- Do not ask a kept question again, unless the user answers the kept question now.
+- Do not write the code that depends on a kept question.
+- Try to close each question that is not a kept question with the question rule.
+- Make the list of questions to ask:
+  - If the preview is stale, add the stale question: "Regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md?"
+  - Add each open question that has no marker and that you did not ask yet in this session.
+- If the list of questions to ask is empty, go to step 4.
+- If the list of questions to ask is not empty, ask all questions of the list in one reply:
+  - Give your recommended answer for each open question.
+  - Give no recommendation when the answer is a fact that only the user knows, for example where some code is. Say why you give no recommendation.
+  - In the same reply, give the answer of each question that you closed.
+  - End your turn, and wait for the reply of the user.
+- When the user replies to the questions of step 3:
+  - Record each answer with the answer rule.
+  - A question that the user did not answer stays open. Do not write the code that depends on that question.
+  - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
+  - If the user says to continue from plan.md, go to step 4.
+  - If the preview is stale, and the user does not answer the stale question, ask the stale question again, and end your turn.
+  - If the preview is not stale, go to step 4.
+
+## Step 4: Write the code
+
+- Input: plan.md, and `<changeDir>/tasks-preview.md` as a guide if it exists. The CLI does not list tasks-preview.md in contextFiles.
+- Output: the code, and the updates of plan.md.
+- Implement from plan.md.
+- If your work conflicts with a decision with no 🤖, ask the user, and end your turn.
+- If you find a new point that you cannot close with the question rule:
+  - Record the point as an open question before you write the code that depends on the point.
+  - Ask the open question with your recommended answer.
+  - Give no recommendation when the answer is a fact that only the user knows.
+  - End your turn.
+- When the code is written, go to step 5.
+
 ## Step 5: Check plan.md against the code
 
-Do these checks in this order, before the done check.
+Do these checks in this order:
 
-- Run the tests.
-- Check the decisions:
-  - Compare each decision in `## Decisions` with the code.
-  - If the code no longer matches a 🤖 decision, update the decision.
-  - If the code does not match a decision with no 🤖, plan.md wins: fix the code. If the code cannot follow that decision, ask the user, and end your turn.
-  - Read each file that you added or changed. Find each thing in it that matches criterion (1) of the decision rule, and that `## Decisions` does not hold. Record each one as a 🤖 decision.
-  - Check each decision with no 🤖. Move each choice that you added to it into its own 🤖 decision.
-- Check the open questions:
-  - Record each point that you cannot close with the question rule as an open question.
-  - Keep each kept question.
-- Check each 🤖 decision that you added, also in the open-question check above. If it matches neither criterion (1) nor criterion (2), remove it.
-- Check the facts, last, because the checks above can add facts:
-  - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
-  - Check each fact that you added in this run, except a fact that the user gave (👤). If a reader can see it in the code or the file list, it is obvious, also if you found it with a run. Move it to the "because" part of the decision that it justifies, or remove it.
+1. Run the tests. If a test fails, fix the code, and run the tests again.
+2. Compare each decision in `## Decisions` with the code:
+   - If the code no longer matches a 🤖 decision, update the 🤖 decision.
+   - If the code does not match a decision with no 🤖, fix the code, because plan.md wins.
+   - If the code cannot follow a decision with no 🤖, ask the user, and end your turn.
+3. Read each file that you added or changed. Find each thing in the file that matches criterion (1) of the decision rule, and that `## Decisions` does not hold. Record each such thing as a 🤖 decision.
+4. Check each decision with no 🤖. Move each choice that you added to a decision with no 🤖 into its own 🤖 decision.
+5. Record each point that you cannot close with the question rule as an open question. Keep each kept question.
+6. Check each 🤖 decision that you added in this run. If a 🤖 decision matches neither criterion (1) nor criterion (2) of the decision rule, remove the 🤖 decision.
+7. Check the facts. Do this check last, because checks 2 to 6 can add facts:
+   - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
+   - Check each fact that you added in this run, except a fact that the user gave (👤). If a reader can see the fact in the code or in the file list, the fact is obvious, also if you found the fact with a run.
+   - Move each obvious fact to the "because" part of the decision that the fact justifies, or remove the obvious fact.
+
+When the checks are done, go to step 6.
 
 ## Step 6: End
 
-- Give the end summary:
-  - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
-  - For each open question that you removed, also give its answer.
-  - The plan hash does not cover these three sections, so these edits do not make the preview stale. If you added a constraint, list it with its ID. If a preview exists, say that the edit makes it stale, and that the next run of apply asks to regenerate it.
-  - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In Criterion, write (1) or (2) of the decision rule. In Why, write the visible result for (1), or the close options for (2).
-  - Ask each new open question of step 5, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
-- Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
-- If an open question is left, tell the user to answer it in the next message, so that you record the answer. For each open question, also name the part of the Goal that waits for its answer.
-- When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
+1. Give the end summary:
+   - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
+   - For each open question that you removed, give its answer.
+   - Say that the plan hash does not cover `## Facts`, `## Decisions`, and `## Open Questions`, so your edits of these sections do not make the preview stale.
+   - If you added a constraint, list the constraint with its ID.
+   - If you added a constraint, and the preview is not absent, say that the new constraint makes the preview stale, and that the next run of apply asks to regenerate the preview.
+   - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
+   - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
+2. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
+3. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
+4. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question.
+5. If the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 
 ## Question rule: close an open question
 
-- A question is open only while you cannot decide it and cannot find its answer.
-- You cannot decide a question when its answer depends on information that only the user has. Examples: an intent, or where some code is when a search of the repo does not find it.
+- A question is open only while you cannot decide the question and cannot find its answer.
+- You cannot decide a question when its answer depends on information that only the user has. Examples: an intent, or where some code is when a search of the repo does not find the code.
 - To close a question, read the code and the docs, or run a command.
-- If you find the answer:
-  - If it is a non-obvious fact, record it with the fact rule.
-  - If it is obvious, give it in the end summary.
-- If you can decide the question, also when no option is a clear winner:
-  - If the decision rule records the choice, record a 🤖 decision.
-  - If not, record no decision, and give the answer in the end summary.
-- Then remove the question.
+- If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
+- If you find the answer, and the answer is obvious, give the answer in the end summary.
+- If you can decide the question, also when no option is a clear winner, and the decision rule records the choice, record a 🤖 decision.
+- If you can decide the question, and the decision rule does not record the choice, record no decision. Give the answer in the end summary.
+- When you close a question, remove the question from `## Open Questions`.
 - Do not record a point that you can decide as an open question.
 - Write a new open question as `- OQ<n>: <question>`.
 
-## Answer rule: record an answer of the user
+## Answer rule: record a reply of the user
 
-- If the reply answers an open question, remove the question.
-- If the user says to keep a question open, keep it in `## Open Questions`, and end its text with "(kept open by the user)". Add the marker only when the user says to keep the question open, for example "keep it open" or "leave it open". An answer such as "I do not know yet" leaves the question open with no marker.
-- Split the reply as well as you can:
-  - Record each fact in it in `## Facts`, with 👤 and "Source: the user".
-  - Record each rule in it that the change must follow in `## Constraints`. Test: if the result breaks it, the change is not done, for example "add no npm dependency" or "a request over the limit gets status 429". A choice of how to meet the goal is a decision, for example "use a sliding window". This edit makes the preview stale, which is correct, because the preview does not know the rule yet.
-  - Record each other choice or instruction in it in `## Decisions`, as a decision with no 🤖.
+- If a reply of the user answers an open question, remove the question from `## Open Questions`.
+- If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
+- Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
+- An answer such as "I do not know yet" leaves the question open with no marker.
+- Split the reply of the user as well as you can into facts, rules, and choices.
+- Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
+- Record each rule of the reply that the change must follow in `## Constraints`.
+- A rule passes this test: if the result breaks the rule, the change is not done. Examples: "add no npm dependency", or "a request over the limit gets status 429".
+- A choice of how to meet the goal is not a rule, for example "use a sliding window".
+- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
+- An edit of `## Constraints` makes the preview stale. This result is correct, because the preview does not know the new rule yet.
 
 ## Decision rule: when to record a decision
 
-- Record a decision when one of these is true:
-  - (1) You put something in the code that changes a visible result, and plan.md and the user did not say it. Then it is your choice: record it. A visible result is one of these:
-    - a UI, a public interface, or the signature of an exported function
-    - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a field of its JSON output
-    - a file name or path in the repo that another program, a config, or a doc outside this change refers to. A name that the program gives to its output, for example a download file name, is an output of the program
-    - a key in a config file that a program or a user reads, for example a field of `package.json` or an env var, or a new dependency
-    - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
-  - (2) You weighed two or more close options, and no option was a clear winner, also for an internal choice.
+- Record a decision when criterion (1) or criterion (2) is true.
+- Criterion (1): you put something in the code that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
+- A visible result is one of these things:
+  - a UI, a public interface, or the signature of an exported function
+  - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a field of its JSON output
+  - a file name or path in the repo that another program, a config, or a doc outside this change refers to
+  - a name that the program gives to its output, for example a download file name
+  - a key in a config file that a program or a user reads, for example a field of `package.json` or an env var
+  - a new dependency
+  - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
+- Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
 - Do not record your other choices.
-- Record only the part of the decision that matches (1) or (2).
-- If you need an internal detail to explain the reason, write it in the "because" part, not in the title or in "Chose X".
+- Record only the part of the decision that matches criterion (1) or criterion (2).
+- If you need an internal detail to explain the reason, write the detail in the "because" part, not in the title or in "Chose X".
 
 ## Decision format
 
 - Write `### Decision D<n>: <title>`, with `<n>` higher than each decision ID in the file.
-- Then write "Chose X because Y."
+- After the heading, write "Chose X because Y."
 - Add "Rejected Z because W." when there was an alternative.
 - Each reason must come from this run, the user, plan.md, the code, or a well-known fact.
-- A claim about how a tool, a runtime, or a platform behaves is not a well-known fact. Check it with a run or a doc, and give the source.
-- If no source supports a reason, write "Reason not checked." in its place.
+- A claim about how a tool, a runtime, or a platform behaves is not a well-known fact. Check the claim with a run or a doc, and give the source.
+- If no source supports a reason, write "Reason not checked." in place of the reason.
 - Do not guess a reason, also not a wish of the user.
 
 ## Mark rule: the 🤖 mark
 
-- End the heading with 🤖, unless the decision records an answer or an instruction of the user.
-- A decision with no 🤖 belongs to the user, also one that the user wrote by hand.
+- End the heading of a decision with 🤖, unless the decision records an answer or an instruction of the user.
+- A decision with no 🤖 belongs to the user, also a decision that the user wrote by hand.
 - A decision with no 🤖 holds only what the user said. Put each choice that you add, and that the decision rule records, in its own 🤖 decision.
-- When you update a 🤖 decision to follow an answer or an instruction of the user, remove its 🤖.
+- When you update a 🤖 decision to follow an answer or an instruction of the user, remove the 🤖 of that decision.
 - The user removes the 🤖 to accept a decision.
 
 ## Current-decisions rule: keep `## Decisions` current
 
 - `## Decisions` holds only the current decisions.
-- You can update or remove a 🤖 decision:
-  - Remove each one that a new decision supersedes.
-  - Update each one that a new decision makes stale.
-  - Update or remove each one that conflicts with a constraint or with a decision with no 🤖.
+- Remove each 🤖 decision that a new decision supersedes.
+- Update each 🤖 decision that a new decision makes stale.
+- Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖.
 - Change a decision with no 🤖 only when the user tells you to.
-- Then remove each fact that justifies no current decision or constraint, except a non-obvious fact.
+- After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
 
 ## Fact rule: when to record a fact
 
-- Record each non-obvious fact when you find it.
-- A non-obvious fact needs one of these to find:
+- Record each non-obvious fact when you find the fact.
+- A non-obvious fact needs one of these sources to find:
   - an answer of the user
   - a run or a test result
   - research of remote sources, for example documentation on the internet, another repo, logs, or a remote database
   - a long analysis of the code
-  - other work that is worth an agent to find it
-- A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found it:
-  - A run alone is not enough. The result must be one that a reader cannot see in the code or in the file list.
-  - For example, what a script prints when its code shows it, or which files exist, is obvious.
-- A fact that the user gave (👤) is always non-obvious:
-  - The rules about obvious facts do not apply to it, also not the obvious-fact check of step 5.
-  - The other checks apply to it, for example the check of a fact that is no longer true.
-- When a command, a tool, or a service gives an error or an output that makes you change what you do, record it, with the command and the error text. If a reader can see the same output in the code, it is an obvious fact.
-- Do not record an obvious fact or a well-known fact in `## Facts`:
-  - If it is the reason of a decision, write it in the "because" part of that decision.
-  - If it justifies only a constraint or a non-goal, do not record it, because an edit of those sections makes the preview stale.
+  - other work that is worth an agent to find the fact
+- A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found the fact.
+- A run alone does not make a fact non-obvious. The result must be one that a reader cannot see in the code or in the file list.
+- For example, the output of a script is obvious when the code of the script shows the output. The list of files that exist is obvious too.
+- A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact, also not the obvious-fact check of step 5.
+- The other checks apply to a 👤 fact, for example the check of a fact that is no longer true.
+- When a command, a tool, or a service gives an error or an output that makes you change what you do, record the output as a fact, with the command and the error text.
+- If a reader can see the same output in the code, the output is an obvious fact.
+- Do not record an obvious fact or a well-known fact in `## Facts`.
+- If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
+- If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact, because an edit of those sections makes the preview stale.
 - Do not record a guess.
 - A sentence that states a choice, for example "the script must read the item count", is a decision, not a fact.
 - Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK.
@@ -538,29 +573,30 @@ Do these checks in this order, before the done check.
   - 🔍 a long analysis of the code
 - Also give the source in words: a command or a test that you ran, the files that you analyzed, a doc URL, a log, or an error text.
 - Do not change an existing fact only to add an emoji.
-- Write a fact so that it stays true after the change, for example "Before this change, the report page did not exist."
+- Write a fact so that the fact stays true after the change, for example "Before this change, the report page did not exist."
 
 ## Exit-code rule
 
-- To know the exit code of a command, run `node openspec/schemas/plan-lite/exit-code.mjs <command> <args...>` from the OpenSpec root.
-- Run it alone, not in a chain. Read its last line `exit: <code>`.
+- To know the exit code of a command, run `node openspec/schemas/plan-lite/exit-code.mjs <command> <args...>`.
+- Run the `exit-code.mjs` command alone, not in a chain.
+- Read the last line of the output: `exit: <code>`.
 - Do not add `echo $?`.
-- If you did not get the exit code, record nothing about it.
+- If you did not get the exit code, record nothing about the exit code.
 
 ## Test rule
 
 - When you change a behavior, write or update a test that fails if the behavior breaks.
 - If the change replaces an old behavior, the test must also fail on the old behavior.
 - A manual run is not a test. Write the test in a file that the test command of the repo runs.
-- If the repo has no test setup, add the smallest one that needs no new dependency, for example `node:test` for JavaScript.
+- If the repo has no test setup, add the smallest test setup that needs no new dependency, for example `node:test` for JavaScript.
 
 ## ID rule
 
 - Give each new item a number higher than each ID of its kind in the file.
 - Do not add an ID to an existing item that has none.
 - Use the plan.md IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in plan.md and tasks-preview.md.
-- Do not write them in another file, a code comment, a commit message, a pull request, or a ticket.
-- To refer to an item from outside these two files, use the item title, or a short form of its text, with the change name.
+- Do not write the plan.md IDs in another file, a code comment, a commit message, a pull request, or a ticket.
+- To refer to a plan.md item from outside plan.md and tasks-preview.md, use the item title, or a short form of its text, with the change name.
 ```
 
 `plan-status.mjs` (D193) is in `package/skills/openspec-lite-schema/assets/plan-lite/plan-status.mjs`. Usage: `node plan-status.mjs <plan.md>`. It runs `git status --porcelain -- <plan.md>`. If the output is not empty, it prints the note "plan.md is not committed, so git diff cannot show the changes of this run alone. Commit plan.md before the next run." Otherwise, and if git fails, it prints nothing. It always exits with code 0. The agent copies the line, and does not read the git output itself.

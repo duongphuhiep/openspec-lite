@@ -3433,3 +3433,21 @@ This revises the scenario check of D171 and D193. It closes todo item 89.
 This revises D228, D230, D241, and D243. It closes todo item 84.
 
 **Rationale**: in the run on a98437d, upgrade added the marker to OQ1 after "I do not know yet", and 20a failed. A kept question blocks the code that depends on it, and the agent does not ask it again. So a marker that the user did not ask for hides the question from later sessions.
+
+## D248: `apply.instruction` Follows the Rules of "Write Instructions as Code"
+
+**Decision**: `apply.instruction` in `schema.yaml` follows the ten rules of the section "Write Instructions as Code" of `CLAUDE.md`:
+
+1. A short "How to read this instruction" part defines the order of the steps, the scope of the rules, the OpenSpec root, and `<changeDir>`.
+2. A "General rules" list holds each rule that applies at all times: plan.md wins, do not edit the preview, the triggers of the answer rule, the decision rules, the fact rules, the exit-code rule, the test rule, the ID rule, and the upgrade hint. Step 4 no longer holds them.
+3. Each step names its input, and its output where it has one. Each step ends with the next step.
+4. Each bullet names its subject. No bullet uses "it", "this", "then", or "above" for a subject in another bullet.
+5. Each bullet does one job. The marker bullet of the answer rule, the constraint bullet, and the end-summary bullets are split.
+6. No bullet has more than one sub-level. The decision rule lists criterion (1), the visible results, and criterion (2) at the same level.
+7. Each branch is written: step 2 says what to do when no preview exists and when the hash matches. Step 5 says to fix the code and run the tests again when a test fails. Step 6 says to name each outcome or constraint that is not met.
+
+The rules do not change, except for the new branches of item 7. The user chose this.
+
+This revises the form of D235. It adds the branches of item 7.
+
+**Rationale**: `CLAUDE.md` now says that an instruction is code that an agent runs with no human to fix a misread. A unit that depends on another unit, a bullet with two jobs, and a missing branch are the bugs of such code.
