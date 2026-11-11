@@ -1078,6 +1078,19 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.322: when a Bash command exits with a code other than 0, the tool result starts with "Exit code <n>" (group I4d, `bf097c7e`). So an agent can read the exit code of one command with no `echo $?` and no `exit-code.mjs`.
 - OpenSpec 1.14.2: with only one spec, which is `# broken`, `openspec validate --specs --json` exits with code 1 (group I4d, 4 repos).
 
+## Scenario Run on a98437d
+
+**Source**: all scenarios, 42 runs, isolated (D199), Claude Code 2.1.322 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261111-a98437d/`, 2026-11-11.
+
+- Sonnet 5.5 with D219 to D245, apply: no run of 4b recorded the 429 body (0 of 2), and no run of 4b ran the tests after the `npm test` denial (0 of 2, as on bdd9b0e). In 4 run 2, no decision records the filter and sort UI (group A). In 4c, 2 of 2 decisions on the unknown city do not give the exit 0 reason of `geo.mjs`. In 4d-1, D1 says that an invalid spec gives exit 0, but the script gives exit 2 on a real invalid spec, and a fake `openspec` in the test hides it. In 4d-1, F1 states a choice ("must read `summary.totals.items`") (group I).
+- Sonnet 5.5, tasks preview: in 4d-2, it asked a question about the intent of the user in its reply, but wrote a 🤖 decision with "Reason not checked", not an open question (group I).
+- Sonnet 5.5, stock `/opsx:apply`: it paraphrased the `plan-status.mjs` line in 2 of 2 runs of scenario 3, and did not copy it. On bdd9b0e, it copied it in 2 of 2 (group A).
+- Sonnet 5.5, upgrade: after the answer "I do not know yet", it added "(kept open by the user)" to the question in `plan.md` (20a, group F). In 1 of 2 runs of 7, it called the CSV quoting "internal formatting", and did not ask its requirement (group C). No upgrade run put an unmarked claim from the preview into `design.md` (0 of 2, group C).
+- Sonnet 5.5, archive: in 13a run 1, the second session did not ask to keep or delete the delta of the first session, and chose itself (group B). In 18 run 1, the guard offered `openspec archive --yes` before the answer to the ADR offer (group C). In 3 of 3 runs of group E, the files on disk equal the approved drafts (1 of 3 differed on bdd9b0e). It said "No decision heading ends with 🤖" in 3 of 3 runs of group E (item 63).
+- Sonnet 5.5, source emojis: two archive drafts got a 👤 that no source supports, from a fixture fact with no emoji (group B). A spec draft ended with a stray "👤?" (20b, group E). Propose turned the reason of the user for D1 into a 👤 fact in 2 of 2 runs (group C).
+- The template comments of D226 to D245 add about 116 words to each new `plan.md`, from 482 to 598 words (group H).
+- Claude Code 2.1.322: the working folder of `cd svc && <cmd>` is not kept when `<cmd>` fails (group D). A `;` chain of allowed commands is not denied; a chain with `echo "exit $?"` is denied (group D).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.

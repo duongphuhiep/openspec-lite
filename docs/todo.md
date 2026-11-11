@@ -236,6 +236,67 @@ The reports are in `.scenario-runs/20261110-f31dfd1/`. 10 of 16 runs pass: 4 (1 
 - Unsourced or false claims about Node: 4 run 3 D6, 4c-1 D2 (D194).
 - Scenario 4 cannot test the resolve path of D223, because each question depends on the user. 4c and 4d asked no question, so the "leave open" case did not run.
 
+## Found in the run on a98437d
+
+The reports are in `.scenario-runs/20261111-a98437d/` (`summary.md` and `group-A.md` to `group-I.md`). 32 of 42 runs pass. 3, 4b, 4c, and 20a fail in each run. 4, 13a, and 4d fail once.
+
+### 84. Upgrade takes "I do not know yet" as "keep it open"
+
+- **Where**: upgrade step 2, open questions (D228, D241).
+- **Problem**: after "I do not know yet", upgrade added "(kept open by the user)" to OQ1. The user did not ask to keep it open. 20a fails on it.
+- **Evidence**: `group-F.md`.
+- **Recommendation**: not decided. Say that the marker needs an explicit "keep it open" of the user. "I do not know" leaves the question open, with no marker.
+
+### 85. Apply misses error bodies and does not run the tests in 4b
+
+- **Where**: apply step 4 and the test rule (D220, D213).
+- **Problem**: 0 of 2 runs of 4b recorded the 429 body, and 0 of 2 ran the tests after the `npm test` denial. Both are the same as on bdd9b0e.
+- **Evidence**: `group-A.md`.
+- **Recommendation**: not decided. Name `node --test` as the fallback when `npm test` is denied, and keep the 429 body in the error item of criterion 1 as the first example.
+
+### 86. The 4c and 4d decisions lose their reason or state a choice as a fact
+
+- **Where**: apply decision format and fact rule (D192, D198).
+- **Problem**: in 4c, 2 of 2 decisions on the unknown city do not give the exit 0 reason. In 4d-1, D1 is false on a real invalid spec, and F1 states a choice.
+- **Evidence**: `group-I.md`.
+- **Recommendation**: not decided.
+
+### 87. Archive does not ask about the delta of an earlier session
+
+- **Where**: archive step 7 (D191).
+- **Problem**: in 13a run 1, the second session kept the earlier delta and did not ask.
+- **Evidence**: `group-B.md`.
+- **Recommendation**: not decided.
+
+### 88. Source emojis are guessed for a fact with none, and appear in spec drafts
+
+- **Where**: archive steps 4 and 6, the fixture `finished-rate-limit` (D227, D244).
+- **Problem**: a fixture fact has no emoji, so archive guessed 👤 in two drafts. A 20b spec draft ended with "👤?".
+- **Evidence**: `group-B.md`, `group-E.md`.
+- **Recommendation**: not decided. Give the fixture facts emojis and the current template comments. Say what archive does for a fact with no emoji: copy no emoji.
+
+### 89. Stock apply paraphrases the plan-status line
+
+- **Where**: `apply.instruction` step 1 (D193).
+- **Problem**: 2 of 2 runs of scenario 3 paraphrased the line (2 of 2 copied it on bdd9b0e). Scenario 3 fails on it.
+- **Evidence**: `group-A.md`.
+- **Recommendation**: not decided. The refactor of D235 may have made the rule less visible.
+
+### 90. The preview writes an intent question as a 🤖 decision
+
+- **Where**: tasks-preview question rule (D223).
+- **Problem**: in 4d-2, the preview asked a question about the intent of the user in the reply, but wrote a 🤖 decision with "Reason not checked".
+- **Evidence**: `group-I.md`.
+- **Recommendation**: not decided.
+
+### 91. Smaller gaps from the run on a98437d
+
+- Upgrade: 1 of 2 runs of 7 called the quoting "internal formatting" (D182). Step 5.1 gives no heading for Constraints (20a). Two new claims with no 🤖 in 20a. `openspec instructions` in a pipe and a `for` loop (group F).
+- Archive guard: in 18 run 1, it offered `openspec archive --yes` before the ADR answer. In 18b run 1, it asked to settle the open question before the archive question (group C). 21b asked before the `Status:` edit (group G). 22c gave the "no" paths before the answer (group H).
+- Propose: the reason of the user for D1 became a 👤 fact (2 of 2, group C). Level 1 question asked with an open question recorded (scenario 9, group D).
+- Scenario texts: scenario 4 does not say if sample content of a scaffold needs a decision (group A). 21b gives no answers for the questions of the agent (group G).
+- Setup scripts: the group F build script made a commit in the main repo with bad arguments. `F/mk.sh` now stops on a bad argument. Each setup script must refuse to run in the repo root.
+
 ### 55. The scripts do not run alone
 
 - **Where**: the version step of each skill, and `plan-status.mjs` (D175, D192, D193).
