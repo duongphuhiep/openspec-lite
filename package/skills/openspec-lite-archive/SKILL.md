@@ -42,7 +42,7 @@ The guard path:
    - Warn: "Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs. They stay only in the archive folder. To keep them as ADRs, copy them to `openspec/adr/` before you archive." A change that was upgraded from plan-lite has its decisions there.
    - Offer to copy each `### Decision` of `design.md` to an ADR. Write nothing before the user says yes.
    - On no, tell the user to run stock `/opsx:archive`, and stop. Do not offer the `openspec archive` command yourself.
-   - On yes, draft each ADR with the form and the two checks of section 2, step 5, and show the drafts as in step 6. Write each approved ADR with the file rules and the `Supersedes:` edits of step 10, without its `validate` condition. Do not run steps 7 to 9, and do not change `design.md`.
+   - On yes, draft each ADR with the form and the two checks of section 2, step 5, and show the drafts as in section 2, step 6. Write each approved ADR with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition. Do not run section 2, steps 7 to 9, and do not change `design.md`.
 3. After the ADRs are written, search `specs/` and `design.md` of the change for 🤖.
    - If a line has one, list each such line. Tell the user to accept it (remove the mark) or delete it.
    - Do not remove a 🤖 yourself: only the user removes it.

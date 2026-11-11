@@ -3311,3 +3311,18 @@ The rules do not change. The longest line of archive has 50 words in place of 20
 This revises the form of the text of the archive and upgrade decisions. It does not revise their content.
 
 **Rationale**: the same as for D235 and D237.
+
+## D239: Fixes From Review Loop 3, Round 1, on 99d8656..local
+
+**Decision**:
+
+1. Apply and the tasks preview say that each rule applies in each step where its topic comes up, also when the step does not name it. Each answer of the user to an open question uses the answer rule, in each step. Step 4 of apply and step 3 of the preview name the decision format, the mark rule, the current-decisions rule, the fact format, and the exit-code rule. Apply step 4 names the ID rule.
+2. The archive guard path names "section 2, step 6", "section 2, step 10", and "section 2, steps 7 to 9", because the guard path has its own step 6.
+3. Upgrade plans a decided open question as a 🤖 decision only when it changes a visible result or was a close call. Otherwise, the answer goes only to the summary (D234). `docs/design.md` says the same for upgrade and the tasks preview.
+4. Apply step 5 checks the open questions before it checks each added 🤖 decision, so the 🤖 check also covers a decision that the open-question check added.
+5. The ID rule of apply gives a new item a number higher than each ID of its kind in the file, as the preview does.
+6. Scenarios 4 and 4c accept an answer that is only in the end summary. Scenario 4c says that apply writes the code that depends on no kept question.
+
+This revises D234, D235, D236, and D237.
+
+**Rationale**: review loop 3, round 1 found 7 remarks. Each one had one logical fix. Remarks 1, 2, and 6 came from the refactor of D235 to D237.

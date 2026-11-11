@@ -84,7 +84,7 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
    - For each other question, try to decide it or find its answer, as apply does. A question is open only while you cannot decide it and cannot find its answer.
    - Plan a found answer that is a non-obvious fact as a fact in `design.md` → `## Context`.
    - Give an obvious answer only in the summary.
-   - Plan a decided point as a decision with 🤖 in `design.md`. If the decided point is a contract, ask its requirement in the question turn below, as for a decision with 🤖 in `plan.md`.
+   - Plan a decided point as a decision with 🤖 in `design.md` only when it changes a visible result or was a close call, as the decision rule of apply says. Otherwise, give the answer only in the summary. If the decided point is a contract, ask its requirement in the question turn below, as for a decision with 🤖 in `plan.md`.
    - Do not ask a question that you closed.
 
    **Question turn.** Ask the user, in one reply, before you write any artifact:

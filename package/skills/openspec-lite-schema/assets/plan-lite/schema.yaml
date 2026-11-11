@@ -14,7 +14,7 @@ apply:
   instruction: |
     This is a plan-lite change. It has no tasks.md and no checkboxes.
 
-    The work has six steps. Do them in order. The rules after the steps say how to record each item in plan.md. A step names each rule that it uses.
+    The work has six steps. Do them in order. The rules after the steps say how to record each item in plan.md. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, record the answer with the answer rule.
 
     ## Step 1: Start
 
@@ -57,14 +57,15 @@ apply:
     - If `<changeDir>/tasks-preview.md` exists, use it as a guide. The CLI does not list it in contextFiles.
     - If plan.md and tasks-preview.md conflict, plan.md wins.
     - Do not edit tasks-preview.md.
-    - When you make a decision, record it with the decision rule.
-    - When you find a fact, record it with the fact rule.
+    - When you make a decision, record it with the decision rule, the decision format, and the mark rule. Keep `## Decisions` current with the current-decisions rule.
+    - When you find a fact, record it with the fact rule and the fact format. To know an exit code, use the exit-code rule.
     - If your work conflicts with a decision with no 🤖, ask the user, and end your turn.
     - If you find a new point that you cannot close with the question rule:
       - Record it as an open question before you write the code that depends on it.
       - Ask it with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
       - End your turn.
     - When you change a behavior, follow the test rule.
+    - When you write any file, a commit message, or a reply, follow the ID rule.
     - Suggest running openspec-lite-upgrade when one of these is true:
       - Another person or agent must continue the work.
       - The change touches more than one capability.
@@ -85,10 +86,10 @@ apply:
       - If the code does not match a decision with no 🤖, plan.md wins: fix the code. If the code cannot follow that decision, ask the user, and end your turn.
       - Read each file that you added or changed. Find each thing in it that matches criterion (1) of the decision rule, and that `## Decisions` does not hold. Record each one as a 🤖 decision.
       - Check each decision with no 🤖. Move each choice that you added to it into its own 🤖 decision.
-      - Check each 🤖 decision that you added. If it matches neither criterion (1) nor criterion (2), remove it.
     - Check the open questions:
       - Record each point that you cannot close with the question rule as an open question.
       - Keep each kept question.
+    - Check each 🤖 decision that you added, also in the open-question check above. If it matches neither criterion (1) nor criterion (2), remove it.
 
     ## Step 6: End
 
@@ -220,6 +221,7 @@ apply:
 
     ## ID rule
 
+    - Give each new item a number higher than each ID of its kind in the file.
     - Do not add an ID to an existing item that has none.
     - Use the plan.md IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in plan.md and tasks-preview.md.
     - Do not write them in another file, a code comment, a commit message, a pull request, or a ticket.

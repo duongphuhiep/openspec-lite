@@ -254,7 +254,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - Record in `plan.md`, with no question (D171). Edit only `## Facts`, `## Decisions`, and `## Open Questions`. The plan hash does not cover them, so the preview stays current.
   - **Fact**, when you find it: each non-obvious fact, with its source, and a source emoji at the start: 👤 📖 🎫 📊 🌐 🔬 🔍 (D226). An answer of the user is a source of a non-obvious fact, and a 👤 fact is always non-obvious. The fact is written so that it stays true after the change. The agent does not change an existing fact only to add an emoji (D227). An obvious fact or a well-known fact is not recorded. If it is the reason of a decision, it goes into the "because" part of that item (D192). A sentence that states a choice is a decision, not a fact (D192). A non-obvious fact needs one of these to find: a run or a test result; research of remote sources, for example documentation on the internet, another repo, logs, or a remote database; a long analysis of the code; or other work that is worth an agent to find it. A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found it. A run alone is not enough: the result must be one that a reader cannot see in the code or in the file list. For example, what a script prints when its code shows it, or which files exist, is obvious. This includes each error or output of a tool that makes the agent change what it does (D172), unless a reader can see the same output in the code (D200). The agent reads an exit code with `exit-code.mjs`, not with `echo $?`, and records nothing about an exit code that it did not get (D197). No guess, no fact that a reader can easily deduce from the code (also if a run found it, D186; a run is not enough if a reader can see the result in the code or the file list, D198), and no numbers that soon go out of date (D136, D174, D184).
   - **Decision**, when you make it: (1) each thing that the preview plans for the code and that changes a visible result, also the input or output of a program and the result on an error or an edge case, and that `plan.md` and the user did not say; (2) each choice between close options with no clear winner, also an internal one. No other choice. The decision holds only the part that matches (1) or (2). An internal detail can appear only in the "because" part (D220). The apply end check reads each added or changed file for (1). Only the agent at the moment of the choice can see (2) (D217, D218, D219, D224). Each reason comes from this run, the user, `plan.md`, the code, or a well-known fact (D177, D192). A claim about how a tool, a runtime, or a platform behaves needs a run or a doc. With no source, the agent writes "Reason not checked." (D194). End the heading with 🤖, unless the decision records an answer or an instruction of the user. Remove the 🤖 when the agent updates a decision to follow the user. A decision with no 🤖 belongs to the user. Update or remove only a 🤖 decision, also after the user corrected `plan.md`. Change a decision with no 🤖 only when the user says so in this session. On another conflict, record an open question (D181, D182).
-  - **Open question**: each point that the agent cannot decide and cannot find the answer to, for example because the answer depends on information that only the user has: an intent, or where some code is when a search does not find it. An obvious answer goes only to the summary (D226). A point that it can decide is a 🤖 decision, not a question. Before it writes the tasks, it tries to decide or find the answer to each existing question. The answer becomes a fact or a 🤖 decision, and the agent removes the question, unless the user said to keep it open. A kept question ends with "(kept open by the user)" (D228). It records each new question after it writes the preview. If the user answers one in this session, the agent splits the answer: each fact goes to `## Facts` with 👤, and each choice or instruction becomes a decision with no 🤖. Then it removes the question (D183, D223, D226).
+  - **Open question**: each point that the agent cannot decide and cannot find the answer to, for example because the answer depends on information that only the user has: an intent, or where some code is when a search does not find it. An obvious answer goes only to the summary (D226). A point that it can decide is a 🤖 decision, not a question. Before it writes the tasks, it tries to decide or find the answer to each existing question. The answer becomes a fact, a 🤖 decision when the decision rule records it, or else an answer in the summary, and the agent removes the question, unless the user said to keep it open (D234). A kept question ends with "(kept open by the user)" (D228). It records each new question after it writes the preview. If the user answers one in this session, the agent splits the answer: each fact goes to `## Facts` with 👤, and each choice or instruction becomes a decision with no 🤖. Then it removes the question (D183, D223, D226).
 - Before it writes `tasks-preview.md`, the preview checks each fact that the run added, except a 👤 fact. If a reader can see it in the code or the file list, it is obvious, also after a run: move it to the "because" part of the decision that it justifies, or remove it (D211, D227). In the same step, it removes each added 🤖 decision that matches neither criterion (D221, D230, D234).
 - In the summary, list each fact, decision, and open question that the run added, changed, or removed (D171). Then show a table of each added 🤖 decision, with its criterion, (1) or (2), and why (D221, D234).
 
@@ -273,7 +273,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
    - a decision that is also a contract, as `GLOSSARY.md` defines it: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. A decision that is not a contract goes only to `design.md` → `## Decisions`;
    - an answer of the user.
 
-   The Goal and `tasks-preview.md` alone are not sources. Before it asks, upgrade tries to decide or find the answer to each open question, as apply does. A found answer that is a non-obvious fact goes to `design.md` → `## Context`, an obvious answer goes only to the summary, and a decided point is a decision with 🤖 in `design.md`. If a decided point is a contract, upgrade asks its requirement, as for a 🤖 decision of `plan.md`. A question that ends with "(kept open by the user)" stays, and upgrade does not ask it again (D228, D229). Then ask in one reply, and end the turn:
+   The Goal and `tasks-preview.md` alone are not sources. Before it asks, upgrade tries to decide or find the answer to each open question, as apply does. A found answer that is a non-obvious fact goes to `design.md` → `## Context`, an obvious answer goes only to the summary, and a decided point is a decision with 🤖 in `design.md` only when the decision rule records it, or else an answer in the summary (D234). If a decided point is a contract, upgrade asks its requirement, as for a 🤖 decision of `plan.md`. A question that ends with "(kept open by the user)" stays, and upgrade does not ask it again (D228, D229). Then ask in one reply, and end the turn:
    - each open question that is still open and that changes the specs, the approach, or the tasks;
    - each requirement that you plan from the Goal, the preview, or a 🤖 decision of `plan.md`, with its text (D182);
    - a question if the change has a requirement, if you plan none. "None" is a valid answer, and then upgrade writes no spec (D210).
@@ -338,12 +338,12 @@ apply:
 - OpenSpec ignores the `openspec-version` key. Only the skills read it (D48).
 - `version` is an integer. A change to it is a schema **update** (D45).
 
-`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172, D174, D177, D178, D180, D181, D182, D183, D184, D186, D194, D195, D197, D198, D211, D212, D213, D214, D216, D217, D218, D219, D220, D221, D222, D223, D225, D226, D227, D228, D229, D230, D231, D232, D233, D234, D235). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
+`apply.instruction` holds the plan-lite apply rules (D29, D33, D49, D60, D64, D72, D73, D99, D106, D171, D172, D174, D177, D178, D180, D181, D182, D183, D184, D186, D194, D195, D197, D198, D211, D212, D213, D214, D216, D217, D218, D219, D220, D221, D222, D223, D225, D226, D227, D228, D229, D230, D231, D232, D233, D234, D235, D239). It ships in the user's repo, so it must not refer to this file. This is the exact text in `schema.yaml`:
 
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
 
-The work has six steps. Do them in order. The rules after the steps say how to record each item in plan.md. A step names each rule that it uses.
+The work has six steps. Do them in order. The rules after the steps say how to record each item in plan.md. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, record the answer with the answer rule.
 
 ## Step 1: Start
 
@@ -386,14 +386,15 @@ The work has six steps. Do them in order. The rules after the steps say how to r
 - If `<changeDir>/tasks-preview.md` exists, use it as a guide. The CLI does not list it in contextFiles.
 - If plan.md and tasks-preview.md conflict, plan.md wins.
 - Do not edit tasks-preview.md.
-- When you make a decision, record it with the decision rule.
-- When you find a fact, record it with the fact rule.
+- When you make a decision, record it with the decision rule, the decision format, and the mark rule. Keep `## Decisions` current with the current-decisions rule.
+- When you find a fact, record it with the fact rule and the fact format. To know an exit code, use the exit-code rule.
 - If your work conflicts with a decision with no 🤖, ask the user, and end your turn.
 - If you find a new point that you cannot close with the question rule:
   - Record it as an open question before you write the code that depends on it.
   - Ask it with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
   - End your turn.
 - When you change a behavior, follow the test rule.
+- When you write any file, a commit message, or a reply, follow the ID rule.
 - Suggest running openspec-lite-upgrade when one of these is true:
   - Another person or agent must continue the work.
   - The change touches more than one capability.
@@ -414,10 +415,10 @@ Do these checks in this order, before the done check.
   - If the code does not match a decision with no 🤖, plan.md wins: fix the code. If the code cannot follow that decision, ask the user, and end your turn.
   - Read each file that you added or changed. Find each thing in it that matches criterion (1) of the decision rule, and that `## Decisions` does not hold. Record each one as a 🤖 decision.
   - Check each decision with no 🤖. Move each choice that you added to it into its own 🤖 decision.
-  - Check each 🤖 decision that you added. If it matches neither criterion (1) nor criterion (2), remove it.
 - Check the open questions:
   - Record each point that you cannot close with the question rule as an open question.
   - Keep each kept question.
+- Check each 🤖 decision that you added, also in the open-question check above. If it matches neither criterion (1) nor criterion (2), remove it.
 
 ## Step 6: End
 
@@ -549,6 +550,7 @@ Do these checks in this order, before the done check.
 
 ## ID rule
 
+- Give each new item a number higher than each ID of its kind in the file.
 - Do not add an ID to an existing item that has none.
 - Use the plan.md IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in plan.md and tasks-preview.md.
 - Do not write them in another file, a code comment, a commit message, a pull request, or a ticket.

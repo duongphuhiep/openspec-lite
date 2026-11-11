@@ -59,7 +59,7 @@ Do these checks in order.
 
 ## 2. Steps
 
-Do these steps in order. The rules of section 3 say how to record each item in `plan.md`. A step names each rule that it uses.
+Do these steps in order. The rules of section 3 say how to record each item in `plan.md`. Each rule applies in each step where its topic comes up, also when the step does not name it. Each time the user answers an open question, record the answer with the answer rule.
 
 ### Step 1: Check plan.md
 
@@ -78,8 +78,8 @@ Do these steps in order. The rules of section 3 say how to record each item in `
 - Read `plan.md`.
 - Explore the code that the change touches.
 - Before you write the tasks, try to close each open question with the question rule.
-- When you make a decision, record it with the decision rule.
-- When you find a fact, record it with the fact rule.
+- When you make a decision, record it with the decision rule, the decision format, and the mark rule. Keep `## Decisions` current with the current-decisions rule.
+- When you find a fact, record it with the fact rule and the fact format. To know an exit code, use the exit-code rule.
 - Edit `plan.md` only as the plan.md rule says.
 
 ### Step 4: Get the plan hash
