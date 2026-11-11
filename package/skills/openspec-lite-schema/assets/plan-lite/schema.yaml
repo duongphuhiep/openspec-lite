@@ -49,6 +49,8 @@ apply:
     - When the user answers:
       - Record each answer with the answer rule.
       - If the user says to continue from plan.md, go to step 4.
+      - If the preview is not stale, go to step 4 after you record the answers.
+      - If the preview is stale, and the user does not answer the stale question, ask it again, and end your turn.
       - A question that the user did not answer stays open. Do not write the code that depends on it.
       - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
 
@@ -66,7 +68,7 @@ apply:
       - Ask it with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
       - End your turn.
     - When you change a behavior, follow the test rule.
-    - When you write any file, a commit message, or a reply, follow the ID rule.
+    - When you write any file other than plan.md and tasks-preview.md, or a commit message, follow the ID rule.
     - Suggest running openspec-lite-upgrade when one of these is true:
       - Another person or agent must continue the work.
       - The change touches more than one capability.
@@ -101,7 +103,7 @@ apply:
       - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In Criterion, write (1) or (2) of the decision rule. In Why, write the visible result for (1), or the close options for (2).
       - Ask each new open question of step 5, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
     - Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count.
-    - If an open question is left, tell the user to answer it in the next message, so that you record the answer. For a kept question, also name the part of the Goal that waits for its answer.
+    - If an open question is left, tell the user to answer it in the next message, so that you record the answer. For each open question, also name the part of the Goal that waits for its answer.
     - When the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. It promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 
     ## Question rule: close an open question

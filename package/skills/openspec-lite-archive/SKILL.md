@@ -116,7 +116,7 @@ The guard path:
    - If a decision is also a contract, draft the contract as a requirement. Its rationale can also go to an ADR.
    - List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
    - A fact goes to the `## Context` of each ADR whose decision it justifies. Keep its source emoji.
-   - A fact that justifies a requirement goes into the requirement text, as its reason, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
+   - A fact that justifies a requirement goes into the requirement text, as its reason, with its source emoji, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
    - A non-obvious fact goes to the `## Context` of each drafted ADR that it relates to.
      - If no drafted ADR holds it, and no drafted requirement holds it as its reason, draft an ADR for the fact.
      - Its `## Context` holds the fact and its source.

@@ -3385,3 +3385,20 @@ This revises D226, D229, D230, D236, and D240.
 This revises D240 and D242.
 
 **Rationale**: review loop 3, round 4 found 9 remarks. Each one had one logical fix. For remark 2, the test of D241 from the user's other session is the one test.
+
+## D244: Fixes From Review Loop 3, Round 5, on 99d8656..local
+
+**Decision**:
+
+1. Apply step 4 applies the ID rule to each file other than `plan.md` and `tasks-preview.md`, and to a commit message, not to a reply. The end summary keeps the IDs (D142 covers files only).
+2. In upgrade, a rule from an answer of the user is a requirement source, like a constraint of `plan.md` (D164, D166). This revises D243 item 4. A choice from an answer goes to the specs only when it is a contract, else to `## Decisions`.
+3. Apply step 3 goes to step 4 after it records the answers when the preview is not stale. If the preview is stale and the user does not answer the stale question, apply asks it again.
+4. The done check of apply names the part of the Goal that waits for each open question, not only for a kept one.
+5. When the user answers a question that a task of the preview waits for, the preview also changes the task to follow the answer. If the user moves a rule to `## Constraints`, the preview tells the user that it is stale.
+6. Step 8 of the preview asks each open question that is still open, also an existing one, but not a kept question.
+7. Archive keeps the source emoji when a fact goes into a requirement text, as the user chose for D227.
+8. Scenario 4 accepts a decision or a constraint for "create it in this repo", because both readings pass the test of D241, and the user said that a wrong split is acceptable while the answer is recorded (D226). Scenario 4c accepts a constraint in each bullet.
+
+This revises D226, D227, D239, D240, D242, and D243.
+
+**Rationale**: review loop 3, round 5 found 10 remarks. Each one had one logical fix, or an earlier choice of the user decided it.

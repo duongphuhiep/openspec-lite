@@ -133,10 +133,11 @@ Do these two checks before you write the preview, so that no task refers to an i
 ### Step 8: End
 
 - If you added a fact or a decision after step 5, do the two checks of step 5 for it. If a check moves or removes an item that a task of the preview names, update that task.
-- If the user answers a question that a task waits for, remove the "waits for the answer" note from that task.
+- If the user answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer.
+- If the user moves a rule to `## Constraints`, the preview is stale. Tell the user to run this skill again.
 - List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
 - For each open question that you removed, also give its answer.
-- Ask each new open question, with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
+- Ask each open question that is still open, also an existing one, with your recommended answer. Do not ask a kept question again. Give no recommendation when the answer is a fact that only the user knows.
 - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`.
   - In Criterion, write (1) or (2) of the decision rule.
   - In Why, write the visible result for (1), or the close options for (2).

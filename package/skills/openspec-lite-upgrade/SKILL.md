@@ -143,8 +143,8 @@ Read `schema` from `openspec/changes/<name>/.openspec.yaml`. There are three cas
       - An open question that changes the specs, the approach, or the tasks has no slot. Do not put it, or a note that points to it, in `design.md`.
       - Split the answer of such a question, as the answer rule of `apply.instruction` says, but write each part to an artifact, not to `plan.md`. In step 2, edit `plan.md` only to add the "(kept open by the user)" marker when the user keeps a question open. A closed question stays in `plan.md` until the prune of step 5:
         - A fact goes to `## Context`, with 👤 and "Source: the user".
-        - A rule that the change must follow (test: if the result breaks it, the change is not done) goes to the specs as a requirement only when it is a contract. Otherwise, it goes to `## Context`, like a constraint.
-        - A choice goes to the specs or to `## Decisions`.
+        - A rule that the change must follow (test: if the result breaks it, the change is not done) is a requirement source, like a constraint of `plan.md`. Plan its requirement, and ask it in the question turn.
+        - A choice goes to the specs only when it is a contract. Otherwise, it goes to `## Decisions`.
       - If the user has no answer to such a question, or it ends with "(kept open by the user)", keep the question in `plan.md`, and also put it as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
       - A question with the "(kept open by the user)" marker that is safe to answer later goes to `## Open Questions`, like each other such question. It also stays in `plan.md`.
    4. `tasks.md`:
