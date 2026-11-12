@@ -139,6 +139,7 @@ Ask the question turn:
 - Make the question list from these items:
   - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks;
   - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`;
+  - each requirement that you plan from a point that step 2 decided and that is a contract;
   - if you plan no requirement at all, the question if the change has a requirement.
 - If the question list is empty, do not ask. Go to step 2.1.
 - If each of the four artifacts already exists, do not ask. Go to step 2.1.
@@ -203,6 +204,7 @@ Read the answer of the user:
 - Non-Goals go to `## Goals / Non-Goals`.
 - Each `### Decision` entry of `plan.md` goes to `## Decisions`.
 - A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet.
+- If the user said yes in step 2 to a requirement that you planned from a decision with 🤖, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
@@ -269,7 +271,8 @@ Do steps 5.1 to 5.4 in order.
 - In the `Heading` column, write the heading of the artifact that now holds the content, for example `## Context`, or write "kept".
 - If a question also stays in `plan.md` (step 2.3 or step 2.4), write the heading of the artifact and "kept", for example "`## Open Questions`, kept".
 - A question that step 2 closed in this session has the destination "closed", with its answer. A yes to the prune question deletes the closed question.
-- If step 2 did not run in this session, for example on the resume path, do not use the destination "closed". Give each question of `plan.md` the heading of the artifact that holds the question or its answer, or `## 0. Open questions`, or "kept, in no artifact".
+- If step 2 did not run in this session, for example on the resume path, give each question of `plan.md` the heading of the artifact that holds the question or its answer, or `## 0. Open questions`.
+- If step 2 did not run in this session, and no artifact holds a question or its answer, use the test of the question rule again. If you can decide the question or find its answer now, give the answer and the destination "closed". If not, the destination is "kept, in no artifact".
 - If the items of one section go to different destinations, list each item.
 - Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
 - Go to step 5.2.
@@ -360,7 +363,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Before you mark an item, check each sentence of the item, not only its main source.
 - If one sentence holds a new claim, mark the item, and name that claim in a few words.
 - If no sentence holds a new claim, do not mark the item.
-- One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet.
+- One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet. Step 2.3 removes the 🤖 when the user said yes to a requirement from that decision.
 - These are not new claims:
   - other words for a `plan.md` item or an answer;
   - another form of a `plan.md` item, for example a `#### Scenario:` that only restates its requirement;

@@ -116,7 +116,7 @@ Do these checks in order. When the checks are done, go to section 3.
 2. Run `openspec new change "<name>" --schema plan-lite`.
    - If the command succeeds, go to step 3.
    - If the command fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`.
-   - If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped at step 2. Ask: "Resume the change <name>?"
+   - If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped at step 2. Ask: "Resume the change <name>?" End your turn, and wait for the answer.
    - On yes to the resume question, go to step 3.
    - On no to the resume question, ask for another name. Then do step 2 again with the new name.
    - In each other failure case, show the error, and ask for another name. Then do step 2 again with the new name.
@@ -165,7 +165,8 @@ Do these checks in order. When the checks are done, go to section 3.
 - Record each part of the answer in one section only. If a part is both a rule and a choice, record it as a constraint only.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
 - Record each rule in the answer that the change must follow as a constraint in `## Constraints`.
-- A rule passes this test: if the result breaks the rule, the change is not done.
+- A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.
+- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window", or "use plain HTML under `src/`".
 - Record each other choice or instruction in the answer as a decision with no 🤖.
 
 ### Fact rule

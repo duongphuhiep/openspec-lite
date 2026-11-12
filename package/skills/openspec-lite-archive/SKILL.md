@@ -61,7 +61,7 @@ Do these checks in order.
 
 ### Guard
 
-- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`.
+- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, and the file `openspec/changes/<name>/plan.md`.
 - Output: the path to follow: the schema check, or the guard path.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, continue with the schema check.
@@ -275,7 +275,9 @@ When each item has a draft, go to step 6.
 - Input: the files under `<dir>/specs/`, and the approved deltas of step 6.
 - Output: the deltas in `<dir>/specs/`.
 - Before you write, list the files under `<dir>/specs/`.
-- The files under `<dir>/specs/` are from an earlier run. Show each file, and ask the user to keep or delete the file.
+- If no file exists under `<dir>/specs/`, write the approved deltas to `<dir>/specs/<capability>/spec.md`.
+- If a file exists under `<dir>/specs/`, the file is from an earlier run. Show each file, ask the user to keep or delete each file, and end your turn.
+- When the user replies, delete each file that the user said to delete. Keep each other file for the merge.
 - Then write the approved deltas to `<dir>/specs/<capability>/spec.md`.
 - If a kept file has the same path as an approved delta, merge the new delta into the kept file, with no duplicate requirement.
 - Go to step 8.

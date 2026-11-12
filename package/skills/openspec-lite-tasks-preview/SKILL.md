@@ -47,12 +47,15 @@ Do these checks in order.
 
 ### Guard
 
-- Input: `openspec/changes/<name>/.openspec.yaml`.
+- Input: `openspec/changes/<name>/.openspec.yaml`, `openspec/changes/<name>/tasks.md`, and `openspec/changes/<name>/plan.md` if `plan.md` exists.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If the schema is `plan-lite`, go to the schema check.
-- If the schema is not `plan-lite`, stop. A spec-driven change has `tasks.md` instead.
 - If the schema is not `plan-lite`, and `openspec/changes/<name>/tasks.md` exists, point the user to stock `/opsx:apply`.
 - If the schema is not `plan-lite`, and `openspec/changes/<name>/tasks.md` does not exist, point the user to stock `/opsx:continue`.
+- If the schema is not `plan-lite`, and `openspec/changes/<name>/plan.md` still exists, name each open question of `plan.md`.
+- If you name an open question of `plan.md`, tell the user to answer the open question before the stock skill, because the stock skills do not read `plan.md`.
+- If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
+- If the schema is not `plan-lite`, stop after the pointer. Do not write `tasks-preview.md`.
 
 ### Schema check
 
@@ -240,7 +243,8 @@ When the checks are done, go to step 6.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
 - You cannot edit `## Constraints`, so record each rule of the reply that the change must follow in `## Decisions`, as a decision with no 🤖.
-- A rule passes this test: if the result breaks the rule, the change is not done.
+- A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.
+- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window", or "use plain HTML under `src/`".
 - For each rule that you record as a decision, say in the end summary that the user can move the rule to `## Constraints`.
 
 ### Decision rule: when to record a decision

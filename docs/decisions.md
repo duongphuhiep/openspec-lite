@@ -3570,3 +3570,21 @@ This revises D229 and D253.
 This revises D133, D154, D196, and D254.
 
 **Rationale**: a fresh-context review found each gap. I checked each remark against the skills, `design.md`, and the decisions.
+
+## D256: Fixes From Review Loop 4, Round 3, on 99d8656..local
+
+**Decision**: from `.review-reports/review_20261112103716_claude-opus-5-5_99d8656-local.md`:
+
+1. The question list of upgrade step 2 has an item for each requirement that upgrade plans from a contract point that step 2 decided.
+2. If the user says yes in the upgrade question turn to a requirement from a 🤖 decision of `plan.md`, upgrade writes that decision in `design.md` with no 🤖, and the summary says that the yes removed the mark. The user chose this. This revises D182. Scenario 7 expects this.
+3. The answer rule of apply, propose, and the tasks preview says what a rule is: a rule limits the result that a user or a program sees, or says what the change must not add. A choice of how to build the result is a decision, also when the user gives it, for example "use a sliding window" or "use plain HTML under `src/`". The user chose this. This revises D241 and D252. Scenario 4 expects a decision with no 🤖 for "create it in this repo" and for the build parts of the stack instruction, and a constraint for "no npm dependency".
+4. Archive step 7 ends the turn at the keep-or-delete question for the files of an earlier run, and deletes each file that the user says to delete.
+5. The tasks-preview guard gives the pointer and then stops. It names each open question of a kept `plan.md`, as the apply guard does.
+6. On the upgrade resume path, step 5.1 uses the test of the question rule again for a question that no artifact holds. The destination "kept, in no artifact" is only for a question that is still open.
+7. The Input line of the archive guard names `plan.md`.
+8. The apply intro says which added rule is in section 2 and which rules are general rules.
+9. The resume question of propose ends the turn.
+
+This revises D182, D241, D252, and D255.
+
+**Rationale**: a fresh-context review found each gap. I checked each remark against the skills, `design.md`, and the decisions. Four remarks came from the fixes of D254 and D255.

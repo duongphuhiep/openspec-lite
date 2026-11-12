@@ -162,8 +162,8 @@ apply:
     - Record each part of the reply in one section only. If a part is both a rule and a choice, record it as a constraint only, because the done check checks each constraint.
     - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
     - Record each rule of the reply that the change must follow in `## Constraints`.
-    - A rule passes this test: if the result breaks the rule, the change is not done. Examples: "add no npm dependency", or "a request over the limit gets status 429".
-    - A choice of how to meet the goal is not a rule, for example "use a sliding window".
+    - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done. Examples: "add no npm dependency", or "a request over the limit gets status 429".
+    - A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window", or "use plain HTML under `src/`".
     - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
     - An edit of `## Constraints` makes the preview stale. This result is correct, because the preview does not know the new rule yet.
 
