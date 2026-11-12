@@ -3809,3 +3809,23 @@ This revises D119, D166, D182, D219, and D256.
 12. Smaller fixes: the fact example "before this change, the thumbnail folder did not exist"; the tasks preview says "plan for the code"; the template comment splits a guess from an obvious fact; a change of a decision with no 🤖 is allowed when you move your own choice out of it; overlapping bullets of the tasks preview and propose are merged.
 
 **Rationale**: the user asked for a review of `package/` for overlapping rules, hint phrases, and logic inconsistencies, with fixes that add no hint example. The report is `.review-reports/review_20261112232836_eu.anthropic.claude-opus-5-5_98efbdb-package.md`, 36 remarks. The user asked to fix all of them.
+
+## D272: Fixes From Review Round 2 of the Skill Text at 3f1988c
+
+**Decision**:
+
+1. Ten D271 edits broke a copy or a near rule. These are fixed:
+   - The tool-output fact rule records an output only when the output is a non-obvious fact. D271 removed its exception as a hint, but the exception was general.
+   - A kept question stays until a message of the user answers it. Apply step 6 names a kept question and the part of the Goal that waits, and does not ask for its answer.
+   - The tasks preview has the same kept-question rules and the same ask rule as apply, in its question rule and its ask rule. Its general rule says "constraint".
+   - Archive: after section 2, step 6, the guard path continues guard step 1 with the write. After section 2, step 10, it goes to guard step 2. A non-obvious fact goes to each drafted ADR that it relates to. Another fact goes only to an ADR whose decision it justifies.
+   - Upgrade: the delta condition is in one place, "Plan the requirements", and each requirement question names it. The split rule says "constraint". Upgrade calls the ask rule.
+   - Propose keeps a part of a reply until `plan.md` exists.
+   - The template comment allows the move of your own choice out of a decision with no 🤖.
+   - The schema skill reads no exit code, shows the old-folder line before it stops, and says "already current" once.
+2. Two more hint quotes are removed: the quoted archive replies of scenarios 18 and 18b, and the quoted pointers of scenario 20a in upgrade.
+3. Ambiguities are fixed: "no code, doc, or run that you can reach shows it" replaces "the repo does not show it". "Those sections" names `## Constraints` and `## Non-Goals`. The ID rule applies to plan.md and to each other file. Apply follows each rule of the `instruction` field. Upgrade names "the question turn of step 2". A row of step 5.1 is kept when its `Heading` holds "kept". Propose and the tasks preview name an open question of `plan.md`, and "the decision that records a constraint of the user".
+4. `apply.instruction` says that the `cd <root> && ` prefix does not count as a chain, so stock `/opsx:apply` also gets the rule.
+5. When an edit changes a rule, check each copy of the rule and each rule near it in the same commit. Ten of the 29 remarks of round 2 came from D271 edits that missed a copy or a near rule.
+
+**Rationale**: the user asked for a second review round, with a check for ambiguous phrasing. The report is `.review-reports/review_20261112235649_eu.anthropic.claude-opus-5-5_3f1988c-package.md`, 29 remarks. The user asked to fix all of them.
