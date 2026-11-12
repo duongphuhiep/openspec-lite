@@ -93,7 +93,8 @@ Do these checks in order.
 - When you need the exit code of a command, use the exit-code rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
 - If the user moves the decision that records a constraint of the user to `## Constraints`, the preview is stale. Tell the user to run this skill again.
-- If a reply asks for an edit of Goal, Background, Non-Goals, or Constraints, tell the user to make the edit in `plan.md`, and to run this skill again.
+- If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
+- A new constraint in a reply follows the answer rule.
 - If the user replies after step 8, and the reply does not make the preview stale, record the reply with the general rules. Update each task of the preview that the changed items make wrong. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again for the items that the reply changed.
 
 ### Step 1: Check that plan.md exists
@@ -217,7 +218,7 @@ When the checks are done, go to step 6.
 
 - A question is open only while you cannot decide the question and cannot find its answer.
 - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
-- You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
+- You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. For example, the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary of step 8.
@@ -245,6 +246,7 @@ When the checks are done, go to step 6.
 - Split the reply of the user as well as you can into facts, constraints, and choices.
 - A fact says how something is, for example "before this change, the thumbnail folder did not exist". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
 - Record each part of the reply in one section only.
+- If a part limits the result and also says how to build the result, record the limit and the build choice as two decisions with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
@@ -300,7 +302,7 @@ When the checks are done, go to step 6.
 - Remove each 🤖 decision that a new decision supersedes.
 - Update each 🤖 decision that a new decision makes stale.
 - Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`.
-- Change a decision with no 🤖 only when the user tells you to in this session.
+- Change a decision with no 🤖 only when the user tells you to in this session, or to move a choice that you added into its own 🤖 decision.
 - If your approach conflicts with a decision with no 🤖, record an open question.
 - After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
 

@@ -356,7 +356,7 @@ How to read these steps:
 - The general rules apply at all times, in each step.
 - A named rule, for example the question rule, applies in each step where its topic comes up, also when the step does not name the rule.
 - The OpenSpec root is the folder that holds `openspec/`. Run each command from the OpenSpec root.
-- If the OpenSpec root is not the current folder, start each command with `cd <root> && `. This prefix does not count as a chain.
+- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
 - `<changeDir>` is the folder of the change.
 
 ## General rules
@@ -414,7 +414,7 @@ How to read these steps:
   - End your turn, and wait for the reply of the user.
 - When the user replies to the questions of step 3:
   - Record each answer with the answer rule.
-  - The stale question of step 3 depends only on the result of step 2.
+  - Do not run step 2 again after you record the answers.
   - A question that the user did not answer stays open. Do not write the code that depends on that question.
   - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
   - If the user says to continue from plan.md, go to step 4.
@@ -426,7 +426,7 @@ How to read these steps:
 - Input: plan.md, and `<changeDir>/tasks-preview.md` as a guide if it exists. The CLI does not list tasks-preview.md in contextFiles.
 - Output: the code, and the updates of plan.md.
 - Implement from plan.md.
-- If your work conflicts with a decision with no 🤖, ask the user, and end your turn.
+- If your work conflicts with a constraint or with a decision with no 🤖, record the conflict as an open question, ask the open question with the ask rule, and end your turn.
 - If you find a new point that you cannot close with the question rule:
   - Record the point as an open question before you write the code that depends on the point.
   - Ask the open question with the ask rule.
@@ -443,7 +443,7 @@ Do these checks in this order:
    - If a test checks an old behavior that the change replaces, update the test, as the test rule says.
    - If a test fails, fix the code, and run the tests again.
    - Do not change a constraint or a decision with no 🤖 to make a test pass.
-   - If a test fails because the code follows a constraint or a decision with no 🤖, ask the user, and end your turn.
+   - If a test fails because the code follows a constraint or a decision with no 🤖, and the test does not check an old behavior that the change replaces, record the conflict as an open question, ask the open question with the ask rule, and end your turn.
    - If you cannot make a failing test pass, say in the end summary which test fails, with the error text. Go to check 2.
    - If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run. Go to check 2.
 2. Compare each decision in `## Decisions` with the code:
@@ -452,7 +452,7 @@ Do these checks in this order:
    - Do not count a condition as named only because the condition gives the same result as a named condition. For example, the decision "skip the thumbnail when the file is not an image" does not name the condition "the image is over 10 MB", although both conditions skip the thumbnail.
    - If the code no longer matches a 🤖 decision, update the 🤖 decision, so that the decision names each condition.
    - If the code does not match a decision with no 🤖, fix the code, because plan.md wins.
-   - If the code cannot follow a decision with no 🤖, ask the user, and end your turn.
+   - If the code cannot follow a decision with no 🤖, record the conflict as an open question, ask the open question with the ask rule, and end your turn.
 3. Read each file that you added or changed. Find each thing in the file that matches criterion (1) of the decision rule, and that `## Decisions` does not hold. Record each such thing as a 🤖 decision.
 4. Check each decision with no 🤖. Move each choice that you added to a decision with no 🤖 into its own 🤖 decision.
 5. Record each point that you cannot close with the question rule as an open question.
@@ -480,7 +480,7 @@ When the checks are done, go to step 6.
 4. If the tests did not run, and the test check did not pass, tell the user to run the test command, and to run apply again.
 5. If a test fails, name the test that fails, and say what blocks the fix.
 6. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
-7. If an open question that is not a kept question is left, tell the user to answer the open question in the next message, so that you record the answer. For each open question that is left, also a kept question, name the part of the Goal that waits for the answer. Do not ask for the answer of a kept question. When the user replies, step 4 says what to do.
+7. If an open question that is not a kept question is left, tell the user to answer the open question in the next message, so that you record the answer. For each open question that is left, kept or not, name the part of the Goal that waits for the answer. Do not ask for the answer of a kept question. When the user replies, step 4 says what to do.
 8. If the test check and the done check pass, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 9. If the test check or the done check fails, do not suggest an archive.
 
@@ -488,7 +488,7 @@ When the checks are done, go to step 6.
 
 - A question is open only while you cannot decide the question and cannot find its answer.
 - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
-- You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
+- You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. For example, the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary.
