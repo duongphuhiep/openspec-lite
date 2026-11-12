@@ -80,7 +80,7 @@ The guard path:
    - If `openspec/changes/<name>/design.md` has `### Decision` entries, warn: "Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs. They stay only in the archive folder. To keep them as ADRs, copy them to `openspec/adr/` before you archive."
    - A change that was upgraded from plan-lite has its decisions in `design.md`.
    - Offer to copy each `### Decision` of `design.md` to an ADR. Write nothing before the user says yes.
-   - End your turn after the offer, and wait for the answer. In the same reply, offer nothing else, also not the archive.
+   - End your turn after the offer, and wait for the answer. In the same reply, say nothing about the 🤖 lines of `specs/`, and offer nothing else, also not the archive.
    - If the user says no, write no ADR, and go to guard step 2.
    - If the user says yes, draft each ADR with the form and the three checks of section 2, step 5.
    - Show the drafts as in section 2, step 6.
@@ -92,7 +92,7 @@ The guard path:
    - Do this search after the ADRs of guard step 1 are written, or after the user says no to the offer of guard step 1.
    - If a line of `specs/` or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
    - If no line has a 🤖, say nothing about marks.
-   - Before each reply that says what holds a 🤖, search `specs/` and `design.md` again.
+   - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `specs/` and `design.md` again.
    - Go to guard step 3.
 3. Name the open questions of a kept `plan.md`.
    - If `openspec/changes/<name>/plan.md` still exists, name each open question in `plan.md`.
