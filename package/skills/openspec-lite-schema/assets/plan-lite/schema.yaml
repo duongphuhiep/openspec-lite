@@ -77,7 +77,7 @@ apply:
     - If the list of questions to ask is empty, go to step 4.
     - If the list of questions to ask is not empty, ask all questions of the list in one reply:
       - Give your recommended answer for each open question.
-      - Give no recommendation when the answer is a fact that only the user knows, for example where some code is. Say why you give no recommendation.
+      - Give no recommendation when the answer is a fact that only the user knows, for example where some code is when a search of the repo does not find the code. Say why you give no recommendation.
       - In the same reply, give the answer of each question that you closed.
       - End your turn, and wait for the reply of the user.
     - When the user replies to the questions of step 3:
@@ -110,7 +110,7 @@ apply:
     1. Run the tests. If a test fails, fix the code, and run the tests again. Do not change a constraint or a decision with no 🤖 to make a test pass. If you cannot make a failing test pass, say in the end summary which test fails, with the error text, and do checks 2 to 7. If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run, and do checks 2 to 7.
     2. Compare each decision in `## Decisions` with the code:
        - For each result of a 🤖 decision, find each condition in the code that gives the result.
-       - A 🤖 decision matches the code only when the decision names each such condition. A condition that gives the same result as a named condition is not named. For example, "status 400 when the body is not JSON" does not name "status 400 when the body has no `id` field".
+       - A 🤖 decision matches the code only when the decision names each such condition. A condition that gives the same result as a named condition is not named. For example, "skip the thumbnail when the file is not an image" does not name "skip the thumbnail when the image is over 10 MB".
        - If the code no longer matches a 🤖 decision, update the 🤖 decision, so that the decision names each condition.
        - If the code does not match a decision with no 🤖, fix the code, because plan.md wins.
        - If the code cannot follow a decision with no 🤖, ask the user, and end your turn.
@@ -136,10 +136,14 @@ apply:
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
        - If you added no 🤖 decision, show no table.
        - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
-    2. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Did the tests run and pass? Is `## Open Questions` empty? An HTML comment does not count as a question.
-    3. If an outcome of the Goal or a Constraint is not met, name each one that is not met. If a test fails, or the tests did not run, say so.
-    4. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question. When the user replies, step 4 says what to do.
-    5. If the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
+    2. Do the test check, with the result of step 5, check 1: Did the tests run and pass?
+    3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
+    4. If the tests did not run, tell the user to run the test command, and to run apply again.
+    5. If a test fails, name the test that fails.
+    6. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
+    7. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question. When the user replies, step 4 says what to do.
+    8. If the test check and the done check pass, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
+    9. If the test check or the done check fails, do not suggest an archive.
 
     ## Question rule: close an open question
 
@@ -242,7 +246,7 @@ apply:
     - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
     - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact, because an edit of those sections makes the preview stale with no need.
     - Do not record a guess.
-    - A sentence that states a choice, for example "the script must read the item count", is a decision, not a fact.
+    - A sentence that states a choice, for example "the thumbnails must keep the aspect ratio", is a decision, not a fact.
     - Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK.
 
     ## Fact format

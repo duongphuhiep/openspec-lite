@@ -65,7 +65,7 @@ An item of `## Decisions` in a plan. The agent records a choice as a decision wh
 _Avoid_: Choice log, rationale
 
 **Visible result**:
-What a user or another program sees or uses: a UI, a public interface, the input or output of a program, the signature of an exported function, a data format, a file name or path in the repo that another program, a config, or a doc outside this change refers to, a name that the program gives to its output, a key in a config file that a program or a user reads, a new dependency, or the result on an error or an edge case (D218, D220, D222).
+What a user or another program sees or uses: a UI, a public interface, the input or output of a program, the output of another tool that the code reads, the signature of an exported function, a data format, a file name or path in the repo that another program, a config, or a doc outside this change refers to, a name that the program gives to its output, a key in a config file that a program or a user reads, a new dependency, or the result on an error or an edge case (D218, D220, D222).
 _Avoid_: Observable behavior
 
 **Open question**:
@@ -79,6 +79,10 @@ _Avoid_: AI decision, draft decision
 **Done check**:
 The three questions at the end of apply and the start of archive: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 _Avoid_: Done checklist, definition of done
+
+**Test check**:
+The question at the end of apply, before the done check: Did the tests run and pass? Apply suggests the archive only when the test check and the done check pass. Archive does not run the tests (D264).
+_Avoid_: Test gate
 
 **Upgrade**:
 The switch of an active change from plan-lite to spec-driven. You can upgrade a change at any time.

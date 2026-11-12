@@ -3697,3 +3697,15 @@ This revises D119, D166, D182, D219, and D256.
 7. Scenario 1 expects no Level 1 question, and each open point of the request in `## Open Questions` (D260).
 
 **Rationale**: the review `.review-reports/review_20261112141533_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 7 remarks. Two remarks found D262 fixes that were not complete.
+
+## D264: Fixes From Review Loop 5, Round 3, on 99d8656..local
+
+**Decision**:
+
+1. The done check keeps one meaning: the three questions about the Goal, the Constraints, and `## Open Questions`, in apply and in archive. Apply step 6 has a separate test check: did the tests run and pass? Apply suggests the archive only when the test check and the done check pass. If the tests did not run, apply tells the user to run the test command and to run apply again. If a test fails, apply names the test. Archive does not run the tests. `GLOSSARY.md` has the term "Test check". The user chose this. This revises D263 item 3.
+2. The examples of the condition rule of step 5 check 2 and of the fact rule now use the thumbnail domain. The old examples copied the cases of scenario 4d ("is not JSON" against a missing field, "the script must read the item count"). This completes D262 item 1.
+3. `GLOSSARY.md` → Visible result names the output of another tool that the code reads, as the decision rule does (D218).
+4. Apply step 3 says "where some code is when a search of the repo does not find the code", as the question rule says.
+5. Scenario 4 says where the OQ2 answer goes (a constraint) and where the test stack goes (a decision with no 🤖).
+
+**Rationale**: the review `.review-reports/review_20261112142047_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 7 remarks. Two remarks found D263 item 3 not complete.
