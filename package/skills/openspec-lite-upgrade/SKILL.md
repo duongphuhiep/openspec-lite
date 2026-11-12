@@ -141,6 +141,7 @@ Ask the question turn:
   - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`;
   - each requirement that you plan from a point that step 2 decided and that is a contract;
   - if you plan no requirement at all, the question if the change has a requirement.
+- If `<dir>/specs/` already holds a delta, plan no requirement, and ask no question about requirements, because step 2.2 keeps the delta.
 - If the question list is empty, do not ask. Go to step 2.1.
 - If each of the four artifacts already exists, do not ask. Go to step 2.1.
 - If the question list is not empty, ask all items of the question list in one reply, before you write any artifact.
@@ -159,9 +160,7 @@ Read the answer of the user:
 - If the user says yes to a planned requirement, the user is the source of that requirement.
 - If the user says no to a planned requirement, do not write that requirement.
 - If the user cannot answer an open question now, keep the question in `plan.md`, with no marker.
-- An answer such as "I do not know yet" leaves the question open with no marker.
 - If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
-- Examples of such a reply: "keep it open" or "leave it open".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
 - Go to step 2.1.
 
@@ -206,14 +205,13 @@ Read the answer of the user:
 - Non-Goals go to `## Goals / Non-Goals`.
 - Each `### Decision` entry of `plan.md` goes to `## Decisions`.
 - A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet.
-- If the user said yes in step 2 to a requirement that you planned from a decision with 🤖, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
 - Write each decision that step 2 planned to `## Decisions`, with 🤖 at the end of its heading.
-- If the user said yes in step 2 to the requirement of a contract point that step 2 decided, write that decision with no 🤖. In the summary, say that the yes removed the mark.
-- An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says.
-- A kept question that is safe to answer later goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
+- If the user said yes in step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
+- An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
+- A kept question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
 - If the user answered a question that changes the specs, the approach, or the tasks, split the answer with the split rule.
 - If the user has no answer to a question that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
@@ -246,7 +244,6 @@ Read the answer of the user:
 - Output: `proposal.md` and `design.md` with no pointer to a question of `## 0`.
 - Read `proposal.md` and `design.md` again.
 - Remove each sentence that restates a question of `## 0. Open questions`, or points to it, for example "See the open questions in tasks.md" or "See task 0.2".
-- This also applies to a question that the tasks preview added to `## Open Questions` of `plan.md`.
 - In the artifacts, the task in `## 0. Open questions` is the only place of each question of `## 0`. The question also stays in `plan.md`.
 - Go to step 3.
 

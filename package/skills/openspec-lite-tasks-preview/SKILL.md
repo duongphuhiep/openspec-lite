@@ -235,8 +235,7 @@ When the checks are done, go to step 6.
 
 - If a reply of the user in this session answers an open question, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
-- Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
-- An answer such as "I do not know yet" leaves the question open with no marker.
+- Add the "(kept open by the user)" marker only when the user says to keep the question open.
 - Split the reply of the user as well as you can into facts, constraints, and choices.
 - A fact says how something is, for example "before this change, the thumbnail folder did not exist". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
 - Record each part of the reply in one section only.

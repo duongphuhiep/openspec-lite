@@ -152,8 +152,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - Propose does not explore the code, so propose decides no open point.
 - Record each open point as an open question in `## Open Questions`. The tasks preview tries to decide the open question later.
 - If the user says to keep a question open, end the text of the question with "(kept open by the user)".
-- Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
-- An answer such as "I do not know yet" leaves the question open with no marker.
+- Add the "(kept open by the user)" marker only when the user says to keep the question open.
 
 ### Answer rule
 
