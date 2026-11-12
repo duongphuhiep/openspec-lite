@@ -1121,6 +1121,15 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.322, scenario allowlist: `cd <abs dir>; head -5 <file> | grep -n …` and `node <script>; cd <dir>; cat …` ran with no denial. So a `cd` or a pipe to `head` or `grep` does not cause a denial (group F, sessions `2f547d29`, `8c2f3e66`).
 - Claude Code 2.1.322, scenario allowlist: `cd "$(git rev-parse --show-toplevel)" && …` is denied (groups B, I, session `4be14cdc`).
 
+## Scenario Run on afb706a
+
+**Source**: `.scenario-runs/20261113-afb706a/group-*.md`, `raw/*/*/turn-*.json` (`permission_denials`), and the session logs, 2026-11-13.
+
+- Claude Code 2.1.323: a `cd <dir>` in one Bash call stays in effect for the next Bash call. A later `node <relative path>` call then failed, because the folder had changed (group G, session `5a961f93`).
+- Claude Code 2.1.323, scenario allowlist: a heredoc write can be denied with the new text "Parser did not consume trailing input" (group B, 13b run 1).
+- Claude Code 2.1.323, scenario allowlist: after `cd <subfolder>;`, the denial names only the parts of the command with a `../../` path (group F).
+- Sonnet 5.5, stock `/opsx:apply` on a plan-lite change: it called the `openspec-lite-apply` skill in 2 of 6 sessions. On 84abcb6, it called no skill in 6 of 6 sessions (group A).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
