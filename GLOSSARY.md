@@ -57,11 +57,11 @@ An item that upgrade writes in `proposal.md`, `specs/`, or `design.md`, but that
 _Avoid_: Guess, assumption
 
 **Constraint**:
-An item of `## Constraints` in a plan: a rule that the implementation must follow. It comes from the user, a ticket, or the platform. It is not a choice, so it has no "because" part to weigh and no 🤖. It limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks it, the change is not done. A choice of how to build the result is a decision, also when the user gives it (D256). The plan hash covers `## Constraints`, so an edit makes the tasks preview stale. The done check asks if each constraint is met (D226, D240, D241).
+An item of `## Constraints` in a plan: a limit on the result that a user or a program sees, or what the change must not add. It comes from the user, a ticket, or the platform. It is not a choice, so it has no "because" part to weigh and no 🤖. It limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks it, the change is not done. A choice of how to build the result is a decision, also when the user gives it (D256). The plan hash covers `## Constraints`, so an edit makes the tasks preview stale. The done check asks if each constraint is met (D226, D240, D241).
 _Avoid_: Requirement, rule set
 
 **Decision**:
-An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, also not a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts`. In propose and apply, a rule in that answer that the change must follow is a constraint. The tasks preview cannot edit `## Constraints`, so there it is a decision (D219, D222, D225, D226, D229, D240).
+An item of `## Decisions` in a plan. The agent records a choice as a decision when (1) it changes a visible result that the plan and the user did not give, or (2) the agent weighed close options with no clear winner. The agent records no other choice of its own, also not a choice that answers an open question. A choice or an instruction in an answer of the user is also a decision. A fact in that answer goes to `## Facts`. In propose and apply, a limit in that answer on the result that a user or a program sees, or on what the change must not add, is a constraint. The tasks preview cannot edit `## Constraints`, so there it is a decision (D219, D222, D225, D226, D229, D240).
 _Avoid_: Choice log, rationale
 
 **Visible result**:

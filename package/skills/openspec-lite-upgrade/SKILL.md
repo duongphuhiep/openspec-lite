@@ -156,7 +156,7 @@ Ask the question turn:
 Read the answer of the user:
 
 - Split each answer of the user with the split rule, and plan each part for its artifact. Steps 2.1 to 2.4 write the parts.
-- Plan a requirement for each constraint of the answer, with no new question.
+- If `<dir>/specs/` holds no delta, plan a requirement for each constraint of the answer, with no new question.
 - If the user says yes to a planned requirement, the user is the source of that requirement.
 - If the user says no to a planned requirement, do not write that requirement.
 - If the user cannot answer an open question now, keep the question in `plan.md`, with no marker.
@@ -208,7 +208,8 @@ Read the answer of the user:
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
-- Write each decision that step 2 planned to `## Decisions`, with 🤖 at the end of its heading.
+- Write each decision that you decided in the question turn of step 2 to `## Decisions`, with 🤖 at the end of its heading.
+- Write each choice from the answer of the user to `## Decisions`, with no 🤖.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
 - A kept question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
@@ -235,6 +236,7 @@ Read the answer of the user:
   - each open question that step 2 asked and that the user could not answer;
   - each question with the "(kept open by the user)" marker that changes the specs, the approach, or the tasks.
 - Give each question of `## 0. Open questions` one task: `- [ ] 0.1 Answer: <question> The answer can change the specs, the approach, or the tasks.`
+- Do the last check of the split rule.
 - Go to step 2.5.
 
 ### Step 2.5: Check the pointers
@@ -348,7 +350,8 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 - Split the answer of the user, as the answer rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says.
 - In steps 2.1 to 2.4, write each part of the answer to its artifact, not to `plan.md`. Where the answer rule says a section of `plan.md`, use the artifact that this split rule names.
-- After steps 2.1 to 2.4 write the answer, read the answer again, part by part. If a part is in no artifact, write the part to its artifact before step 2.5.
+- The last check of the split rule: after steps 2.1 to 2.4 write the answer, read the answer again, part by part. If a part is in no artifact, write the part to its artifact before step 2.5.
+- If the resume rule kept the artifact of a part, do not edit the artifact. Name the part in the summary, and offer to add the part.
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice.
