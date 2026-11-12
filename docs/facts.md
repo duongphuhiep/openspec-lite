@@ -1105,6 +1105,14 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - The input tokens of a session grew by about 2,000 to 3,000, and the cost of most groups by 10 to 15%, after D248 to D250 (groups B, D, H).
 - Claude Code 2.1.322: the Edit tool with an empty `new_string` also deletes the newline after `old_string` (20b, group E).
 
+## Investigation of the Defects D01 to D07 of the Run on 3fb090c
+
+**Source**: `.scenario-runs/20261112-3fb090c/investigation-D01-D07.md`, the session logs of scenario 4b from bdd9b0e to 3fb090c (22 sessions), and a run of `openspec instructions specs`, 2026-11-12.
+
+- OpenSpec 1.14.2, `openspec instructions specs --schema spec-driven --json`: the instruction says "Good spec content: - Observable behavior users or downstream systems rely on". It also says that the first section of a delta is `## Purpose`, of one or two sentences and 50 or more characters, "describing what the capability is for". So the stock text asks the agent for a purpose that `plan.md` may not state.
+- Sonnet 5.5, `openspec-lite-apply`, scenario 4b, 22 sessions: no session reads a file of `src/` or `test/` again after the code write. Each session writes all decisions in one `plan.md` edit after the tests. So the file check of step 5 does not run as a new read.
+- Sonnet 5.5, scenario 4b, 22 runs: the 429 body is in a decision in 9 of 14 runs with a `Retry-After` header, and in 2 of 8 runs with no header. Since D241, 0 of 4 runs add the header. The agent records the body only when it also sees another choice about the 429 response.
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
