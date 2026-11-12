@@ -3872,3 +3872,19 @@ This revises D119, D166, D182, D219, and D256.
 5. Upgrade: a late first delta of the last split check removes `skip_specs` and runs the `specs` instructions first. Section 3 names each part of a kept artifact, and step 5.4 adds the part on request and runs `validate` again. The requirement write of a constraint of the answer needs no delta. Only a planned 🤖 decision gets 🤖, and only a choice of the user that is not a contract goes to `## Decisions`.
 
 **Rationale**: review round 5 of the loop that the user asked for. The report is `.review-reports/review_20261113002414_eu.anthropic.claude-opus-5-5_5fdda53-package.md`, 12 remarks, no must fix, no hint. Ten came from D274 edits, most of them a copy that D274 did not change.
+
+## D276: Fixes From Review Round 6 of the Skill Text at 7433254
+
+**Decision**:
+
+1. Apply and the tasks preview change or remove an item when the user tells them to, and do not record the instruction as a decision. The preview limits this to `## Facts`, `## Decisions`, and `## Open Questions`.
+2. Apply records only a fact, a constraint, or a choice for the change from a reply. A plain request to run a command or a skill, or a question to the agent, is done or answered, and nothing is recorded.
+3. A new instruction of the user that supersedes a decision with no 🤖 is recorded as a new decision, and the old decision is removed. The rule that limits a change of a decision with no 🤖 names this case. Same in the tasks preview.
+4. The tasks preview has one 🤖 conflict rule, with "record no question", and its open-question conflict names "the tasks of the preview".
+5. Propose writes one choice per decision, and "Reason not checked." when the user gave no reason.
+6. Upgrade: a choice of the answer that supersedes a decision of `plan.md` replaces it in `design.md`. Only a kept question that no message of the user answered is kept. The last split check follows the kept-artifact bullet only for a delta that the resume rule kept, and can write to an earlier artifact after `tasks.md`.
+7. Upgrade no longer offers to add content to an artifact. The summary names each part of a kept artifact and each "kept, in no artifact" content, and tells the user to add it by hand. The offer grew a new branch in each round, and no scenario tests it. This revises D206 and D275 item 5.
+8. The archive guard does the 🤖 search also when guard step 1 finds no decisions.
+9. The template comments of `## Facts` and `## Decisions` and the decision-format comment match the rules: a 👤 fact is non-obvious, a 🤖 decision is removed when a new decision supersedes it, and one decision records one choice.
+
+**Rationale**: review round 6 of the loop that the user asked for. A fourth reviewer compared the copies of each shared rule across the skills. The report is `.review-reports/review_20261113002913_eu.anthropic.claude-opus-5-5_7433254-package.md`, 13 remarks, no must fix, no hint.
