@@ -3755,4 +3755,4 @@ This revises D119, D166, D182, D219, and D256.
 4. The `after-upgrade` fixture has no "Exclude hidden columns" decision in `design.md`. The answer "no hidden columns" is a rule, so it is only a requirement in `specs/`, as the split rule of upgrade says.
 5. The `rate-limit` fixture and `kept-plan.md` keep their form, because scenarios 4b and 17b need it.
 
-**Rationale**: the user found that the fixtures did not follow the current schema. The fixtures date from D199. Later decisions changed the preview rule (D234) and the split rule (D256, D258).
+**Rationale**: the user found that the fixtures did not follow the current schema. The fixtures date from D199. Later decisions changed the preview rule (D250) and the split rule (D256, D258).
