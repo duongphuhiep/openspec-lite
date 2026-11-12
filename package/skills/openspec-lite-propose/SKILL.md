@@ -20,6 +20,7 @@ How to read this skill:
 - When you write `## Goal`, follow the goal rule.
 - When you record an open point, follow the question rule.
 - Each time the user answers a question of `plan.md`, record the answer with the answer rule.
+- Each time the user gives a fact, a constraint, or a choice for the change in a reply, record the reply with the answer rule.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
 
@@ -138,10 +139,6 @@ Do these checks in order. When the checks are done, go to section 3.
    - Write the content of a section on the lines under the guidance comment.
    - Do not invent non-goals, constraints, facts, or decisions.
    - Do not write an outcome that the user moved out, also not in `## Non-Goals`. The summary of section 5 names the outcome.
-   - Write `## Goal` with the goal rule.
-   - Write `## Open Questions` with the question rule.
-   - Write `## Facts` with the fact rule.
-   - Write `## Decisions` with the decision rule.
    - Go to section 4.
 
 ### Goal rule
@@ -165,9 +162,9 @@ Do these checks in order. When the checks are done, go to section 3.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
 - Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
-- Record each rule in the answer that the change must follow as a constraint in `## Constraints`.
-- A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.
-- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
+- Record each constraint in the answer in `## Constraints`.
+- A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
+- A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - Record each other choice or instruction in the answer as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
@@ -189,8 +186,6 @@ Do these checks in order. When the checks are done, go to section 3.
 - `## Decisions` holds only the current decisions, not a history.
 - When you add a decision, remove each superseded decision.
 - When you add a decision, update each stale decision.
-- After you remove the superseded decisions and update the stale decisions, remove each fact that justifies no current decision or constraint.
-- Do not remove a non-obvious fact, also when the non-obvious fact justifies no current decision or constraint.
 
 ## 4. Upgrade signals
 
@@ -212,7 +207,8 @@ Do these checks in order. When the checks are done, go to section 3.
    - Go to step 2.
 2. Ask: "Do you want a tasks preview?"
    - After the question, end your turn, and wait for the answer.
-   - On yes, run the `openspec-lite-tasks-preview` skill.
+   - When the user replies, first record each answer to an open question of `plan.md`, and each other part of the reply, with the answer rule.
+   - Then, on yes, run the `openspec-lite-tasks-preview` skill.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
    - On no, end your turn.
-   - If the reply answers an open question of `plan.md`, record each answer with the answer rule. Then ask the tasks-preview question again.
+   - If the reply has no yes and no no, ask the tasks-preview question again.

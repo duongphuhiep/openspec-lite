@@ -228,7 +228,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - `## Goal` holds one outcome by preference. If the change has more than one outcome, write one outcome per bullet, in one or two sentences each (D148).
 - If an upgrade signal is present (see §5), suggest an upgrade.
 - In the summary, show the change name. Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it (D148).
-- At the end, ask: "Do you want a tasks preview?" On yes, run `openspec-lite-tasks-preview`.
+- At the end, ask: "Do you want a tasks preview?" When the user replies, propose first records each part of the reply with the answer rule. Then, on yes, it runs `openspec-lite-tasks-preview`. On no, it ends its turn. If the reply has no yes and no no, it asks again (D266, D271).
 - Do not write code, except after a yes to the Level 1 question (D202).
 
 ### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172, D174, D177, D180, D181, D182, D183, D184, D193, D211, D217, D218, D219, D220, D221, D222, D223, D224, D225, D226, D227, D228, D229, D230, D231, D236)
