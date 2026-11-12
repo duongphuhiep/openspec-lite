@@ -2,7 +2,7 @@
 
 ## 0. Open questions
 
-- [ ] 0.1 Answer: Where does the report page live? The repo has no app code and no `docs/report-page.md`, so the tasks name no real files. The answer can change the specs.
+- [ ] 0.1 Answer: Where does the report page live? The repo has no app code and no `docs/report-page.md`, so the tasks name no real files. The answer can change the specs, the approach, or the tasks.
 
 ## 1. CSV generation in the browser
 

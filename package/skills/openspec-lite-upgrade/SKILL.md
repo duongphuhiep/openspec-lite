@@ -155,7 +155,8 @@ Ask the question turn:
 
 Read the answer of the user:
 
-- Split each answer of the user with the split rule.
+- Split each answer of the user with the split rule, and plan each part for its artifact. Steps 2.1 to 2.4 write the parts.
+- Plan a requirement for each constraint of the answer, with no new question.
 - If the user says yes to a planned requirement, the user is the source of that requirement.
 - If the user says no to a planned requirement, do not write that requirement.
 - If the user cannot answer an open question now, keep the question in `plan.md`, with no marker.
@@ -212,7 +213,6 @@ Read the answer of the user:
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
 - A kept question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
-- If the user answered a question that changes the specs, the approach, or the tasks, split the answer with the split rule.
 - If the user has no answer to a question that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
 - If a kept question changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
 - Go to step 2.4.
@@ -234,7 +234,7 @@ Read the answer of the user:
 - In both cases, put these questions before the first group, as `## 0. Open questions`:
   - each open question that step 2 asked and that the user could not answer;
   - each question with the "(kept open by the user)" marker that changes the specs, the approach, or the tasks.
-- Give each question of `## 0. Open questions` one task: `- [ ] 0.1 Answer: <question> The answer can change the specs.`
+- Give each question of `## 0. Open questions` one task: `- [ ] 0.1 Answer: <question> The answer can change the specs, the approach, or the tasks.`
 - Go to step 2.5.
 
 ### Step 2.5: Check the pointers
@@ -291,7 +291,7 @@ Do steps 5.1 to 5.4 in order.
 - Write one reply in this order: the result of step 4, the summary of section 3, the list from step 5.1, and last the prune question.
 - The prune question is: "Delete the moved sections from `plan.md`?"
 - If `validate` failed, recommend to keep `plan.md` until the errors are fixed.
-- The summary must not say that `plan.md` is deleted or kept, because the user did not answer yet.
+- The summary must not say that `plan.md` is deleted or kept, because the user did not answer yet. This ban is about the whole file. Name each item that stays in `plan.md` after any answer, as section 3 says.
 - The prune question is the last line of the reply.
 - End your turn, and wait for the answer. Then go to step 5.4.
 
@@ -347,7 +347,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 ### Split rule
 
 - Split the answer of the user, as the answer rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says.
-- Write each part of the answer to an artifact, not to `plan.md`. Where the answer rule says a section of `plan.md`, use the artifact that this split rule names.
+- In steps 2.1 to 2.4, write each part of the answer to its artifact, not to `plan.md`. Where the answer rule says a section of `plan.md`, use the artifact that this split rule names.
 - After you write the answer, read the answer again, part by part. If a part is in no artifact, write the part now.
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
