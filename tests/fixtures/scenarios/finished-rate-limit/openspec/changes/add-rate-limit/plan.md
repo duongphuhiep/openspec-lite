@@ -26,7 +26,7 @@ Limit each API key to 100 requests per minute on the public HTTP API.
 - F1: 👤 The public API runs as a single instance. Source: the user.
 
 ## Decisions
-<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Change a decision with no 🤖 only on an answer or an instruction of the user. Then remove each fact that justifies no current decision or constraint, except a non-obvious fact. -->
+<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Change a decision with no 🤖 only on an answer or an instruction of the user, or to move a choice that you added into its own 🤖 decision. Then remove each fact that justifies no current decision or constraint, except a non-obvious fact. -->
 <!-- ### Decision D<n>: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. An agent ends the heading with 🤖, unless the decision records an answer or an instruction of the user. A decision with no 🤖 belongs to the user. Remove the 🤖 to accept a decision. -->
 ### Decision D1: In-memory fixed window instead of Redis
 Chose an in-memory fixed-window counter because the API runs as a single instance (F1) and C2 forbids a new dependency. Rejected Redis because it adds a runtime dependency and a service to run.
