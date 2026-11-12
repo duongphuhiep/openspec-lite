@@ -3860,3 +3860,15 @@ This revises D119, D166, D182, D219, and D256.
 8. `GLOSSARY.md` and `docs/design.md` define a constraint as a limit on the result that a user or a program sees, or on what the change must not add.
 
 **Rationale**: review round 4 of the loop that the user asked for. The report is `.review-reports/review_20261113001742_eu.anthropic.claude-opus-5-5_dc95267-package.md`, 14 remarks, no must fix. Five came from D273 edits.
+
+## D275: Fixes From Review Round 5 of the Skill Text at 5fdda53
+
+**Decision**:
+
+1. Apply goes to step 4 after each reply in step 4, step 5, or step 6, or after step 6, also a reply that answers no question.
+2. A new instruction of the user that supersedes a decision with no 🤖 updates or removes that decision, in `apply.instruction` and in the tasks preview.
+3. The tasks preview has the two conflict rules of apply: a conflicting 🤖 decision is updated with no question, and a conflict that the plan cannot follow is an open question. Its step-8 note names only the decisions of this run that record a constraint of the user.
+4. Propose changes or removes an item of `plan.md` when the user tells it to. It records the parts of each reply that it kept before `plan.md` existed. After the reply to the tasks-preview question, it lists each item that it recorded.
+5. Upgrade: a late first delta of the last split check removes `skip_specs` and runs the `specs` instructions first. Section 3 names each part of a kept artifact, and step 5.4 adds the part on request and runs `validate` again. The requirement write of a constraint of the answer needs no delta. Only a planned 🤖 decision gets 🤖, and only a choice of the user that is not a contract goes to `## Decisions`.
+
+**Rationale**: review round 5 of the loop that the user asked for. The report is `.review-reports/review_20261113002414_eu.anthropic.claude-opus-5-5_5fdda53-package.md`, 12 remarks, no must fix, no hint. Ten came from D274 edits, most of them a copy that D274 did not change.
