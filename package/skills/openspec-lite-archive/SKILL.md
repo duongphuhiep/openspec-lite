@@ -21,7 +21,7 @@ How to read this skill:
 
 - Write nothing before the user approves.
 - Write each approved draft exactly as the user approved it. If you must change an approved draft, show the change, and ask for approval again.
-- An ADR that an earlier run wrote needs no new approval, because the user approved the ADR in that run. Show the ADR, and do not ask about the ADR.
+- An ADR that an earlier run wrote needs no new approval, because the user approved the ADR in that run. Print the full text of the ADR in your reply, and do not ask about the ADR.
 - The `Status:` edit of step 10 needs no approval, because the approval of the new ADR with the `Supersedes:` line covers the edit. Do not ask about the edit.
 - Do not remove a 🤖 yourself. Only the user removes a 🤖.
 - Write no 🤖 in a spec or an ADR.
@@ -249,7 +249,7 @@ The first check, for existing ADRs:
 
 - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`.
 - An earlier run of this archive can have written these files.
-- Show each file with the line `Change: <name>`.
+- Print the full text of each file that has the line `Change: <name>`, in your reply.
 - Do not draft a decision or a fact that already has an ADR.
 
 The second check, for a **Superseded ADR**:
@@ -286,7 +286,7 @@ When each item has a draft, go to step 6.
 - Output: the deltas in `<dir>/specs/`.
 - Before you write, list the files under `<dir>/specs/`.
 - If no file exists under `<dir>/specs/`, write the approved deltas to `<dir>/specs/<capability>/spec.md`.
-- If a file exists under `<dir>/specs/`, the file is from an earlier run. Show each file, ask the user to keep or delete each file, and end your turn.
+- If a file exists under `<dir>/specs/`, the file is from an earlier run. Print the full text of each file in your reply, ask the user to keep or delete each file, and end your turn.
 - When the user replies, delete each file that the user said to delete. Keep each other file for the merge.
 - Then write the approved deltas to `<dir>/specs/<capability>/spec.md`.
 - If a kept file has the same path as an approved delta, merge the new delta into the kept file, with no duplicate requirement.
