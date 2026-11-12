@@ -85,9 +85,9 @@ The guard path:
    - Print the full text of each draft as in section 2, step 6.
    - Write each approved ADR with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
    - On the guard path, do not run section 2, steps 7 to 9.
-   - On the guard path, after section 2, step 6 or step 10, go back to guard step 1. Do not go to the next step of section 2.
+   - On the guard path, after section 2, step 6, continue guard step 1 with the write of the approved ADRs. Do not go to section 2, step 7.
+   - On the guard path, after section 2, step 10, go to guard step 2. Do not go to section 2, step 11.
    - On the guard path, do not change `design.md`.
-   - When the approved ADRs are written, go to guard step 2.
 2. Search `specs/` and `design.md` of the change for 🤖.
    - Do this search after the ADRs of guard step 1 are written, or after the user says no to the offer of guard step 1.
    - If a line of `specs/` or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
@@ -100,13 +100,13 @@ The guard path:
    - Go to guard step 4.
 4. Block the archive while a delta holds a 🤖.
    - If a delta in `specs/` holds a 🤖, do not offer the archive, and do not tell the user to run stock `/opsx:archive`, because the CLI copies the 🤖 into the main spec.
-   - The block also forbids a question with a condition, such as "Do you want me to archive after you remove the marks?".
+   - The block also forbids a question with a condition about the archive.
    - If a delta in `specs/` holds a 🤖, ask the user to remove the marks, and end your turn.
    - When the user replies after guard step 4, go to guard step 2. Keep the answer of the user to the offer of guard step 1.
    - If no delta in `specs/` holds a 🤖, go to guard step 5.
 5. Give the archive step.
    - If the user said no to the offer of guard step 1, tell the user to run stock `/opsx:archive`, and stop.
-   - If the user said no to the offer of guard step 1, do not offer the `openspec archive` command yourself. Do not offer to archive in any other words, for example "I can run the archive for you".
+   - If the user said no to the offer of guard step 1, do not offer the `openspec archive` command yourself. Do not offer to archive in any other words.
    - In each other case, ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
@@ -197,7 +197,8 @@ The guard path:
 - A selected decision goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement. The rationale of the decision can also go to an ADR.
 - List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
-- A fact goes to the `## Context` of each drafted ADR that the fact relates to, for example an ADR whose decision the fact justifies. Keep the source emoji of the fact.
+- A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to. Keep the source emoji of the fact.
+- Another fact goes only to the `## Context` of an ADR whose decision the fact justifies. Keep the source emoji of the fact.
 - A fact that justifies a requirement goes into the requirement text, as its reason, with no source emoji, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
 - If no drafted ADR holds a non-obvious fact, no drafted requirement holds the fact as its reason, and the change depends on the fact, draft an ADR for the fact:
   - The `## Context` of the fact ADR holds the fact and its source.
