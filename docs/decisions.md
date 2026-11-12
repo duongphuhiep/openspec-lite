@@ -3512,3 +3512,18 @@ This revises the role of `docs/todo.md` in D173 and the later decisions that add
 This revises D226, D227, D240, and D244.
 
 **Rationale**: the defects D08 to D13 of `.scenario-runs/20261112-3fb090c/defects.md`. In scenario 15, archive guessed 👤 for two items and wrote the marks into a main spec. Archive read the 🤖 of the template comment as a mark. In scenario 4, two rules were both a constraint and a decision, and an instruction became a fact.
+
+## D253: Fixes for the Defects D03, D05, D06, and D07 of the Run on 3fb090c
+
+**Decision**: from `.scenario-runs/20261112-3fb090c/investigation-D01-D07.md`:
+
+1. Upgrade step 2.2 writes only the requirements that step 2 planned and that the user approved, or whose source is a constraint or an answer of the user. It writes no requirement that step 2 did not plan, also if the CLI instruction or the Goal suggests one. The summary names the source of each requirement. (D03)
+2. The `## Purpose` of a new spec states only what `plan.md` or an answer of the user states. If `plan.md` states no purpose, the Purpose describes what the capability does. The text of a `## Purpose` section is an item that can be inferred, so a new claim in it gets a 🤖. (D05)
+3. On the archive guard path, archive ends its turn after the ADR offer, and offers nothing else in that reply. After a no, it offers the archive in no words. (D06)
+4. Upgrade step 5.1 shows the destination list as a table with the columns `Section`, `Artifact`, and `Heading`, with one row for each section that has content. Scenario 20a says that a section with only a guidance comment needs no row. (D07)
+
+The user chose these four fixes. The user did not choose the proposed fixes for D01, D02, and D04, so these defects stay open.
+
+This revises D152, D164, D191, and D215.
+
+**Rationale**: the investigation found a cause for each defect. The stock `specs` instruction asks "what the capability is for" and names "observable behavior", which pulls the agent to a new purpose and to a requirement from the Goal. Guard step 2 did not end the turn, so the agent added an archive offer to the same reply. Step 5.1 gave no form for the list.

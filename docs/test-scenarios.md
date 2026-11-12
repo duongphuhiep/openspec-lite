@@ -488,7 +488,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 **Expected**:
 
 - The agent asks the user to answer the open question before it writes an artifact, in one reply with each planned requirement from the Goal or the tasks preview (D164).
-- Before the prune question, the agent shows the `openspec validate` result, and lists each `plan.md` section with its artifact and heading. The open question is "kept" (D191).
+- Before the prune question, the agent shows the `openspec validate` result, and lists each `plan.md` section with its artifact and heading. The open question is "kept" (D191). A section with only a guidance comment needs no row (D253).
 - After step 2, `plan.md` is the same as in step 1.
 - After the "no" of step 2, the agent says in one line that the moved sections in `plan.md` are old copies, and that the artifacts are the source of truth. It does not write the summary again (D193).
 - `proposal.md` holds the two scope items of `## Background`.

@@ -182,10 +182,13 @@ Read the answer of the user:
 - Write one delta per capability, for the requirements of step 2.
 - To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new capability only when none matches.
 - For a new capability, start the delta with a `## Purpose` section of one or two sentences on what the capability covers. Without a `## Purpose` section, the CLI writes "TBD" as the Purpose of the new main spec.
+- Write in the `## Purpose` section only what `plan.md` or an answer of the user states. The CLI instruction asks "what the capability is for". If `plan.md` does not state a purpose, describe what the capability does, not why a user wants it.
 - Use the headers `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`, or `## RENAMED Requirements`.
 - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
 - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit the copy.
-- Write only the requirements of step 2.
+- Write only the requirements that step 2 planned and that the user approved, or whose source is a constraint or an answer of the user.
+- Do not write a requirement that step 2 did not plan, also if the CLI instruction or the Goal suggests it.
+- In the summary, name the source of each requirement: a constraint, a contract decision, or an answer of the user.
 - After a yes in step 2, the user is the source of a requirement, so the requirement gets no 🤖 mark.
 - Go to step 2.3.
 
@@ -258,7 +261,8 @@ Do steps 5.1 to 5.4 in order.
 
 - Input: `plan.md`, and the four artifacts.
 - Output: the destination list.
-- List each `plan.md` section with its destination: the artifact and the heading that now hold its content, or "kept".
+- List each `plan.md` section with its destination, in a table with the columns `Section`, `Artifact`, and `Heading`. Give one row for each section that has content.
+- In the `Heading` column, write the heading of the artifact that now holds the content, for example `## Context`, or write "kept".
 - A question that step 2 closed has the destination "closed", with its answer. A yes to the prune question deletes the closed question.
 - If the items of one section go to different destinations, list each item.
 - Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
@@ -339,7 +343,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - A new claim is a case, a value, a behavior, a risk, a dependency, a choice, or a reason.
 - A claim is new only when no section of `plan.md` and no answer of the user in this upgrade states the claim.
 - `tasks-preview.md` is not a source: a claim that only the preview states is new.
-- An item can be a `#### Scenario:`, a `### Decision`, or a list item.
+- An item can be a `#### Scenario:`, a `### Decision`, a list item, or the text of a `## Purpose` section.
 - A requirement is never inferred, because step 2 gives each requirement a source.
 - A fact with a source, for example a run, a doc, or an analysis of the code, is not inferred. The fact gets no 🤖, and the fact keeps its source emoji.
 - Before you mark an item, check each sentence of the item, not only its main source.

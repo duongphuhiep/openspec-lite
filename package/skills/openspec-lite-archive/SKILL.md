@@ -78,8 +78,9 @@ The guard path:
    - If `openspec/changes/<name>/design.md` has `### Decision` entries, warn: "Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs. They stay only in the archive folder. To keep them as ADRs, copy them to `openspec/adr/` before you archive."
    - A change that was upgraded from plan-lite has its decisions in `design.md`.
    - Offer to copy each `### Decision` of `design.md` to an ADR. Write nothing before the user says yes.
+   - End your turn after the offer, and wait for the answer. In the same reply, offer nothing else, also not the archive.
    - If the user says no, tell the user to run stock `/opsx:archive`, and stop.
-   - If the user says no, do not offer the `openspec archive` command yourself.
+   - If the user says no, do not offer the `openspec archive` command yourself. Do not offer to archive in any other words, for example "I can run the archive for you".
    - If the user says yes, draft each ADR with the form and the two checks of section 2, step 5.
    - Show the drafts as in section 2, step 6.
    - Write each approved ADR with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
