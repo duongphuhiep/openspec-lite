@@ -14,11 +14,12 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - When the schema check says "continue with the next step of this skill", go to section 2, step 1. On the resume path of the guard, go to section 2, step 4.
 - In section 2, do steps 1 to 5 in order. Each step names its next step.
 - Step 2 has the sub-steps 2.1 to 2.5. Step 5 has the sub-steps 5.1 to 5.4. For example, "step 2.4" is the sub-step 4 of step 2.
+- "The question turn of step 2" is the part of step 2 before step 2.1: the plan, the questions, and the reply of the user.
 - Section 3 gives the content of the summary. Step 5.3 writes the summary.
 - Section 4 holds the named rules of this skill, for example the requirement-source rule.
 - The general rules apply at all times, in each step.
 - A named rule applies in each step where its topic comes up, also when the step does not name the rule.
-- The question rule, the decision rule, and the answer rule are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these three rules in that file.
+- The question rule, the ask rule, the decision rule, and the answer rule are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these four rules in that file.
 - `<name>` is the name of the change. The change selection check gives `<name>`.
 - `<dir>` is `openspec/changes/<name>`.
 
@@ -29,7 +30,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Do not mark an item of `tasks.md` with 🤖.
 - When you run `openspec instructions`, follow the instructions rule.
 - If an artifact already exists from an earlier run, follow the resume rule.
-- In step 2, edit `plan.md` only to add the "(kept open by the user)" marker, when the user keeps a question open.
+- In the question turn of step 2, edit `plan.md` only to add the "(kept open by the user)" marker, when the user keeps a question open.
 - A closed question stays in `plan.md` until the prune of step 5.
 
 ## 1. Common checks
@@ -113,11 +114,12 @@ Do these checks in order.
 
 - Input: `<dir>/plan.md`, `<dir>/tasks-preview.md` if it exists, and each artifact that already exists in `<dir>`.
 - Output: the planned requirements, the closed questions with their answers, and the answers of the user.
-- Do step 2 before you write an artifact. Steps 2.1 to 2.4 then write the four artifacts.
+- Do the question turn of step 2 before you write an artifact. Steps 2.1 to 2.4 then write the four artifacts.
 
 Plan the requirements:
 
-- Plan each requirement with the requirement-source rule.
+- If `<dir>/specs/` already holds a delta, plan no requirement, because step 2.2 keeps the delta.
+- If `<dir>/specs/` holds no delta, plan each requirement with the requirement-source rule.
 
 Close the open questions of `plan.md`:
 
@@ -125,13 +127,13 @@ Close the open questions of `plan.md`:
 - A question that ends with "(kept open by the user)" is a kept question.
 - Keep each kept question, also if you can decide the kept question. Do not ask a kept question again.
 - For each question that is not a kept question, try to decide the question or find its answer. Use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
-- In step 2, do not do the `plan.md` writes of the question rule: record no fact or decision in `plan.md`, and remove no question from `plan.md`. Plan each answer for an artifact or for the summary, as the next bullets say.
+- In the question turn of step 2, do not do the `plan.md` writes of the question rule: record no fact or decision in `plan.md`, and remove no question from `plan.md`. Plan each answer for an artifact or for the summary, as the next bullets say.
 - A question is open only while you cannot decide the question and cannot find its answer.
 - If you find an answer that is a non-obvious fact, plan the answer as a fact in `design.md` → `## Context`.
 - If you find an answer that is obvious, give the answer only in the summary.
 - If you decide a point, and the point changes a visible result or was a close call, plan a decision with 🤖 in `design.md`. The decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` gives these two criteria.
 - If you decide a point, and the point matches neither criterion of the decision rule, give the answer only in the summary.
-- If a decided point is a contract, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
+- If a decided point is a contract, and `<dir>/specs/` holds no delta, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
 - Do not ask a question that you closed.
 
 Ask the question turn:
@@ -140,14 +142,11 @@ Ask the question turn:
   - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks;
   - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`;
   - each requirement that you plan from a point that step 2 decided and that is a contract;
-  - if you plan no requirement at all, the question if the change has a requirement.
-- If `<dir>/specs/` already holds a delta, plan no requirement, and ask no question about requirements, because step 2.2 keeps the delta.
+  - if you plan no requirement at all, and `<dir>/specs/` holds no delta, the question if the change has a requirement.
 - If the question list is empty, do not ask. Go to step 2.1.
 - If each of the four artifacts already exists, do not ask. Go to step 2.1.
 - If the question list is not empty, ask all items of the question list in one reply, before you write any artifact.
-- For each open question in the reply, give your recommended answer.
-- If the answer to an open question is a fact that only the user knows, give no recommendation for that question.
-- If the answer to an open question depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
+- Ask each open question with the ask rule.
 - For each planned requirement in the reply, show its text, and ask if you can write it.
 - For each decision with 🤖 in `plan.md` that you do not plan as a requirement, give in the reply the reason why the decision is not a contract, in one sentence.
 - For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", upgrade writes no spec (step 2.2).
@@ -193,7 +192,7 @@ Read the answer of the user:
 - Write only the requirements that step 2 planned and that the user approved, or whose source is a constraint, a decision with no 🤖 that is a contract, or an answer of the user.
 - Do not write a requirement that step 2 did not plan, also if the CLI instruction or the Goal suggests it.
 - In the summary, name the source of each requirement: a constraint, a contract decision, or an answer of the user.
-- After a yes in step 2, the user is the source of a requirement, so the requirement gets no 🤖 mark.
+- After a yes in the question turn of step 2, the user is the source of a requirement, so the requirement gets no 🤖 mark.
 - Go to step 2.3.
 
 ### Step 2.3: Write `design.md`
@@ -209,7 +208,7 @@ Read the answer of the user:
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
 - Write each decision that step 2 planned to `## Decisions`, with 🤖 at the end of its heading.
-- If the user said yes in step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
+- If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
 - A kept question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
@@ -243,7 +242,7 @@ Read the answer of the user:
 - Input: `<dir>/proposal.md`, `<dir>/design.md`, and `## 0. Open questions` of `<dir>/tasks.md`.
 - Output: `proposal.md` and `design.md` with no pointer to a question of `## 0`.
 - Read `proposal.md` and `design.md` again.
-- Remove each sentence that restates a question of `## 0. Open questions`, or points to it, for example "See the open questions in tasks.md" or "See task 0.2".
+- Remove each sentence that restates a question of `## 0. Open questions`, or points to it.
 - In the artifacts, the task in `## 0. Open questions` is the only place of each question of `## 0`. The question also stays in `plan.md`.
 - Go to step 3.
 
@@ -301,7 +300,7 @@ Do steps 5.1 to 5.4 in order.
 - If the user answers no, keep `plan.md` as it is. Say in one line that its moved sections are old copies, and that the artifacts are the source of truth.
 - If the user answers yes, delete each section or item whose content moved, except the items that stay.
 - These items stay in `plan.md` after a yes:
-  - each row of step 5.1 whose `Heading` is "kept"
+  - each row of step 5.1 whose `Heading` holds "kept"
   - each content that step 5.2 lists as "kept, in no artifact"
   - each question with the "(kept open by the user)" marker, also when `design.md` → `## Open Questions` holds a copy of the question (step 2.3)
   - each question of `## 0. Open questions` of `tasks.md` (step 2.4)
@@ -351,9 +350,9 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Write each part of the answer to an artifact, not to `plan.md`. Where the answer rule says a section of `plan.md`, use the artifact that this split rule names.
 - After you write the answer, read the answer again, part by part. If a part is in no artifact, write the part now.
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
-- A rule of the answer is a rule that the change must follow. A rule limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the rule, the change is not done.
-- A choice of how to build the result is not a rule, also when the user gives the choice.
-- A rule of the answer is a requirement source, like a constraint of `plan.md`. Write its requirement with no new question, because the answer of the user is the source of the requirement.
+- A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
+- A choice of how to build the result is not a constraint, also when the user gives the choice.
+- A constraint of the answer is a requirement source, like a constraint of `plan.md`. Write its requirement with no new question, because the answer of the user is the source of the requirement.
 - A choice of the answer goes to the specs only when the choice is a contract.
 - A choice of the answer that is not a contract goes to `## Decisions` of `design.md`.
 
