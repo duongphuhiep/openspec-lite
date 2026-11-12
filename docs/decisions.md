@@ -3605,3 +3605,17 @@ This revises D182, D241, D252, and D255.
 This revises D252, D255, and D256.
 
 **Rationale**: a fresh-context review found each gap. Five remarks came from the fixes of D255 and D256. The reviewer also suggested that propose checks an existing change name before the Level 1 question. I did not make this change, because the scenario fix closes the gap of the test, and the order change is a new rule.
+
+## D258: Fixes From Review Loop 4, Round 5, on 99d8656..local
+
+**Decision**: from `.review-reports/review_20261112110822_claude-opus-5-5_99d8656-local.md`:
+
+1. Upgrade step 5.1 has one closed rule for each path. A question that no artifact holds is "closed" only when its answer is obvious, or is a decision that the decision rule does not record. A non-obvious fact or a recorded decision that no artifact holds is "kept, in no artifact". This also covers a `design.md` of an earlier run that step 2.3 kept.
+2. Upgrade step 5.1 makes no separate offer to add an answer to `design.md`. Step 5.2 already tells the user that they can ask for it, so the prune question stays the last line of the reply. This revises D257 item 8.
+3. The apply guard gives the pointer and names the open questions of a kept `plan.md`, and then stops, as the tasks-preview guard does (D256).
+4. After a reply that does not make the preview stale, the tasks preview updates each task that the changed items make wrong, because the plan hash does not cover `## Decisions`.
+5. Scenario 7 expects "no hidden columns" as a requirement in `specs/`, because the answer limits the result, so it is a rule and a requirement source (D256, D257).
+
+This revises D255, D256, and D257.
+
+**Rationale**: a fresh-context review found each gap. Three remarks came from the fixes of D254 and D257.

@@ -94,7 +94,7 @@ Do these checks in order.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
 - If the user answers a question that a task of the preview waits for, remove the "waits for the answer" note from that task. Then change the task to follow the answer.
 - If the user moves a rule to `## Constraints`, the preview is stale. Tell the user to run this skill again.
-- If the user replies after step 8, and the reply does not make the preview stale, record the reply with the general rules. Then run step 8 again for the items that the reply changed.
+- If the user replies after step 8, and the reply does not make the preview stale, record the reply with the general rules. Update each task of the preview that the changed items make wrong. Then run step 8 again for the items that the reply changed.
 
 ### Step 1: Check that plan.md exists
 

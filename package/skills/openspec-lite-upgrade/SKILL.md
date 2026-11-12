@@ -271,12 +271,12 @@ Do steps 5.1 to 5.4 in order.
 - List each `plan.md` section with its destination, in a table with the columns `Section`, `Artifact`, and `Heading`. Give one row for each section that has content.
 - In the `Heading` column, write the heading of the artifact that now holds the content, for example `## Context`, or write "kept".
 - If a question also stays in `plan.md` (step 2.3 or step 2.4), write the heading of the artifact and "kept", for example "`## Open Questions`, kept".
-- A question that step 2 closed in this session has the destination "closed", with its answer. A yes to the prune question deletes the closed question.
-- If step 2 did not run in this session, for example on the resume path, give each question of `plan.md` the heading of the artifact that holds the question or its answer, or `## 0. Open questions`.
-- If step 2 did not run in this session, and no artifact holds a question or its answer, use the test of the question rule again.
-- If the new answer is obvious, or the decision rule does not record the answer, give the answer and the destination "closed".
-- If the new answer is a non-obvious fact, or a decision that the decision rule records, the destination is "kept, in no artifact". Offer to add the answer to `design.md`.
-- If you cannot decide the question or find its answer now, the destination is "kept, in no artifact".
+- If an artifact holds a question of `plan.md` or its answer, give the question the heading of that artifact, or `## 0. Open questions`.
+- If no artifact holds a question or its answer, and step 2 did not run in this session, for example on the resume path, use the test of the question rule again to find the answer.
+- The closed rule: a question that no artifact holds has the destination "closed", with its answer, only when the answer is obvious, or the answer is a decision that the decision rule does not record.
+- A yes to the prune question deletes a closed question.
+- If no artifact holds a question, and its answer is a non-obvious fact or a decision that the decision rule records, the destination is "kept, in no artifact". This case occurs when step 2.3 kept a `design.md` of an earlier run.
+- If no artifact holds a question, and you cannot decide the question or find its answer, the destination is "kept, in no artifact".
 - If the items of one section go to different destinations, list each item.
 - Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
 - Go to step 5.2.

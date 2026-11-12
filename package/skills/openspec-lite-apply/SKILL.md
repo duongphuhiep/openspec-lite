@@ -54,10 +54,11 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - Output: continue or stop.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, continue with the schema check.
-- If `schema` is not `plan-lite`, stop. Tell the user to run stock `/opsx:apply`.
+- If `schema` is not `plan-lite`, tell the user to run stock `/opsx:apply`.
 - If `schema` is not `plan-lite`, and `openspec/changes/<name>/plan.md` still exists, name each open question of `plan.md`.
 - If you name an open question of `plan.md`, tell the user to answer the open question before `/opsx:apply`, because the stock skills do not read `plan.md`.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
+- If `schema` is not `plan-lite`, stop after the pointer and the open questions.
 
 ### Schema check
 
