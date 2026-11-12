@@ -208,8 +208,8 @@ Read the answer of the user:
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
-- Write each decision that you decided in the question turn of step 2 to `## Decisions`, with 🤖 at the end of its heading.
-- Write each choice from the answer of the user to `## Decisions`, with no 🤖.
+- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading.
+- Write each choice from the answer of the user that is not a contract to `## Decisions`, with no 🤖.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
 - A kept question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
@@ -310,6 +310,7 @@ Do steps 5.1 to 5.4 in order.
 - After a yes, if no section is left, delete `plan.md`. A section with only an HTML comment counts as no section.
 - After a yes, say in one line what you deleted and what you kept.
 - After a yes, if a section is kept, tell the user to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`.
+- If the user asks you to add a part that the summary named as a part of a kept artifact, add the part to its artifact, run step 4 again, and report the result.
 - Do not write the summary again.
 - Upgrade ends here.
 
@@ -325,6 +326,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Ask for an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference.
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
+- Name each part of the answer whose artifact the resume rule kept, and offer to add the part.
 - Name each `plan.md` item that has no slot and stays in `plan.md`, for example an open question that the user cannot answer now. The stock skills do not read `plan.md`.
 - If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs.
 - If `design.md` has `### Decision` entries, say: to keep them as ADRs, copy them to `openspec/adr/` before the archive. `openspec-lite-archive` can do this copy: run it before `/opsx:archive`.
@@ -350,12 +352,12 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 - Split the answer of the user, as the answer rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says.
 - In steps 2.1 to 2.4, write each part of the answer to its artifact, not to `plan.md`. Where the answer rule says a section of `plan.md`, use the artifact that this split rule names.
-- The last check of the split rule: after steps 2.1 to 2.4 write the answer, read the answer again, part by part. If a part is in no artifact, write the part to its artifact before step 2.5.
-- If the resume rule kept the artifact of a part, do not edit the artifact. Name the part in the summary, and offer to add the part.
+- The last check of the split rule: after steps 2.1 to 2.4 write the answer, read the answer again, part by part. If a part is in no artifact, write the part to its artifact before step 2.5. If that write is the first delta, first remove the `skip_specs: true` line, and run the instructions command for `specs`, as step 2.2 says.
+- If the resume rule kept the artifact of a part, do not edit the artifact. Section 3 names the part in the summary.
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice.
-- A constraint of the answer is a requirement source, like a constraint of `plan.md`. Write its requirement with no new question, because the answer of the user is the source of the requirement.
+- A constraint of the answer is a requirement source, like a constraint of `plan.md`. If `<dir>/specs/` holds no delta, write its requirement with no new question, because the answer of the user is the source of the requirement. If `<dir>/specs/` holds a delta, follow the kept-artifact bullet of this rule.
 - A choice of the answer goes to the specs only when the choice is a contract.
 - A choice of the answer that is not a contract goes to `## Decisions` of `design.md`.
 
