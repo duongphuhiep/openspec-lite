@@ -190,7 +190,7 @@ When the checks are done, go to step 6.
    - Ask each open question that is still open and is not a kept question, new or existing, with the ask rule.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
-   - For each decision that records a constraint of the user, say that the user can move the decision to `## Constraints`.
+   - For each decision that you added in this run to record a constraint of the user, say that the user can move the decision to `## Constraints`.
 4. Tell the user to read the preview.
 5. Tell the user what to do on disagreement: put the correction in `plan.md`, and run this skill again. The user does not edit `tasks-preview.md`.
 
@@ -300,10 +300,12 @@ When the checks are done, go to step 6.
 
 - `## Decisions` holds only the current decisions.
 - Remove each 🤖 decision that a new decision supersedes.
+- If a new instruction of the user supersedes a decision with no 🤖, update or remove that decision.
 - Update each 🤖 decision that a new decision makes stale.
 - Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`.
 - Change a decision with no 🤖 only when the user tells you to in this session, or to move a choice that you added into its own 🤖 decision.
-- If your approach conflicts with a constraint or with a decision with no 🤖, record an open question.
+- If a 🤖 decision conflicts with a constraint or with a decision with no 🤖, update or remove the 🤖 decision, and record no question.
+- If the plan cannot follow a constraint or a decision with no 🤖, record the conflict as an open question.
 - After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
 
 ### Fact rule: when to record a fact

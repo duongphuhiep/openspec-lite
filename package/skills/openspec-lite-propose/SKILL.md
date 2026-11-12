@@ -136,7 +136,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - Input: the request, the answers of the user, the outcomes that stay in this change, and the list of open points of section 1.
    - Output: `openspec/changes/<name>/plan.md`.
    - Fill only what is known. Leave the other sections empty.
-   - Record each fact, constraint, or choice of the request with the answer rule.
+   - Record each fact, constraint, or choice of the request, and of each reply that you kept before `plan.md` existed, with the answer rule.
    - Record each open point of the list in `## Open Questions` with the question rule.
    - Keep each `<!-- ... -->` guidance comment, also in a section that you fill.
    - Write the content of a section on the lines under the guidance comment.
@@ -167,6 +167,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - Record each constraint in the answer in `## Constraints`.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
+- If the user tells you to change or remove an item of `plan.md`, change or remove the item. Do not record the instruction as a decision.
 - Record each other choice or instruction in the answer as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
@@ -210,6 +211,7 @@ Do these checks in order. When the checks are done, go to section 3.
 2. Ask: "Do you want a tasks preview?"
    - After the question, end your turn, and wait for the answer.
    - When the user replies, first record each answer to an open question of `plan.md`, and each other part of the reply, with the answer rule.
+   - List each item that you added, changed, or removed in `plan.md`, with its ID.
    - Then, on yes, run the `openspec-lite-tasks-preview` skill.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
    - On no, end your turn.

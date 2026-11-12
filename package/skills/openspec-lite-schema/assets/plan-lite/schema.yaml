@@ -96,7 +96,7 @@ apply:
       - Record the point as an open question before you write the code that depends on the point.
       - Ask the open question with the ask rule.
       - End your turn.
-    - When the user replies to a question of step 4, step 5, or step 6, record each answer with the answer rule. Then go to step 4, and write the code that waited for the answer.
+    - When the user replies in step 4, step 5, or step 6, or after step 6, record each part of the reply with the answer rule. Then go to step 4, and write the code that the reply needs.
     - When the code is written, go to step 5.
 
     ## Step 5: Check plan.md against the code
@@ -235,6 +235,7 @@ apply:
 
     - `## Decisions` holds only the current decisions.
     - Remove each 🤖 decision that a new decision supersedes.
+    - If a new instruction of the user supersedes a decision with no 🤖, update or remove that decision.
     - Update each 🤖 decision that a new decision makes stale.
     - Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖.
     - Change a decision with no 🤖 only when the user tells you to, or to move a choice that you added into its own 🤖 decision.
