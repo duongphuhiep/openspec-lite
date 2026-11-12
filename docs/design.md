@@ -671,7 +671,7 @@ When the checks are done, go to step 6.
 <!-- What this change will not do. One item per line. -->
 
 ## Constraints
-<!-- Rules the implementation must follow, for example from the user, a ticket, or the platform. One item per line, as "- C<n>: <rule>". A constraint is not a choice. If the result breaks it, the change is not done. A choice of how to meet the goal is a decision. -->
+<!-- Limits on the result that a user or a program sees, or what the change must not add, for example from the user, a ticket, or the platform. One item per line, as "- C<n>: <constraint>". A constraint is not a choice. If the result breaks it, the change is not done. A choice of how to meet the goal is a decision. -->
 
 ## Open Questions
 <!-- Open points, as "- OQ<n>: <question>". Apply and the tasks preview keep only a point that they cannot decide and cannot find the answer to. Keep a question that the user said to keep open, and end it with "(kept open by the user)". When a question gets an answer, remove it: an answer of the user goes to another section of the plan. An answer that the agent found goes to another section, or only to the summary when the answer is obvious or is a choice that the decision rule does not record. -->
