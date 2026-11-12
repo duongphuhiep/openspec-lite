@@ -50,11 +50,12 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 
 ### Guard
 
-- Input: `openspec/changes/<name>/.openspec.yaml`, and `openspec/changes/<name>/plan.md` if `plan.md` exists.
+- Input: `openspec/changes/<name>/.openspec.yaml`, `openspec/changes/<name>/plan.md` if `plan.md` exists, and the file list of `openspec/changes/<name>/`.
 - Output: continue or stop.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, continue with the schema check.
-- If `schema` is not `plan-lite`, tell the user to run stock `/opsx:apply`.
+- If `schema` is not `plan-lite`, and `openspec/changes/<name>/tasks.md` exists, tell the user to run stock `/opsx:apply`.
+- If `schema` is not `plan-lite`, and `openspec/changes/<name>/tasks.md` does not exist, tell the user to run stock `/opsx:continue`, because stock `/opsx:apply` needs `tasks.md`.
 - If `schema` is not `plan-lite`, and `openspec/changes/<name>/plan.md` still exists, name each open question of `plan.md`.
 - If you name an open question of `plan.md`, tell the user to answer the open question before `/opsx:apply`, because the stock skills do not read `plan.md`.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.

@@ -51,7 +51,7 @@ How to read this skill:
 ### Level 1 question
 
 - Input: the outcomes that stay in this change.
-- Before you decide on the Level 1 question, list the open points of the outcomes with the question rule.
+- Before you decide on the Level 1 question, list the open points of the outcomes for yourself. Do not write them yet: section 3, step 5 records them in `plan.md` with the question rule.
 - If the list of open points is not empty, the outcomes are not small.
 - Ask the Level 1 question only if the outcomes that stay are small: one obvious fix, and no constraints or open questions worth recording.
 - If the outcomes that stay are not small, do not ask the Level 1 question. Go to section 2.
@@ -118,7 +118,7 @@ Do these checks in order. When the checks are done, go to section 3.
 2. Run `openspec new change "<name>" --schema plan-lite`.
    - If the command succeeds, go to step 3.
    - If the command fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`.
-   - If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped at step 2. Ask: "Resume the change <name>?" End your turn, and wait for the answer.
+   - If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped after step 2. Ask: "Resume the change <name>?" End your turn, and wait for the answer.
    - On yes to the resume question, go to step 3.
    - On no to the resume question, ask for another name. Then do step 2 again with the new name.
    - In each other failure case, show the error, and ask for another name. Then do step 2 again with the new name.
@@ -168,13 +168,17 @@ Do these checks in order. When the checks are done, go to section 3.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
 - Record each rule in the answer that the change must follow as a constraint in `## Constraints`.
 - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.
-- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window for the rate limit", or "use plain HTML under `src/`".
+- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - Record each other choice or instruction in the answer as a decision with no 🤖.
+- An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
+- The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
+- An answer to an open question is a part of the answer. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
+- After you record the answer, read the answer again, part by part. If a part is in no section of plan.md, record the part now.
 
 ### Fact rule
 
 - Start each fact with a source emoji, as the template comment of `## Facts` says, for example 👤 for a fact that the user gave.
-- Write a fact so that the fact stays true after the change, for example "Before this change, the report page did not exist."
+- Write a fact so that the fact stays true after the change, for example "Before this change, the thumbnail folder did not exist."
 - Do not record statistics that soon go out of date.
 - A number as an example or a reference is OK in a fact.
 

@@ -3659,3 +3659,19 @@ The user did not choose the proposed fixes for D04 and D06, so these defects sta
 This revises D119, D166, D182, D219, and D256.
 
 **Rationale**: in 4b, the agent read the constraint "status 429" as the whole response, and recorded no body. In 4 run 1, the answer "create it in this repo, scaffold a minimal report page" went to no section, because the decision rule says "Do not record your other choices". In 7 step 3, the skill defined a contract only in abstract words, so the agent called the CSV quoting "not a contract" in about 1 of 2 runs. Reruns with each fix in the temp copies: D02 3 of 3 recorded the 429 body, D03 3 of 3 passed, D05 3 of 3 planned the quoting requirement.
+
+## D262: Fixes From Review Loop 5, Round 1, on 99d8656..local
+
+**Decision**:
+
+1. No example in `package/` copies the domain, the answer, or the fixture of a test scenario. The examples of the answer rule, the fact format, the decision rule, and the partial-result rule of apply, the tasks preview, and propose now use image thumbnails and uploads. The inferred-item examples of upgrade use thumbnails and an invoice email. This revises D259, which kept "use a sliding window for the rate limit".
+2. The archive guard path drafts each ADR with the three checks of step 5, also the `plan.md` ID check of D260. Archive step 6 ends the turn after the drafts. The done check names each outcome and each constraint that is not met, and each open question that is left.
+3. The template comment of `## Open Questions` says: an answer of the user goes to another section of the plan, and only an obvious answer that the agent found goes only to the summary. The fixtures have the same comment. This agrees with D261.
+4. The tasks preview and propose have the four answer-rule bullets of D261.
+5. Apply step 5 check 1: do not change a constraint or a decision with no 🤖 to make a test pass. If a failing test cannot pass, say which test fails, with the error text, and do checks 2 to 7. The end summary shows no 🤖 table when apply added no 🤖 decision.
+6. The apply guard points to stock `/opsx:continue` when `tasks.md` does not exist, as the tasks-preview guard does.
+7. Upgrade says where the schema check continues: section 2, step 1, or step 4 on the resume path. Propose lists the open points for itself before the Level 1 question, and section 3 records them. `GLOSSARY.md` → Visible result names "a name that the program gives to its output".
+8. Scenario 4 fails when a build choice of the answer is a constraint. The user chose this. This revises D226 and D244.
+9. The `after-propose` fixture is a fixed start state, not the output of scenario 1.
+
+**Rationale**: the review `.review-reports/review_20261112124141_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 20 remarks. Remark 11 was not accurate: the fact rule reason holds in apply, because the edit is not needed. The text now says "with no need".

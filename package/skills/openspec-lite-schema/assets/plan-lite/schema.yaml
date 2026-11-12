@@ -107,7 +107,7 @@ apply:
 
     Do these checks in this order:
 
-    1. Run the tests. If a test fails, fix the code, and run the tests again. If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run, and do checks 2 to 7.
+    1. Run the tests. If a test fails, fix the code, and run the tests again. Do not change a constraint or a decision with no 🤖 to make a test pass. If you cannot make a failing test pass, say in the end summary which test fails, with the error text, and do checks 2 to 7. If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run, and do checks 2 to 7.
     2. Compare each decision in `## Decisions` with the code:
        - For each result of a 🤖 decision, find each condition in the code that gives the result.
        - A 🤖 decision matches the code only when the decision names each such condition. A condition that gives the same result as a named condition is not named. For example, "status 400 when the body is not JSON" does not name "status 400 when the body has no `id` field".
@@ -134,6 +134,7 @@ apply:
        - If you added a constraint, list the constraint with its ID.
        - If you added a constraint, and the preview is not absent, say that the new constraint makes the preview stale, and that the next run of apply asks to regenerate the preview.
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
+       - If you added no 🤖 decision, show no table.
        - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
     2. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
     3. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
@@ -162,12 +163,12 @@ apply:
     - Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
     - An answer such as "I do not know yet" leaves the question open with no marker.
     - Split the reply of the user as well as you can into facts, rules, and choices.
-    - A fact says how something is, for example "the report page does not exist yet". An instruction says what to do, for example "use plain HTML under `src/`". An instruction is never a fact.
+    - A fact says how something is, for example "the thumbnail folder does not exist yet". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
     - Record each part of the reply in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
     - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
     - Record each rule of the reply that the change must follow in `## Constraints`.
-    - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done. Examples: "add no npm dependency", or "a request over the limit gets status 429".
-    - A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window for the rate limit", or "use plain HTML under `src/`".
+    - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
+    - A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
     - Record each other choice or instruction of the reply, that is not a fact and not a rule, in `## Decisions`, as a decision with no 🤖.
     - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
     - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
@@ -181,13 +182,13 @@ apply:
     - Criterion (1): you put something in the code, or plan to put something in the code, that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
     - A visible result is one of these things:
       - a UI, a public interface, or the signature of an exported function
-      - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a field of its JSON output
+      - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a value that the code reads from that output
       - a file name or path in the repo that another program, a config, or a doc outside this change refers to
-      - a name that the program gives to its output, for example a download file name
-      - a key in a config file that a program or a user reads, for example a field of `package.json` or an env var
+      - a name that the program gives to its output, for example the name of a file that the program writes for the user
+      - a key in a config file that a program or a user reads, for example a key of a YAML config file, or an env var
       - a new dependency
       - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
-    - plan.md or the user can fix only one part of a visible result, for example the status code of an error response. Each other part that you put in the code is your choice, for example the body, a header, or the content type.
+    - plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you put in the code is your choice, for example the height, the file format, or the file name.
     - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
     - Do not record your other choices.
     - Record only the part of the decision that matches criterion (1) or criterion (2).
@@ -239,7 +240,7 @@ apply:
     - If a reader can see the same output in the code, the output is an obvious fact.
     - Do not record an obvious fact or a well-known fact in `## Facts`.
     - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
-    - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact, because an edit of those sections makes the preview stale.
+    - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact, because an edit of those sections makes the preview stale with no need.
     - Do not record a guess.
     - A sentence that states a choice, for example "the script must read the item count", is a decision, not a fact.
     - Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK.
@@ -257,7 +258,7 @@ apply:
       - 🔍 a long analysis of the code
     - Also give the source in words: a command or a test that you ran, the files that you analyzed, a doc URL, a log, or an error text.
     - Do not change an existing fact only to add an emoji.
-    - Write a fact so that the fact stays true after the change, for example "Before this change, the report page did not exist."
+    - Write a fact so that the fact stays true after the change, for example "Before this change, the thumbnail folder did not exist."
 
     ## Exit-code rule
 

@@ -240,13 +240,17 @@ When the checks are done, go to step 6.
 - Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
 - An answer such as "I do not know yet" leaves the question open with no marker.
 - Split the reply of the user as well as you can into facts, rules, and choices.
-- A fact says how something is, for example "the report page does not exist yet". An instruction says what to do, for example "use plain HTML under `src/`". An instruction is never a fact.
+- A fact says how something is, for example "the thumbnail folder does not exist yet". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
 - Record each part of the reply in one section only.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
+- An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
+- The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
+- An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
+- After you record the reply, read the reply again, part by part. If a part is in no section of plan.md, record the part now.
 - You cannot edit `## Constraints`, so record each rule of the reply that the change must follow in `## Decisions`, as a decision with no 🤖.
 - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.
-- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window for the rate limit", or "use plain HTML under `src/`".
+- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - For each rule that you record as a decision, say in the end summary that the user can move the rule to `## Constraints`.
 
 ### Decision rule: when to record a decision
@@ -255,13 +259,13 @@ When the checks are done, go to step 6.
 - Criterion (1): you plan something for the code that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
 - A visible result is one of these things:
   - a UI, a public interface, or the signature of an exported function
-  - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a field of its JSON output
+  - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a value that the code reads from that output
   - a file name or path in the repo that another program, a config, or a doc outside this change refers to
-  - a name that the program gives to its output, for example a download file name
-  - a key in a config file that a program or a user reads, for example a field of `package.json` or an env var
+  - a name that the program gives to its output, for example the name of a file that the program writes for the user
+  - a key in a config file that a program or a user reads, for example a key of a YAML config file, or an env var
   - a new dependency
   - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
-- plan.md or the user can fix only one part of a visible result, for example the status code of an error response. Each other part that you put in the code is your choice, for example the body, a header, or the content type.
+- plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you put in the code is your choice, for example the height, the file format, or the file name.
 - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
 - Do not record your other choices.
 - Record only the part of the decision that matches criterion (1) or criterion (2).
@@ -331,7 +335,7 @@ When the checks are done, go to step 6.
   - 🔍 a long analysis of the code
 - Also give the source in words: a command or a test that you ran, the files that you analyzed, a doc URL, a log, or an error text.
 - Do not change an existing fact only to add an emoji.
-- Write a fact so that the fact stays true after the change, for example "Before this change, the report page did not exist."
+- Write a fact so that the fact stays true after the change, for example "Before this change, the thumbnail folder did not exist."
 
 ### Exit-code rule
 

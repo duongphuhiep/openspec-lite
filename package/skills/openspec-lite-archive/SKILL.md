@@ -82,7 +82,7 @@ The guard path:
    - Offer to copy each `### Decision` of `design.md` to an ADR. Write nothing before the user says yes.
    - End your turn after the offer, and wait for the answer. In the same reply, offer nothing else, also not the archive.
    - If the user says no, write no ADR, and go to guard step 2.
-   - If the user says yes, draft each ADR with the form and the two checks of section 2, step 5.
+   - If the user says yes, draft each ADR with the form and the three checks of section 2, step 5.
    - Show the drafts as in section 2, step 6.
    - Write each approved ADR with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
    - On the guard path, do not run section 2, steps 7 to 9.
@@ -151,7 +151,7 @@ The guard path:
 - Get the git root with `git rev-parse --show-toplevel` as its own command.
 - Then search with `git -C <git root> grep <word>`.
 - Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them.
-- Name each outcome that is not met.
+- Name each outcome and each constraint that is not met, and each open question that is left.
 - If each answer is "yes", go to step 2.
 - If an answer is "no", show the warnings, and ask only: "Archive anyway?" Give no other options in this question. End your turn.
 - If the user says yes to "Archive anyway?", go to step 2.
@@ -276,7 +276,8 @@ When each item has a draft, go to step 6.
 - For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes.
 - The user answers yes, no, or edit for each item. Apply each edit.
 - Tell the user that they can pick a skipped item to draft.
-- If the user picks a skipped item, draft the item, and show the draft for approval.
+- After you show the drafts, end your turn, and wait for the answer of the user.
+- If the user picks a skipped item, draft the item, show the draft for approval, end your turn, and wait for the answer.
 - When the user approved or rejected each draft, go to step 7.
 
 ### Step 7: Write the deltas

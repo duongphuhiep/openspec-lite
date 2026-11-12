@@ -11,6 +11,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
 - Do section 1, then section 2.
 - In section 1, do the checks in this order: OpenSpec root, Change selection, Guard, Schema check.
+- When the schema check says "continue with the next step of this skill", go to section 2, step 1. On the resume path of the guard, go to section 2, step 4.
 - In section 2, do steps 1 to 5 in order. Each step names its next step.
 - Step 2 has the sub-steps 2.1 to 2.5. Step 5 has the sub-steps 5.1 to 5.4. For example, "step 2.4" is the sub-step 4 of step 2.
 - Section 3 gives the content of the summary. Step 5.3 writes the summary.
@@ -377,9 +378,9 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
   - another form of a `plan.md` item, for example a `#### Scenario:` that only restates its requirement;
   - another artifact or section for a `plan.md` item;
   - the code, file, or module that a `plan.md` item clearly touches.
-- Example: `plan.md` asks for a CSV export of a table, and does not say what the export does for an empty table. A `#### Scenario: Table is empty` gets 🤖, because the scenario adds a new claim.
-- Example: `plan.md` asks for an audit log of the changes to a record, and does not say that a log entry names the user. The Why line "no trace of who changed what" in `proposal.md` gets 🤖, because the line adds the claim that an entry records the user.
-- Example: `plan.md` has the constraint "The CSV uses the column order of the table on screen". A `#### Scenario: Columns follow the on-screen order` gets no 🤖, because the scenario only restates that constraint.
+- Example: `plan.md` asks for a thumbnail of each uploaded image, and does not say what happens to a file that is not an image. A `#### Scenario: Upload is not an image` gets 🤖, because the scenario adds a new claim.
+- Example: `plan.md` asks for an email when an invoice is paid, and does not say that the email names the payer. The Why line "customers do not know who paid" in `proposal.md` gets 🤖, because the line adds the claim that the email names the payer.
+- Example: `plan.md` has the constraint "Each thumbnail is 200 pixels wide". A `#### Scenario: Thumbnail width is 200 pixels` gets no 🤖, because the scenario only restates that constraint.
 - Put one mark per item.
 - Do not mark `tasks.md`.
 
