@@ -107,7 +107,14 @@ apply:
 
     Do these checks in this order:
 
-    1. Run the tests. If a test fails, fix the code, and run the tests again. Do not change a constraint or a decision with no 🤖 to make a test pass. If a test fails because the code follows a constraint or a decision with no 🤖, ask the user, and end your turn. If you cannot make a failing test pass, say in the end summary which test fails, with the error text, and do checks 2 to 7. If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run, and do checks 2 to 7.
+    1. Run the tests:
+       - If the repo has no test command, and the change changes no behavior, run no test. Say so in the end summary, and go to check 2.
+       - If a test checks an old behavior that the change replaces, update the test, as the test rule says.
+       - If a test fails, fix the code, and run the tests again.
+       - Do not change a constraint or a decision with no 🤖 to make a test pass.
+       - If a test fails because the code follows a constraint or a decision with no 🤖, ask the user, and end your turn.
+       - If you cannot make a failing test pass, say in the end summary which test fails, with the error text. Go to check 2.
+       - If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run. Go to check 2.
     2. Compare each decision in `## Decisions` with the code:
        - For each result of a 🤖 decision, find each condition in the code that gives the result.
        - A 🤖 decision matches the code only when the decision names each such condition. A condition that gives the same result as a named condition is not named. For example, "skip the thumbnail when the file is not an image" does not name "skip the thumbnail when the image is over 10 MB".
@@ -138,7 +145,7 @@ apply:
        - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
     2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
     3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
-    4. If the tests did not run, tell the user to run the test command, and to run apply again.
+    4. If the tests did not run, and the test check did not pass, tell the user to run the test command, and to run apply again.
     5. If a test fails, name the test that fails, and say what blocks the fix.
     6. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
     7. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question. When the user replies, step 4 says what to do.

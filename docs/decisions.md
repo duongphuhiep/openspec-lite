@@ -3726,3 +3726,15 @@ This revises D119, D166, D182, D219, and D256.
 8. D263 has a `**Status**` line that names D264.
 
 **Rationale**: the review `.review-reports/review_20261112142946_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 10 remarks. Remarks 1 and 2 found D264 fixes that were not complete.
+
+**Status**: Item 5 reverted by D266 item 1. Each constraint is a requirement source again.
+
+## D266: Fixes From Review Loop 5, Round 5, on 99d8656..local
+
+**Decision**:
+
+1. Revert D265 item 5. Each constraint of `plan.md` is a requirement source in upgrade, as in archive and in the split rule. Constraints also go to `## Context` or `## Risks / Trade-offs` of `design.md` if they fit. Scenario 7 accepts the "no new server endpoint" constraint in `specs/`, in `design.md`, or in both. The user chose this, because the split was only in one step, a constraint can fit both classes, and its example was close to a fixture.
+2. Apply step 5 check 1 is a list of branches. It runs no test when the repo has no test command and the change changes no behavior. It updates a test that checks an old behavior that the change replaces, as the test rule says. Step 6 tells the user to run the test command only when the test check did not pass.
+3. Propose: if the reply to the tasks-preview question answers an open question, propose records each answer with the answer rule, then asks the tasks-preview question again.
+
+**Rationale**: the review `.review-reports/review_20261112143415_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 7 remarks. Four remarks came from the constraint split of D265.

@@ -216,3 +216,4 @@ Do these checks in order. When the checks are done, go to section 3.
    - On yes, run the `openspec-lite-tasks-preview` skill.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
    - On no, end your turn.
+   - If the reply answers an open question of `plan.md`, record each answer with the answer rule. Then ask the tasks-preview question again.
