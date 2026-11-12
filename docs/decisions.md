@@ -3829,3 +3829,19 @@ This revises D119, D166, D182, D219, and D256.
 5. When an edit changes a rule, check each copy of the rule and each rule near it in the same commit. Ten of the 29 remarks of round 2 came from D271 edits that missed a copy or a near rule.
 
 **Rationale**: the user asked for a second review round, with a check for ambiguous phrasing. The report is `.review-reports/review_20261112235649_eu.anthropic.claude-opus-5-5_3f1988c-package.md`, 29 remarks. The user asked to fix all of them.
+
+## D273: Fixes From Review Round 3 of the Skill Text at 4eccc57
+
+**Decision**:
+
+1. Upgrade: the question turn splits the answer and plans each part for its artifact. Steps 2.1 to 2.4 write the parts. The question turn plans a requirement for each constraint of the answer, with no new question.
+2. Apply: a conflict with a constraint or with a decision with no 🤖, in step 4 or step 5, is recorded as an open question and asked with the ask rule. A failing test that checks an old behavior that the change replaces is updated, not asked.
+3. The root prefix of `apply.instruction` has the same scope as the six skills.
+4. The template comment of `## Constraints` names a limit on the result that a user or a program sees, or what the change must not add. Its placeholder is `<constraint>`.
+5. The tasks preview: a reply that asks to change the existing text of Goal, Background, Non-Goals, or Constraints gets its other parts recorded, and the turn ends. A mixed part becomes two decisions. A decision with no 🤖 can change to move your own choice out.
+6. Archive: if the user rejects each guard draft, archive goes to guard step 2. An edited draft is printed again for approval. An obvious fact goes to an ADR only when it justifies the decision of that ADR.
+7. Propose records the open points of section 1 in step 5.
+8. The example "the field names of a message that another service sends" is removed, because it is close to scenario 4b. The deploy-folder example stays.
+9. Smaller fixes: apply no longer counts its rules; "kept or not"; "Do not run step 2 again"; the `## 0` task text names the specs, the approach, or the tasks; the upgrade summary ban is about the whole file; the split rule names steps 2.1 to 2.4.
+
+**Rationale**: review round 3 of the loop that the user asked for (5 rounds of review and fix). The report is `.review-reports/review_20261113001040_eu.anthropic.claude-opus-5-5_4eccc57-package.md`, 20 remarks. Seven of them came from D272 edits.

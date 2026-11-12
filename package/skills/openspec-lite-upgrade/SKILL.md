@@ -348,7 +348,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 - Split the answer of the user, as the answer rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says.
 - In steps 2.1 to 2.4, write each part of the answer to its artifact, not to `plan.md`. Where the answer rule says a section of `plan.md`, use the artifact that this split rule names.
-- After you write the answer, read the answer again, part by part. If a part is in no artifact, write the part now.
+- After steps 2.1 to 2.4 write the answer, read the answer again, part by part. If a part is in no artifact, write the part to its artifact before step 2.5.
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice.
