@@ -3888,3 +3888,16 @@ This revises D119, D166, D182, D219, and D256.
 9. The template comments of `## Facts` and `## Decisions` and the decision-format comment match the rules: a 👤 fact is non-obvious, a 🤖 decision is removed when a new decision supersedes it, and one decision records one choice.
 
 **Rationale**: review round 6 of the loop that the user asked for. A fourth reviewer compared the copies of each shared rule across the skills. The report is `.review-reports/review_20261113002913_eu.anthropic.claude-opus-5-5_7433254-package.md`, 13 remarks, no must fix, no hint.
+
+## D277: Fixes From Review Round 7 of the Skill Text at 3fb3150
+
+**Decision**:
+
+1. One reply rule in `apply.instruction`, the tasks preview, and propose: each time the user replies, record the reply with the answer rule. The answer rule starts with one exception: a part that only asks for a command or a skill, or asks a question, is done or answered, and nothing from that part is recorded. Upgrade gets the exception through the answer rule of `apply.instruction`. This revises D276 item 2, which narrowed the reply rule too much: "remove F3" fit no rule.
+2. Apply goes to step 4 after a reply only when the reply changed an item of `plan.md`. The tasks preview does not run step 8 again after a reply that changes no item. Propose lists the changed items only when it changed an item.
+3. The change-or-remove rule applies when the user names the item, for example by its ID or its title. Each other new instruction follows the supersede rule. Same in the three skills.
+4. Upgrade: a decision of `plan.md` that an answer superseded has the heading of the decision that replaced it, so the prune does not keep it. The resume rule names an incomplete kept artifact in the summary, and tells the user to complete it by hand. This removes the last offer to add content (D276 item 7).
+5. Archive names each decision of `plan.md` that has no ADR, also a decision that step 4 did not draft.
+6. The template comment of `## Decisions` says "Update each 🤖 decision that a new decision makes stale."
+
+**Rationale**: review round 7, the last round of the loop that the user asked for. The report is `.review-reports/review_20261113003410_eu.anthropic.claude-opus-5-5_3fb3150-package.md`, 9 remarks, no must fix, no hint.
