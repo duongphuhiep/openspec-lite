@@ -287,7 +287,7 @@ When the checks are done, go to step 6.
 - Add "Rejected Z because W." when there was an alternative.
 - Each reason must come from this run, the user, plan.md, the code, or a well-known fact.
 - A claim about how a tool, a runtime, or a platform behaves is not a well-known fact. Check the claim with a run or a doc, and give the source.
-- If no source supports a reason, write "Reason not checked." in place of the reason.
+- If no source supports a reason, end the sentence after X or Z, and add the sentence "Reason not checked."
 - Do not guess a reason, also not a wish of the user.
 
 ### Mark rule: the 🤖 mark

@@ -186,7 +186,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 - Write `### Decision D<n>: <title>`, then "Chose X because Y."
 - One decision records one choice. If the user made two choices, write two decisions.
-- If the user gave no reason, write "Reason not checked." in place of the reason. Do not guess a reason.
+- If the user gave no reason, end the sentence after X or Z, and add the sentence "Reason not checked." Do not guess a reason.
 - If there was an alternative, add "Rejected Z because W."
 - A decision of propose records a choice of the user. Write no 🤖 on a decision of propose.
 - `## Decisions` holds only the current decisions, not a history.
