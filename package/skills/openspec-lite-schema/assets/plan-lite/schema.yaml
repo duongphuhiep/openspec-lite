@@ -136,8 +136,8 @@ apply:
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
        - If you added no 🤖 decision, show no table.
        - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
-    2. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
-    3. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
+    2. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Did the tests run and pass? Is `## Open Questions` empty? An HTML comment does not count as a question.
+    3. If an outcome of the Goal or a Constraint is not met, name each one that is not met. If a test fails, or the tests did not run, say so.
     4. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question. When the user replies, step 4 says what to do.
     5. If the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 

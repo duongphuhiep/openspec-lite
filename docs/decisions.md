@@ -3122,6 +3122,8 @@ This revises D172, D184, D219, D223, and D225.
 
 **Rationale**: review round 2 found 15 remarks. Remark 11 asked where a fact in a user answer goes, and the user chose the split and the emojis. Each other remark had one logical fix, or no fix, as for remark 15.
 
+**Status**: Revised by D262 item 8. Scenario 4 no longer accepts a constraint for a build choice.
+
 ## D227: Fixes From Review Round 3 on 99d8656..local
 
 **Decision**:
@@ -3403,6 +3405,8 @@ This revises D226, D227, D239, D240, D242, and D243.
 
 **Rationale**: review loop 3, round 5 found 10 remarks. Each one had one logical fix, or an earlier choice of the user decided it.
 
+**Status**: Revised by D262 item 8. Scenario 4 no longer accepts a constraint for a build choice.
+
 ## D245: The Propose Skill Uses Small Bullets and Named Rules
 
 **Decision**:
@@ -3606,6 +3610,8 @@ This revises D252, D255, and D256.
 
 **Rationale**: a fresh-context review found each gap. Five remarks came from the fixes of D255 and D256. The reviewer also suggested that propose checks an existing change name before the Level 1 question. I did not make this change, because the scenario fix closes the gap of the test, and the order change is a new rule.
 
+**Status**: Item 6 revised by D262 item 8. Scenario 4 no longer accepts a constraint for a build choice.
+
 ## D258: Fixes From Review Loop 4, Round 5, on 99d8656..local
 
 **Decision**: from `.review-reports/review_20261112110822_claude-opus-5-5_99d8656-local.md`:
@@ -3625,6 +3631,8 @@ This revises D255, D256, and D257.
 **Decision**: an example in a skill, in `schema.yaml`, or in a template gives its own setup, for example what `plan.md` asks for. It does not depend on a test fixture or a test scenario of this repo. The three examples of the inferred-item rule of upgrade now say what `plan.md` asks for, and use `#### Scenario:`, so that "scenario" cannot mean a test scenario. The example "use a sliding window" now says "for the rate limit". The user asked for this.
 
 **Rationale**: only `package/` reaches the machine of the user. The old examples of upgrade named "the export" and "the column-order constraint" of the `after-preview` fixture. On another project, the agent could not know this context.
+
+**Status**: Revised by D262 item 1. No example in `package/` copies the domain of a test scenario, so the example "use a sliding window for the rate limit" is gone.
 
 ## D260: Fixes for the Defects D01, D07 to D12, and D18 of the Run on b470899
 
@@ -3675,3 +3683,17 @@ This revises D119, D166, D182, D219, and D256.
 9. The `after-propose` fixture is a fixed start state, not the output of scenario 1.
 
 **Rationale**: the review `.review-reports/review_20261112124141_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 20 remarks. Remark 11 was not accurate: the fact rule reason holds in apply, because the edit is not needed. The text now says "with no need".
+
+## D263: Fixes From Review Loop 5, Round 2, on 99d8656..local
+
+**Decision**:
+
+1. Scenario 4 no longer says "A constraint for a build choice also passes". D262 item 8 removed only one of the two sentences.
+2. The template comment of `## Open Questions`, and its fixture copies: an answer of the user goes to another section. An answer that the agent found goes to another section, or only to the summary when the answer is obvious or is a choice that the decision rule does not record. This matches the question rule.
+3. The done check of apply also asks: did the tests run and pass? If a test fails, or the tests did not run, apply says so, and does not tell the user to archive.
+4. The apply guard tells the user to answer an open question before the stock skill, because the guard can point to `/opsx:continue`.
+5. The upgrade split rule maps "a section of `plan.md`" of the answer rule to the artifact of the split rule. After the write, upgrade reads the answer again, part by part, and writes each part that is in no artifact.
+6. D226, D244, D257, and D259 have a `**Status**` line that names D262.
+7. Scenario 1 expects no Level 1 question, and each open point of the request in `## Open Questions` (D260).
+
+**Rationale**: the review `.review-reports/review_20261112141533_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 7 remarks. Two remarks found D262 fixes that were not complete.

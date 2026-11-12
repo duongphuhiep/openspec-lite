@@ -470,8 +470,8 @@ When the checks are done, go to step 6.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
    - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
-2. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
-3. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
+2. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Did the tests run and pass? Is `## Open Questions` empty? An HTML comment does not count as a question.
+3. If an outcome of the Goal or a Constraint is not met, name each one that is not met. If a test fails, or the tests did not run, say so.
 4. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question. When the user replies, step 4 says what to do.
 5. If the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 
@@ -659,7 +659,7 @@ When the checks are done, go to step 6.
 <!-- Rules the implementation must follow, for example from the user, a ticket, or the platform. One item per line, as "- C<n>: <rule>". A constraint is not a choice. If the result breaks it, the change is not done. A choice of how to meet the goal is a decision. -->
 
 ## Open Questions
-<!-- Open points, as "- OQ<n>: <question>". Apply and the tasks preview keep only a point that they cannot decide and cannot find the answer to. Keep a question that the user said to keep open, and end it with "(kept open by the user)". When a question gets an answer, remove it: an answer of the user goes to another section of the plan. Only an obvious answer that the agent found goes only to the summary. -->
+<!-- Open points, as "- OQ<n>: <question>". Apply and the tasks preview keep only a point that they cannot decide and cannot find the answer to. Keep a question that the user said to keep open, and end it with "(kept open by the user)". When a question gets an answer, remove it: an answer of the user goes to another section of the plan. An answer that the agent found goes to another section, or only to the summary when the answer is obvious or is a choice that the decision rule does not record. -->
 
 ## Facts
 <!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>", with the source and a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code. A non-obvious fact needs an answer of the user, a run or a test result, research of remote sources (documentation on the internet, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. A run alone is not enough: if a reader can see the result in the code or in the file list, the fact is obvious. Do not record a guess, an obvious fact, or a well-known fact: write such a fact in the "because" part of the decision that it justifies. Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK. -->
