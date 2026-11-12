@@ -20,9 +20,6 @@ Chose to generate the CSV in the browser because the data is already loaded ther
 ### Decision: Quote each cell 🤖
 Chose to quote each cell because a cell can hold a comma.
 
-### Decision: Exclude hidden columns
-Chose to leave hidden columns out of the export, on the answer of the user in this upgrade.
-
 ## Risks / Trade-offs
 
 None known.

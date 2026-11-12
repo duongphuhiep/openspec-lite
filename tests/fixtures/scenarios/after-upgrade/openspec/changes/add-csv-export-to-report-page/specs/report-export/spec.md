@@ -31,13 +31,6 @@ The CSV export SHALL NOT include hidden columns of the table.
 - **WHEN** the user exports a table that has a hidden column
 - **THEN** the CSV has no column for the hidden column
 
-### Requirement: CSV cells are quoted
-The CSV export SHALL quote each cell, so that a comma inside a cell does not break the columns.
-
-#### Scenario: Cell holds a comma
-- **WHEN** a cell of the table holds a comma and the user exports the table
-- **THEN** the cell is quoted in the CSV and stays in one column
-
 ### Requirement: Export uses no new server endpoint
 The CSV export SHALL NOT call a new server endpoint.
 

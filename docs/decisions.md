@@ -3744,3 +3744,15 @@ This revises D119, D166, D182, D219, and D256.
 **Decision**: apply step 5 check 2 says the condition rule as two bullets. The second bullet says: do not count a condition as named only because the condition gives the same result as a named condition. The thumbnail example names both conditions, and says that both skip the thumbnail.
 
 **Rationale**: the user could not understand the old sentence "A condition that gives the same result as a named condition is not named". The old sentence did not say which shortcut it blocks. The rule does not change.
+
+## D268: Scenario Fixtures Follow the Current Skill Rules
+
+**Decision**:
+
+1. In the `after-preview` and `interrupted-upgrade` fixtures, each task of `tasks-preview.md` that depends on an open question says that the task waits for the answer, as the preview rule says. No task decides an open question, and no task only answers an open question.
+2. The `after-preview` fixture keeps its three open questions, because scenario 4 tests that apply decides OQ3.
+3. The `after-upgrade` fixture is the state where the user did not say yes to the quoting requirement. Its delta has no quoting requirement, and the "Quote each cell" decision in `design.md` keeps its 🤖. Scenario 7 accepts this state, and scenario 18b needs the 🤖.
+4. The `after-upgrade` fixture has no "Exclude hidden columns" decision in `design.md`. The answer "no hidden columns" is a rule, so it is only a requirement in `specs/`, as the split rule of upgrade says.
+5. The `rate-limit` fixture and `kept-plan.md` keep their form, because scenarios 4b and 17b need it.
+
+**Rationale**: the user found that the fixtures did not follow the current schema. The fixtures date from D199. Later decisions changed the preview rule (D234) and the split rule (D256, D258).
