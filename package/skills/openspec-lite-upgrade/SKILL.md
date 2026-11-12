@@ -146,6 +146,7 @@ Ask the question turn:
 - If the question list is not empty, ask all items of the question list in one reply, before you write any artifact.
 - For each open question in the reply, give your recommended answer.
 - If the answer to an open question is a fact that only the user knows, give no recommendation for that question.
+- If the answer to an open question depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
 - For each planned requirement in the reply, show its text, and ask if you can write it.
 - For each decision with 🤖 in `plan.md` that you do not plan as a requirement, give in the reply the reason why the decision is not a contract, in one sentence.
 - For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", upgrade writes no spec (step 2.2).

@@ -3772,3 +3772,13 @@ This revises D119, D166, D182, D219, and D256.
 8. D09 (skill): the decision format says "One decision records one choice. If you made two choices, write two decisions, each with its own reason." No rule about the output of a tool is added, because that rule is a hint example.
 
 **Rationale**: the user reviewed each must-fix defect of `.scenario-runs/20261112-84abcb6/defects.md` with the investigation reports of the run. Items 4 to 8 are agreed fixes.
+
+## D270: Results of the Rerun on 2119a53, and a Mixed Open Question
+
+**Decision**:
+
+1. If the answer to an open question depends on an intent of the user and also on a fact that only the user knows, the agent gives its recommended answer for the intent, and names the fact that it needs. This rule is in `apply.instruction`, the tasks preview, upgrade, and `docs/design.md`, next to each rule that gives no recommendation. No example is added (D269).
+2. D09 of the run on 84abcb6 has the cause `llm` after D269. The rule "One decision records one choice" stays. In 4c, "return `null` or throw" can be one choice, and the missing reason is a rejected option. The rule "Add "Rejected Z because W." when there was an alternative" covers it.
+3. D05, D06, and D07 of the run on 84abcb6 are fixed. The rerun shows it.
+
+**Rationale**: the rerun `.scenario-runs/20261112-2119a53/` passed 5 of 8 runs (1 of 8 on 84abcb6). D02 failed in 2 of 2 runs after D269 item 4. The agent said "I have no recommendation, because the report's data model isn't visible here", and then gave a default. OQ2 of scenario 4 depends on an intent (the columns that the user wants) and on a fact (the columns that exist). The skill had no branch for such a question. The user agreed with both findings.

@@ -191,6 +191,7 @@ When the checks are done, go to step 6.
    - Ask each open question that is still open, also an existing one, with your recommended answer.
    - Do not ask a kept question again.
    - Give no recommendation when the answer is a fact that only the user knows.
+   - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
 4. Tell the user to read the preview.

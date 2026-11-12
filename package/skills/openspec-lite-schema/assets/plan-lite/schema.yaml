@@ -78,6 +78,7 @@ apply:
     - If the list of questions to ask is not empty, ask all questions of the list in one reply:
       - Give your recommended answer for each open question.
       - Give no recommendation when the answer is a fact that only the user knows, for example where some code is when a search of the repo does not find the code. Say why you give no recommendation.
+      - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
       - In the same reply, give the answer of each question that you closed.
       - End your turn, and wait for the reply of the user.
     - When the user replies to the questions of step 3:
@@ -99,6 +100,7 @@ apply:
       - Record the point as an open question before you write the code that depends on the point.
       - Ask the open question with your recommended answer.
       - Give no recommendation when the answer is a fact that only the user knows.
+      - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
       - End your turn.
     - When the user replies to a question of step 4, step 5, or step 6, record each answer with the answer rule. Then go to step 4, and write the code that waited for the answer.
     - When the code is written, go to step 5.
@@ -144,6 +146,7 @@ apply:
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
        - If you added no 🤖 decision, show no table.
        - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
+       - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
     2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
     3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
     4. If the tests did not run, and the test check did not pass, tell the user to run the test command, and to run apply again.
