@@ -136,6 +136,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - Input: the request, the answers of the user, the outcomes that stay in this change, and the list of open points of section 1.
    - Output: `openspec/changes/<name>/plan.md`.
    - Fill only what is known. Leave the other sections empty.
+   - Record each fact, constraint, or choice of the request with the answer rule.
    - Record each open point of the list in `## Open Questions` with the question rule.
    - Keep each `<!-- ... -->` guidance comment, also in a section that you fill.
    - Write the content of a section on the lines under the guidance comment.

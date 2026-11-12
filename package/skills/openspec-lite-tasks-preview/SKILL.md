@@ -93,9 +93,9 @@ Do these checks in order.
 - When you need the exit code of a command, use the exit-code rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
 - If the user moves the decision that records a constraint of the user to `## Constraints`, the preview is stale. Tell the user to run this skill again.
-- If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
+- If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. List each item that you recorded, with its ID. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
 - A new constraint in a reply follows the answer rule.
-- If the user replies after step 8, and the reply does not make the preview stale, record the reply with the general rules. Update each task of the preview that the changed items make wrong. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again for the items that the reply changed.
+- If the user replies after step 8, the reply does not make the preview stale, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Update each task of the preview that the changed items make wrong. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again for the items that the reply changed.
 
 ### Step 1: Check that plan.md exists
 
@@ -190,6 +190,7 @@ When the checks are done, go to step 6.
    - Ask each open question that is still open and is not a kept question, new or existing, with the ask rule.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
+   - For each decision that records a constraint of the user, say that the user can move the decision to `## Constraints`.
 4. Tell the user to read the preview.
 5. Tell the user what to do on disagreement: put the correction in `plan.md`, and run this skill again. The user does not edit `tasks-preview.md`.
 
@@ -256,7 +257,6 @@ When the checks are done, go to step 6.
 - You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
-- For each decision that records a constraint of the user, say in the end summary that the user can move the decision to `## Constraints`.
 
 ### Decision rule: when to record a decision
 
