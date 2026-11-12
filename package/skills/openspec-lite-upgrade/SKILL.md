@@ -125,7 +125,7 @@ Close the open questions of `plan.md`:
 
 - Read each question in `## Open Questions` of `plan.md`.
 - A question that ends with "(kept open by the user)" is a kept question.
-- Keep each kept question, also if you can decide the kept question. Do not ask a kept question again.
+- Keep each kept question until a message of the user answers the kept question, also if you can decide the kept question. Do not ask a kept question.
 - For each question that is not a kept question, try to decide the question or find its answer. Use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
 - In the question turn of step 2, do not do the `plan.md` writes of the question rule: record no fact or decision in `plan.md`, and remove no question from `plan.md`. Plan each answer for an artifact or for the summary, as the next bullets say.
 - A question is open only while you cannot decide the question and cannot find its answer.
