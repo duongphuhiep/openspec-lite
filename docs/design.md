@@ -451,7 +451,8 @@ Do these checks in this order:
    - If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run. Go to check 2.
 2. Compare each decision in `## Decisions` with the code:
    - For each result of a 🤖 decision, find each condition in the code that gives the result.
-   - A 🤖 decision matches the code only when the decision names each such condition. A condition that gives the same result as a named condition is not named. For example, "skip the thumbnail when the file is not an image" does not name "skip the thumbnail when the image is over 10 MB".
+   - A 🤖 decision matches the code only when the decision names each such condition.
+   - Do not count a condition as named only because the condition gives the same result as a named condition. For example, the decision "skip the thumbnail when the file is not an image" does not name the condition "the image is over 10 MB", although both conditions skip the thumbnail.
    - If the code no longer matches a 🤖 decision, update the 🤖 decision, so that the decision names each condition.
    - If the code does not match a decision with no 🤖, fix the code, because plan.md wins.
    - If the code cannot follow a decision with no 🤖, ask the user, and end your turn.

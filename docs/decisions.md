@@ -3738,3 +3738,9 @@ This revises D119, D166, D182, D219, and D256.
 3. Propose: if the reply to the tasks-preview question answers an open question, propose records each answer with the answer rule, then asks the tasks-preview question again.
 
 **Rationale**: the review `.review-reports/review_20261112143415_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 7 remarks. Four remarks came from the constraint split of D265.
+
+## D267: Clear Wording of the Condition Rule in Apply Step 5 Check 2
+
+**Decision**: apply step 5 check 2 says the condition rule as two bullets. The second bullet says: do not count a condition as named only because the condition gives the same result as a named condition. The thumbnail example names both conditions, and says that both skip the thumbnail.
+
+**Rationale**: the user could not understand the old sentence "A condition that gives the same result as a named condition is not named". The old sentence did not say which shortcut it blocks. The rule does not change.
