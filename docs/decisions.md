@@ -3757,3 +3757,18 @@ This revises D119, D166, D182, D219, and D256.
 6. In the `interrupted-upgrade` and `after-upgrade` fixtures, the `## Why` line of `proposal.md` ends with 🤖. `plan.md` does not say that users cannot take the rows out of the page, or what issue #42 asks, so the line is an inferred item. The user chose the mark over a rewrite.
 
 **Rationale**: the user found that the fixtures did not follow the current schema. The fixtures date from D199. Later decisions changed the preview rule (D250) and the split rule (D256, D258).
+
+## D269: Triage of the Must-Fix Defects of the Run on 84abcb6
+
+**Decision**:
+
+1. A defect has the cause `llm` when a rule covers the case and the agent did not follow the rule. A defect has the cause `skill` when the flow misses a case, is illogical, or is inconsistent.
+2. Do not add an example to `package/` only to steer the agent to the result of a test scenario. An example that hints at the expected result makes the test measure the hint, not the rule.
+3. D01, D03, D04, D08, D10, and D12 of the run have the cause `llm`. The skills do not change for them. D01 and D03 got worse after D262 replaced two examples, but the rules `schema.yaml:200`, `:202`, and `:203` still cover the cases.
+4. D02 (skill): the question rule splits its class into "an intent of the user" and "a fact that only the user knows". The recommendation rule uses the same term. No example is added.
+5. D05 (skill): archive says "Print the full text of … in your reply" for an ADR of an earlier run, for each file with the line `Change: <name>`, and for each delta file of an earlier run. "Show" had more than one meaning.
+6. D06 (skill): the archive guard rule "Before each reply that says what holds a 🤖, search again" applies only in guard steps 2 to 4. The reply with the ADR offer says nothing about the 🤖 lines of `specs/`.
+7. D07 (scenario, skill): the rule "After the user confirms a root, also start the first command with `cd <root> && `" is deleted in the schema skill and in propose, because the rule for each `openspec` command covers the case. Scenario 11 checks the result, not the form of the first command.
+8. D09 (skill): the decision format says "One decision records one choice. If you made two choices, write two decisions, each with its own reason." No rule about the output of a tool is added, because that rule is a hint example.
+
+**Rationale**: the user reviewed each must-fix defect of `.scenario-runs/20261112-84abcb6/defects.md` with the investigation reports of the run. Items 4 to 8 are agreed fixes. They are not applied yet.

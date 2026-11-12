@@ -140,6 +140,7 @@ openspec-lite/
 
 - Each skill and `apply.instruction` follow the section "Write Instructions as Code" of `CLAUDE.md`: a "How to read" part, a "General rules" list, steps with Input and Output lines that end with the next step, one job per bullet, a named subject in each bullet, flat nesting, and each branch written (D248, D249, D250).
 - An example in `package/` gives its own setup, for example what `plan.md` asks for. It does not depend on a test fixture or a test scenario of this repo, because only `package/` reaches the user (D259).
+- Do not add an example to `package/` only to steer the agent to the result of a test scenario. If a rule already covers a case and the agent misses the case, the cause is `llm`, and the skill does not change. Fix a skill only when its flow misses a case, is illogical, or is inconsistent (D269).
 
 The five workflow skills are propose, tasks-preview, apply, upgrade, and archive.
 
