@@ -14,7 +14,7 @@ Limit each API key to 100 requests per minute on the public HTTP API.
 - No per-user limits for the admin UI.
 
 ## Constraints
-<!-- Rules the implementation must follow. One item per line, as "- C<n>: <rule>". -->
+<!-- Rules the implementation must follow, for example from the user, a ticket, or the platform. One item per line, as "- C<n>: <rule>". A constraint is not a choice. If the result breaks it, the change is not done. A choice of how to meet the goal is a decision. -->
 - C1: Over-limit requests get HTTP 429 with a `Retry-After` header in seconds. Mobile clients depend on this header to back off.
 - C2: Add no new runtime dependency.
 
@@ -23,7 +23,7 @@ Limit each API key to 100 requests per minute on the public HTTP API.
 
 ## Facts
 <!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>", with the source and a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code. A non-obvious fact needs an answer of the user, a run or a test result, research of remote sources (documentation on the internet, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. A run alone is not enough: if a reader can see the result in the code or in the file list, the fact is obvious. Do not record a guess, an obvious fact, or a well-known fact: write such a fact in the "because" part of the decision that it justifies. Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK. -->
-- F1: The public API runs as a single instance.
+- F1: 👤 The public API runs as a single instance. Source: the user.
 
 ## Decisions
 <!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Change a decision with no 🤖 only on an answer or an instruction of the user. Then remove each fact that justifies no current decision or constraint, except a non-obvious fact. -->

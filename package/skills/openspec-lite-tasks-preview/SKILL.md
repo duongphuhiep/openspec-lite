@@ -232,6 +232,8 @@ When the checks are done, go to step 6.
 - Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
 - An answer such as "I do not know yet" leaves the question open with no marker.
 - Split the reply of the user as well as you can into facts, rules, and choices.
+- A fact says how something is, for example "the report page does not exist yet". An instruction says what to do, for example "use plain HTML under `src/`". An instruction is never a fact.
+- Record each part of the reply in one section only.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
 - You cannot edit `## Constraints`, so record each rule of the reply that the change must follow in `## Decisions`, as a decision with no 🤖.
@@ -268,6 +270,7 @@ When the checks are done, go to step 6.
 ### Mark rule: the 🤖 mark
 
 - End the heading of a decision with 🤖, unless the decision records an answer or an instruction of the user.
+- A 🤖 in an HTML comment, for example in a template comment, is not a mark. A decision is a 🤖 decision only when its heading ends with 🤖.
 - A decision with no 🤖 belongs to the user, also a decision that the user wrote by hand.
 - A decision with no 🤖 holds only what the user said. Put each choice that you add, and that the decision rule records, in its own 🤖 decision.
 - When you update a 🤖 decision to follow an answer or an instruction of the user, remove the 🤖 of that decision.

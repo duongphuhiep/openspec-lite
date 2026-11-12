@@ -3496,3 +3496,19 @@ The user chose this.
 This revises the role of `docs/todo.md` in D173 and the later decisions that added todo items.
 
 **Rationale**: `docs/todo.md` and `defects.md` held the same items. `defects.md` gives a cause, an action, and a priority for each defect of a run, so one triaged list per run is enough.
+
+## D252: Fixes for the Must-Fix Defects D08 to D13 of the Run on 3fb090c
+
+**Decision**:
+
+1. Archive writes no source emoji in a spec. A fact in a requirement text gives its source in words. An ADR keeps the source emoji of a fact (D227). The user chose this. This revises D244 item 7. (D09)
+2. If a fact of `plan.md` has no source emoji, archive adds no emoji, and does not guess its source. (D09, D11)
+3. A 🤖 in an HTML comment, for example in a template comment, is not a mark. A decision is a 🤖 decision only when its heading ends with 🤖. The archive general rules and the mark rules of apply and of the tasks preview say this. (D10)
+4. Archive step 6 names each draft, a spec draft or an ADR draft, that holds content from a 🤖 decision, and names that 🤖 decision. (D08)
+5. The answer rule of apply, the tasks preview, and propose says: a fact says how something is, an instruction says what to do, and an instruction is never a fact. Each part of a reply goes to one section only. In apply and propose, a part that is both a rule and a choice is a constraint only, because the done check checks each constraint. (D12, D13)
+6. The fixture fact F1 of `finished-rate-limit` has 👤 and "Source: the user". The four fixtures with the old Constraints comment of the template have the current comment. HTML comments do not change the plan hash. (D11)
+7. Scenario 15 checks that no spec holds a source emoji. Scenario 4 checks that each part of the answer is in one section only, and that the stack instruction is not a fact.
+
+This revises D226, D227, D240, and D244.
+
+**Rationale**: the defects D08 to D13 of `.scenario-runs/20261112-3fb090c/defects.md`. In scenario 15, archive guessed 👤 for two items and wrote the marks into a main spec. Archive read the 🤖 of the template comment as a mark. In scenario 4, two rules were both a constraint and a decision, and an instruction became a fact.

@@ -22,6 +22,9 @@ How to read this skill:
 - Write nothing before the user approves.
 - Do not remove a 🤖 yourself. Only the user removes a 🤖.
 - Write no 🤖 in a spec or an ADR.
+- Write no source emoji in a spec, for example 👤 or 🔬. Give the source of a fact in words in the requirement text. An ADR keeps the source emoji of a fact.
+- If a fact of `plan.md` has no source emoji, add no emoji, and do not guess its source. Give the source in words only when the fact names it.
+- A 🤖 in an HTML comment, for example in a template comment of `plan.md`, is not a mark. A decision is a 🤖 decision only when its heading ends with 🤖.
 - The ID rule: use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md` and `tasks-preview.md`.
 - The ID rule also forbids a `plan.md` ID in another file, a code comment, a commit message, a pull request, or a ticket.
 - To refer to a `plan.md` item from outside `plan.md` and `tasks-preview.md`, use the item title, or a short form of its text, with the change name.
@@ -188,7 +191,7 @@ The guard path:
 - If a decision is also a contract, draft the contract as a requirement. The rationale of the decision can also go to an ADR.
 - List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
 - A fact goes to the `## Context` of each ADR whose decision the fact justifies. Keep the source emoji of the fact.
-- A fact that justifies a requirement goes into the requirement text, as its reason, with its source emoji, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
+- A fact that justifies a requirement goes into the requirement text, as its reason, with no source emoji, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
 - A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to.
 - If no drafted ADR holds a non-obvious fact, and no drafted requirement holds the fact as its reason, draft an ADR for the fact:
   - The `## Context` of the fact ADR holds the fact and its source.
@@ -255,7 +258,7 @@ When each item has a draft, go to step 6.
 - Input: the drafts of step 5.
 - Output: the approved drafts.
 - Show all drafts.
-- Name each draft that comes from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet.
+- Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
 - If no decision heading ends with 🤖, say nothing about marks.
 - For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes.
 - The user answers yes, no, or edit for each item. Apply each edit.

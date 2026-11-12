@@ -13,7 +13,7 @@ Add one Export CSV button to the report page. It exports the rows shown in the t
 <!-- What this change will not do. One item per line. -->
 
 ## Constraints
-<!-- Rules the implementation must follow. One item per line, as "- C<n>: <rule>". -->
+<!-- Rules the implementation must follow, for example from the user, a ticket, or the platform. One item per line, as "- C<n>: <rule>". A constraint is not a choice. If the result breaks it, the change is not done. A choice of how to meet the goal is a decision. -->
 - C1: The export uses the same column order as the table on screen.
 - C2: No new server endpoint.
 
