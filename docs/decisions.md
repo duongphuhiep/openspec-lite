@@ -3527,3 +3527,23 @@ The user chose these four fixes. The user did not choose the proposed fixes for 
 This revises D152, D164, D191, and D215.
 
 **Rationale**: the investigation found a cause for each defect. The stock `specs` instruction asks "what the capability is for" and names "observable behavior", which pulls the agent to a new purpose and to a requirement from the Goal. Guard step 2 did not end the turn, so the agent added an archive offer to the same reply. Step 5.1 gave no form for the list.
+
+## D254: Fixes From Review Loop 4, Round 1, on 99d8656..local
+
+**Decision**: from `.review-reports/review_20261112094239_claude-opus-5-5_99d8656-local.md`:
+
+1. The archive guard path has no first step that points to stock `/opsx:archive`. The ADR offer is guard step 1. A no to the offer goes to the 🤖 search, the open-question report, and the 🤖 block. Then, if no delta holds a 🤖, the guard tells the user to run stock `/opsx:archive`. While a delta holds a 🤖, the guard gives no pointer to `/opsx:archive`. Scenario 18 expects this.
+2. `apply.instruction` step 4 says what to do when the user replies to a question of step 4, step 5, or step 6: record the answer, then go to step 4. The tasks preview runs step 8 again after a reply that does not make the preview stale.
+3. Criterion (1) of apply says "you put something in the code, or plan to put something in the code", because step 3 decides questions before any code exists.
+4. Scenario 4 expects a constraint for "create it in this repo", as the answer rule of D252 says, and still accepts a decision with no 🤖 (D226). Each part of the stack instruction that passes the rule test is a constraint.
+5. Scenario 4b accepts only an open question for the header that names the API key. The user chose this. This revises D229 item 7.
+6. Upgrade step 5.4 lists the items that stay in `plan.md` after a yes. Step 5.1 marks a question that also stays in `plan.md` as "kept".
+7. Upgrade step 2 gives the question filter in its own text, with no reference to the `design` instruction, which the agent reads only in step 2.3.
+8. Archive step 4 says that a selected constraint becomes a requirement in a spec.
+9. The shared block `### Change selection` shows the name and the schema of each change when it asks the user to pick.
+10. The upgrade guard stops on a `plan-lite` change with no `plan.md`, and points to `openspec-lite-propose`.
+11. Archive step 5 ignores `skipped: true` only if `skip_specs` is set.
+
+This revises D229 and D253.
+
+**Rationale**: a fresh-context review found each gap. I checked each remark against the skills, `design.md`, and the decisions.

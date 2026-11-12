@@ -58,7 +58,7 @@ Do these checks in order.
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
 - The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
 - If only one active change exists, use that change.
-- If more than one active change exists, ask the user to pick one change.
+- If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts.
 - If no active change exists, stop. Tell the user that no active change exists.
 
 ### Guard
@@ -66,7 +66,8 @@ Do these checks in order.
 - Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, and the file `openspec/changes/<name>/plan.md`.
 - Output: the next check or step, or a stop.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
-- If `schema` is `plan-lite`, go to the schema check.
+- If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, go to the schema check.
+- If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
 - If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
 - If `schema` has any other value, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
 - If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question. An earlier run may have stopped after step 3. A finished upgrade can also keep `plan.md`.
@@ -135,7 +136,7 @@ Close the open questions of `plan.md`:
 Ask the question turn:
 
 - Make the question list from these items:
-  - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks, as the `design` instruction says;
+  - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks;
   - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`;
   - if you plan no requirement at all, the question if the change has a requirement.
 - If the question list is empty, do not ask. Go to step 2.1.
@@ -263,6 +264,7 @@ Do steps 5.1 to 5.4 in order.
 - Output: the destination list.
 - List each `plan.md` section with its destination, in a table with the columns `Section`, `Artifact`, and `Heading`. Give one row for each section that has content.
 - In the `Heading` column, write the heading of the artifact that now holds the content, for example `## Context`, or write "kept".
+- If a question also stays in `plan.md` (step 2.3 or step 2.4), write the heading of the artifact and "kept", for example "`## Open Questions`, kept".
 - A question that step 2 closed has the destination "closed", with its answer. A yes to the prune question deletes the closed question.
 - If the items of one section go to different destinations, list each item.
 - Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
@@ -287,7 +289,12 @@ Do steps 5.1 to 5.4 in order.
 ### Step 5.4: Act on the answer
 
 - If the user answers no, keep `plan.md` as it is. Say in one line that its moved sections are old copies, and that the artifacts are the source of truth.
-- If the user answers yes, delete each section or item whose content moved. Keep each kept item.
+- If the user answers yes, delete each section or item whose content moved, except the items that stay.
+- These items stay in `plan.md` after a yes:
+  - each row of step 5.1 whose `Heading` is "kept"
+  - each content that step 5.2 lists as "kept, in no artifact"
+  - each question with the "(kept open by the user)" marker, also when `design.md` → `## Open Questions` holds a copy of the question (step 2.3)
+  - each question of `## 0. Open questions` of `tasks.md` (step 2.4)
 - After a yes, keep the ID comment at the top of `plan.md` while a section is left.
 - After a yes, if no section is left, delete `plan.md`. A section with only an HTML comment counts as no section.
 - After a yes, say in one line what you deleted and what you kept.

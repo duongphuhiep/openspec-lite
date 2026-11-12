@@ -42,7 +42,7 @@ Do these checks in order.
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
 - The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
 - If only one active change exists, use that change.
-- If more than one active change exists, ask the user to pick one change.
+- If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts.
 - If no active change exists, stop. Tell the user that no active change exists.
 
 ### Guard
@@ -89,6 +89,7 @@ Do these checks in order.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
 - If the user answers a question that a task of the preview waits for, remove the "waits for the answer" note from that task. Then change the task to follow the answer.
 - If the user moves a rule to `## Constraints`, the preview is stale. Tell the user to run this skill again.
+- If the user replies after step 8, and the reply does not make the preview stale, record the reply with the general rules. Then run step 8 again for the items that the reply changed.
 
 ### Step 1: Check that plan.md exists
 

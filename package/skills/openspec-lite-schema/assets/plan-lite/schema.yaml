@@ -99,6 +99,7 @@ apply:
       - Ask the open question with your recommended answer.
       - Give no recommendation when the answer is a fact that only the user knows.
       - End your turn.
+    - When the user replies to a question of step 4, step 5, or step 6, record each answer with the answer rule. Then go to step 4, and write the code that waited for the answer.
     - When the code is written, go to step 5.
 
     ## Step 5: Check plan.md against the code
@@ -133,7 +134,7 @@ apply:
        - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
     2. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
     3. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
-    4. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question.
+    4. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question. When the user replies, step 4 says what to do.
     5. If the done check passes, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 
     ## Question rule: close an open question
@@ -168,7 +169,7 @@ apply:
     ## Decision rule: when to record a decision
 
     - Record a decision when criterion (1) or criterion (2) is true.
-    - Criterion (1): you put something in the code that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
+    - Criterion (1): you put something in the code, or plan to put something in the code, that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
     - A visible result is one of these things:
       - a UI, a public interface, or the signature of an exported function
       - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a field of its JSON output

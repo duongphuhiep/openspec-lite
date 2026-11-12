@@ -56,7 +56,7 @@ Do these checks in order.
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
 - The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
 - If only one active change exists, use that change.
-- If more than one active change exists, ask the user to pick one change.
+- If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts.
 - If no active change exists, stop. Tell the user that no active change exists.
 
 ### Guard
@@ -69,44 +69,44 @@ Do these checks in order.
 
 The guard path:
 
-1. Tell the user to run stock `/opsx:archive`.
-   - Go to guard step 2.
-2. Offer to copy the decisions of `design.md` to ADRs.
+1. Offer to copy the decisions of `design.md` to ADRs.
    - Input: `openspec/changes/<name>/design.md`.
-   - Output: the approved ADRs in `openspec/adr/`.
-   - If `openspec/changes/<name>/design.md` has no `### Decision` entries, go to guard step 3.
+   - Output: the approved ADRs in `openspec/adr/`, and the answer of the user to the offer.
+   - If `openspec/changes/<name>/design.md` has no `### Decision` entries, go to guard step 2.
    - If `openspec/changes/<name>/design.md` has `### Decision` entries, warn: "Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs. They stay only in the archive folder. To keep them as ADRs, copy them to `openspec/adr/` before you archive."
    - A change that was upgraded from plan-lite has its decisions in `design.md`.
    - Offer to copy each `### Decision` of `design.md` to an ADR. Write nothing before the user says yes.
    - End your turn after the offer, and wait for the answer. In the same reply, offer nothing else, also not the archive.
-   - If the user says no, tell the user to run stock `/opsx:archive`, and stop.
-   - If the user says no, do not offer the `openspec archive` command yourself. Do not offer to archive in any other words, for example "I can run the archive for you".
+   - If the user says no, write no ADR, and go to guard step 2.
    - If the user says yes, draft each ADR with the form and the two checks of section 2, step 5.
    - Show the drafts as in section 2, step 6.
    - Write each approved ADR with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
    - On the guard path, do not run section 2, steps 7 to 9.
    - On the guard path, do not change `design.md`.
-   - When the approved ADRs are written, go to guard step 3.
-3. Search `specs/` and `design.md` of the change for 🤖.
-   - Do this search after the ADRs of guard step 2 are written.
+   - When the approved ADRs are written, go to guard step 2.
+2. Search `specs/` and `design.md` of the change for 🤖.
+   - Do this search after the ADRs of guard step 1 are written, or after the user says no to the offer of guard step 1.
    - If a line of `specs/` or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
    - If no line has a 🤖, say nothing about marks.
    - Before each reply that says what holds a 🤖, search `specs/` and `design.md` again.
-   - Go to guard step 4.
-4. Name the open questions of a kept `plan.md`.
+   - Go to guard step 3.
+3. Name the open questions of a kept `plan.md`.
    - If `openspec/changes/<name>/plan.md` still exists, name each open question in `plan.md`.
    - If `openspec/changes/<name>/plan.md` does not exist, say nothing about `plan.md`.
-   - Go to guard step 5.
-5. Block the archive while a delta holds a 🤖.
-   - If a delta in `specs/` holds a 🤖, do not offer the archive, because the CLI copies the 🤖 into the main spec.
+   - Go to guard step 4.
+4. Block the archive while a delta holds a 🤖.
+   - If a delta in `specs/` holds a 🤖, do not offer the archive, and do not tell the user to run stock `/opsx:archive`, because the CLI copies the 🤖 into the main spec.
    - The block also forbids a question with a condition, such as "Do you want me to archive after you remove the marks?".
    - If a delta in `specs/` holds a 🤖, ask the user to remove the marks, and end your turn.
-   - If no delta in `specs/` holds a 🤖, go to guard step 6.
-6. Ask: "Archive the change now with `openspec archive <name> --yes`?"
+   - If no delta in `specs/` holds a 🤖, go to guard step 5.
+5. Give the archive step.
+   - If the user said no to the offer of guard step 1, tell the user to run stock `/opsx:archive`, and stop.
+   - If the user said no to the offer of guard step 1, do not offer the `openspec archive` command yourself. Do not offer to archive in any other words, for example "I can run the archive for you".
+   - In each other case, ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
-   - If the user says yes, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
-   - If the user says no, tell the user to run stock `/opsx:archive` later.
+   - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
+   - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
 
 ### Schema check
 
@@ -188,7 +188,8 @@ The guard path:
 
 - Input: the items of `<dir>/plan.md`, and the selected items of step 3.
 - Output: the list of items to draft, each with its destination, and the list of items that you do not draft.
-- A requirement goes to a spec. A decision goes to an ADR.
+- A selected constraint goes to a spec, as a requirement.
+- A selected decision goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement. The rationale of the decision can also go to an ADR.
 - List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
 - A fact goes to the `## Context` of each ADR whose decision the fact justifies. Keep the source emoji of the fact.
@@ -211,7 +212,7 @@ The delta format:
 
 - Before the first delta, run `openspec instructions specs --change "<name>" --schema spec-driven --json`.
 - Follow the delta format in the `instruction` of the result. The `instruction` gives the format for each header, including the `**Reason**` and `**Migration**` lines of REMOVED and the `FROM:` and `TO:` lines of RENAMED.
-- The result also has `skipped: true` and a warning, because `skip_specs` is still set. Ignore both: step 8 sets `skip_specs`.
+- If `skip_specs` is set, the result also has `skipped: true` and a warning. Ignore both, because step 8 removes `skip_specs` when a delta exists.
 
 **Requirement**: a delta for `<dir>/specs/<capability>/spec.md`.
 

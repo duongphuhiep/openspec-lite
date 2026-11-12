@@ -45,7 +45,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
 - The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
 - If only one active change exists, use that change.
-- If more than one active change exists, ask the user to pick one change.
+- If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts.
 - If no active change exists, stop. Tell the user that no active change exists.
 
 ### Guard
