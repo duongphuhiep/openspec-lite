@@ -29,7 +29,6 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
 - Run each command from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
 - If the OpenSpec root is not the current folder, start each `openspec` command with `cd <root> && `.
-- After the user confirms a root, also start the first command with `cd <root> && `.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root.

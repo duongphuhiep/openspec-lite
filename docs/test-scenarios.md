@@ -233,7 +233,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Expected**:
 
 - At the git root, `openspec list --json` gives `root: null`. The agent finds `svc/openspec/` in a subfolder and asks you to confirm it as the root. It does not suggest `openspec init` at the git root.
-- After you confirm, the agent runs each command in `svc/`.
+- After you confirm, each `openspec` command and each command with a relative `openspec/...` path runs in `svc/`. A command that gets `svc/` as an absolute argument, for example the `install.mjs` command, can run from any folder (D269).
 - `svc/openspec/schemas/plan-lite/` exists. The git root has no `openspec/` folder.
 - The schema skill finds itself in `.claude/skills/` at the git root, which is a parent folder of `svc/`.
 

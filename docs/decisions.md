@@ -3768,7 +3768,7 @@ This revises D119, D166, D182, D219, and D256.
 4. D02 (skill): the question rule splits its class into "an intent of the user" and "a fact that only the user knows". The recommendation rule uses the same term. No example is added.
 5. D05 (skill): archive says "Print the full text of … in your reply" for an ADR of an earlier run, for each file with the line `Change: <name>`, and for each delta file of an earlier run. "Show" had more than one meaning.
 6. D06 (skill): the archive guard rule "Before each reply that says what holds a 🤖, search again" applies only in guard steps 2 to 4. The reply with the ADR offer says nothing about the 🤖 lines of `specs/`.
-7. D07 (scenario, skill): the rule "After the user confirms a root, also start the first command with `cd <root> && `" is deleted in the schema skill and in propose, because the rule for each `openspec` command covers the case. Scenario 11 checks the result, not the form of the first command.
+7. D07 (scenario, skill): the rule "After the user confirms a root, also start the first command with `cd <root> && `" is deleted in each of the six skills, because the block is shared, and because the rule for each `openspec` command covers the case. Scenario 11 checks the result, not the form of the first command.
 8. D09 (skill): the decision format says "One decision records one choice. If you made two choices, write two decisions, each with its own reason." No rule about the output of a tool is added, because that rule is a hint example.
 
 **Rationale**: the user reviewed each must-fix defect of `.scenario-runs/20261112-84abcb6/defects.md` with the investigation reports of the run. Items 4 to 8 are agreed fixes. They are not applied yet.
