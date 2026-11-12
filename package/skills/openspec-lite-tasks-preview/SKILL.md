@@ -50,7 +50,9 @@ Do these checks in order.
 - Input: `openspec/changes/<name>/.openspec.yaml`.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If the schema is `plan-lite`, go to the schema check.
-- If the schema is not `plan-lite`, stop. A spec-driven change has `tasks.md` instead. Point the user to stock `/opsx:continue`.
+- If the schema is not `plan-lite`, stop. A spec-driven change has `tasks.md` instead.
+- If the schema is not `plan-lite`, and `openspec/changes/<name>/tasks.md` exists, point the user to stock `/opsx:apply`.
+- If the schema is not `plan-lite`, and `openspec/changes/<name>/tasks.md` does not exist, point the user to stock `/opsx:continue`.
 
 ### Schema check
 

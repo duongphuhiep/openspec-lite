@@ -82,6 +82,7 @@ apply:
       - End your turn, and wait for the reply of the user.
     - When the user replies to the questions of step 3:
       - Record each answer with the answer rule.
+      - In step 3, "stale" means the result of step 2. A constraint that the answer rule adds in this run does not make step 3 ask the stale question. Step 6 reports the new constraint.
       - A question that the user did not answer stays open. Do not write the code that depends on that question.
       - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
       - If the user says to continue from plan.md, go to step 4.

@@ -29,6 +29,7 @@ How to read this skill:
 
 - Input: the request of the user.
 - Output: the main outcome, and the list of the other outcomes.
+- If the request names no outcome, ask the user what the change does, and end your turn. Do not invent a Goal. When the user replies, do the main outcome step again with the reply.
 - The first outcome of the request is the main outcome, also when the request has only one outcome.
 - If the request has more than one outcome, do the split check for each other outcome.
 - If the request has only one outcome, go to the Level 1 question.
@@ -41,6 +42,8 @@ How to read this skill:
 - If the outcome touches the same code as the main outcome, keep the outcome in this change. Do not ask.
 - If the outcome does not touch the same code as the main outcome, and the outcome can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?"
 - If the outcome does not touch the same code as the main outcome, and the outcome cannot ship alone, keep the outcome in this change. Do not ask.
+- If more than one outcome needs the split question, ask all split questions in one reply.
+- After the split questions, end your turn, and wait for the answer.
 - On yes to the split question, leave the outcome out of this change. The outcome is an outcome that the user moved out.
 - On no to the split question, keep the outcome as an outcome of this change.
 - When the split check is done for each outcome, go to the Level 1 question.
@@ -51,6 +54,7 @@ How to read this skill:
 - Ask the Level 1 question only if the outcomes that stay are small: one obvious fix, and no constraints or open questions worth recording.
 - If the outcomes that stay are not small, do not ask the Level 1 question. Go to section 2.
 - Ask: "This looks small. Implement directly with no change?"
+- After the Level 1 question, end your turn, and wait for the answer.
 - On yes, make the fix directly, with no change and no file under `openspec/`.
 - On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
 - On yes, stop after the fix and the names.

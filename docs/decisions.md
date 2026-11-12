@@ -3547,3 +3547,26 @@ This revises D152, D164, D191, and D215.
 This revises D229 and D253.
 
 **Rationale**: a fresh-context review found each gap. I checked each remark against the skills, `design.md`, and the decisions.
+
+## D255: Fixes From Review Loop 4, Round 2, on 99d8656..local
+
+**Decision**: from `.review-reports/review_20261112102432_claude-opus-5-5_99d8656-local.md`:
+
+1. Upgrade step 2.2 also writes a planned requirement whose source is a decision with no 🤖 that is a contract.
+2. In `apply.instruction` step 3, "stale" means the result of step 2. A constraint that an answer adds in step 3 does not trigger the stale question. Step 6 reports the constraint.
+3. Upgrade step 2 uses only the test of the question rule of apply. It does not do the `plan.md` writes of that rule.
+4. Upgrade step 2.3 writes each fact and each decision that step 2 planned.
+5. Upgrade step 5.1 uses the destination "closed" only for a question that step 2 closed in this session. On the resume path, each question gets a destination from the artifacts.
+6. Upgrade step 2.5 says that "a question that the tasks preview added" is a question in `## Open Questions` of `plan.md`.
+7. Propose asks what the change does when the request names no outcome, and does not invent a Goal. Scenario 12 expects this.
+8. The split questions and the Level 1 question of propose end the turn. All split questions go in one reply.
+9. The archive guard stops on a `plan-lite` change with no `plan.md`, and points to `openspec-lite-propose`, as upgrade does (D254).
+10. When the user replies after archive guard step 4, archive goes to guard step 2, and keeps the answer to the ADR offer.
+11. `design.md` says that the archive question gives the number of unchecked tasks, as the skill and scenario 18b say.
+12. The tasks-preview guard points to `/opsx:apply` when the change has `tasks.md`, and to `/opsx:continue` when it has none. Scenario 19 case 1 expects `/opsx:apply`.
+13. Scenario 4 expects a constraint for a part that passes the rule test, not for each choice.
+14. Scenario 18 has a step that declines the ADR offer, so that a run reaches the decline checks.
+
+This revises D133, D154, D196, and D254.
+
+**Rationale**: a fresh-context review found each gap. I checked each remark against the skills, `design.md`, and the decisions.

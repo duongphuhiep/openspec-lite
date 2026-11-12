@@ -124,7 +124,8 @@ Close the open questions of `plan.md`:
 - Read each question in `## Open Questions` of `plan.md`.
 - A question that ends with "(kept open by the user)" is a kept question.
 - Keep each kept question, also if you can decide the kept question. Do not ask a kept question again.
-- For each question that is not a kept question, try to decide the question or find its answer. Use the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`.
+- For each question that is not a kept question, try to decide the question or find its answer. Use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
+- In step 2, do not do the `plan.md` writes of the question rule: record no fact or decision in `plan.md`, and remove no question from `plan.md`. Plan each answer for an artifact or for the summary, as the next bullets say.
 - A question is open only while you cannot decide the question and cannot find its answer.
 - If you find an answer that is a non-obvious fact, plan the answer as a fact in `design.md` → `## Context`.
 - If you find an answer that is obvious, give the answer only in the summary.
@@ -187,7 +188,7 @@ Read the answer of the user:
 - Use the headers `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`, or `## RENAMED Requirements`.
 - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
 - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit the copy.
-- Write only the requirements that step 2 planned and that the user approved, or whose source is a constraint or an answer of the user.
+- Write only the requirements that step 2 planned and that the user approved, or whose source is a constraint, a decision with no 🤖 that is a contract, or an answer of the user.
 - Do not write a requirement that step 2 did not plan, also if the CLI instruction or the Goal suggests it.
 - In the summary, name the source of each requirement: a constraint, a contract decision, or an answer of the user.
 - After a yes in step 2, the user is the source of a requirement, so the requirement gets no 🤖 mark.
@@ -204,6 +205,8 @@ Read the answer of the user:
 - A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet.
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
+- Write each fact that step 2 planned to `## Context`, with its source emoji.
+- Write each decision that step 2 planned to `## Decisions`, with 🤖 at the end of its heading.
 - An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says.
 - A kept question that is safe to answer later goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
@@ -238,7 +241,7 @@ Read the answer of the user:
 - Output: `proposal.md` and `design.md` with no pointer to a question of `## 0`.
 - Read `proposal.md` and `design.md` again.
 - Remove each sentence that restates a question of `## 0. Open questions`, or points to it, for example "See the open questions in tasks.md" or "See task 0.2".
-- Also remove such a sentence for a question that the tasks preview added.
+- This also applies to a question that the tasks preview added to `## Open Questions` of `plan.md`.
 - In the artifacts, the task in `## 0. Open questions` is the only place of each question of `## 0`. The question also stays in `plan.md`.
 - Go to step 3.
 
@@ -265,7 +268,8 @@ Do steps 5.1 to 5.4 in order.
 - List each `plan.md` section with its destination, in a table with the columns `Section`, `Artifact`, and `Heading`. Give one row for each section that has content.
 - In the `Heading` column, write the heading of the artifact that now holds the content, for example `## Context`, or write "kept".
 - If a question also stays in `plan.md` (step 2.3 or step 2.4), write the heading of the artifact and "kept", for example "`## Open Questions`, kept".
-- A question that step 2 closed has the destination "closed", with its answer. A yes to the prune question deletes the closed question.
+- A question that step 2 closed in this session has the destination "closed", with its answer. A yes to the prune question deletes the closed question.
+- If step 2 did not run in this session, for example on the resume path, do not use the destination "closed". Give each question of `plan.md` the heading of the artifact that holds the question or its answer, or `## 0. Open questions`, or "kept, in no artifact".
 - If the items of one section go to different destinations, list each item.
 - Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
 - Go to step 5.2.

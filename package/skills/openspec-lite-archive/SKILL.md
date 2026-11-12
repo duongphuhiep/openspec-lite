@@ -64,7 +64,8 @@ Do these checks in order.
 - Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`.
 - Output: the path to follow: the schema check, or the guard path.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
-- If `schema` is `plan-lite`, continue with the schema check.
+- If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, continue with the schema check.
+- If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
 - If `schema` is not `plan-lite`, follow the guard path below. Do not run the schema check, section 2, or section 3.
 
 The guard path:
@@ -98,6 +99,7 @@ The guard path:
    - If a delta in `specs/` holds a 🤖, do not offer the archive, and do not tell the user to run stock `/opsx:archive`, because the CLI copies the 🤖 into the main spec.
    - The block also forbids a question with a condition, such as "Do you want me to archive after you remove the marks?".
    - If a delta in `specs/` holds a 🤖, ask the user to remove the marks, and end your turn.
+   - When the user replies after guard step 4, go to guard step 2. Keep the answer of the user to the offer of guard step 1.
    - If no delta in `specs/` holds a 🤖, go to guard step 5.
 5. Give the archive step.
    - If the user said no to the offer of guard step 1, tell the user to run stock `/opsx:archive`, and stop.
