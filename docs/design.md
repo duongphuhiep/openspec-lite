@@ -364,7 +364,7 @@ How to read these steps:
 - If plan.md and tasks-preview.md conflict, follow plan.md.
 - Do not edit tasks-preview.md.
 - Each time the user answers an open question, record the answer with the answer rule.
-- Each time the user gives a fact, a constraint, or a choice for the change in a reply, record the reply with the answer rule.
+- Each time the user replies, record the reply with the answer rule.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
 - When you find a fact, record the fact with the fact rule and the fact format.
@@ -432,8 +432,7 @@ How to read these steps:
   - Record the point as an open question before you write the code that depends on the point.
   - Ask the open question with the ask rule.
   - End your turn.
-- When the user replies in step 4, step 5, or step 6, or after step 6, record each fact, constraint, or choice for the change in the reply with the answer rule. Then go to step 4, and write the code that the reply needs.
-- If the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question, and record nothing.
+- When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule. If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs.
 - When the code is written, go to step 5.
 
 ## Step 5: Check plan.md against the code
@@ -513,6 +512,7 @@ When the checks are done, go to step 6.
 
 ## Answer rule: record a reply of the user
 
+- If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
 - If a reply of the user answers an open question, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -521,14 +521,14 @@ When the checks are done, go to step 6.
 - Record each part of the reply in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each constraint of the reply in `## Constraints`.
-- If the user tells you to change or remove an item of plan.md, change or remove the item. Do not record the instruction as a decision.
+- If the user names an item of plan.md, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - Record each other choice or instruction of the reply, that is not a fact and not a constraint, in `## Decisions`, as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
-- After you record the reply, read the reply again, part by part. If a fact, constraint, or choice of the reply is in no section of plan.md, record the part now.
+- After you record the reply, read the reply again, part by part. If a part of the reply is in no section of plan.md, record the part now, unless the part only asks you to run a command or a skill, or asks you a question.
 
 ## Decision rule: when to record a decision
 
@@ -684,7 +684,7 @@ When the checks are done, go to step 6.
 <!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>", with the source and a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code. A non-obvious fact needs an answer of the user, a run or a test result, research of remote sources (documentation on the internet, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. A run alone is not enough: if a reader can see the result in the code or in the file list, the fact is obvious. A fact that the user gave (👤) is always non-obvious. Do not record a guess. Do not record an obvious fact or a well-known fact: write such a fact in the "because" part of the decision that it justifies. Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK. -->
 
 ## Decisions
-<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each 🤖 decision that a new decision supersedes. If a new instruction of the user supersedes a decision with no 🤖, remove the old decision. Update each stale decision. Change a decision with no 🤖 only on an answer or an instruction of the user, or to move a choice that you added into its own 🤖 decision. Then remove each fact that justifies no current decision or constraint, except a non-obvious fact. -->
+<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each 🤖 decision that a new decision supersedes. If a new instruction of the user supersedes a decision with no 🤖, remove the old decision. Update each 🤖 decision that a new decision makes stale. Change a decision with no 🤖 only on an answer or an instruction of the user, or to move a choice that you added into its own 🤖 decision. Then remove each fact that justifies no current decision or constraint, except a non-obvious fact. -->
 <!-- ### Decision D<n>: <title>, then "Chose X because Y." One decision records one choice. Add "Rejected Z because W." when there was an alternative. An agent ends the heading with 🤖, unless the decision records an answer or an instruction of the user. A decision with no 🤖 belongs to the user. Remove the 🤖 to accept a decision. -->
 ```
 

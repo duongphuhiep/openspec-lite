@@ -20,7 +20,7 @@ How to read this skill:
 - When you write `## Goal`, follow the goal rule.
 - When you record an open point, follow the question rule.
 - Each time the user answers a question of `plan.md`, record the answer with the answer rule.
-- Each time the user gives a fact, a constraint, or a choice for the change in a reply, record the reply with the answer rule.
+- Each time the user replies, record the reply with the answer rule.
 - If `plan.md` does not exist yet, keep each fact, constraint, or choice of the reply. Record each one with the answer rule in section 3, step 5.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
@@ -159,6 +159,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 ### Answer rule
 
+- If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
 - If the user answers an open question of `plan.md`, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
@@ -167,12 +168,12 @@ Do these checks in order. When the checks are done, go to section 3.
 - Record each constraint in the answer in `## Constraints`.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
-- If the user tells you to change or remove an item of `plan.md`, change or remove the item. Do not record the instruction as a decision.
+- If the user names an item of `plan.md`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
 - Record each other choice or instruction in the answer as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
 - An answer to an open question is a part of the answer. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
-- After you record the answer, read the answer again, part by part. If a part is in no section of plan.md, record the part now.
+- After you record the answer, read the answer again, part by part. If a part of the answer is in no section of plan.md, record the part now, unless the part only asks you to run a command or a skill, or asks you a question.
 
 ### Fact rule
 
@@ -212,8 +213,8 @@ Do these checks in order. When the checks are done, go to section 3.
    - Go to step 2.
 2. Ask: "Do you want a tasks preview?"
    - After the question, end your turn, and wait for the answer.
-   - When the user replies, first record each answer to an open question of `plan.md`, and each other part of the reply, with the answer rule.
-   - List each item that you added, changed, or removed in `plan.md`, with its ID.
+   - When the user replies, first record the reply with the answer rule.
+   - If you added, changed, or removed an item in `plan.md`, list each such item, with its ID.
    - Then, on yes, run the `openspec-lite-tasks-preview` skill.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
    - On no, end your turn.

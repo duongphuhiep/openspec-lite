@@ -331,4 +331,4 @@ When each item has a draft, go to step 6.
 ## 3. End
 
 - List the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
-- If the user rejected a draft of a decision, say that this decision now exists only in `openspec/changes/archive/`.
+- If a decision of `plan.md` has no ADR, because step 4 did not draft it or the user rejected its draft, say that this decision now exists only in `openspec/changes/archive/`.

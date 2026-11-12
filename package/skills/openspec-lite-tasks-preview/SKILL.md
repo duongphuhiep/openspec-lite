@@ -85,7 +85,7 @@ Do these checks in order.
 
 - Edit `plan.md` only as the plan.md rule says.
 - Each time the user answers an open question, record the answer with the answer rule.
-- Each time the user gives a fact, a constraint, or a choice for the change in a reply, record the reply with the answer rule.
+- Each time the user replies, record the reply with the answer rule.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
 - When you find a fact, record the fact with the fact rule and the fact format.
@@ -95,6 +95,7 @@ Do these checks in order.
 - If the user moves the decision that records a constraint of the user to `## Constraints`, the preview is stale. Tell the user to run this skill again.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. List each item that you recorded, with its ID. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
 - A new constraint in a reply follows the answer rule.
+- If a reply after step 8 changes no item of `plan.md`, answer the reply, and do not run step 8 again.
 - If the user replies after step 8, the reply does not make the preview stale, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Update each task of the preview that the changed items make wrong. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again for the items that the reply changed.
 
 ### Step 1: Check that plan.md exists
@@ -241,6 +242,7 @@ When the checks are done, go to step 6.
 
 ### Answer rule: record a reply of the user
 
+- If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
 - If a reply of the user in this session answers an open question, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -249,12 +251,12 @@ When the checks are done, go to step 6.
 - Record each part of the reply in one section only.
 - If a part limits the result and also says how to build the result, record the limit and the build choice as two decisions with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
-- If the user tells you to change or remove an item of `## Facts`, `## Decisions`, or `## Open Questions`, change or remove the item. Do not record the instruction as a decision.
+- If the user names an item of `## Facts`, `## Decisions`, or `## Open Questions`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
-- After you record the reply, read the reply again, part by part. If a fact, constraint, or choice of the reply is in no section of plan.md, record the part now.
+- After you record the reply, read the reply again, part by part. If a part of the reply is in no section of plan.md, record the part now, unless the part only asks you to run a command or a skill, or asks you a question.
 - You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".

@@ -270,6 +270,7 @@ Do steps 5.1 to 5.4 in order.
 - Input: `plan.md`, and the four artifacts.
 - Output: the destination list.
 - List each `plan.md` section with its destination, in a table with the columns `Section`, `Artifact`, and `Heading`. Give one row for each section that has content.
+- A decision of `plan.md` that an answer superseded has the heading of the decision that replaced it.
 - In the `Heading` column, write the heading of the artifact that now holds the content, for example `## Context`, or write "kept".
 - If a question also stays in `plan.md` (step 2.3 or step 2.4), write the heading of the artifact and "kept", for example "`## Open Questions`, kept".
 - If an artifact holds a question of `plan.md` or its answer, give the question the heading of that artifact, or `## 0. Open questions`.
@@ -404,4 +405,4 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 - If an artifact already exists from an earlier run, keep the artifact, and go to the next artifact.
 - On a resumed run, ask the questions of step 2 again before you write a missing artifact, because the answers of the earlier session are not on disk.
-- If a kept artifact looks incomplete, for example a template section that is still empty, tell the user, and offer to complete it.
+- If a kept artifact looks incomplete, for example a template section that is still empty, name the section in the summary, and tell the user to complete it by hand.
