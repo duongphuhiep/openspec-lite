@@ -249,11 +249,12 @@ When the checks are done, go to step 6.
 - Record each part of the reply in one section only.
 - If a part limits the result and also says how to build the result, record the limit and the build choice as two decisions with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
+- If the user tells you to change or remove an item of `## Facts`, `## Decisions`, or `## Open Questions`, change or remove the item. Do not record the instruction as a decision.
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
-- After you record the reply, read the reply again, part by part. If a part is in no section of plan.md, record the part now.
+- After you record the reply, read the reply again, part by part. If a fact, constraint, or choice of the reply is in no section of plan.md, record the part now.
 - You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
@@ -300,12 +301,11 @@ When the checks are done, go to step 6.
 
 - `## Decisions` holds only the current decisions.
 - Remove each 🤖 decision that a new decision supersedes.
-- If a new instruction of the user supersedes a decision with no 🤖, update or remove that decision.
+- If a new instruction of the user supersedes a decision with no 🤖, record the new decision, and remove the old decision.
 - Update each 🤖 decision that a new decision makes stale.
-- Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`.
-- Change a decision with no 🤖 only when the user tells you to in this session, or to move a choice that you added into its own 🤖 decision.
-- If a 🤖 decision conflicts with a constraint or with a decision with no 🤖, update or remove the 🤖 decision, and record no question.
-- If the plan cannot follow a constraint or a decision with no 🤖, record the conflict as an open question.
+- Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`, and record no question.
+- Change a decision with no 🤖 only when the user tells you to in this session, when a new instruction of the user supersedes the decision, or to move a choice that you added into its own 🤖 decision.
+- If the tasks of the preview cannot follow a constraint or a decision with no 🤖, record the conflict as an open question.
 - After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
 
 ### Fact rule: when to record a fact

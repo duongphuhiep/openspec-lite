@@ -432,7 +432,8 @@ How to read these steps:
   - Record the point as an open question before you write the code that depends on the point.
   - Ask the open question with the ask rule.
   - End your turn.
-- When the user replies in step 4, step 5, or step 6, or after step 6, record each part of the reply with the answer rule. Then go to step 4, and write the code that the reply needs.
+- When the user replies in step 4, step 5, or step 6, or after step 6, record each fact, constraint, or choice for the change in the reply with the answer rule. Then go to step 4, and write the code that the reply needs.
+- If the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question, and record nothing.
 - When the code is written, go to step 5.
 
 ## Step 5: Check plan.md against the code
@@ -520,14 +521,14 @@ When the checks are done, go to step 6.
 - Record each part of the reply in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each constraint of the reply in `## Constraints`.
-- If the user tells you to change or remove a constraint, change or remove the constraint.
+- If the user tells you to change or remove an item of plan.md, change or remove the item. Do not record the instruction as a decision.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - Record each other choice or instruction of the reply, that is not a fact and not a constraint, in `## Decisions`, as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
-- After you record the reply, read the reply again, part by part. If a part is in no section of plan.md, record the part now.
+- After you record the reply, read the reply again, part by part. If a fact, constraint, or choice of the reply is in no section of plan.md, record the part now.
 
 ## Decision rule: when to record a decision
 
@@ -571,10 +572,10 @@ When the checks are done, go to step 6.
 
 - `## Decisions` holds only the current decisions.
 - Remove each 🤖 decision that a new decision supersedes.
-- If a new instruction of the user supersedes a decision with no 🤖, update or remove that decision.
+- If a new instruction of the user supersedes a decision with no 🤖, record the new decision, and remove the old decision.
 - Update each 🤖 decision that a new decision makes stale.
 - Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖.
-- Change a decision with no 🤖 only when the user tells you to, or to move a choice that you added into its own 🤖 decision.
+- Change a decision with no 🤖 only when the user tells you to, when a new instruction of the user supersedes the decision, or to move a choice that you added into its own 🤖 decision.
 - After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
 
 ## Fact rule: when to record a fact
@@ -680,11 +681,11 @@ When the checks are done, go to step 6.
 <!-- Open points, as "- OQ<n>: <question>". Apply and the tasks preview keep only a point that they cannot decide and cannot find the answer to. Keep a question that the user said to keep open, and end it with "(kept open by the user)". When a question gets an answer, remove it: an answer of the user goes to another section of the plan. An answer that the agent found goes to another section, or only to the summary when the answer is obvious or is a choice that the decision rule does not record. -->
 
 ## Facts
-<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>", with the source and a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code. A non-obvious fact needs an answer of the user, a run or a test result, research of remote sources (documentation on the internet, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. A run alone is not enough: if a reader can see the result in the code or in the file list, the fact is obvious. Do not record a guess. Do not record an obvious fact or a well-known fact: write such a fact in the "because" part of the decision that it justifies. Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK. -->
+<!-- Non-obvious facts found during exploration, grilling, the tasks preview, or apply, as "- F<n>: <fact>", with the source and a source emoji: 👤 the user, 📖 documentation, 🎫 a ticket, 📊 an external report, 🌐 online research or a community, 🔬 a test run or a probe, 🔍 a long analysis of the code. A non-obvious fact needs an answer of the user, a run or a test result, research of remote sources (documentation on the internet, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. A run alone is not enough: if a reader can see the result in the code or in the file list, the fact is obvious. A fact that the user gave (👤) is always non-obvious. Do not record a guess. Do not record an obvious fact or a well-known fact: write such a fact in the "because" part of the decision that it justifies. Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK. -->
 
 ## Decisions
-<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each superseded decision. Update each stale decision. Change a decision with no 🤖 only on an answer or an instruction of the user, or to move a choice that you added into its own 🤖 decision. Then remove each fact that justifies no current decision or constraint, except a non-obvious fact. -->
-<!-- ### Decision D<n>: <title>, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative. An agent ends the heading with 🤖, unless the decision records an answer or an instruction of the user. A decision with no 🤖 belongs to the user. Remove the 🤖 to accept a decision. -->
+<!-- Keep only the current decisions, not a history. When you add a decision, check the others. Remove each 🤖 decision that a new decision supersedes. If a new instruction of the user supersedes a decision with no 🤖, remove the old decision. Update each stale decision. Change a decision with no 🤖 only on an answer or an instruction of the user, or to move a choice that you added into its own 🤖 decision. Then remove each fact that justifies no current decision or constraint, except a non-obvious fact. -->
+<!-- ### Decision D<n>: <title>, then "Chose X because Y." One decision records one choice. Add "Rejected Z because W." when there was an alternative. An agent ends the heading with 🤖, unless the decision records an answer or an instruction of the user. A decision with no 🤖 belongs to the user. Remove the 🤖 to accept a decision. -->
 ```
 
 `## Decisions` holds only the current decisions, not a history. When an agent adds a decision, it removes each superseded decision and updates each stale one (D136). Entry format: `### Decision D<n>: <title>`, then "Chose X because Y." Add "Rejected Z because W." when there was an alternative (D92, D134).
