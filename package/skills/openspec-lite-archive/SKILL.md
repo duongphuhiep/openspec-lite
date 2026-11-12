@@ -210,8 +210,8 @@ The guard path:
 
 ### Step 5: Draft the full text of each item
 
-- Input: the items to draft of step 4, `openspec/specs/`, and `openspec/adr/`.
-- Output: the drafts of the deltas and the ADRs.
+- Input: the items to draft of step 4, `openspec/specs/`, `openspec/adr/`, and `<dir>/specs/`.
+- Output: the drafts of the deltas and the ADRs, and the list of the delta files of an earlier run.
 
 The delta format:
 
@@ -251,6 +251,13 @@ The first check, for existing ADRs:
 - Print the full text of each file that has the line `Change: <name>`, in your reply.
 - Do not draft a decision or a fact that already has an ADR.
 
+The check for an earlier delta:
+
+- Before you draft a delta, list the files under `<dir>/specs/`.
+- If a file exists under `<dir>/specs/`, an earlier run of this archive wrote the file.
+- Print the full text of each such file in your reply.
+- Step 6 asks the user to keep or delete each such file.
+
 The second check, for a **Superseded ADR**:
 
 - Read the title and `## Decision` of each ADR in `openspec/adr/` with the line `Status: Accepted`.
@@ -273,23 +280,21 @@ When each item has a draft, go to step 6.
 - Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
+- For each delta file of an earlier run (step 5), ask the user to keep or delete the file, in the same reply as the drafts.
 - For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes.
 - The user answers yes, no, or edit for each item.
 - After you apply an edit, print the full text of the edited draft, and ask for approval again.
 - Outside the guard path, tell the user that they can pick a skipped item to draft.
 - After you print the drafts, end your turn, and wait for the answer of the user.
 - If the user picks a skipped item, draft the item, print the full text of the draft for approval, end your turn, and wait for the answer.
-- When the user approved or rejected each draft, go to step 7.
+- When the user approved or rejected each draft, and answered keep or delete for each delta file of an earlier run, go to step 7.
 
 ### Step 7: Write the deltas
 
-- Input: the files under `<dir>/specs/`, and the approved deltas of step 6.
+- Input: the approved deltas of step 6, and the keep-or-delete answers of step 6.
 - Output: the deltas in `<dir>/specs/`.
-- Before you write, list the files under `<dir>/specs/`.
-- If no file exists under `<dir>/specs/`, write the approved deltas to `<dir>/specs/<capability>/spec.md`.
-- If a file exists under `<dir>/specs/`, the file is from an earlier run. Print the full text of each file in your reply, ask the user to keep or delete each file, and end your turn.
-- When the user replies, delete each file that the user said to delete. Keep each other file for the merge.
-- Then write the approved deltas to `<dir>/specs/<capability>/spec.md`.
+- Delete each delta file of an earlier run that the user said to delete in step 6. Keep each other such file for the merge.
+- Write the approved deltas to `<dir>/specs/<capability>/spec.md`.
 - If a kept file has the same path as an approved delta, merge the new delta into the kept file, with no duplicate requirement.
 - Go to step 8.
 
