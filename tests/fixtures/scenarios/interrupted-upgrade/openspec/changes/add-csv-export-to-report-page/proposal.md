@@ -2,7 +2,7 @@
 
 ## Why
 
-Users of the report page cannot take the rows of the table out of the page. Issue #42 asks for a CSV export of the report table.
+Users of the report page cannot take the rows of the table out of the page. Issue #42 asks for a CSV export of the report table. 🤖
 
 ## What Changes
 

@@ -3754,5 +3754,6 @@ This revises D119, D166, D182, D219, and D256.
 3. The `after-upgrade` fixture is the state where the user did not say yes to the quoting requirement. Its delta has no quoting requirement, and the "Quote each cell" decision in `design.md` keeps its 🤖. Scenario 7 accepts this state, and scenario 18b needs the 🤖.
 4. The `after-upgrade` fixture has no "Exclude hidden columns" decision in `design.md`. The answer "no hidden columns" is a rule, so it is only a requirement in `specs/`, as the split rule of upgrade says.
 5. The `rate-limit` fixture and `kept-plan.md` keep their form, because scenarios 4b and 17b need it.
+6. In the `interrupted-upgrade` and `after-upgrade` fixtures, the `## Why` line of `proposal.md` ends with 🤖. `plan.md` does not say that users cannot take the rows out of the page, or what issue #42 asks, so the line is an inferred item. The user chose the mark over a rewrite.
 
 **Rationale**: the user found that the fixtures did not follow the current schema. The fixtures date from D199. Later decisions changed the preview rule (D250) and the split rule (D256, D258).
