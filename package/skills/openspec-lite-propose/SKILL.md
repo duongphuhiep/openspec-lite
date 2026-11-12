@@ -21,7 +21,7 @@ How to read this skill:
 - When you record an open point, follow the question rule.
 - Each time the user answers a question of `plan.md`, record the answer with the answer rule.
 - Each time the user gives a fact, a constraint, or a choice for the change in a reply, record the reply with the answer rule.
-- If `plan.md` does not exist yet, keep each such part of the reply, and record the part when you write `plan.md` in section 3.
+- If `plan.md` does not exist yet, keep each fact, constraint, or choice of the reply. Record each one with the answer rule in section 3, step 5.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
 
@@ -133,9 +133,10 @@ Do these checks in order. When the checks are done, go to section 3.
    - Write `openspec/changes/<name>/plan.md` from the `template` field of the output.
    - Go to step 5.
 5. Fill `plan.md`:
-   - Input: the request, the answers of the user, and the outcomes that stay in this change.
+   - Input: the request, the answers of the user, the outcomes that stay in this change, and the list of open points of section 1.
    - Output: `openspec/changes/<name>/plan.md`.
    - Fill only what is known. Leave the other sections empty.
+   - Record each open point of the list in `## Open Questions` with the question rule.
    - Keep each `<!-- ... -->` guidance comment, also in a section that you fill.
    - Write the content of a section on the lines under the guidance comment.
    - Do not invent non-goals, constraints, facts, or decisions.

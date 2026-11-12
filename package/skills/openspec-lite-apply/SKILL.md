@@ -5,7 +5,7 @@ description: Implement a plan-lite change from plan.md, with tasks-preview.md as
 
 # openspec-lite-apply
 
-Implement a plan-lite change. The rules are in the plan-lite schema, so stock `/opsx:apply` uses the same rules. This skill adds three rules: the stop on a blocked state (section 2), and two general rules: the rule not to follow CLI text that names another skill, and the rule to ignore checkboxes and task counts.
+Implement a plan-lite change. The rules are in the plan-lite schema, so stock `/opsx:apply` uses the same rules. This skill adds the stop on a blocked state (section 2) and the general rules.
 
 How to read this skill:
 
