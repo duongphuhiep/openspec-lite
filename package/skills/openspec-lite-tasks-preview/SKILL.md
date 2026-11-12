@@ -85,13 +85,15 @@ Do these checks in order.
 
 - Edit `plan.md` only as the plan.md rule says.
 - Each time the user answers an open question, record the answer with the answer rule.
-- Each time the user gives a fact, a rule, or a choice for the change in a reply, record the reply with the answer rule.
+- Each time the user gives a fact, a constraint, or a choice for the change in a reply, record the reply with the answer rule.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
 - When you find a fact, record the fact with the fact rule and the fact format.
+- When you ask an open question, follow the ask rule.
 - When you need the exit code of a command, use the exit-code rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
-- If the user moves a constraint to `## Constraints`, the preview is stale. Tell the user to run this skill again.
+- If the user moves the decision that records a constraint of the user to `## Constraints`, the preview is stale. Tell the user to run this skill again.
+- If a reply asks for an edit of Goal, Background, Non-Goals, or Constraints, tell the user to make the edit in `plan.md`, and to run this skill again.
 - If the user replies after step 8, and the reply does not make the preview stale, record the reply with the general rules. Update each task of the preview that the changed items make wrong. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again for the items that the reply changed.
 
 ### Step 1: Check that plan.md exists
@@ -115,8 +117,6 @@ Do these checks in order.
 - Output: the updates of `## Facts`, `## Decisions`, and `## Open Questions` in `plan.md`.
 - Read `plan.md`.
 - Explore the code that the change touches.
-- A question that ends with "(kept open by the user)" is a kept question.
-- Keep each kept question, also if you can decide the kept question, unless the user answers the kept question now.
 - Before you write the tasks, try to close each question that is not a kept question with the question rule.
 - Go to step 4.
 
@@ -175,7 +175,6 @@ When the checks are done, go to step 6.
 - Input: the points that you found in steps 3 to 6.
 - Output: the new questions in `## Open Questions` of `plan.md`, and the updates of `tasks-preview.md`.
 - Record each point that you cannot close with the question rule as an open question.
-- Keep each kept question.
 - If a task of the preview depends on a new open question, add to that task that the task waits for the answer.
 - Go to step 8.
 
@@ -187,10 +186,7 @@ When the checks are done, go to step 6.
    - List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
    - If you added, changed, or removed no item in `plan.md`, say that you changed no item.
    - For each open question that you removed, give its answer.
-   - Ask each open question that is still open, also an existing one, with your recommended answer.
-   - Do not ask a kept question again.
-   - Give no recommendation when the answer is a fact that only the user knows.
-   - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
+   - Ask each open question that is still open and is not a kept question, also an existing one, with the ask rule.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
 4. Tell the user to read the preview.
@@ -221,7 +217,7 @@ When the checks are done, go to step 6.
 
 - A question is open only while you cannot decide the question and cannot find its answer.
 - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
-- You cannot decide a point when the code must match something outside the repo, and the repo does not show it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
+- You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary of step 8.
@@ -230,6 +226,16 @@ When the checks are done, go to step 6.
 - When you close a question, remove the question from `## Open Questions`.
 - Do not record a point that you can decide as an open question.
 - Write a new open question as `- OQ<n>: <question>`.
+- A question that ends with "(kept open by the user)" is a kept question.
+- Keep each kept question until a message of the user answers the kept question, also if you can decide the kept question.
+- Do not ask a kept question.
+- If a message of the user answers a kept question, record the answer with the answer rule.
+
+### Ask rule: ask an open question
+
+- Give your recommended answer for each open question.
+- Give no recommendation when the answer is a fact that only the user knows. Say why you give no recommendation.
+- If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
 
 ### Answer rule: record a reply of the user
 
@@ -248,7 +254,7 @@ When the checks are done, go to step 6.
 - You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
-- For each constraint that you record as a decision, say in the end summary that the user can move the constraint to `## Constraints`.
+- For each decision that records a constraint of the user, say in the end summary that the user can move the decision to `## Constraints`.
 
 ### Decision rule: when to record a decision
 
@@ -310,7 +316,7 @@ When the checks are done, go to step 6.
 - A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found the fact.
 - A run alone does not make a fact non-obvious. The result must be one that a reader cannot see in the code or in the file list.
 - A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact, also not the fact check of step 5.
-- When a command, a tool, or a service gives an error or an output that makes you change what you do, record the output as a fact, with the command and the error text.
+- When a command, a tool, or a service gives an error or an output that makes you change what you do, and the output is a non-obvious fact, record the output as a fact, with the command and the error text.
 - Do not record an obvious fact or a well-known fact in `## Facts`.
 - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
 - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact. The preview cannot edit `## Constraints` or `## Non-Goals`, so the fact has no place.

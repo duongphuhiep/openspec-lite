@@ -20,6 +20,7 @@ apply:
     - The general rules apply at all times, in each step.
     - A named rule, for example the question rule, applies in each step where its topic comes up, also when the step does not name the rule.
     - The OpenSpec root is the folder that holds `openspec/`. Run each command from the OpenSpec root.
+    - If the OpenSpec root is not the current folder, start each command with `cd <root> && `. This prefix does not count as a chain.
     - `<changeDir>` is the folder of the change.
 
     ## General rules
@@ -34,7 +35,7 @@ apply:
     - When you ask an open question, follow the ask rule.
     - When you need the exit code of a command, use the exit-code rule.
     - When you change a behavior, follow the test rule.
-    - When you write a file other than plan.md and tasks-preview.md, or a commit message, follow the ID rule.
+    - When you add an item to plan.md, or write another file or a commit message, follow the ID rule.
     - Suggest running openspec-lite-upgrade when one of these conditions is true:
       - Another person or agent must continue the work.
       - The change touches more than one capability.
@@ -70,14 +71,14 @@ apply:
     - Try to close each question that is not a kept question with the question rule.
     - Make the list of questions to ask:
       - If the preview is stale, add the stale question: "Regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md?"
-      - Add each open question that has no marker and that you did not ask yet in this session.
+      - Add each open question that is not a kept question, and that you did not ask yet in this session.
     - If the list of questions to ask is empty, go to step 4.
     - If the list of questions to ask is not empty, ask all questions of the list in one reply, with the ask rule:
       - In the same reply, give the answer of each question that you closed.
       - End your turn, and wait for the reply of the user.
     - When the user replies to the questions of step 3:
       - Record each answer with the answer rule.
-      - The stale question of step 3 depends only on the result of step 2. Step 6 reports each constraint that you add in this run.
+      - The stale question of step 3 depends only on the result of step 2.
       - A question that the user did not answer stays open. Do not write the code that depends on that question.
       - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
       - If the user says to continue from plan.md, go to step 4.
@@ -143,7 +144,7 @@ apply:
     4. If the tests did not run, and the test check did not pass, tell the user to run the test command, and to run apply again.
     5. If a test fails, name the test that fails, and say what blocks the fix.
     6. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
-    7. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question. When the user replies, step 4 says what to do.
+    7. If an open question that is not a kept question is left, tell the user to answer the open question in the next message, so that you record the answer. For each open question that is left, also a kept question, name the part of the Goal that waits for the answer. Do not ask for the answer of a kept question. When the user replies, step 4 says what to do.
     8. If the test check and the done check pass, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
     9. If the test check or the done check fails, do not suggest an archive.
 
@@ -151,7 +152,7 @@ apply:
 
     - A question is open only while you cannot decide the question and cannot find its answer.
     - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
-    - You cannot decide a point when the code must match something outside the repo, and the repo does not show it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
+    - You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
     - To close a question, read the code and the docs, or run a command.
     - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
     - If you find the answer, and the answer is obvious, give the answer in the end summary.
@@ -161,7 +162,7 @@ apply:
     - Do not record a point that you can decide as an open question.
     - Write a new open question as `- OQ<n>: <question>`.
     - A question that ends with "(kept open by the user)" is a kept question.
-    - Keep each kept question, also if you can decide the kept question.
+    - Keep each kept question until a message of the user answers the kept question, also if you can decide the kept question.
     - Do not ask a kept question.
     - If a message of the user answers a kept question, record the answer with the answer rule.
     - Do not write the code that depends on a kept question.
@@ -250,10 +251,10 @@ apply:
     - A run alone does not make a fact non-obvious. The result must be one that a reader cannot see in the code or in the file list.
     - A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact, also not the obvious-fact check of step 5.
     - The other checks apply to a 👤 fact, for example the check of a fact that is no longer true.
-    - When a command, a tool, or a service gives an error or an output that makes you change what you do, record the output as a fact, with the command and the error text.
+    - When a command, a tool, or a service gives an error or an output that makes you change what you do, and the output is a non-obvious fact, record the output as a fact, with the command and the error text.
     - Do not record an obvious fact or a well-known fact in `## Facts`.
     - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
-    - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact, because an edit of those sections makes the preview stale with no need.
+    - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact in `## Facts`. Do not add the fact to `## Constraints` or `## Non-Goals` either, because an edit of those two sections makes the preview stale.
     - Do not record a guess.
     - A sentence that states a choice, for example "the code must resize the images in one batch", is a decision, not a fact.
     - Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK.
