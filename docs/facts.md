@@ -1113,6 +1113,14 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Sonnet 5.5, `openspec-lite-apply`, scenario 4b, 22 sessions: no session reads a file of `src/` or `test/` again after the code write. Each session writes all decisions in one `plan.md` edit after the tests. So the file check of step 5 does not run as a new read.
 - Sonnet 5.5, scenario 4b, 22 runs: the 429 body is in a decision in 9 of 14 runs with a `Retry-After` header, and in 2 of 8 runs with no header. Since D241, 0 of 4 runs add the header. The agent records the body only when it also sees another choice about the 429 response.
 
+## Scenario Run on 84abcb6
+
+**Source**: `.scenario-runs/20261112-84abcb6/group-*.md`, `raw/*/*/turn-*.json` (`permission_denials`), and the session logs, 2026-11-12.
+
+- Claude Code 2.1.322, `acceptEdits` with the scenario allowlist: a Bash script with `cd <dir>`, `mkdir -p …`, and `cat > <file> <<'EOF'` on separate lines ran with no denial. The same commands joined with `&&` were denied (group C, `raw/C/18b/turn-3.json` and `raw/C/18b-r2/turn-3.json`).
+- Claude Code 2.1.322, scenario allowlist: `cd <abs dir>; head -5 <file> | grep -n …` and `node <script>; cd <dir>; cat …` ran with no denial. So a `cd` or a pipe to `head` or `grep` does not cause a denial (group F, sessions `2f547d29`, `8c2f3e66`).
+- Claude Code 2.1.322, scenario allowlist: `cd "$(git rev-parse --show-toplevel)" && …` is denied (groups B, I, session `4be14cdc`).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
