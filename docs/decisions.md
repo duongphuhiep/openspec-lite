@@ -3901,3 +3901,13 @@ This revises D119, D166, D182, D219, and D256.
 6. The template comment of `## Decisions` says "Update each 🤖 decision that a new decision makes stale."
 
 **Rationale**: review round 7, the last round of the loop that the user asked for. The report is `.review-reports/review_20261113003410_eu.anthropic.claude-opus-5-5_3fb3150-package.md`, 9 remarks, no must fix, no hint.
+
+## D278: Fixes of the Skill Defects of the Run on afb706a
+
+**Decision**:
+
+1. Archive checks for a delta of an earlier run in step 5, before the drafts, next to the check for an earlier ADR. It prints the full text of each such file. Step 6 asks the user to keep or delete each such file, in the same reply as the drafts. Step 7 only deletes and merges. Before, the check was in step 7, after the user approved a draft for the same path. (D02 of the run)
+2. Archive can say in one line that no decision heading, or no line of `specs/` and `design.md`, ends with 🤖. It never says that a decision has a 🤖 when its heading does not end with 🤖. This revises D192 item 7, which asked for silence. A true line does not harm the user, and scenario 5 already accepts it (D193 item 5). In 15 of 15 archive replies with a decision draft, the agent gave the line. (D12 of the run)
+3. If no source supports a reason, the decision format ends the sentence after X or Z, and adds the sentence "Reason not checked." Before, "in place of the reason" met the template "because W", and gave "Rejected Z because Reason not checked." Same in `apply.instruction`, the tasks preview, and propose. (D13 of the run)
+
+**Rationale**: the user asked to investigate each defect of the run `.scenario-runs/20261113-afb706a/` with the cause `skill`. The reports are `investigation-D02.md` and `investigation-D12.md` in that folder. The user agreed with the cause and the fix of each defect.
