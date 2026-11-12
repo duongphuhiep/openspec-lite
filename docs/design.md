@@ -196,7 +196,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
   - Repo version equal: copy nothing.
   - Repo version higher: copy nothing, exit 2.
   - Output: one line `status: installed`, `replaced`, `current`, or `newer`. Then `backup: <path>` if it made a backup, and `copied: <path>` for each file. Exit 0 on `installed`, `replaced`, and `current`.
-  - A file system error: exit 1, with `install: <message>` on stderr and no stack trace. If the old schema already moved, a second line names the backup folder (D106).
+  - A file system error: exit 1, with `install: <message>` on stderr and no stack trace. If the old schema already moved, a second line names the backup folder (D106). The schema skill reads these cases from the output, not from the exit code, because the skills do not use `echo $?` (D271).
 - Add this item to `operations.archive.guidance` in `openspec/config.yaml`, if the list does not have it yet. `guidance` must be a YAML list (D95):
 
   ```yaml
