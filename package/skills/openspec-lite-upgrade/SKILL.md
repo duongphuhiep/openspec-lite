@@ -204,6 +204,7 @@ Read the answer of the user:
 - Run the instructions command for `design` with the instructions rule.
 - Non-Goals go to `## Goals / Non-Goals`.
 - Each `### Decision` entry of `plan.md` goes to `## Decisions`.
+- If a choice of the answer supersedes or changes a decision of `plan.md`, write only the decision that follows the answer, with no 🤖. Do not copy the old decision.
 - A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet.
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
@@ -212,10 +213,10 @@ Read the answer of the user:
 - Write each choice from the answer of the user that is not a contract to `## Decisions`, with no 🤖.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
-- A kept question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
+- A kept question that no message of the user answered, and that does not change the specs, the approach, or the tasks, goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
 - If the user has no answer to a question that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
-- If a kept question changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
+- If a kept question that no message of the user answered changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
 - Go to step 2.4.
 
 ### Step 2.4: Write `tasks.md`
@@ -234,7 +235,7 @@ Read the answer of the user:
 - If no preview exists, write `tasks.md` from the template.
 - In both cases, put these questions before the first group, as `## 0. Open questions`:
   - each open question that step 2 asked and that the user could not answer;
-  - each question with the "(kept open by the user)" marker that changes the specs, the approach, or the tasks.
+  - each question with the "(kept open by the user)" marker that no message of the user answered, and that changes the specs, the approach, or the tasks.
 - Give each question of `## 0. Open questions` one task: `- [ ] 0.1 Answer: <question> The answer can change the specs, the approach, or the tasks.`
 - Do the last check of the split rule.
 - Go to step 2.5.
@@ -285,7 +286,7 @@ Do steps 5.1 to 5.4 in order.
 
 - If a section has content that is in no artifact, list the content as "kept, in no artifact".
 - A yes to the prune question does not delete content that is "kept, in no artifact".
-- In the summary, name each content that is "kept, in no artifact". Say that the user can ask you to add it to an artifact.
+- In the summary, name each content that is "kept, in no artifact". Tell the user to add the content to an artifact by hand, to keep it in an artifact.
 - Go to step 5.3.
 
 ### Step 5.3: Ask the prune question
@@ -304,13 +305,12 @@ Do steps 5.1 to 5.4 in order.
 - These items stay in `plan.md` after a yes:
   - each row of step 5.1 whose `Heading` holds "kept"
   - each content that step 5.2 lists as "kept, in no artifact"
-  - each question with the "(kept open by the user)" marker, also when `design.md` → `## Open Questions` holds a copy of the question (step 2.3)
+  - each question with the "(kept open by the user)" marker that no message of the user answered, also when `design.md` → `## Open Questions` holds a copy of the question (step 2.3)
   - each question of `## 0. Open questions` of `tasks.md` (step 2.4)
 - After a yes, keep the ID comment at the top of `plan.md` while a section is left.
 - After a yes, if no section is left, delete `plan.md`. A section with only an HTML comment counts as no section.
 - After a yes, say in one line what you deleted and what you kept.
 - After a yes, if a section is kept, tell the user to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`.
-- If the user asks you to add a part that the summary named as a part of a kept artifact, add the part to its artifact, run step 4 again, and report the result.
 - Do not write the summary again.
 - Upgrade ends here.
 
@@ -326,7 +326,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Ask for an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference.
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
-- Name each part of the answer whose artifact the resume rule kept, and offer to add the part.
+- Name each part of the answer whose artifact the resume rule kept. Tell the user to add the part to that artifact by hand.
 - Name each `plan.md` item that has no slot and stays in `plan.md`, for example an open question that the user cannot answer now. The stock skills do not read `plan.md`.
 - If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs.
 - If `design.md` has `### Decision` entries, say: to keep them as ADRs, copy them to `openspec/adr/` before the archive. `openspec-lite-archive` can do this copy: run it before `/opsx:archive`.
@@ -357,7 +357,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice.
-- A constraint of the answer is a requirement source, like a constraint of `plan.md`. If `<dir>/specs/` holds no delta, write its requirement with no new question, because the answer of the user is the source of the requirement. If `<dir>/specs/` holds a delta, follow the kept-artifact bullet of this rule.
+- A constraint of the answer is a requirement source, like a constraint of `plan.md`. If `<dir>/specs/` holds no delta, write its requirement with no new question, because the answer of the user is the source of the requirement. If the resume rule kept a delta in `<dir>/specs/`, follow the kept-artifact bullet of this rule.
 - A choice of the answer goes to the specs only when the choice is a contract.
 - A choice of the answer that is not a contract goes to `## Decisions` of `design.md`.
 
@@ -393,7 +393,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 ### Instructions rule
 
-- Write the four artifacts in this order: `proposal`, `specs`, `design`, `tasks`.
+- Write the four artifacts in this order: `proposal`, `specs`, `design`, `tasks`. The last check of the split rule can write to an earlier artifact after `tasks.md`.
 - For each artifact, run `openspec instructions <artifact> --change "<name>" --schema spec-driven --json`.
 - Run the `openspec instructions` command as one plain command. Do not put it in a loop or a chain, and do not pipe it to another command.
 - Read the full JSON output.

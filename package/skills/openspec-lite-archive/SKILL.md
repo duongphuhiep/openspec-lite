@@ -90,7 +90,7 @@ The guard path:
    - On the guard path, if the user rejects each draft, write no ADR, and go to guard step 2.
    - On the guard path, do not change `design.md`.
 2. Search `specs/` and `design.md` of the change for 🤖.
-   - Do this search after the ADRs of guard step 1 are written, after the user says no to the offer of guard step 1, or after the user rejects each draft.
+   - Do this search after guard step 1 finds no `### Decision` entries, after the ADRs of guard step 1 are written, after the user says no to the offer of guard step 1, or after the user rejects each draft.
    - If a line of `specs/` or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
    - If no line has a 🤖, say nothing about marks.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `specs/` and `design.md` again.
