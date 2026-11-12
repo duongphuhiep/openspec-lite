@@ -55,7 +55,7 @@ apply:
     - Output: the preview is current, stale, or absent.
     - If `<changeDir>/tasks-preview.md` does not exist, the preview is absent. Go to step 3.
     - Run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md`. You do not need the exit code of `plan-hash.mjs`.
-    - If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, show the message to the user, and stop.
+    - If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, show the message to the user, and stop. Ask the user to fix plan.md as the message says.
     - If the hash differs from the `plan-sha256` line in the preview header, the preview is stale.
     - If the preview header has no `plan-sha256` line, the preview is stale.
     - If the hash equals the `plan-sha256` line, the preview is current.
@@ -107,7 +107,7 @@ apply:
 
     Do these checks in this order:
 
-    1. Run the tests. If a test fails, fix the code, and run the tests again. Do not change a constraint or a decision with no 🤖 to make a test pass. If you cannot make a failing test pass, say in the end summary which test fails, with the error text, and do checks 2 to 7. If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run, and do checks 2 to 7.
+    1. Run the tests. If a test fails, fix the code, and run the tests again. Do not change a constraint or a decision with no 🤖 to make a test pass. If a test fails because the code follows a constraint or a decision with no 🤖, ask the user, and end your turn. If you cannot make a failing test pass, say in the end summary which test fails, with the error text, and do checks 2 to 7. If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run, and do checks 2 to 7.
     2. Compare each decision in `## Decisions` with the code:
        - For each result of a 🤖 decision, find each condition in the code that gives the result.
        - A 🤖 decision matches the code only when the decision names each such condition. A condition that gives the same result as a named condition is not named. For example, "skip the thumbnail when the file is not an image" does not name "skip the thumbnail when the image is over 10 MB".
@@ -136,10 +136,10 @@ apply:
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
        - If you added no 🤖 decision, show no table.
        - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
-    2. Do the test check, with the result of step 5, check 1: Did the tests run and pass?
+    2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
     3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
     4. If the tests did not run, tell the user to run the test command, and to run apply again.
-    5. If a test fails, name the test that fails.
+    5. If a test fails, name the test that fails, and say what blocks the fix.
     6. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
     7. If an open question is left, tell the user to answer the open question in the next message, so that you record the answer. Name the part of the Goal that waits for the answer of each open question. When the user replies, step 4 says what to do.
     8. If the test check and the done check pass, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
@@ -246,7 +246,7 @@ apply:
     - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
     - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact, because an edit of those sections makes the preview stale with no need.
     - Do not record a guess.
-    - A sentence that states a choice, for example "the thumbnails must keep the aspect ratio", is a decision, not a fact.
+    - A sentence that states a choice, for example "the code must resize the images in one batch", is a decision, not a fact.
     - Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK.
 
     ## Fact format

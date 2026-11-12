@@ -3698,6 +3698,8 @@ This revises D119, D166, D182, D219, and D256.
 
 **Rationale**: the review `.review-reports/review_20261112141533_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 7 remarks. Two remarks found D262 fixes that were not complete.
 
+**Status**: Item 3 revised by D264 item 1. The test question is a separate test check, not a part of the done check.
+
 ## D264: Fixes From Review Loop 5, Round 3, on 99d8656..local
 
 **Decision**:
@@ -3709,3 +3711,18 @@ This revises D119, D166, D182, D219, and D256.
 5. Scenario 4 says where the OQ2 answer goes (a constraint) and where the test stack goes (a decision with no 🤖).
 
 **Rationale**: the review `.review-reports/review_20261112142047_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 7 remarks. Two remarks found D263 item 3 not complete.
+
+## D265: Fixes From Review Loop 5, Round 4, on 99d8656..local
+
+**Decision**:
+
+1. The fact-rule example of a choice is "the code must resize the images in one batch". The old example "the thumbnails must keep the aspect ratio" was a rule by the answer-rule test.
+2. Apply step 5 check 1: if a test fails because the code follows a constraint or a decision with no 🤖, apply asks the user, and ends its turn. Step 6 names the failing test, and says what blocks the fix.
+3. The test check passes when the repo has no test command, and the change changes no behavior. `GLOSSARY.md` says this.
+4. Scenario 4 expects the test check and the done check. Scenario 4b: the two constraints of step 1 do not change, and a new constraint can come only from the answer about the header.
+5. Upgrade: a constraint that limits a result that a user or a program sees is a requirement source, and does not also go to `design.md`. A constraint that only says what the change must not add goes to `## Context` or `## Risks / Trade-offs`. This gives the split that scenario 7 expects.
+6. The propose summary lists each open question that propose recorded. Propose ends its turn after the tasks-preview question. Scenario 1 expects the list.
+7. Apply step 2: after a `plan-hash:` error, apply asks the user to fix `plan.md` as the message says, as the tasks preview does.
+8. D263 has a `**Status**` line that names D264.
+
+**Rationale**: the review `.review-reports/review_20261112142946_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 10 remarks. Remarks 1 and 2 found D264 fixes that were not complete.

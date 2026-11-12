@@ -207,7 +207,8 @@ Read the answer of the user:
 - Each `### Decision` entry of `plan.md` goes to `## Decisions`.
 - A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet.
 - If the user said yes in step 2 to a requirement that you planned from a decision with 🤖, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
-- Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
+- A constraint that limits a result that a user or a program sees is a requirement source. Do not also write that constraint in `design.md`.
+- A constraint that only says what the change must not add, for example "add no new service", goes to `## Context` or `## Risks / Trade-offs`.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
 - Write each decision that step 2 planned to `## Decisions`, with 🤖 at the end of its heading.

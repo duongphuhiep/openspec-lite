@@ -319,7 +319,7 @@ When the checks are done, go to step 6.
 - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
 - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact. The preview cannot edit `## Constraints` or `## Non-Goals`, so the fact has no place.
 - Do not record a guess.
-- A sentence that states a choice, for example "the thumbnails must keep the aspect ratio", is a decision, not a fact.
+- A sentence that states a choice, for example "the code must resize the images in one batch", is a decision, not a fact.
 - Do not record numbers or statistics that soon go out of date. A number as a reference or an example is OK.
 
 ### Fact format

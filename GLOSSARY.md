@@ -81,7 +81,7 @@ The three questions at the end of apply and the start of archive: Is each outcom
 _Avoid_: Done checklist, definition of done
 
 **Test check**:
-The question at the end of apply, before the done check: Did the tests run and pass? Apply suggests the archive only when the test check and the done check pass. Archive does not run the tests (D264).
+The question at the end of apply, before the done check: Did the tests run and pass? The test check also passes when the repo has no test command and the change changes no behavior. Apply suggests the archive only when the test check and the done check pass. Archive does not run the tests (D264).
 _Avoid_: Test gate
 
 **Upgrade**:

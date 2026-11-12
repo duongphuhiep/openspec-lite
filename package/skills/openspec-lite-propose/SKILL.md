@@ -209,8 +209,10 @@ Do these checks in order. When the checks are done, go to section 3.
 1. Give the summary:
    - Show the change name and the path of `plan.md`.
    - Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
+   - List each open question that you recorded in `plan.md`, so that the user can answer it.
    - Go to step 2.
 2. Ask: "Do you want a tasks preview?"
+   - After the question, end your turn, and wait for the answer.
    - On yes, run the `openspec-lite-tasks-preview` skill.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
    - On no, end your turn.
