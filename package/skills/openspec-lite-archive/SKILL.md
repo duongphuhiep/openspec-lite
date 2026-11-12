@@ -87,6 +87,7 @@ The guard path:
    - On the guard path, do not run section 2, steps 7 to 9.
    - On the guard path, after section 2, step 6, continue guard step 1 with the write of the approved ADRs. Do not go to section 2, step 7.
    - On the guard path, after section 2, step 10, go to guard step 2. Do not go to section 2, step 11.
+   - On the guard path, if the user rejects each draft, write no ADR, and go to guard step 2.
    - On the guard path, do not change `design.md`.
 2. Search `specs/` and `design.md` of the change for 🤖.
    - Do this search after the ADRs of guard step 1 are written, or after the user says no to the offer of guard step 1.
@@ -198,7 +199,7 @@ The guard path:
 - If a decision is also a contract, draft the contract as a requirement. The rationale of the decision can also go to an ADR.
 - List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
 - A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to. Keep the source emoji of the fact.
-- Another fact goes only to the `## Context` of an ADR whose decision the fact justifies. Keep the source emoji of the fact.
+- An obvious fact goes to the `## Context` of an ADR only when the fact justifies the decision of that ADR. Keep the source emoji of the fact.
 - A fact that justifies a requirement goes into the requirement text, as its reason, with no source emoji, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
 - If no drafted ADR holds a non-obvious fact, no drafted requirement holds the fact as its reason, and the change depends on the fact, draft an ADR for the fact:
   - The `## Context` of the fact ADR holds the fact and its source.
@@ -272,7 +273,8 @@ When each item has a draft, go to step 6.
 - Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
 - If no decision heading ends with 🤖, say nothing about marks.
 - For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes.
-- The user answers yes, no, or edit for each item. Apply each edit.
+- The user answers yes, no, or edit for each item.
+- After you apply an edit, print the full text of the edited draft, and ask for approval again.
 - Outside the guard path, tell the user that they can pick a skipped item to draft.
 - After you print the drafts, end your turn, and wait for the answer of the user.
 - If the user picks a skipped item, draft the item, print the full text of the draft for approval, end your turn, and wait for the answer.
