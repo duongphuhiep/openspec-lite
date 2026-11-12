@@ -73,7 +73,7 @@ An item of `## Open Questions` in a plan: a point that is still open. Propose re
 _Avoid_: Pending item, TODO
 
 **Agent decision**:
-A decision in a plan that an agent wrote, and that records no answer and no instruction of the user. Its heading ends with 🤖. Upgrade keeps the mark in `design.md`. A decision with no 🤖 belongs to the user: one that the user wrote, or one that records an answer or an instruction of the user. An agent changes only an agent decision with no question. The user removes the 🤖 to accept it (D181).
+A decision in a plan that an agent wrote, and that records no answer and no instruction of the user. Its heading ends with 🤖. Upgrade keeps the mark in `design.md`, unless the user said yes to a requirement from that decision (D256). A decision with no 🤖 belongs to the user: one that the user wrote, or one that records an answer or an instruction of the user. An agent changes only an agent decision with no question. The user removes the 🤖 to accept it (D181).
 _Avoid_: AI decision, draft decision
 
 **Done check**:

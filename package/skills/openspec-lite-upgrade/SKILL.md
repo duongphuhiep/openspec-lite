@@ -209,6 +209,7 @@ Read the answer of the user:
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
 - Write each decision that step 2 planned to `## Decisions`, with 🤖 at the end of its heading.
+- If the user said yes in step 2 to the requirement of a contract point that step 2 decided, write that decision with no 🤖. In the summary, say that the yes removed the mark.
 - An open question that is safe to answer later goes to `## Open Questions`, as the `design` instruction says.
 - A kept question that is safe to answer later goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
@@ -272,7 +273,10 @@ Do steps 5.1 to 5.4 in order.
 - If a question also stays in `plan.md` (step 2.3 or step 2.4), write the heading of the artifact and "kept", for example "`## Open Questions`, kept".
 - A question that step 2 closed in this session has the destination "closed", with its answer. A yes to the prune question deletes the closed question.
 - If step 2 did not run in this session, for example on the resume path, give each question of `plan.md` the heading of the artifact that holds the question or its answer, or `## 0. Open questions`.
-- If step 2 did not run in this session, and no artifact holds a question or its answer, use the test of the question rule again. If you can decide the question or find its answer now, give the answer and the destination "closed". If not, the destination is "kept, in no artifact".
+- If step 2 did not run in this session, and no artifact holds a question or its answer, use the test of the question rule again.
+- If the new answer is obvious, or the decision rule does not record the answer, give the answer and the destination "closed".
+- If the new answer is a non-obvious fact, or a decision that the decision rule records, the destination is "kept, in no artifact". Offer to add the answer to `design.md`.
+- If you cannot decide the question or find its answer now, the destination is "kept, in no artifact".
 - If the items of one section go to different destinations, list each item.
 - Keep a section that has no slot, for example an open question that the user cannot answer now (step 2.3).
 - Go to step 5.2.
@@ -345,7 +349,8 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Split the answer of the user, as the answer rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says.
 - Write each part of the answer to an artifact, not to `plan.md`.
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
-- A rule of the answer is a rule that the change must follow. Test: if the result breaks the rule, the change is not done.
+- A rule of the answer is a rule that the change must follow. A rule limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the rule, the change is not done.
+- A choice of how to build the result is not a rule, also when the user gives the choice.
 - A rule of the answer is a requirement source, like a constraint of `plan.md`. Write its requirement with no new question, because the answer of the user is the source of the requirement.
 - A choice of the answer goes to the specs only when the choice is a contract.
 - A choice of the answer that is not a contract goes to `## Decisions` of `design.md`.
@@ -363,7 +368,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Before you mark an item, check each sentence of the item, not only its main source.
 - If one sentence holds a new claim, mark the item, and name that claim in a few words.
 - If no sentence holds a new claim, do not mark the item.
-- One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet. Step 2.3 removes the 🤖 when the user said yes to a requirement from that decision.
+- One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet. Step 2.3 removes the 🤖 when the user said yes to a requirement from that decision, or from a contract point that step 2 decided.
 - These are not new claims:
   - other words for a `plan.md` item or an answer;
   - another form of a `plan.md` item, for example a `#### Scenario:` that only restates its requirement;

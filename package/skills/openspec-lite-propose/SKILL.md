@@ -162,7 +162,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - If the user answers a question, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
-- Record each part of the answer in one section only. If a part is both a rule and a choice, record it as a constraint only.
+- Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
 - Record each rule in the answer that the change must follow as a constraint in `## Constraints`.
 - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.

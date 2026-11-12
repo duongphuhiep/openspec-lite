@@ -3588,3 +3588,20 @@ This revises D133, D154, D196, and D254.
 This revises D182, D241, D252, and D255.
 
 **Rationale**: a fresh-context review found each gap. I checked each remark against the skills, `design.md`, and the decisions. Four remarks came from the fixes of D254 and D255.
+
+## D257: Fixes From Review Loop 4, Round 4, on 99d8656..local
+
+**Decision**: from `.review-reports/review_20261112110221_claude-opus-5-5_99d8656-local.md`:
+
+1. The apply answer rule records in `## Decisions` only a choice or an instruction that is not a fact and not a rule. A rule such as "add no npm dependency" goes to `## Constraints` only.
+2. The tie-breaker of D252 changes. If a part limits the result and also says how to build the result, apply and propose record the limit as a constraint, and the build choice as a decision with no 🤖.
+3. The split rule of upgrade has the D256 definition of a rule. A build choice of the user is not a requirement source.
+4. Upgrade also removes the 🤖 of a decided contract point after a yes to its requirement, as D256 item 2 does for a 🤖 decision of `plan.md`.
+5. Scenario 12 gives the answers in the order of the skill, and answers no to a Level 1 question.
+6. Scenario 4 accepts a constraint for a build choice (D226), and never only a decision for a rule.
+7. The glossary term **Agent decision** has the exception of D256 item 2.
+8. On the upgrade resume path, a new answer that is a non-obvious fact, or a decision that the decision rule records, is "kept, in no artifact", and upgrade offers to add it to `design.md`. Only an obvious answer, or an answer that the decision rule does not record, is "closed".
+
+This revises D252, D255, and D256.
+
+**Rationale**: a fresh-context review found each gap. Five remarks came from the fixes of D255 and D256. The reviewer also suggested that propose checks an existing change name before the Level 1 question. I did not make this change, because the scenario fix closes the gap of the test, and the order change is a new rule.
