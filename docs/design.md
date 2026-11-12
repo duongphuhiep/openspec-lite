@@ -50,8 +50,7 @@ openspec-lite/
 │   ├── apm-install.yml
 │   └── test.yml
 ├── docs/
-│   ├── test-scenarios.md
-│   └── todo.md            # open items with evidence, no decision yet
+│   └── test-scenarios.md
 ├── GLOSSARY.md
 └── README.md
 ```
@@ -103,7 +102,7 @@ openspec-lite/
     13. archive rerun: (a) after a failed validate, the agent shows earlier deltas before the write and drafts the decision again; (b) after a failed `openspec archive`, it skips the ADRs with `Change: <name>` (D111, D112, D113).
     14. Promotion into an existing capability: archive reuses the capability, and the main spec ends up correct (D115). The ADR `## Context` holds the fact, with no `plan.md` ID (D135, D142).
     15. Promotion keeps each non-obvious item and each contract of `plan.md`, or names it as skipped (D115, D119). A fact goes to its ADR, or is named as not drafted. No spec or ADR holds a `plan.md` ID (D135, D142).
-    16. Stock `/opsx:archive` on a plan-lite change: 16a, with the guidance, the agent warns or runs `openspec-lite-archive` (D95, D115). The cases with no guidance and with the CLI are known gaps, and no scenario runs them (D190, `docs/todo.md` item 31).
+    16. Stock `/opsx:archive` on a plan-lite change: 16a, with the guidance, the agent warns or runs `openspec-lite-archive` (D95, D115). The cases with no guidance and with the CLI are known gaps, and no scenario runs them (D190).
     17. `openspec-lite-apply` after an upgrade refuses and points to `/opsx:apply` (D75).
     18. `openspec-lite-archive` after an upgrade refuses, points to `/opsx:archive`, and warns about the decisions in `design.md` (D115). 18b: on a yes, it copies the decisions to ADRs, lists each 🤖 line, and then offers the archive (D154, D191, D192).
     19. tasks-preview and upgrade after an upgrade: refuse, or ask to resume when `plan.md` exists (D107, D108).
@@ -122,7 +121,7 @@ openspec-lite/
 - `openspec-version.test.mjs`: with a fake `openspec` on `PATH`, 1.14.2 is in `>=1.9.0 <2.0.0`. A version outside the range and output with no version exit with code 2. A failed command and a `schema.yaml` with no range exit with code 1. The shipped `schema.yaml` has a readable range. It skips on Windows (D175).
 - `run-metrics.test.mjs`: the script sums the tokens, turns, denials, and time of all turns. It takes the cost and the thinking tokens from the last turn of each session, because a `--resume` turn holds the totals of the session (D170). It counts a tool call that is twice in the log once. A turn in a new session is not a user turn. It lists the `.md` files under `openspec/`, except `openspec/schemas/` and `openspec/schemas-backup/` (D162). A missing session log exits with code 1 (D146).
 - `schema.test.mjs`: in a temp repo, runs `openspec new change`, `instructions plan`, `validate`, and `archive --yes` on the shipped schema. It also tests the upgrade path (`instructions <artifact> --schema spec-driven` on a plan-lite change), an archive that merges a delta, and a `validate` failure with no delta and no `skip_specs` (D108). It also tests the CLI behavior that the skills rely on: `state: blocked` with no `plan.md`, `root.path` from a subfolder and `root: null` above it, `skipped: true` on `instructions specs` with `skip_specs`, and the failure on a duplicate key in `.openspec.yaml` (D112). The CLI test skips itself if `openspec` is not installed. When the `CI` environment variable is set, it fails instead, so a broken CI install cannot pass (D99). The `plan-hash.mjs` test in this file does not need `openspec` and never skips.
-- `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to `docs/todo.md`, or a new decision fixes the skill (D173). Each scenario run is isolated: a new temp folder from `scripts/scenario-setup.sh`, a new session, and no output of another scenario or of an earlier run. A scenario that needs an earlier state starts from a fixture in `tests/fixtures/scenarios/` (D199).
+- `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to the `defects.md` of the run, or a new decision fixes the skill (D173, D251). Each scenario run is isolated: a new temp folder from `scripts/scenario-setup.sh`, a new session, and no output of another scenario or of an earlier run. A scenario that needs an earlier state starts from a fixture in `tests/fixtures/scenarios/` (D199).
 - `exit-code.test.mjs` skips the missing-command case on Windows, where the shell reports it (D202).
 - `scripts/break-delta.sh` is the 13a helper: it removes the `#### Scenario:` blocks of the first delta that the agent writes (D203).
 - `skills.test.mjs`: the shared blocks `### OpenSpec root`, `### Change selection`, and `### Schema check` are the same text in each skill that has them. When you edit one copy, edit each other copy (D237).

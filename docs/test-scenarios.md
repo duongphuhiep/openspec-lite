@@ -392,7 +392,7 @@ Record each mismatch with the answer key. A tagged `spec` or `ADR` item that is 
 
 ## 16. Stock `/opsx:archive` on a plan-lite change
 
-This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does not promote `plan.md`. openspec-lite adds a hint to `openspec/config.yaml` (D95), but the hint is best effort. Without the hint, and with the `openspec archive` CLI, the gap is known (`docs/todo.md`, `docs/facts.md`), so no scenario runs these cases (D190).
+This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does not promote `plan.md`. openspec-lite adds a hint to `openspec/config.yaml` (D95), but the hint is best effort. Without the hint, and with the `openspec archive` CLI, the gap is known (`docs/facts.md`), so no scenario runs these cases (D190).
 
 ### 16a. With the archive guidance in `config.yaml`
 

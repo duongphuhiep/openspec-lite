@@ -3482,3 +3482,17 @@ Each command, each code span, each quoted text, and each decision ID of the old 
 This revises the form of D236 to D238 and D245. It adds the branches of item 4 and the fixes of item 5.
 
 **Rationale**: the same as for D248. The user asked to review all skills with the new rules.
+
+## D251: `defects.md` of Each Scenario Run Replaces `docs/todo.md`
+
+**Decision**:
+
+1. After each scenario run, the agent writes `.scenario-runs/<run>/defects.md`. It lists each verified defect with its scenario, its description, its cause (test scenario, skill rules or wording, LLM mistake, or other), its action (need decision, need investigation, or need fix), and its priority (must-fix or acceptable).
+2. `docs/todo.md` is removed from the repo. Its last version is archived in `.scenario-runs/archive/todo-2026-11-12.md`, which git does not track.
+3. `CLAUDE.md` names `defects.md` in place of `docs/todo.md`, in the table of project files and in the rule of a failing scenario. `docs/design.md` and `docs/test-scenarios.md` no longer refer to `docs/todo.md`.
+
+The user chose this.
+
+This revises the role of `docs/todo.md` in D173 and the later decisions that added todo items.
+
+**Rationale**: `docs/todo.md` and `defects.md` held the same items. `defects.md` gives a cause, an action, and a priority for each defect of a run, so one triaged list per run is enough.

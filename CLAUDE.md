@@ -42,7 +42,7 @@ Apply the best practices of programming:
 | `docs/decisions.md` | Append-only log of decisions with rationale | Why a rule exists. Old entries can be superseded. |
 | `docs/facts.md` | Verified facts about OpenSpec and tools, with sources | How external tools behave |
 | `GLOSSARY.md` | Glossary of project terms | What each term means |
-| `docs/todo.md` | Open items with evidence and a recommendation, but no decision yet | What is left to decide. Remove an item when its decision is in `decisions.md`. |
+| `.scenario-runs/<run>/defects.md` | The triaged defects of one scenario run: scenario, description, cause, action, and priority. Git does not track `.scenario-runs/`. | What is left to fix or decide after the run |
 | `docs/test-scenarios.md` | Agent test scenarios that we run by hand before each release | What a good result is for the end user |
 | `README.md` | User-facing overview and lifecycle | Nothing. It summarizes the files above. |
 
@@ -62,7 +62,7 @@ When you write a new scenario or refine an existing one:
 
 - Write the expected result that is best for the end user. Find the most logical and useful result first.
 - Do not copy the current skill behavior into the expected result. Question the skill. If the skill does something that does not help the user, write the better result.
-- A scenario can fail on the current skills. That is correct when the skill is wrong. Then record the gap in `docs/todo.md`, or fix the skill with a new decision.
+- A scenario can fail on the current skills. That is correct when the skill is wrong. Then record the gap in the `defects.md` of the run, or fix the skill with a new decision.
 
 ## After Each Review, Grilling Round, or Scenario Run
 
