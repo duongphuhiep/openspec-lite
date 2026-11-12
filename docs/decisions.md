@@ -3771,4 +3771,4 @@ This revises D119, D166, D182, D219, and D256.
 7. D07 (scenario, skill): the rule "After the user confirms a root, also start the first command with `cd <root> && `" is deleted in each of the six skills, because the block is shared, and because the rule for each `openspec` command covers the case. Scenario 11 checks the result, not the form of the first command.
 8. D09 (skill): the decision format says "One decision records one choice. If you made two choices, write two decisions, each with its own reason." No rule about the output of a tool is added, because that rule is a hint example.
 
-**Rationale**: the user reviewed each must-fix defect of `.scenario-runs/20261112-84abcb6/defects.md` with the investigation reports of the run. Items 4 to 8 are agreed fixes. They are not applied yet.
+**Rationale**: the user reviewed each must-fix defect of `.scenario-runs/20261112-84abcb6/defects.md` with the investigation reports of the run. Items 4 to 8 are agreed fixes.
