@@ -19,7 +19,7 @@ apply:
     - Do steps 1 to 6 in order.
     - The general rules apply at all times, in each step.
     - A named rule, for example the question rule, applies in each step where its topic comes up, also when the step does not name the rule.
-    - The OpenSpec root is the folder that holds `openspec/`. Run each command from the OpenSpec root.
+    - The OpenSpec root is the folder that holds `openspec/`. Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
     - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
     - `<changeDir>` is the folder of the change.
 
@@ -90,7 +90,8 @@ apply:
     - Input: plan.md, and `<changeDir>/tasks-preview.md` as a guide if it exists. The CLI does not list tasks-preview.md in contextFiles.
     - Output: the code, and the updates of plan.md.
     - Implement from plan.md.
-    - If your work conflicts with a constraint or with a decision with no 🤖, record the conflict as an open question, ask the open question with the ask rule, and end your turn.
+    - If a 🤖 decision conflicts with a constraint or with a decision with no 🤖, follow the current-decisions rule, and ask no question.
+    - If the code cannot follow a constraint or a decision with no 🤖, record the conflict as an open question, ask the open question with the ask rule, and end your turn.
     - If you find a new point that you cannot close with the question rule:
       - Record the point as an open question before you write the code that depends on the point.
       - Ask the open question with the ask rule.
@@ -123,7 +124,7 @@ apply:
     6. Check each 🤖 decision that you added in this run. If a 🤖 decision matches neither criterion (1) nor criterion (2) of the decision rule, remove the 🤖 decision.
     7. Check the facts. Do this check last, because checks 2 to 6 can add facts:
        - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
-       - Check each fact that you added in this run, except a fact that the user gave (👤). If a reader can see the fact in the code or in the file list, the fact is obvious, also if you found the fact with a run.
+       - Check each fact that you added in this run, except a fact that the user gave (👤). If a reader can easily deduce the fact from the code or the file list, with no long analysis, the fact is obvious, also if you found the fact with a run.
        - Move each obvious fact to the "because" part of the decision that the fact justifies, or remove the obvious fact.
 
     When the checks are done, go to step 6.
@@ -134,8 +135,8 @@ apply:
        - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
        - For each open question that you removed, give its answer.
        - Say that the plan hash does not cover `## Facts`, `## Decisions`, and `## Open Questions`, so your edits of these sections do not make the preview stale.
-       - If you added a constraint, list the constraint with its ID.
-       - If you added a constraint, and the preview is not absent, say that the new constraint makes the preview stale, and that the next run of apply asks to regenerate the preview.
+       - If you added, changed, or removed a constraint, list the constraint with its ID.
+       - If you added, changed, or removed a constraint, and the preview is not absent, say that the constraint edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
        - If you added no 🤖 decision, show no table.
        - Ask each new open question of step 5 with the ask rule.
@@ -183,6 +184,7 @@ apply:
     - Record each part of the reply in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
     - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
     - Record each constraint of the reply in `## Constraints`.
+    - If the user tells you to change or remove a constraint, change or remove the constraint.
     - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
     - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
     - Record each other choice or instruction of the reply, that is not a fact and not a constraint, in `## Decisions`, as a decision with no 🤖.

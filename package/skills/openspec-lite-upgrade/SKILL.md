@@ -42,7 +42,7 @@ Do these checks in order.
 - Input: the output of `openspec list --json`.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
-- Run each command from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
+- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.

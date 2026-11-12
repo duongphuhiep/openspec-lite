@@ -24,7 +24,7 @@ Do these checks in order.
 - Input: the output of `openspec list --json`.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
-- Run each command from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
+- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
@@ -141,7 +141,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 
 1. Fact check: check each fact that you added in this run, except a fact that the user gave (👤).
    - Read the code or the file list that the fact is about.
-   - If a reader can see the fact in the code or in the file list, the fact is obvious, also if you found the fact with a run.
+   - If a reader can easily deduce the fact from the code or the file list, with no long analysis, the fact is obvious, also if you found the fact with a run.
    - Move each obvious fact to the "because" part of the decision that the fact justifies, or remove the obvious fact.
 2. 🤖 decision check: check each 🤖 decision that you added in this run.
    - If a 🤖 decision matches neither criterion (1) nor criterion (2) of the decision rule, remove the 🤖 decision from `plan.md`.
@@ -187,7 +187,7 @@ When the checks are done, go to step 6.
    - List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
    - If you added, changed, or removed no item in `plan.md`, say that you changed no item.
    - For each open question that you removed, give its answer.
-   - Ask each open question that is still open and is not a kept question, also an existing one, with the ask rule.
+   - Ask each open question that is still open and is not a kept question, new or existing, with the ask rule.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
 4. Tell the user to read the preview.
@@ -212,7 +212,7 @@ When the checks are done, go to step 6.
 - Do not split the work into very small subtasks.
 - Do not specify details that the coding agent can find itself.
 - Pseudo-diffs are permitted.
-- A task that depends on an open question, also a kept question, says that the task waits for the answer.
+- A task that depends on an open question, kept or not, says that the task waits for the answer.
 
 ### Question rule: close an open question
 
@@ -303,7 +303,7 @@ When the checks are done, go to step 6.
 - Update each 🤖 decision that a new decision makes stale.
 - Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`.
 - Change a decision with no 🤖 only when the user tells you to in this session, or to move a choice that you added into its own 🤖 decision.
-- If your approach conflicts with a decision with no 🤖, record an open question.
+- If your approach conflicts with a constraint or with a decision with no 🤖, record an open question.
 - After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
 
 ### Fact rule: when to record a fact
