@@ -92,7 +92,7 @@ The guard path:
 2. Search `specs/` and `design.md` of the change for 🤖.
    - Do this search after guard step 1 finds no `### Decision` entries, after the ADRs of guard step 1 are written, after the user says no to the offer of guard step 1, or after the user rejects each draft.
    - If a line of `specs/` or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
-   - If no line has a 🤖, say nothing about marks.
+   - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `specs/` and `design.md` again.
    - Go to guard step 3.
 3. Name the open questions of a kept `plan.md`.
@@ -271,7 +271,8 @@ When each item has a draft, go to step 6.
 - Output: the approved drafts.
 - Print the full text of each draft.
 - Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
-- If no decision heading ends with 🤖, say nothing about marks.
+- If no decision heading ends with 🤖, you can say so in one line.
+- Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes.
 - The user answers yes, no, or edit for each item.
 - After you apply an edit, print the full text of the edited draft, and ask for approval again.
