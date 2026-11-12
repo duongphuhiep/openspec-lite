@@ -3845,3 +3845,18 @@ This revises D119, D166, D182, D219, and D256.
 9. Smaller fixes: apply no longer counts its rules; "kept or not"; "Do not run step 2 again"; the `## 0` task text names the specs, the approach, or the tasks; the upgrade summary ban is about the whole file; the split rule names steps 2.1 to 2.4.
 
 **Rationale**: review round 3 of the loop that the user asked for (5 rounds of review and fix). The report is `.review-reports/review_20261113001040_eu.anthropic.claude-opus-5-5_4eccc57-package.md`, 20 remarks. Seven of them came from D272 edits.
+
+## D274: Fixes From Review Round 4 of the Skill Text at dc95267
+
+**Decision**:
+
+1. Apply: if the user tells the agent to change or remove a constraint, the agent changes or removes it. Step 6 reports each added, changed, or removed constraint, and the stale preview. A 🤖 decision that conflicts follows the current-decisions rule with no question. Only a conflict that the code cannot follow becomes an open question.
+2. The obvious-fact check of apply step 5 and of the tasks preview calls a fact obvious only when a reader can easily deduce it, with no long analysis, as the fact rule says.
+3. The root rule of `apply.instruction` and of the six skills has one scope: each `openspec` command, and each command with a relative `openspec/...` path, runs from the OpenSpec root.
+4. Upgrade: a choice from the answer of the user goes to `design.md` with no 🤖. A part of an answer whose artifact the resume rule kept is named in the summary, not written. Step 2.4 runs the last check of the split rule. No requirement is planned for a constraint of the answer when a delta exists.
+5. The tasks preview: a conflict with a constraint is an open question. A request to change a fixed section is listed and ends the turn, and does not also match the reply rule. Step 8 says that a decision that records a constraint of the user can move to `## Constraints`. "Kept or not" and "new or existing" replace "also a …".
+6. Propose sorts the facts, constraints, and choices of the first request with the answer rule.
+7. The archive guard names the reject-all case in the time of the 🤖 search.
+8. `GLOSSARY.md` and `docs/design.md` define a constraint as a limit on the result that a user or a program sees, or on what the change must not add.
+
+**Rationale**: review round 4 of the loop that the user asked for. The report is `.review-reports/review_20261113001742_eu.anthropic.claude-opus-5-5_dc95267-package.md`, 14 remarks, no must fix. Five came from D273 edits.
