@@ -11,7 +11,7 @@ How to read this skill:
 
 - Do section 1, section 2, and section 3 in order.
 - In section 1, do the checks in this order: the OpenSpec root, the change selection, the guard, and the schema check.
-- The guard can send you to the guard path. The guard path replaces the schema check, section 2, and section 3.
+- The guard can send you to the guard path. The guard path replaces the schema check, section 2, and section 3. The guard path uses only section 2, steps 5, 6, and 10, when a guard step calls them.
 - When the schema check says "continue with the next step of this skill", go to section 2, step 1.
 - In section 2, do steps 1 to 11 in order. Each step ends with the next step.
 - The general rules apply at all times, in each step and on the guard path.
@@ -20,7 +20,7 @@ How to read this skill:
 ## General rules
 
 - Write nothing before the user approves.
-- Write each approved draft exactly as the user approved it. If you must change an approved draft, show the change, and ask for approval again.
+- Write each approved draft exactly as the user approved it. If you must change an approved draft, print the full text of the changed draft, and ask for approval again.
 - An ADR that an earlier run wrote needs no new approval, because the user approved the ADR in that run. Print the full text of the ADR in your reply, and do not ask about the ADR.
 - The `Status:` edit of step 10 needs no approval, because the approval of the new ADR with the `Supersedes:` line covers the edit. Do not ask about the edit.
 - Do not remove a 🤖 yourself. Only the user removes a 🤖.
@@ -68,7 +68,7 @@ Do these checks in order.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, continue with the schema check.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
-- If `schema` is not `plan-lite`, follow the guard path below. Do not run the schema check, section 2, or section 3.
+- If `schema` is not `plan-lite`, follow the guard path below. Do not run the schema check or section 3. Do not run section 2, except steps 5, 6, and 10 when guard step 1 calls them.
 
 The guard path:
 
@@ -82,9 +82,10 @@ The guard path:
    - End your turn after the offer, and wait for the answer. In the same reply, say nothing about the 🤖 lines of `specs/`, and offer nothing else, also not the archive.
    - If the user says no, write no ADR, and go to guard step 2.
    - If the user says yes, draft each ADR with the form and the three checks of section 2, step 5.
-   - Show the drafts as in section 2, step 6.
+   - Print the full text of each draft as in section 2, step 6.
    - Write each approved ADR with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
    - On the guard path, do not run section 2, steps 7 to 9.
+   - On the guard path, after section 2, step 6 or step 10, go back to guard step 1. Do not go to the next step of section 2.
    - On the guard path, do not change `design.md`.
    - When the approved ADRs are written, go to guard step 2.
 2. Search `specs/` and `design.md` of the change for 🤖.
@@ -146,7 +147,6 @@ The guard path:
 - Answer three questions: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty?
 - An HTML comment in `## Open Questions` does not count as a question.
 - To find the code, search for what each outcome of the Goal names, for example with `git grep`.
-- Run each search from the git root, because an earlier `cd` can stay in effect.
 - Get the git root with `git rev-parse --show-toplevel` as its own command.
 - Then search with `git -C <git root> grep <word>`.
 - Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them.
@@ -158,7 +158,7 @@ The guard path:
   - For each outcome or constraint that is not met, give two paths: implement it with `openspec-lite-apply`, or remove it from `plan.md` and propose it as a separate change with `openspec-lite-propose`.
   - For each open question that is left, tell the user to run `openspec-lite-apply` with the answer, so that apply records it.
   - Tell the user to run `openspec-lite-archive` again.
-  - Also say: to keep an item that is not in `plan.md`, add it to `plan.md` first.
+  - If the user names an item that is not in `plan.md`, say: to keep the item, add it to `plan.md` first.
 
 ### Step 2: Read plan.md
 
@@ -197,14 +197,12 @@ The guard path:
 - A selected decision goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement. The rationale of the decision can also go to an ADR.
 - List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
-- A fact goes to the `## Context` of each ADR whose decision the fact justifies. Keep the source emoji of the fact.
+- A fact goes to the `## Context` of each drafted ADR that the fact relates to, for example an ADR whose decision the fact justifies. Keep the source emoji of the fact.
 - A fact that justifies a requirement goes into the requirement text, as its reason, with no source emoji, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
-- A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to.
-- If no drafted ADR holds a non-obvious fact, and no drafted requirement holds the fact as its reason, draft an ADR for the fact:
+- If no drafted ADR holds a non-obvious fact, no drafted requirement holds the fact as its reason, and the change depends on the fact, draft an ADR for the fact:
   - The `## Context` of the fact ADR holds the fact and its source.
   - The `## Decision` of the fact ADR says how the change uses or handles the fact, as the code shows.
   - The `## Consequences` of the fact ADR says what a later change must keep.
-- If the change does not depend on a non-obvious fact, do not draft the fact: list the fact as not drafted.
 - List each other fact that is in no draft as not drafted, with a one-line reason.
 - Go to step 5.
 
@@ -265,18 +263,18 @@ The third check, for `plan.md` IDs:
 
 When each item has a draft, go to step 6.
 
-### Step 6: Show all drafts
+### Step 6: Print all drafts
 
 - Input: the drafts of step 5.
 - Output: the approved drafts.
-- Show all drafts.
+- Print the full text of each draft.
 - Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
 - If no decision heading ends with 🤖, say nothing about marks.
 - For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes.
 - The user answers yes, no, or edit for each item. Apply each edit.
-- Tell the user that they can pick a skipped item to draft.
-- After you show the drafts, end your turn, and wait for the answer of the user.
-- If the user picks a skipped item, draft the item, show the draft for approval, end your turn, and wait for the answer.
+- Outside the guard path, tell the user that they can pick a skipped item to draft.
+- After you print the drafts, end your turn, and wait for the answer of the user.
+- If the user picks a skipped item, draft the item, print the full text of the draft for approval, end your turn, and wait for the answer.
 - When the user approved or rejected each draft, go to step 7.
 
 ### Step 7: Write the deltas
