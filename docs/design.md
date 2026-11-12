@@ -257,9 +257,9 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - Overwrite the old file.
 - At the start, run `node openspec/schemas/plan-lite/plan-status.mjs <plan.md>` alone. If it prints a line, copy the line to the user, and continue. If it prints nothing, say nothing about commits (D171, D193).
 - Record in `plan.md`, with no question (D171). Edit only `## Facts`, `## Decisions`, and `## Open Questions`. The plan hash does not cover them, so the preview stays current.
-  - **Fact**, when you find it: each non-obvious fact, with its source, and a source emoji at the start: 👤 📖 🎫 📊 🌐 🔬 🔍 (D226). An answer of the user is a source of a non-obvious fact, and a 👤 fact is always non-obvious. The fact is written so that it stays true after the change. The agent does not change an existing fact only to add an emoji (D227). An obvious fact or a well-known fact is not recorded. If it is the reason of a decision, it goes into the "because" part of that item (D192). A sentence that states a choice is a decision, not a fact (D192). A non-obvious fact needs one of these to find: a run or a test result; research of remote sources, for example documentation on the internet, another repo, logs, or a remote database; a long analysis of the code; or other work that is worth an agent to find it. A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found it. A run alone is not enough: the result must be one that a reader cannot see in the code or in the file list. For example, what a script prints when its code shows it, or which files exist, is obvious. This includes each error or output of a tool that makes the agent change what it does (D172), unless a reader can see the same output in the code (D200). The agent reads an exit code with `exit-code.mjs`, not with `echo $?`, and records nothing about an exit code that it did not get (D197). No guess, no fact that a reader can easily deduce from the code (also if a run found it, D186; a run is not enough if a reader can see the result in the code or the file list, D198), and no numbers that soon go out of date (D136, D174, D184).
+  - **Fact**, when you find it: each non-obvious fact, with its source, and a source emoji at the start: 👤 📖 🎫 📊 🌐 🔬 🔍 (D226). An answer of the user is a source of a non-obvious fact, and a 👤 fact is always non-obvious. The fact is written so that it stays true after the change. The agent does not change an existing fact only to add an emoji (D227). An obvious fact or a well-known fact is not recorded. If it is the reason of a decision, it goes into the "because" part of that item (D192). A sentence that states a choice is a decision, not a fact (D192). A non-obvious fact needs one of these to find: a run or a test result; research of remote sources, for example documentation on the internet, another repo, logs, or a remote database; a long analysis of the code; or other work that is worth an agent to find it. A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found it. A run alone is not enough: the result must be one that a reader cannot see in the code or in the file list. This includes each error or output of a tool that makes the agent change what it does (D172), unless a reader can see the output in the code (D200, D271). The agent reads an exit code with `exit-code.mjs`, not with `echo $?` (D197). No guess, no fact that a reader can easily deduce from the code (also if a run found it, D186; a run is not enough if a reader can see the result in the code or the file list, D198), and no numbers that soon go out of date (D136, D174, D184).
   - **Decision**, when you make it: (1) each thing that the preview plans for the code and that changes a visible result, also the input or output of a program and the result on an error or an edge case, and that `plan.md` and the user did not say; (2) each choice between close options with no clear winner, also an internal one. No other choice. The decision holds only the part that matches (1) or (2). An internal detail can appear only in the "because" part (D220). The apply end check reads each added or changed file for (1). Only the agent at the moment of the choice can see (2) (D217, D218, D219, D224). Each reason comes from this run, the user, `plan.md`, the code, or a well-known fact (D177, D192). A claim about how a tool, a runtime, or a platform behaves needs a run or a doc. With no source, the agent writes "Reason not checked." (D194). End the heading with 🤖, unless the decision records an answer or an instruction of the user. Remove the 🤖 when the agent updates a decision to follow the user. A decision with no 🤖 belongs to the user. Update or remove only a 🤖 decision, also after the user corrected `plan.md`. Change a decision with no 🤖 only when the user says so in this session. On another conflict, record an open question (D181, D182).
-  - **Open question**: each point that the agent cannot decide and cannot find the answer to, for example because the answer is an intent of the user, or a fact that only the user knows, for example where some code is when a search does not find it. The agent gives a recommended answer for an intent, and no recommendation for a fact that only the user knows (D269). If the answer depends on both, it gives a recommendation for the intent and names the fact that it needs (D270). An obvious answer goes only to the summary (D226). A point that it can decide is a 🤖 decision, not a question. Before it writes the tasks, it tries to decide or find the answer to each existing question. The answer becomes a fact, a 🤖 decision when the decision rule records it, or else an answer in the summary, and the agent removes the question, unless the user said to keep it open (D234). A kept question ends with "(kept open by the user)" (D228). It records each new question after it writes the preview. If the user answers one in this session, the agent splits the answer: each fact goes to `## Facts` with 👤, and each choice, instruction, or rule becomes a decision with no 🤖. The preview cannot edit `## Constraints`, so its summary says that the user can move a rule there (D240). Then it removes the question (D183, D223, D226).
+  - **Open question**: each point that the agent cannot decide and cannot find the answer to, for example because the answer is an intent of the user, or a fact that only the user knows. The agent gives a recommended answer for an intent, and no recommendation for a fact that only the user knows (D269). If the answer depends on both, it gives a recommendation for the intent and names the fact that it needs (D270). An obvious answer goes only to the summary (D226). A point that it can decide is a 🤖 decision, not a question. Before it writes the tasks, it tries to decide or find the answer to each existing question. The answer becomes a fact, a 🤖 decision when the decision rule records it, or else an answer in the summary, and the agent removes the question, unless the user said to keep it open (D234). A kept question ends with "(kept open by the user)" (D228). It records each new question after it writes the preview. If the user answers one in this session, the agent splits the answer: each fact goes to `## Facts` with 👤, and each choice, instruction, or rule becomes a decision with no 🤖. The preview cannot edit `## Constraints`, so its summary says that the user can move a rule there (D240). Then it removes the question (D183, D223, D226).
 - Before it writes `tasks-preview.md`, the preview checks each fact that the run added, except a 👤 fact. If a reader can see it in the code or the file list, it is obvious, also after a run: move it to the "because" part of the decision that it justifies, or remove it (D211, D227). In the same step, it removes each added 🤖 decision that matches neither criterion (D221, D230, D234).
 - In the summary, list each fact, decision, and open question that the run added, changed, or removed (D171). Then show a table of each added 🤖 decision, with its criterion, (1) or (2), and why (D221, D234).
 
@@ -349,7 +349,7 @@ apply:
 ```text
 This is a plan-lite change. It has no tasks.md and no checkboxes.
 
-How to read this instruction:
+How to read these steps:
 
 - Do steps 1 to 6 in order.
 - The general rules apply at all times, in each step.
@@ -362,10 +362,11 @@ How to read this instruction:
 - If plan.md and tasks-preview.md conflict, follow plan.md.
 - Do not edit tasks-preview.md.
 - Each time the user answers an open question, record the answer with the answer rule.
-- Each time the user gives a fact, a rule, or a choice for the change in a reply, record the reply with the answer rule.
+- Each time the user gives a fact, a constraint, or a choice for the change in a reply, record the reply with the answer rule.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
 - When you find a fact, record the fact with the fact rule and the fact format.
+- When you ask an open question, follow the ask rule.
 - When you need the exit code of a command, use the exit-code rule.
 - When you change a behavior, follow the test rule.
 - When you write a file other than plan.md and tasks-preview.md, or a commit message, follow the ID rule.
@@ -401,29 +402,22 @@ How to read this instruction:
 
 - Input: `## Open Questions` of plan.md, and the result of step 2.
 - Read each question in `## Open Questions`.
-- A question that ends with "(kept open by the user)" is a kept question.
-- Keep each kept question, also if you can decide the kept question.
-- Do not ask a kept question again, unless the user answers the kept question now.
-- Do not write the code that depends on a kept question.
 - Try to close each question that is not a kept question with the question rule.
 - Make the list of questions to ask:
   - If the preview is stale, add the stale question: "Regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md?"
   - Add each open question that has no marker and that you did not ask yet in this session.
 - If the list of questions to ask is empty, go to step 4.
-- If the list of questions to ask is not empty, ask all questions of the list in one reply:
-  - Give your recommended answer for each open question.
-  - Give no recommendation when the answer is a fact that only the user knows, for example where some code is when a search of the repo does not find the code. Say why you give no recommendation.
-  - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
+- If the list of questions to ask is not empty, ask all questions of the list in one reply, with the ask rule:
   - In the same reply, give the answer of each question that you closed.
   - End your turn, and wait for the reply of the user.
 - When the user replies to the questions of step 3:
   - Record each answer with the answer rule.
-  - In step 3, "stale" means the result of step 2. A constraint that the answer rule adds in this run does not make step 3 ask the stale question. Step 6 reports the new constraint.
+  - The stale question of step 3 depends only on the result of step 2. Step 6 reports each constraint that you add in this run.
   - A question that the user did not answer stays open. Do not write the code that depends on that question.
   - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
   - If the user says to continue from plan.md, go to step 4.
-  - If the preview is stale, and the user does not answer the stale question, ask the stale question again, and end your turn.
-  - If the preview is not stale, go to step 4.
+  - If step 2 found the preview stale, and the user does not answer the stale question, ask the stale question again, and end your turn.
+  - If step 2 did not find the preview stale, go to step 4.
 
 ## Step 4: Write the code
 
@@ -433,9 +427,7 @@ How to read this instruction:
 - If your work conflicts with a decision with no 🤖, ask the user, and end your turn.
 - If you find a new point that you cannot close with the question rule:
   - Record the point as an open question before you write the code that depends on the point.
-  - Ask the open question with your recommended answer.
-  - Give no recommendation when the answer is a fact that only the user knows.
-  - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
+  - Ask the open question with the ask rule.
   - End your turn.
 - When the user replies to a question of step 4, step 5, or step 6, record each answer with the answer rule. Then go to step 4, and write the code that waited for the answer.
 - When the code is written, go to step 5.
@@ -461,7 +453,7 @@ Do these checks in this order:
    - If the code cannot follow a decision with no 🤖, ask the user, and end your turn.
 3. Read each file that you added or changed. Find each thing in the file that matches criterion (1) of the decision rule, and that `## Decisions` does not hold. Record each such thing as a 🤖 decision.
 4. Check each decision with no 🤖. Move each choice that you added to a decision with no 🤖 into its own 🤖 decision.
-5. Record each point that you cannot close with the question rule as an open question. Keep each kept question.
+5. Record each point that you cannot close with the question rule as an open question.
 6. Check each 🤖 decision that you added in this run. If a 🤖 decision matches neither criterion (1) nor criterion (2) of the decision rule, remove the 🤖 decision.
 7. Check the facts. Do this check last, because checks 2 to 6 can add facts:
    - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
@@ -480,8 +472,7 @@ When the checks are done, go to step 6.
    - If you added a constraint, and the preview is not absent, say that the new constraint makes the preview stale, and that the next run of apply asks to regenerate the preview.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
-   - Ask each new open question of step 5 with your recommended answer. Give no recommendation when the answer is a fact that only the user knows.
-   - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
+   - Ask each new open question of step 5 with the ask rule.
 2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
 3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
 4. If the tests did not run, and the test check did not pass, tell the user to run the test command, and to run apply again.
@@ -494,9 +485,8 @@ When the checks are done, go to step 6.
 ## Question rule: close an open question
 
 - A question is open only while you cannot decide the question and cannot find its answer.
-- You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows. Where some code is, when a search of the repo does not find the code, is a fact that only the user knows.
-- You cannot decide a point when the code must match something outside the repo, and the repo does not show it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A common convention does not answer such a point, because the other side can use another form.
-- If the only reason for a choice is a convention or "Reason not checked.", and the choice must match something outside the repo, the point is an open question, not a 🤖 decision.
+- You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
+- You cannot decide a point when the code must match something outside the repo, and the repo does not show it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary.
@@ -505,6 +495,17 @@ When the checks are done, go to step 6.
 - When you close a question, remove the question from `## Open Questions`.
 - Do not record a point that you can decide as an open question.
 - Write a new open question as `- OQ<n>: <question>`.
+- A question that ends with "(kept open by the user)" is a kept question.
+- Keep each kept question, also if you can decide the kept question.
+- Do not ask a kept question.
+- If a message of the user answers a kept question, record the answer with the answer rule.
+- Do not write the code that depends on a kept question.
+
+## Ask rule: ask an open question
+
+- Give your recommended answer for each open question.
+- Give no recommendation when the answer is a fact that only the user knows. Say why you give no recommendation.
+- If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
 
 ## Answer rule: record a reply of the user
 
@@ -512,19 +513,18 @@ When the checks are done, go to step 6.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
 - An answer such as "I do not know yet" leaves the question open with no marker.
-- Split the reply of the user as well as you can into facts, rules, and choices.
-- A fact says how something is, for example "the thumbnail folder does not exist yet". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
+- Split the reply of the user as well as you can into facts, constraints, and choices.
+- A fact says how something is, for example "before this change, the thumbnail folder did not exist". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
 - Record each part of the reply in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
-- Record each rule of the reply that the change must follow in `## Constraints`.
-- A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
-- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
-- Record each other choice or instruction of the reply, that is not a fact and not a rule, in `## Decisions`, as a decision with no 🤖.
+- Record each constraint of the reply in `## Constraints`.
+- A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
+- A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
+- Record each other choice or instruction of the reply, that is not a fact and not a constraint, in `## Decisions`, as a decision with no 🤖.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
 - After you record the reply, read the reply again, part by part. If a part is in no section of plan.md, record the part now.
-- An edit of `## Constraints` makes the preview stale. This result is correct, because the preview does not know the new rule yet.
 
 ## Decision rule: when to record a decision
 
@@ -532,9 +532,9 @@ When the checks are done, go to step 6.
 - Criterion (1): you put something in the code, or plan to put something in the code, that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
 - A visible result is one of these things:
   - a UI, a public interface, or the signature of an exported function
-  - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a value that the code reads from that output
+  - the input or output of a program, or a data format
   - a file name or path in the repo that another program, a config, or a doc outside this change refers to
-  - a name that the program gives to its output, for example the name of a file that the program writes for the user
+  - a name that the program gives to its output
   - a key in a config file that a program or a user reads, for example a key of a YAML config file, or an env var
   - a new dependency
   - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
@@ -570,7 +570,7 @@ When the checks are done, go to step 6.
 - Remove each 🤖 decision that a new decision supersedes.
 - Update each 🤖 decision that a new decision makes stale.
 - Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖.
-- Change a decision with no 🤖 only when the user tells you to.
+- Change a decision with no 🤖 only when the user tells you to, or to move a choice that you added into its own 🤖 decision.
 - After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
 
 ## Fact rule: when to record a fact
@@ -584,11 +584,9 @@ When the checks are done, go to step 6.
   - other work that is worth an agent to find the fact
 - A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found the fact.
 - A run alone does not make a fact non-obvious. The result must be one that a reader cannot see in the code or in the file list.
-- For example, the output of a script is obvious when the code of the script shows the output. The list of files that exist is obvious too.
 - A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact, also not the obvious-fact check of step 5.
 - The other checks apply to a 👤 fact, for example the check of a fact that is no longer true.
 - When a command, a tool, or a service gives an error or an output that makes you change what you do, record the output as a fact, with the command and the error text.
-- If a reader can see the same output in the code, the output is an obvious fact.
 - Do not record an obvious fact or a well-known fact in `## Facts`.
 - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
 - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact, because an edit of those sections makes the preview stale with no need.
@@ -617,7 +615,6 @@ When the checks are done, go to step 6.
 - Run the `exit-code.mjs` command alone, not in a chain.
 - Read the last line of the output: `exit: <code>`.
 - Do not add `echo $?`.
-- If you did not get the exit code, record nothing about the exit code.
 
 ## Test rule
 

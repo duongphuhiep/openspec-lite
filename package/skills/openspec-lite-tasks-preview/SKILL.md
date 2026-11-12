@@ -12,7 +12,7 @@ How to read this skill:
 - Do the checks of section 1 in order. Then do steps 1 to 8 of section 2 in order.
 - The general rules of section 2 apply at all times, in each step.
 - A named rule of section 3, for example the question rule, applies in each step where its topic comes up, also when the step does not name the rule.
-- The OpenSpec root is the folder that holds `openspec/`. Run each command from the OpenSpec root.
+- The OpenSpec root is the folder that holds `openspec/`.
 - `<name>` is the name of the change.
 
 ## 1. Common checks
@@ -25,7 +25,7 @@ Do these checks in order.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
 - Run each command from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
-- If the OpenSpec root is not the current folder, start each `openspec` command with `cd <root> && `.
+- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root.
@@ -91,9 +91,8 @@ Do these checks in order.
 - When you find a fact, record the fact with the fact rule and the fact format.
 - When you need the exit code of a command, use the exit-code rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
-- If the user answers a question that a task of the preview waits for, remove the "waits for the answer" note from that task. Then change the task to follow the answer.
-- If the user moves a rule to `## Constraints`, the preview is stale. Tell the user to run this skill again.
-- If the user replies after step 8, and the reply does not make the preview stale, record the reply with the general rules. Update each task of the preview that the changed items make wrong. Then run step 8 again for the items that the reply changed.
+- If the user moves a constraint to `## Constraints`, the preview is stale. Tell the user to run this skill again.
+- If the user replies after step 8, and the reply does not make the preview stale, record the reply with the general rules. Update each task of the preview that the changed items make wrong. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again for the items that the reply changed.
 
 ### Step 1: Check that plan.md exists
 
@@ -221,9 +220,8 @@ When the checks are done, go to step 6.
 ### Question rule: close an open question
 
 - A question is open only while you cannot decide the question and cannot find its answer.
-- You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows. Where some code is, when a search of the repo does not find the code, is a fact that only the user knows.
-- You cannot decide a point when the code must match something outside the repo, and the repo does not show it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A common convention does not answer such a point, because the other side can use another form.
-- If the only reason for a choice is a convention or "Reason not checked.", and the choice must match something outside the repo, the point is an open question, not a 🤖 decision.
+- You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
+- You cannot decide a point when the code must match something outside the repo, and the repo does not show it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary of step 8.
@@ -239,8 +237,8 @@ When the checks are done, go to step 6.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open, for example "keep it open" or "leave it open".
 - An answer such as "I do not know yet" leaves the question open with no marker.
-- Split the reply of the user as well as you can into facts, rules, and choices.
-- A fact says how something is, for example "the thumbnail folder does not exist yet". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
+- Split the reply of the user as well as you can into facts, constraints, and choices.
+- A fact says how something is, for example "before this change, the thumbnail folder did not exist". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
 - Record each part of the reply in one section only.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
@@ -248,10 +246,10 @@ When the checks are done, go to step 6.
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
 - After you record the reply, read the reply again, part by part. If a part is in no section of plan.md, record the part now.
-- You cannot edit `## Constraints`, so record each rule of the reply that the change must follow in `## Decisions`, as a decision with no 🤖.
-- A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.
-- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
-- For each rule that you record as a decision, say in the end summary that the user can move the rule to `## Constraints`.
+- You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
+- A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
+- A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
+- For each constraint that you record as a decision, say in the end summary that the user can move the constraint to `## Constraints`.
 
 ### Decision rule: when to record a decision
 
@@ -259,13 +257,13 @@ When the checks are done, go to step 6.
 - Criterion (1): you plan something for the code that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
 - A visible result is one of these things:
   - a UI, a public interface, or the signature of an exported function
-  - the input or output of a program, or a data format, also the output of another tool that the code reads, for example a value that the code reads from that output
+  - the input or output of a program, or a data format
   - a file name or path in the repo that another program, a config, or a doc outside this change refers to
-  - a name that the program gives to its output, for example the name of a file that the program writes for the user
+  - a name that the program gives to its output
   - a key in a config file that a program or a user reads, for example a key of a YAML config file, or an env var
   - a new dependency
   - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
-- plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you put in the code is your choice, for example the height, the file format, or the file name.
+- plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you plan for the code is your choice, for example the height, the file format, or the file name.
 - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
 - Do not record your other choices.
 - Record only the part of the decision that matches criterion (1) or criterion (2).
@@ -312,10 +310,8 @@ When the checks are done, go to step 6.
   - other work that is worth an agent to find the fact
 - A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found the fact.
 - A run alone does not make a fact non-obvious. The result must be one that a reader cannot see in the code or in the file list.
-- For example, the output of a script is obvious when the code of the script shows the output. The list of files that exist is obvious too.
 - A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact, also not the fact check of step 5.
 - When a command, a tool, or a service gives an error or an output that makes you change what you do, record the output as a fact, with the command and the error text.
-- If a reader can see the same output in the code, the output is an obvious fact.
 - Do not record an obvious fact or a well-known fact in `## Facts`.
 - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
 - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact. The preview cannot edit `## Constraints` or `## Non-Goals`, so the fact has no place.
@@ -344,7 +340,6 @@ When the checks are done, go to step 6.
 - Run the `exit-code.mjs` command alone, not in a chain.
 - Read the last line of the output: `exit: <code>`.
 - Do not add `echo $?`.
-- If you did not get the exit code, record nothing about the exit code.
 
 ### ID rule
 
