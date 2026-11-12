@@ -545,6 +545,7 @@ When the checks are done, go to step 6.
 
 - Write `### Decision D<n>: <title>`, with `<n>` higher than each decision ID in the file.
 - After the heading, write "Chose X because Y."
+- One decision records one choice. If you made two choices, write two decisions, each with its own reason.
 - Add "Rejected Z because W." when there was an alternative.
 - Each reason must come from this run, the user, plan.md, the code, or a well-known fact.
 - A claim about how a tool, a runtime, or a platform behaves is not a well-known fact. Check the claim with a run or a doc, and give the source.
