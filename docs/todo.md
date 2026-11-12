@@ -247,27 +247,6 @@ The reports are in `.scenario-runs/20261111-a98437d/` (`summary.md` and `group-A
 - **Evidence**: `group-A.md`.
 - **Recommendation**: not decided. Name `node --test` as the fallback when `npm test` is denied, and keep the 429 body in the error item of criterion 1 as the first example.
 
-### 86. The 4c and 4d decisions lose their reason or state a choice as a fact
-
-- **Where**: apply decision format and fact rule (D192, D198).
-- **Problem**: in 4c, 2 of 2 decisions on the unknown city do not give the exit 0 reason. In 4d-1, D1 is false on a real invalid spec, and F1 states a choice.
-- **Evidence**: `group-I.md`.
-- **Recommendation**: not decided.
-
-### 87. Archive does not ask about the delta of an earlier session
-
-- **Where**: archive step 7 (D191).
-- **Problem**: in 13a run 1, the second session kept the earlier delta and did not ask.
-- **Evidence**: `group-B.md`.
-- **Recommendation**: not decided.
-
-### 88. Source emojis are guessed for a fact with none, and appear in spec drafts
-
-- **Where**: archive steps 4 and 6, the fixture `finished-rate-limit` (D227, D244).
-- **Problem**: a fixture fact has no emoji, so archive guessed 👤 in two drafts. A 20b spec draft ended with "👤?".
-- **Evidence**: `group-B.md`, `group-E.md`.
-- **Recommendation**: not decided. Give the fixture facts emojis and the current template comments. Say what archive does for a fact with no emoji: copy no emoji.
-
 ### 90. The preview writes an intent question as a 🤖 decision
 
 - **Where**: tasks-preview question rule (D223).
@@ -282,6 +261,55 @@ The reports are in `.scenario-runs/20261111-a98437d/` (`summary.md` and `group-A
 - Propose: the reason of the user for D1 became a 👤 fact (2 of 2, group C). Level 1 question asked with an open question recorded (scenario 9, group D).
 - Scenario texts: scenario 4 does not say if sample content of a scaffold needs a decision (group A). 21b gives no answers for the questions of the agent (group G).
 - Setup scripts: the group F build script made a commit in the main repo with bad arguments. `F/mk.sh` now stops on a bad argument. Each setup script must refuse to run in the repo root.
+
+## Found in the run on 3fb090c
+
+The reports are in `.scenario-runs/20261112-3fb090c/` (`summary.md` and `group-A.md` to `group-I.md`). 33 of 43 runs pass, 239 of 252 checks. 4, 4b, 7, and 20a fail in each run. 18 and 4c fail once. D246 and D247 hold. Items 86, 87, and 89 are closed by the results. Item 84 is closed by D247.
+
+### 92. Archive reads a 🤖 of an HTML comment as a mark
+
+- **Where**: archive steps 1 and 6, the template comment of `## Decisions` (D181).
+- **Problem**: archive says that a decision "is marked 🤖" when only the template comment holds the emoji. This is a likely cause of the false claims of item 63.
+- **Evidence**: `group-F.md` (20a run 1), `group-B.md` (13b).
+- **Recommendation**: not decided. Say that a 🤖 in an HTML comment is not a mark, in archive and in the template comment.
+
+### 93. Archive writes a guessed 👤 into a main spec
+
+- **Where**: archive steps 4 to 6 (D227, D244), the fixture `finished-rate-limit`.
+- **Problem**: archive guessed 👤 for two items with no source emoji, and both marks are in the main spec of 15. In 13a, a fixture fact with no emoji gave "source not recorded" in an ADR. Item 88 is the same problem, and it got worse.
+- **Evidence**: `group-E.md`, `group-B.md`.
+- **Recommendation**: not decided. Two options: archive writes no source emoji into a spec, only into an ADR; or archive copies an emoji only from a fact that has one, and never adds one. Give the fixture facts their emojis.
+
+### 94. Archive does not name a spec draft from a 🤖 decision
+
+- **Where**: archive step 6 (D152, item 82).
+- **Problem**: in 4c-2, the spec draft holds a requirement from D3 🤖, and the reply names only the ADR draft as a 🤖 draft. 4c fails on it.
+- **Evidence**: `group-I.md`.
+- **Recommendation**: not decided. Name each draft, spec or ADR, that comes from a 🤖 decision.
+
+### 95. Archive asks before the `Status:` edit of step 10
+
+- **Where**: archive general rules and step 10 (D191).
+- **Problem**: the general rule "Write nothing before the user approves" does not say that the `Status:` edit of step 10 needs no new approval.
+- **Evidence**: `group-G.md` (21b, also on a98437d).
+- **Recommendation**: not decided. Say that the approval of the new ADR also covers the `Status:` edit of the old ADR.
+
+### 96. Scenario 7 step 3: a requirement from the Goal with no question, and the quoting
+
+- **Where**: upgrade step 2, requirement sources (D164, D166, D182).
+- **Problem**: run 1 wrote a requirement from the Goal that the question turn did not ask. Run 2 called the quoting "not a contract". 7 fails in 2 of 2 runs, after 2 of 2 passes on a98437d.
+- **Evidence**: `group-C.md`.
+- **Recommendation**: not decided.
+
+### 97. Smaller gaps from the run on 3fb090c
+
+- 4b: no decision records the 429 body (0 of 2, item 85). `node --test test/` failed and no fact records it (D172). The user decision D1 gives a reason that the user did not give (group A).
+- 4: two rules of an answer are each both a constraint and a decision. The stack instruction became a 👤 fact. No decision for the sort UI in run 2 (group A).
+- 4c: `lookup` throws on a spawn failure with no decision (third run in a row). `lookup` returns the full object with no decision (group I).
+- 18 run 1: archive offered `openspec archive` after "no" to the ADR offer (D215). The guard path searches for 🤖 before the ADR answer in 4 of 4 sessions (group C).
+- 20a: the section list of step 2 gives no heading (2 of 2). `openspec instructions` in a pipe and `for` loops (group F).
+- Scenario 8: archive ran two commands before it stopped on version 99 (group D). Scenario 9: Level 1 question with an open question recorded (group D).
+- Item 63 again in groups B and E. The Edit tool removed a final newline of `.openspec.yaml` in 20b (group E).
 
 ### 55. The scripts do not run alone
 

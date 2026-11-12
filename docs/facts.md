@@ -1091,6 +1091,20 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - The template comments of D226 to D245 add about 116 words to each new `plan.md`, from 482 to 598 words (group H).
 - Claude Code 2.1.322: the working folder of `cd svc && <cmd>` is not kept when `<cmd>` fails (group D). A `;` chain of allowed commands is not denied; a chain with `echo "exit $?"` is denied (group D).
 
+## Scenario Run on 3fb090c
+
+**Source**: all scenarios, 43 runs, isolated (D199), Claude Code 2.1.322 print mode, `eu.anthropic.claude-sonnet-5-5`, OpenSpec 1.14.2, APM 0.33.0, reports in `.scenario-runs/20261112-3fb090c/`, 2026-11-12.
+
+- Sonnet 5.5 with D246: scenario 3 passes in 2 of 2 runs. With D247: "I do not know yet" adds no "(kept open by the user)" marker in 2 of 2 runs of 20a (group A, group F).
+- Sonnet 5.5 with D248 to D250: archive asked the keep-or-delete question for an earlier delta in 2 of 2 runs of 13a (1 of 2 on a98437d). Both 4c runs give the "exits 0" reason in the decision and the ADR (0 of 2 on a98437d). Both 4d scripts match their decisions on an invalid spec. 22c gave no "no" paths before the answer (groups B, I, H).
+- Sonnet 5.5, archive: it reads the 🤖 of an HTML template comment as a mark of a decision, and says that a decision "is marked 🤖" when its heading has none (20a run 1, group F; 13b, group B). It guessed 👤 for two items of 15 with no source emoji, and wrote both marks into the main spec `openspec/specs/report-csv-export/spec.md` (group E). It names an ADR draft from a 🤖 decision as a 🤖 draft, but not a spec draft (4c-2, group I).
+- Sonnet 5.5, archive step 10: the agent asks before the `Status:` edit of an old ADR, because the general rule "Write nothing before the user approves" does not say that step 10 wins (21b, group G).
+- Sonnet 5.5, archive: with schema version 99, it ran `openspec-version.mjs` and read `plan.md` before it stopped (scenario 8, group D).
+- Sonnet 5.5, apply: no run of 4b recorded the 429 body (0 of 2, also 0 of 2 on a98437d). In 4 run 2, two rules of the user answer are each both a constraint and a decision. In 4 run 1, the stack instruction became a 👤 fact (group A).
+- Sonnet 5.5, upgrade: in scenario 7 step 3, run 1 wrote a requirement from the Goal that the question turn did not ask, and run 2 called the quoting "not a contract" (D182). The section list of step 2 gives no heading in 2 of 2 runs of 20a (groups C, F).
+- The input tokens of a session grew by about 2,000 to 3,000, and the cost of most groups by 10 to 15%, after D248 to D250 (groups B, D, H).
+- Claude Code 2.1.322: the Edit tool with an empty `new_string` also deletes the newline after `old_string` (20b, group E).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
