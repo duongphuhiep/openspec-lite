@@ -21,6 +21,7 @@ How to read this skill:
 - When you record an open point, follow the question rule.
 - Each time the user answers a question of `plan.md`, record the answer with the answer rule.
 - Each time the user gives a fact, a constraint, or a choice for the change in a reply, record the reply with the answer rule.
+- If `plan.md` does not exist yet, keep each such part of the reply, and record the part when you write `plan.md` in section 3.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
 
@@ -156,7 +157,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 ### Answer rule
 
-- If the user answers a question, remove the question from `## Open Questions`.
+- If the user answers an open question of `plan.md`, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
 - Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
