@@ -166,7 +166,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
 - Record each rule in the answer that the change must follow as a constraint in `## Constraints`.
 - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.
-- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window", or "use plain HTML under `src/`".
+- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window for the rate limit", or "use plain HTML under `src/`".
 - Record each other choice or instruction in the answer as a decision with no 🤖.
 
 ### Fact rule

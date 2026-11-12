@@ -3619,3 +3619,9 @@ This revises D252, D255, and D256.
 This revises D255, D256, and D257.
 
 **Rationale**: a fresh-context review found each gap. Three remarks came from the fixes of D254 and D257.
+
+## D259: Each Example in `package/` Gives Its Own Setup
+
+**Decision**: an example in a skill, in `schema.yaml`, or in a template gives its own setup, for example what `plan.md` asks for. It does not depend on a test fixture or a test scenario of this repo. The three examples of the inferred-item rule of upgrade now say what `plan.md` asks for, and use `#### Scenario:`, so that "scenario" cannot mean a test scenario. The example "use a sliding window" now says "for the rate limit". The user asked for this.
+
+**Rationale**: only `package/` reaches the machine of the user. The old examples of upgrade named "the export" and "the column-order constraint" of the `after-preview` fixture. On another project, the agent could not know this context.

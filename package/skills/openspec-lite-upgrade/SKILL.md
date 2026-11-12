@@ -374,9 +374,9 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
   - another form of a `plan.md` item, for example a `#### Scenario:` that only restates its requirement;
   - another artifact or section for a `plan.md` item;
   - the code, file, or module that a `plan.md` item clearly touches.
-- Example: the scenario "Table is empty" gets 🤖, because `plan.md` does not say what the export does for an empty table.
-- Example: the Why line "no trace of who changed what" gets 🤖, because `plan.md` does not say that an entry records the user.
-- Example: the scenario "Columns follow the on-screen order" gets no 🤖, because it restates the column-order constraint.
+- Example: `plan.md` asks for a CSV export of a table, and does not say what the export does for an empty table. A `#### Scenario: Table is empty` gets 🤖, because the scenario adds a new claim.
+- Example: `plan.md` asks for an audit log of the changes to a record, and does not say that a log entry names the user. The Why line "no trace of who changed what" in `proposal.md` gets 🤖, because the line adds the claim that an entry records the user.
+- Example: `plan.md` has the constraint "The CSV uses the column order of the table on screen". A `#### Scenario: Columns follow the on-screen order` gets no 🤖, because the scenario only restates that constraint.
 - Put one mark per item.
 - Do not mark `tasks.md`.
 

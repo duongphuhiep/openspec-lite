@@ -139,6 +139,7 @@ openspec-lite/
 ### Common rules for all workflow skills
 
 - Each skill and `apply.instruction` follow the section "Write Instructions as Code" of `CLAUDE.md`: a "How to read" part, a "General rules" list, steps with Input and Output lines that end with the next step, one job per bullet, a named subject in each bullet, flat nesting, and each branch written (D248, D249, D250).
+- An example in `package/` gives its own setup, for example what `plan.md` asks for. It does not depend on a test fixture or a test scenario of this repo, because only `package/` reaches the user (D259).
 
 The five workflow skills are propose, tasks-preview, apply, upgrade, and archive.
 
@@ -495,7 +496,7 @@ When the checks are done, go to step 6.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each rule of the reply that the change must follow in `## Constraints`.
 - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done. Examples: "add no npm dependency", or "a request over the limit gets status 429".
-- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window", or "use plain HTML under `src/`".
+- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window for the rate limit", or "use plain HTML under `src/`".
 - Record each other choice or instruction of the reply, that is not a fact and not a rule, in `## Decisions`, as a decision with no 🤖.
 - An edit of `## Constraints` makes the preview stale. This result is correct, because the preview does not know the new rule yet.
 

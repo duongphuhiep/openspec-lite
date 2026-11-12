@@ -244,7 +244,7 @@ When the checks are done, go to step 6.
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
 - You cannot edit `## Constraints`, so record each rule of the reply that the change must follow in `## Decisions`, as a decision with no 🤖.
 - A rule limits the result that a user or a program sees, or says what the change must not add. A rule passes this test: if the result breaks the rule, the change is not done.
-- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window", or "use plain HTML under `src/`".
+- A choice of how to build the result is not a rule, also when the user gives the choice. Examples: "use a sliding window for the rate limit", or "use plain HTML under `src/`".
 - For each rule that you record as a decision, say in the end summary that the user can move the rule to `## Constraints`.
 
 ### Decision rule: when to record a decision
