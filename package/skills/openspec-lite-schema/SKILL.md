@@ -55,7 +55,7 @@ How to read this skill:
 - Output: the next section to do, or stop.
 - Read the shipped version and the repo version.
 - If the repo version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-- If the repo version equals the shipped version, say "The plan-lite schema is already current." Also tell the user: to repair a damaged schema, delete `openspec/schemas/plan-lite/`, and run this skill again. Skip section 3, and go to section 4.
+- If the repo version equals the shipped version, tell the user: to repair a damaged schema, delete `openspec/schemas/plan-lite/`, and run this skill again. Skip section 3, and go to section 4.
 - If the repo copy exists and the repo version is lower, or the repo copy has no readable version, ask the user: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`. Proceed?"
 - After you ask the replace question, end your turn, and wait for the answer.
 - Do not run the install script before the user says yes to the replace question.
@@ -65,7 +65,7 @@ How to read this skill:
 
 ## 3. Install
 
-- Input: the output and the exit code of `install.mjs`.
+- Input: the output of `install.mjs`.
 - Output: the `status:`, `backup:`, and `copied:` lines for section 5.
 
 Run:
@@ -78,10 +78,9 @@ The first output line is the status:
 
 - If the status is `status: installed` or `status: replaced`, the install succeeded. The next lines are `backup: <path>` (only on replace) and `copied: <path>`. Go to section 4.
 - If the status is `status: current`, there is nothing to do. Go to section 4.
-- If the status is `status: newer` (exit code 2), stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
+- If the status is `status: newer`, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
 - If the output has no `status:` line, and an `install:` line says that the shipped `schema.yaml` is missing, the shipped assets are damaged. Stop, and tell the user to reinstall openspec-lite.
-- If the output has no `status:` line in each other case, a file system error occurred. Show each `install:` line, and stop.
-- If an `install:` line names the folder of the old schema, tell the user where the old schema folder is.
+- If the output has no `status:` line in each other case, a file system error occurred. Show each `install:` line. If an `install:` line names the folder of the old schema, tell the user where the old schema folder is. Then stop.
 
 ## 4. Archive guidance
 
