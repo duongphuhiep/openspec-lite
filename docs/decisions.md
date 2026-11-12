@@ -3783,3 +3783,29 @@ This revises D119, D166, D182, D219, and D256.
 4. The rerun `.scenario-runs/20261112-5b411a1/` shows that item 1 fixes D02 in 2 of 2 runs. Scenario 4 still fails in 2 of 2 runs. Each failure has the cause `llm`, because a rule covers each case, so the skills do not change.
 
 **Rationale**: the rerun `.scenario-runs/20261112-2119a53/` passed 5 of 8 runs (1 of 8 on 84abcb6). D02 failed in 2 of 2 runs after D269 item 4. The agent said "I have no recommendation, because the report's data model isn't visible here", and then gave a default. OQ2 of scenario 4 depends on an intent (the columns that the user wants) and on a fact (the columns that exist). The skill had no branch for such a question. The user agreed with both findings.
+
+## D271: Fixes From the Review of the Skill Text at 98efbdb
+
+**Decision**:
+
+1. Hint phrases are removed from `package/`, because each one describes the exact case of a test scenario (D269 item 2):
+   - "where some code is when a search of the repo does not find the code" (scenarios 3 and 4). This revises D195 and D264 item 4.
+   - "also the output of another tool that the code reads" in the list of visible results (4c, 4d). This revises D231.
+   - "for example the name of a file that the program writes for the user" (4). This revises D262.
+   - "If you did not get the exit code, record nothing about the exit code." (4d). This revises D197.
+   - "the output of a script is obvious when the code of the script shows the output" and "If a reader can see the same output in the code" (4c). The general obvious-fact rules stay. This revises D200.
+   - "An answer such as "I do not know yet"…", and the examples "keep it open" or "leave it open" (20a, 4b), in each answer rule. The rule "Add the marker only when the user says to keep the question open" stays. This revises D247.
+   - "This also applies to a question that the tasks preview added…" in upgrade (20a).
+2. `apply.instruction` has an ask rule. Steps 3, 4, and 6 call it. Only the ask rule says when to give no recommendation, and it always asks why.
+3. The kept-question rules move from step 3 to the question rule. "Do not ask a kept question." replaces "Do not ask a kept question again, unless the user answers the kept question now."
+4. The stale question of apply step 3 depends only on the result of step 2. The answer rule no longer says that an edit of `## Constraints` makes the preview stale. Step 6 reports each new constraint.
+5. A rule of the user is a "constraint" in the answer rules of apply, the tasks preview, and propose. "How to read this instruction" is now "How to read these steps".
+6. The OpenSpec root block of the six skills: each `openspec` command, and each command with a relative `openspec/...` path, starts with `cd <root> && ` when the root is not the current folder. The prefix does not count as a chain. This revises D121.
+7. Apply follows the skill names of the `instruction` field. It does not follow other CLI text that names a skill.
+8. The schema skill reads the result of `install.mjs` from the output, not from the exit code. It reports "already current" when it skips the install.
+9. Propose records each part of a reply before it acts on the yes or the no of the tasks-preview question. It asks again only when the reply has no yes and no no. Propose records each fact, constraint, or choice of a reply. Propose drops the fact-removal rule, because propose does not define a non-obvious fact.
+10. Archive: the guard path uses section 2, steps 5, 6, and 10, and then goes back to guard step 1. Each draft is printed in full. One rule sends a fact to the `## Context` of each drafted ADR that the fact relates to. A fact ADR needs a fact that the change depends on. The "add it to `plan.md` first" line needs an item that the user named. The guard path offers no skipped item.
+11. Upgrade: on a resumed run with a delta, step 2 plans no requirement. "Does not change the specs, the approach, or the tasks" replaces "safe to answer later". One bullet says that a yes removes the 🤖 of a decision.
+12. Smaller fixes: the fact example "before this change, the thumbnail folder did not exist"; the tasks preview says "plan for the code"; the template comment splits a guess from an obvious fact; a change of a decision with no 🤖 is allowed when you move your own choice out of it; overlapping bullets of the tasks preview and propose are merged.
+
+**Rationale**: the user asked for a review of `package/` for overlapping rules, hint phrases, and logic inconsistencies, with fixes that add no hint example. The report is `.review-reports/review_20261112232836_eu.anthropic.claude-opus-5-5_98efbdb-package.md`, 36 remarks. The user asked to fix all of them.
