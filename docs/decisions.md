@@ -3625,3 +3625,37 @@ This revises D255, D256, and D257.
 **Decision**: an example in a skill, in `schema.yaml`, or in a template gives its own setup, for example what `plan.md` asks for. It does not depend on a test fixture or a test scenario of this repo. The three examples of the inferred-item rule of upgrade now say what `plan.md` asks for, and use `#### Scenario:`, so that "scenario" cannot mean a test scenario. The example "use a sliding window" now says "for the rate limit". The user asked for this.
 
 **Rationale**: only `package/` reaches the machine of the user. The old examples of upgrade named "the export" and "the column-order constraint" of the `after-preview` fixture. On another project, the agent could not know this context.
+
+## D260: Fixes for the Defects D01, D07 to D12, and D18 of the Run on b470899
+
+**Decision**: from `.scenario-runs/20261112-b470899/defects.md`:
+
+1. Propose lists the open points of the outcomes before it decides on the Level 1 question. If the list is not empty, the outcomes are not small, and propose does not ask the Level 1 question. (D08)
+2. Archive searches each draft for a `plan.md` ID before step 6 shows the drafts. It replaces each ID with the item title, or a short form of its text. (D09)
+3. Archive writes each approved draft exactly as the user approved it. A change to an approved draft needs a new approval. (D09, D18)
+4. An ADR that an earlier run wrote needs no new approval. The `Status:` edit of step 10 needs no approval, because the approval of the new ADR with the `Supersedes:` line covers the edit. The archive general rules say both exceptions. (D10)
+5. Scenario 13b step 2 answers the question about the archive target folder: "Do not delete the archive folder." Scenario 21b step 2 answers the keep-or-delete question: "Keep it." 21b expects no approval question for the existing ADR or for the `Status:` edit. (D11, D12)
+
+6. Apply step 5 check 2 finds each condition in the code that gives the result of a 🤖 decision. The decision matches the code only when it names each such condition. A condition that gives the same result as a named condition is not named. (D07)
+7. The question rule of apply and of the tasks preview: a point is open when the code must match something outside the repo, and the repo does not show it, for example the field names of a message that another service sends. A common convention does not answer such a point. A choice whose only reason is a convention or "Reason not checked.", and that must match something outside the repo, is an open question, not a 🤖 decision. The examples come from another domain than scenario 4b, so that the scenario still tests the rule (D259). (D01)
+8. Apply step 5 check 1: if the agent cannot run the tests, for example because the user denies the test command, it does not wait. It says in the end summary that the tests did not run, and does checks 2 to 7. In the two reruns of 4b for D01, the agent stopped step 5 at the denied `npm test`, so check 3 did not record the error bodies (`verify-D01.md`). (D02)
+
+This revises D111, D122, D138, D148, D202, D220, and D254.
+
+**Rationale**: in scenarios 9 and 12, propose judged the request as small, asked the Level 1 question, and then wrote open questions, in three runs in a row. In scenario 15, the approved ADR draft held the ID "(F1)", and the agent removed the ID after the approval. In 20b, the written ADR differed from the approved draft. In 4b, apply chose the API key header "by convention" as a 🤖 decision in 2 of 2 runs. With the fix in the temp copies, 3 of 3 reruns asked the user first (`investigate/D01-D02.md`). In 4d, apply widened the exit-2 condition and said that D3 "still matches", because the result was the same exit 2. With the fix in the temp copies, 2 of 2 reruns updated the decision (`investigate/D06-D07.md`). In 21b, the general rule "Write nothing before the user approves" made the agent ask about an ADR of an earlier run and about the `Status:` edit.
+
+## D261: Fixes for the Defects D02, D03, and D05 of the Run on b470899
+
+**Decision**: from `.scenario-runs/20261112-b470899/investigate/`. The user chose these three fixes:
+
+1. The decision rule of apply and of the tasks preview: `plan.md` or the user can fix only one part of a visible result, for example the status code of an error response. Each other part that the agent puts in the code is a choice of the agent, for example the body, a header, or the content type. (D02)
+2. The answer rule of apply: an instruction that adds work to the change is a choice of the user. The decision rule and the question rule select only the choices of the agent, and never drop a part of a reply of the user. An answer to an open question goes to a section of `plan.md`, not only to the end summary. After the record, apply reads the reply again, part by part, and records each part that is in no section. Scenario 4 names both instructions of the answer. (D03)
+3. The format of a file or of an output that another program reads is a contract. Upgrade, archive, `GLOSSARY.md`, and `docs/design.md` say this. If upgrade is not sure that a decision with 🤖 is a contract, it plans the requirement and asks the user. For each decision with 🤖 that it does not plan as a requirement, the question turn gives the reason in one sentence. Scenario 7 cites this decision for the quoting contract, not D182. (D05)
+
+The examples of the three rules come from other domains than scenarios 4, 4b, and 7, so that the scenarios still test the rules (D259).
+
+The user did not choose the proposed fixes for D04 and D06, so these defects stay open.
+
+This revises D119, D166, D182, D219, and D256.
+
+**Rationale**: in 4b, the agent read the constraint "status 429" as the whole response, and recorded no body. In 4 run 1, the answer "create it in this repo, scaffold a minimal report page" went to no section, because the decision rule says "Do not record your other choices". In 7 step 3, the skill defined a contract only in abstract words, so the agent called the CSV quoting "not a contract" in about 1 of 2 runs. Reruns with each fix in the temp copies: D02 3 of 3 recorded the 429 body, D03 3 of 3 passed, D05 3 of 3 planned the quoting requirement.

@@ -45,7 +45,7 @@ The move of non-obvious information and contracts from a plan into permanent spe
 _Avoid_: Sync, merge, upgrade
 
 **Contract**:
-Externally observable behavior that a client or another team depends on. Promotion writes it to a spec, even if it is obvious from the code. Three other uses of the word are different. "`tasks.md` is a contract" means that apply must follow its steps. The upgrade signal "a contract (spec) becomes necessary" means a spec that others must agree on before the work. In `docs/design.md`, "contract" also names the command-line interface of a script, for example `install.mjs`.
+Externally observable behavior that a client or another team depends on. The format of a file or of an output that another program reads is a contract, for example the line format of a log file that a monitor parses. Promotion writes it to a spec, even if it is obvious from the code. Three other uses of the word are different. "`tasks.md` is a contract" means that apply must follow its steps. The upgrade signal "a contract (spec) becomes necessary" means a spec that others must agree on before the work. In `docs/design.md`, "contract" also names the command-line interface of a script, for example `install.mjs`.
 _Avoid_: Interface, API (for this meaning)
 
 **Outcome**:

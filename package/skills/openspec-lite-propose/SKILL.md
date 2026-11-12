@@ -51,6 +51,8 @@ How to read this skill:
 ### Level 1 question
 
 - Input: the outcomes that stay in this change.
+- Before you decide on the Level 1 question, list the open points of the outcomes with the question rule.
+- If the list of open points is not empty, the outcomes are not small.
 - Ask the Level 1 question only if the outcomes that stay are small: one obvious fix, and no constraints or open questions worth recording.
 - If the outcomes that stay are not small, do not ask the Level 1 question. Go to section 2.
 - Ask: "This looks small. Implement directly with no change?"

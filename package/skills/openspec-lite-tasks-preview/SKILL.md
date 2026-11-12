@@ -222,6 +222,8 @@ When the checks are done, go to step 6.
 
 - A question is open only while you cannot decide the question and cannot find its answer.
 - You cannot decide a question when its answer depends on information that only the user has. Examples: an intent, or where some code is when a search of the repo does not find the code.
+- You cannot decide a point when the code must match something outside the repo, and the repo does not show it. Examples: the field names of a message that another service sends, or the folder where a deploy tool expects the build output. A common convention does not answer such a point, because the other side can use another form.
+- If the only reason for a choice is a convention or "Reason not checked.", and the choice must match something outside the repo, the point is an open question, not a 🤖 decision.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary of step 8.
@@ -259,6 +261,7 @@ When the checks are done, go to step 6.
   - a key in a config file that a program or a user reads, for example a field of `package.json` or an env var
   - a new dependency
   - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
+- plan.md or the user can fix only one part of a visible result, for example the status code of an error response. Each other part that you put in the code is your choice, for example the body, a header, or the content type.
 - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
 - Do not record your other choices.
 - Record only the part of the decision that matches criterion (1) or criterion (2).

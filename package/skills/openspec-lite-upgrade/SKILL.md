@@ -147,6 +147,7 @@ Ask the question turn:
 - For each open question in the reply, give your recommended answer.
 - If the answer to an open question is a fact that only the user knows, give no recommendation for that question.
 - For each planned requirement in the reply, show its text, and ask if you can write it.
+- For each decision with 🤖 in `plan.md` that you do not plan as a requirement, give in the reply the reason why the decision is not a contract, in one sentence.
 - For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", upgrade writes no spec (step 2.2).
 - In the same reply, give the answer of each question that you closed.
 - End the turn, and wait for the answer.
@@ -339,6 +340,8 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
   - an answer of the user.
 - A contract is externally observable behavior that a client or another team depends on.
 - Internal helpers, log text, and UI layout are not contracts.
+- The format of a file or of an output that another program reads is a contract, for example the line format of a log file that a monitor parses, or the date format of a JSON field.
+- A decision with 🤖 in `plan.md` has no confirmation of the user. If you are not sure that a decision with 🤖 is a contract, plan its requirement, and ask the user in the question turn.
 - A decision of `plan.md` that is not a contract goes only to `design.md` → `## Decisions`.
 - A fact is not a source of a requirement. A fact goes to `design.md` → `## Context`, with its source emoji.
 - The Goal and `tasks-preview.md` alone are not sources.

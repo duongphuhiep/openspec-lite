@@ -20,6 +20,9 @@ How to read this skill:
 ## General rules
 
 - Write nothing before the user approves.
+- Write each approved draft exactly as the user approved it. If you must change an approved draft, show the change, and ask for approval again.
+- An ADR that an earlier run wrote needs no new approval, because the user approved the ADR in that run. Show the ADR, and do not ask about the ADR.
+- The `Status:` edit of step 10 needs no approval, because the approval of the new ADR with the `Supersedes:` line covers the edit. Do not ask about the edit.
 - Do not remove a 🤖 yourself. Only the user removes a 🤖.
 - Write no 🤖 in a spec or an ADR.
 - Write no source emoji in a spec, for example 👤 or 🔬. Give the source of a fact in words in the requirement text. An ADR keeps the source emoji of a fact.
@@ -174,6 +177,7 @@ The guard path:
 - **Surprising**: the item would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on.
 - Internal helpers, log text, and UI layout are not contracts.
+- The format of a file or of an output that another program reads is a contract, for example the line format of a log file that a monitor parses, or the date format of a JSON field.
 - A contract is a requirement, even if the contract is obvious from the code.
 - **Non-obvious fact**: a fact of `## Facts` that needs one of these to find:
   - an answer of the user
@@ -254,6 +258,11 @@ The second check, for a **Superseded ADR**:
 - If a new decision fully replaces an old ADR, add the line `Supersedes: <old file name>` after the `Change:` line of the draft.
 - If a new decision changes only part of an old decision, add no line. Tell the user that both ADRs stay `Accepted`.
 - If a new decision replaces no old ADR, add no line.
+
+The third check, for `plan.md` IDs:
+
+- Search each draft for a `plan.md` ID (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`).
+- Replace each ID with the item title, or a short form of its text, as the ID rule says.
 
 When each item has a draft, go to step 6.
 
