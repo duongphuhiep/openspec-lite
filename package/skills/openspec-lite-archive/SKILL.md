@@ -264,6 +264,11 @@ Change: <name>
 ## Consequences
 ```
 
+The sources of an ADR draft:
+
+- Write each section of an ADR from `plan.md`, from `design.md` on the guard path, from the code, and from the facts of `plan.md`.
+- If you add a claim that no source states, for example a consequence that you inferred, step 6 names the claim.
+
 The first check, for existing ADRs:
 
 - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`.
@@ -301,6 +306,7 @@ When each item has a draft, go to step 6.
 - Print the full text of each file of an earlier run of step 5 in this reply, also when you read the file or printed it before in this turn.
 - Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
 - On the guard path, also name each draft that holds content from another line of `proposal.md` or `design.md` with a 🤖, for example a `## Why` line, and name the line. The user did not confirm the line yet, and the draft holds no 🤖.
+- In each ADR draft, quote each sentence that adds a claim that `plan.md`, `design.md` on the guard path, the code, and the facts do not state, for example a consequence that you inferred. Say that the claim is your addition. The user approves, edits, or deletes the claim with the draft.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - For each delta file of an earlier run (step 5), ask the user to keep or delete the file, in the same reply as the drafts.
