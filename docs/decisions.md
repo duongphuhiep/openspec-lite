@@ -3913,3 +3913,9 @@ This revises D119, D166, D182, D219, and D256.
 4. The rerun `.scenario-runs/20261113-3008ff0/` shows that items 2 and 3 work, in 4 of 4 runs. Item 1 fixes the order of D02, in 2 of 2 runs, but the agent still gives a one-line summary of the earlier delta, not its full text. The rule says to print the full text, so this part has the cause `llm`.
 
 **Rationale**: the user asked to investigate each defect of the run `.scenario-runs/20261113-afb706a/` with the cause `skill`. The reports are `investigation-D02.md` and `investigation-D12.md` in that folder. The user agreed with the cause and the fix of each defect.
+
+## D279: Scenario 4d Accepts a Real Run in a Test Repo
+
+**Decision**: the check of scenario 4d for the "no spec" case passes when the agent runs the real script and the real `openspec` command in a repo with no spec. The repo can be the scenario repo, or a repo that a test creates. A run against a fake `openspec` alone does not pass.
+
+**Rationale**: D06 of the run `.scenario-runs/20261113-afb706a/`. In 4d-2, the agent did not run the script in the scenario repo, but its test runs the real script with the real `openspec` command in a new empty temp folder. That proof is the same as a run in the scenario repo, and it stays in the test suite. The old text "in this repo" was stricter than the user needs. The user agreed with the cause `scenario` and with this text.

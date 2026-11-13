@@ -149,7 +149,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 - After step 2 or step 3, `## Facts` has a fact that `openspec validate --specs` exits with code 0 when no spec exists, with the command as its source. It is a non-obvious fact, because only a run shows it. The agent reads the exit code with `exit-code.mjs`, not with `echo $?`. No fact says that the exit code was not checked (D197).
 - After step 3, the fact is still in `## Facts`, also if no decision names it (D184).
-- The script exits with code 1 in this repo, which has no spec. The agent checks it with a run.
+- The script exits with code 1 in a repo with no spec. The agent checks this with a run of the real script and the real `openspec` command, in this repo, or in a test that creates a repo with no spec. A run against a fake `openspec` alone does not pass (D279).
 - In step 4, the script exits with code 0.
 - Apply wrote a test for the script, and the test fails if the script gives the wrong exit code (D192).
 - If the script reads the output text of `openspec validate`, `plan.md` has a 🤖 decision about it, because a new OpenSpec version can change the text. The agent can decide this point, so an open question does not pass (D223). The same holds if it reads a field of the JSON output, because the field is input of the script (D218). Each exit code or result on an error that the agent added and that `plan.md` and the user did not say, for example an exit code when `openspec` cannot run, is in a 🤖 decision (D220).
