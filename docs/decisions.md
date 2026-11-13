@@ -3919,3 +3919,12 @@ This revises D119, D166, D182, D219, and D256.
 **Decision**: the check of scenario 4d for the "no spec" case passes when the agent runs the real script and the real `openspec` command in a repo with no spec. The repo can be the scenario repo, or a repo that a test creates. A run against a fake `openspec` alone does not pass.
 
 **Rationale**: D06 of the run `.scenario-runs/20261113-afb706a/`. In 4d-2, the agent did not run the script in the scenario repo, but its test runs the real script with the real `openspec` command in a new empty temp folder. That proof is the same as a run in the scenario repo, and it stays in the test suite. The old text "in this repo" was stricter than the user needs. The user agreed with the cause `scenario` and with this text.
+
+## D280: The Other Must-Fix Defects of the Run on afb706a
+
+**Decision**:
+
+1. D01 (4b, the API key header is a 🤖 decision with no question) has the cause `llm`. The question rule says that a convention or "Reason not checked." does not decide a point that must match something outside the repo. The agent wrote "Reason not checked." and still recorded a decision. The skills do not change: the user rejected a new general rule, and the old example was a hint (D271). 4b stays a known model risk.
+2. D03 (13b, a denied ADR write, then the archive, and a false "I wrote" claim) has the cause `skill`, then `llm`. Archive step 10 had no branch for a failed write, so the agent went to step 11 and archived the change with no ADR. Now step 10 tries a failed write once more with another tool, reports the error and stops before step 11 if it fails again, and checks that each approved ADR file exists before step 11.
+
+**Rationale**: the user asked to investigate each other must-fix defect of `.scenario-runs/20261113-afb706a/defects.md`, and agreed with each cause and fix.

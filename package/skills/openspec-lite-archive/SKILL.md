@@ -324,6 +324,8 @@ When each item has a draft, go to step 6.
 - If the file name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR.
 - After you write a new ADR with a `Supersedes:` line, edit the old ADR. Change only the `Status:` line of the old ADR to `Status: Superseded by <new file name>`. Do not change any other line of the old ADR.
 - Then check each ADR with `Change: <name>` and a `Supersedes:` line, also the ADRs of an earlier run. If the old ADR of such an ADR does not have `Status: Superseded by`, edit the `Status:` line of the old ADR now.
+- If a write of an ADR fails, try the write once more with another tool. If the write fails again, report the error, and stop. Do not go to step 11.
+- Before you go to step 11, check that each approved ADR file exists.
 - Go to step 11.
 
 ### Step 11: Archive
