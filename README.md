@@ -1,13 +1,15 @@
 # openspec-lite
 
-If you think that [OpenSpec](https://github.com/Fission-AI/OpenSpec) is too heavy or verbose, **openspec-lite** is a compatible alternative.
-It adds a custom OpenSpec schema, `plan-lite`, that generates one minimal `plan.md`. The workflow becomes `plan → implement (→ doc)`.
+If you think that [OpenSpec](https://github.com/Fission-AI/OpenSpec) is too verbose, **openspec-lite** is a compatible alternative.
+It adds a custom OpenSpec schema, `plan-lite`, that generates one compact `plan.md`. The workflow becomes `plan → implement (→ doc)`.
+
+openspec-lite is compact, but it is not "lite". It does more work than stock OpenSpec, and it uses more tokens. See [Cost: compact, not lite](#cost-compact-not-lite).
 
 ## The problem with OpenSpec
 
 The OpenSpec workflow `explore → proposal → apply → archive` generates `proposal → specs → design → tasks` artifacts.
 
-- **The workflow is too heavy for medium changes.** For most medium changes, a `plan → implement` flow with one minimal `plan.md` is sufficient.
+- **The workflow is too heavy.** For most changes, a `plan → implement` flow with one compact `plan.md` is sufficient.
 - **The artifacts overlap.** The proposal covers WHY, the design covers HOW, and the specs cover WHAT. The boundary between them is fuzzy. A good proposal needs scope, feasibility, and trade-offs, but these belong to the design.
 - **`tasks.md` adds little value.**
    - It can become pseudo-code that is almost real code. Then the AI can write the real code directly.
@@ -17,10 +19,12 @@ The OpenSpec workflow `explore → proposal → apply → archive` generates `pr
      - To track implementation progress.
      - To preview the implementation.
    - For a medium change, the same model usually plans and codes, and you do not need to track progress. So you often read `tasks.md` only to preview the code changes that the AI intends to make.
+- **The artifacts do not show who decided what.** They do not separate your decisions from the guesses of the AI. They do not keep the facts that justify a decision.
+- **The artifacts go out of date during implementation.** When the AI finds a better approach in the code, the artifacts keep the old plan.
 
 ## The solution
 
-openspec-lite targets medium changes. The workflow is `plan → implement (→ doc)`:
+openspec-lite works for medium and large changes. The workflow is `plan → implement (→ doc)`:
 
 - **Plan**: `openspec-lite-propose` creates `plan.md` in `openspec/changes/<name>/`. Add the context that the AI needs to implement the change correctly.
 - **Implement**: `openspec-lite-apply` implements the change from `plan.md`.
@@ -43,6 +47,16 @@ A custom OpenSpec schema alone can give you a one-artifact workflow. openspec-li
 **To review the AI's plan before it writes code**, use `tasks-preview.md`. See [Preview the code changes](#preview-the-code-changes).
 
 **At any time**, you can convert a plan-lite change (`plan.md`) to a stock OpenSpec change (`proposal.md`, `design.md`, and so on). See [Upgrade to a spec-driven change](#upgrade-to-a-spec-driven-change).
+
+### What openspec-lite adds to OpenSpec
+
+- **You and the AI make the plan together.** The AI asks you each open question that only you can answer, with its recommended answer. You correct the plan, and the AI updates `plan.md`. After some rounds, the plan becomes solid.
+- **`plan.md` records the source of each item.** Each fact has a source. Each decision of the AI ends with 🤖. A decision with no 🤖 is yours, and the AI asks you before it changes it.
+- **`plan.md` follows the implementation.** During apply, the AI updates the facts and decisions to match the code. After implementation, `plan.md` describes the code that exists, not only the code that you planned.
+
+### Cost: compact, not lite
+
+`plan.md` is shorter than the stock OpenSpec artifacts, but openspec-lite is not simpler than OpenSpec. It records more information: facts with their sources, the owner of each decision, and the changes after implementation. The skills read and write more, so they use more tokens than the stock OpenSpec skills.
 
 ## Install openspec-lite
 
@@ -185,7 +199,7 @@ After an upgrade, archive with stock `/opsx:archive`. It does not turn the decis
 
 ### You may not need `openspec-lite-upgrade`
 
-openspec-lite targets medium changes, but in practice it also works well for large changes. An upgrade often doubles the size of the change, because the spec-driven artifacts repeat the same content.
+openspec-lite works well for large changes. An upgrade often doubles the size of the change, because the spec-driven artifacts repeat the same content.
 
 So you rarely need to upgrade a plan-lite change to a spec-driven change.
 
