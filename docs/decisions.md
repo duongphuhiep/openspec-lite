@@ -3957,3 +3957,11 @@ This revises D119, D166, D182, D219, and D256.
 4. Upgrade guard: the bullet of the resume question gives its reason with no step number: an earlier run can stop after it wrote the artifacts, and a finished upgrade can keep `plan.md`. A new bullet says that the reply with the resume question names no step number.
 
 **Rationale**: the user asked to investigate the must-fix defects and D05 of `.scenario-runs/20261113-eb2df49/defects.md`. The report is `investigation.md` in that folder. The user agreed with the cause and the fix of D01, D02, D03, and D05. D12 stays open. In D01 (13a run 1), the agent applied the ADR rule "Do not draft a decision that already has an ADR" to the delta of run 1. It offered the delta that failed `validate` as the requirement. After "Delete it.", archive archived the change with no spec. In D02 (21b run 1), the agent read the earlier ADR and delta with `cat`, and said "I printed both above". No text of the reply held them. D278 had moved the print from step 7 to step 5, so the print and the reply were in different steps. In D03 (21b run 2), the agent asked to approve the `Status:` edit and the kept delta. "Do not ask about the edit." was only in the general rules, and step 6 said "The user answers yes, no, or edit for each item." In D05 (20a run 2), the agent copied "An earlier run may have stopped after step 3." from the bullet that says what to ask into the reply. D191 asks for a question with no step number.
+
+## D283: Scenario Text Fixes of the Run on eb2df49
+
+**Decision**:
+
+1. Scenario 4b step 2 gives the answer "I have no preference." to each other question, for example about a request with no key. The Expected text does not change: after this answer, the agent picks, so the point is a 🤖 decision.
+
+**Rationale**: the user asked to investigate the defects of `.scenario-runs/20261113-eb2df49/defects.md` with the cause `scenario`. The report is `investigation-scenario.md` in that folder. The user picked the option of each question. S5 and S6 need no change: D282 item 1 removes the cause of S5, and "Approve the other drafts" of 20b already covers a second ADR. In S1, group A had to invent an answer for the no-key question.

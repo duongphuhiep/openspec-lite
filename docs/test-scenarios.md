@@ -102,7 +102,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 **Steps**:
 
 1. Start from the fixture `rate-limit`: `src/server.js`, `package.json`, and the change `add-rate-limit`. Its `plan.md` has no template comments, so that the run checks `apply.instruction` alone. It has the Goal "Limit each API key to 100 requests per minute on the API server.", two constraints with no ID ("The limiter must not add an npm dependency." and "A request over the limit gets status 429."), and one decision `### Decision D1: Use a fixed 60-second window`. Two facts justify only D1: `- F1: A fixed window needs only one counter for each API key.`, which a reader can deduce, and `- F2: In the access logs, the clients retry after 30 seconds or more.`, which is non-obvious, because it needs a study of the logs.
-2. Run `openspec-lite-apply`. If it asks how clients send the API key, answer: "Clients send the key in the `x-api-key` header." During the work, tell the agent: "Use a sliding window instead."
+2. Run `openspec-lite-apply`. If it asks how clients send the API key, answer: "Clients send the key in the `x-api-key` header." If it asks any other question, answer: "I have no preference." During the work, tell the agent: "Use a sliding window instead."
 
 **Expected**:
 
