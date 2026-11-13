@@ -198,6 +198,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 - Start each fact with a source emoji, as the template comment of `## Facts` says, for example 👤 for a fact that the user gave.
 - Write a fact so that the fact stays true after the change, for example "Before this change, the thumbnail folder did not exist."
+- Do not record a fact that only repeats the Goal, a constraint, or a non-goal of `plan.md`, because `plan.md` already holds the fact.
 - Do not record statistics that soon go out of date.
 - A number as an example or a reference is OK in a fact.
 
