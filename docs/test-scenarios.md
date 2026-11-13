@@ -485,7 +485,7 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 **Steps**:
 
 1. Create a plan-lite change with a Goal, a `## Background` with two scope items, two Constraints, one `### Decision D<n>:` entry, one `## Facts` item that the decision relies on, and one open question in `plan.md`. Keep the guidance comments of the template. The answer to the question must change the specs, for example "Do internal service keys get a higher limit?" on a rate limit change. Run `openspec-lite-tasks-preview`. If the preview names no `plan.md` ID, add one, for example "(D1)", to a task line.
-2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". The tasks preview of step 1 can add more open questions. Give the same answer to each one. If the agent also asks to write a requirement from the Goal or the tasks preview, answer yes in the same reply (D164). At the prune question, answer no.
+2. Run `openspec-lite-upgrade`. When the agent asks about the open question, answer "I do not know yet". The tasks preview of step 1 can add more open questions. Give the same answer to each one. If the agent also asks to write a requirement, from the Goal, the tasks preview, a 🤖 decision, or another source, answer yes to each one in the same reply (D164). At the prune question, answer no.
 3. Run `openspec-lite-upgrade` again. Answer yes to the resume question and to the prune question. The resume question says what is left to do, with no step number (D191).
 
 **Expected**:
