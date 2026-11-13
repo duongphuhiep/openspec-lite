@@ -124,6 +124,7 @@ Do these checks in order.
 - Input: `openspec/changes/<name>/plan.md`.
 - Run `node openspec/schemas/plan-lite/plan-status.mjs openspec/changes/<name>/plan.md` from the OpenSpec root.
 - Run the `plan-status.mjs` command alone, not in a chain.
+- If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 3. The commit note is only information.
 - If `plan-status.mjs` prints a line, copy the line to the user as it is.
 - If `plan-status.mjs` prints nothing, say nothing about commits.
 - Go to step 3.
@@ -149,6 +150,7 @@ Do these checks in order.
 
 - You do not need the exit code of `plan-hash.mjs`.
 - If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, show the message, and stop. Ask the user to fix `plan.md` as the message says.
+- If the output has no hash and no `plan-hash:` message, follow the failure rule. Do not compute the hash another way.
 - If `plan-hash.mjs` prints a hash, keep the hash for step 6. Go to step 5.
 
 ### Step 5: Check the facts and the 🤖 decisions
@@ -365,6 +367,7 @@ When the checks are done, go to step 6.
 - To know the exit code of a command, run `node openspec/schemas/plan-lite/exit-code.mjs <command> <args...>` from the OpenSpec root.
 - Run the `exit-code.mjs` command alone, not in a chain.
 - Read the last line of the output: `exit: <code>`.
+- If the last line is `exit: not run (...)`, or has no `exit:`, the command did not run. Follow the failure rule.
 - Do not add `echo $?`.
 
 ### ID rule

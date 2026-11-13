@@ -395,6 +395,7 @@ How to read these steps:
 - Input: `<changeDir>/plan.md`.
 - Run `node openspec/schemas/plan-lite/plan-status.mjs <changeDir>/plan.md`.
 - Run the `plan-status.mjs` command alone, not in a chain.
+- If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 2. The commit note is only information.
 - If `plan-status.mjs` prints a line, copy the line to the user as it is.
 - If `plan-status.mjs` prints nothing, say nothing about commits.
 - Go to step 2.
@@ -406,6 +407,7 @@ How to read these steps:
 - If `<changeDir>/tasks-preview.md` does not exist, the preview is absent. Go to step 3.
 - Run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md`. You do not need the exit code of `plan-hash.mjs`.
 - If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, show the message to the user, and stop. Ask the user to fix plan.md as the message says.
+- If the output has no hash and no `plan-hash:` message, the preview is stale. Do not compute the hash another way.
 - If the hash differs from the `plan-sha256` line in the preview header, the preview is stale.
 - If the preview header has no `plan-sha256` line, the preview is stale.
 - If the hash equals the `plan-sha256` line, the preview is current.
@@ -631,6 +633,7 @@ When the checks are done, go to step 6.
 - To know the exit code of a command, run `node openspec/schemas/plan-lite/exit-code.mjs <command> <args...>`.
 - Run the `exit-code.mjs` command alone, not in a chain.
 - Read the last line of the output: `exit: <code>`.
+- If the last line is `exit: not run (...)`, or has no `exit:`, the command did not run. Follow the failure rule.
 - Do not add `echo $?`.
 
 ## Test rule

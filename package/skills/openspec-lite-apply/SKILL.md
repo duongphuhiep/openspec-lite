@@ -106,7 +106,8 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 
 1. Run `openspec instructions apply --change "<name>" --json`.
    - If `state` is `blocked`, `plan.md` is missing. Stop, and tell the user to run `openspec-lite-propose` to finish the change.
-   - If `state` is not `blocked`, go to step 2.
+   - If the command fails, or its output has no `instruction` field, follow the failure rule. Do not write code without `instruction`.
+   - If `state` is not `blocked`, and the output has an `instruction` field, go to step 2.
 2. Read each file in `contextFiles`.
    - Follow `instruction`. The `instruction` field holds all plan-lite apply rules.
    - `<changeDir>` in the rules of `instruction` is the `changeDir` field.
