@@ -36,7 +36,7 @@ openspec-lite works for medium and large changes. The workflow is `plan → impl
 - The non-obvious facts: the facts that need a run, a test, research, or a long analysis of the code to find. An obvious or well-known reason goes into the "because" part of the decision instead.
 - The current decisions: yours, and the decisions that the AI makes during implementation. When a new decision replaces an old one, the AI removes or updates the old one. `plan.md` is not a history.
 
-Each constraint, open question, fact, and decision has a short ID, such as `C1` or `D2`. The IDs appear only in `plan.md` and `tasks-preview.md`. Specs, ADRs, code comments, and commit messages name an item by its title instead.
+Each constraint, open question, fact, and decision has a short ID, such as `C1` or `D2`. The IDs appear only in `plan.md`, in `tasks-preview.md`, and in the replies of the AI. Specs, ADRs, code comments, and commit messages name an item by its title instead.
 
 `plan.md` is a compact form of `proposal.md`, `design.md`, and `specs/`. It has no overlap between sections, so it is easier to review.
 

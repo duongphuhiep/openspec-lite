@@ -1949,6 +1949,8 @@ This extends D140.
 
 ## D142: The plan.md IDs Stay in plan.md and tasks-preview.md
 
+**Status**: Revised by D290 and D292: the IDs can also appear in a reply to the user.
+
 **Decision**:
 
 - The IDs `C<n>`, `OQ<n>`, `F<n>`, and `D<n>` appear only in `plan.md` and `tasks-preview.md`. The preview extends `plan.md`, so it can refer to the IDs.
@@ -2848,6 +2850,8 @@ This revises D191, D199, and D202.
 **Rationale**: review round 14 found these gaps. Each has one logical fix: a design bullet that round 13 did not update, an archive rule that asks for an ADR that scenario 15 does not expect, a step that skips a user turn, four scenarios with no defined start state under D199, and a wrong list. The start state and the helper were only in the git-ignored `.scenario-runs/` folder.
 
 ## D204: Fixes From Review Round 15 on cb22fc4..local
+
+**Status**: Item 3 is revised by D289 and D291: archive has no rejected draft, and the end line names each decision with no ADR.
 
 **Decision**:
 
@@ -4104,3 +4108,14 @@ This revises D119, D166, D182, D219, and D256.
 6. Scenario 5 expects the Goal outcome of the fixture as a requirement, and gives no count example. Scenario 6 uses an internal Goal that the fixture code meets. Scenario 15 tags the Goal outcome, and counts it in the final check. Scenario 13a points to the fix of step 4.
 
 **Rationale**: review round 2 on `v1.8.0..local` (`.review-reports/review_20261114000637_claude-opus-5-5_bead6c5-local.md`). Items 1, 3, and 6 complete fixes of round 1 (D290).
+
+## D292: Fixes of Review Round 3 on v1.8.0..local
+
+**Decision**:
+
+1. The ID rule of `apply.instruction`, its copy in `docs/design.md`, the template copy in `docs/design.md`, `GLOSSARY.md`, and `README.md` allow the `plan.md` IDs in a reply to the user. This completes D291 item 1.
+2. The delta line of the archive summary gives the ID of each item that has an ID, and a short form of the text of each other item. This completes D291 item 2.
+3. If each group of the archive summary is empty, the summary says in one line that archive promotes no item, and lists the items that archive does not draft. Scenario 6 checks this line.
+4. Scenario 15 expects the end line of D291 item 3. Scenario 18b checks that guard step 2 names the ADR of "Quote each cell". Scenario 13a counts each requirement once. Scenario 21b names the subjects of "asks no question".
+
+**Rationale**: review round 3 on `v1.8.0..local` (`.review-reports/review_20261114001244_claude-opus-5-5_bead6c5-local.md`). No tag ships schema version 7 yet, so the edit of `schema.yaml` needs no second bump.

@@ -25,7 +25,7 @@ A fact that needs one of these to find: an answer of the user; a run or a test r
 _Avoid_: Tool fact, finding
 
 **Item ID**:
-The short ID of a constraint, open question, fact, or decision in a plan: `C<n>`, `OQ<n>`, `F<n>`, or `D<n>`. It is unique only in its plan. It appears only in the plan and in its tasks preview. Elsewhere, an item is named by its title, or a short form of its text, with the change name.
+The short ID of a constraint, open question, fact, or decision in a plan: `C<n>`, `OQ<n>`, `F<n>`, or `D<n>`. It is unique only in its plan. It appears only in the plan, in its tasks preview, and in a reply to the user. In another file, an item is named by its title, or a short form of its text, with the change name.
 _Avoid_: Number, key
 
 **Tasks preview**:

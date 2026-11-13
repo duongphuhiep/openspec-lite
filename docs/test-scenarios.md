@@ -269,7 +269,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 - In run 2, the summary names the delta file of run 1, and says that the agent keeps the file. The agent asks no question about the file, and does not draft a requirement that the file holds. The fix of step 4 is still in the main spec after the archive (D289).
 - The agent drafts the decision again, because no ADR exists yet.
 - In run 1, the agent shows the `validate` error. A stop before `validate` also passes, if the agent read the delta back, says how the delta differs from the draft, and writes no ADR, because the failure rule checks each write on disk (D281).
-- After run 2, `openspec/adr/` has one ADR for the decision, with the plain lines `Status: Accepted` and `Change: <name>`. `openspec/specs/` holds the requirement once, and the change is in `openspec/changes/archive/`.
+- After run 2, `openspec/adr/` has one ADR for the decision, with the plain lines `Status: Accepted` and `Change: <name>`. `openspec/specs/` holds each requirement once, and the change is in `openspec/changes/archive/`.
 
 ### 13b. After a failed `openspec archive`
 
@@ -384,7 +384,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 
 **Expected**:
 
-- Each item tagged `spec` is in a requirement of the delta. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. If no ADR holds the file name decision, the end summary says that the decision now exists only in `openspec/changes/archive/` (D204). Each item tagged `ADR` is in an ADR. The Goal outcome "Export the report table as CSV" is a requirement, or is in the requirement of a constraint, because it is a contract for the users (D290).
+- Each item tagged `spec` is in a requirement of the delta. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. If no ADR holds the file name decision, the end summary says that the reason of the decision now exists only in `openspec/changes/archive/`, names the requirement that holds the decision, and says that the requirement keeps only the rule (D204, D291). Each item tagged `ADR` is in an ADR. The Goal outcome "Export the report table as CSV" is a requirement, or is in the requirement of a constraint, because it is a contract for the users (D290).
 - For each item that the agent does not draft, the summary names the item and says why it skips it. No item disappears with no word. The summary gives each promoted item by its `plan.md` ID and title, in its group, and does not print the full text of a draft (D289).
 - The reason for the semicolon (French Excel) stays in the requirement text or in the ADR, not only in a scenario title. It is the non-obvious part (D147).
 - No line of the written deltas or specs holds a source emoji, for example 👤. No spec or ADR gets a 👤 for an item that has none in `plan.md` (D252).
@@ -454,7 +454,7 @@ This scenario checks the guard path with a kept `plan.md`, up to the archive (D1
 **Expected**:
 
 - The agent asks no question before it writes the ADRs. The summary names each ADR by its title. Each ADR has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
-- The summary names the ADR of "Quote each cell", because its heading in `design.md` ends with 🤖 (D204).
+- The summary names the ADR of "Quote each cell", because its heading in `design.md` ends with 🤖 (D204). When guard step 2 lists the 🤖 heading of "Quote each cell", the agent names its ADR file, and tells the user to also delete the ADR file if the user deletes the decision (D290).
 - After step 2, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
 - Before step 3, `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
 - After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of the fixture. It does not offer the archive while a delta holds a 🤖, also not as a question with a condition (D192, D215). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 3, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
@@ -543,7 +543,7 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 1. Build the state after step 10 of `openspec-lite-archive` in 21a, but before the old ADR changed: the new ADR exists with `Supersedes:`, the old ADR still has `Status: Accepted`, and the change is not archived. `validate` passes.
 2. Run `openspec-lite-archive`.
 
-**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. If the earlier run wrote a delta, the agent keeps the delta, does not draft a requirement that the delta holds, and names the delta file in the summary. After the archive, the main spec holds each requirement once (D289). The summary names the new ADR. The agent asks no question about them or about the `Status:` edit. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
+**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. If the earlier run wrote a delta, the agent keeps the delta, does not draft a requirement that the delta holds, and names the delta file in the summary. After the archive, the main spec holds each requirement once (D289). The summary names the new ADR. The agent asks no question about the new ADR, the delta file, or the `Status:` edit. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
 
 ## 22. Goal with more than one outcome
 

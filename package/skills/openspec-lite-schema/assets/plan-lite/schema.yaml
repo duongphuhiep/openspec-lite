@@ -317,6 +317,6 @@ apply:
 
     - Give each new item a number higher than each ID of its kind in the file.
     - Do not add an ID to an existing item that has none.
-    - Use the plan.md IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in plan.md and tasks-preview.md.
+    - Use the plan.md IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in plan.md, in tasks-preview.md, and in a reply to the user.
     - Do not write the plan.md IDs in another file, a code comment, a commit message, a pull request, or a ticket.
-    - To refer to a plan.md item from outside plan.md and tasks-preview.md, use the item title, or a short form of its text, with the change name.
+    - To refer to a plan.md item in a file other than plan.md and tasks-preview.md, use the item title, or a short form of its text, with the change name.

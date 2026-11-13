@@ -307,7 +307,7 @@ When each item has a draft, go to step 6.
   - The facts that go into a requirement text as its reason.
   - The facts that go to the `## Context` of an ADR. Name the ADR for each fact.
   - The facts that get an ADR of their own, from step 4.
-  - The deltas. For each delta, give the capability, the count of requirements and scenarios, and the IDs of the items that the delta comes from.
+  - The deltas. For each delta, give the capability, the count of requirements and scenarios, and the items that the delta comes from: the ID of each item that has an ID, or a short form of the text of each item that has no ID.
   - The items that step 4 does not draft, each with its one-line reason.
 - After the groups, give each other point that the user must know, one line for each point:
   - Name each draft that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`. Name the 🤖 decision. Say that the user did not confirm the decision, and that the archive promotes the decision.
@@ -316,6 +316,7 @@ When each item has a draft, go to step 6.
   - For each new decision that changes only part of an old ADR, say that both ADRs stay `Accepted`.
   - Name each ADR of an earlier run, with its title. Say that the earlier run wrote the ADR, and that this run does not write the ADR again.
   - Name each delta file of an earlier run. Say that the archive keeps the file, and merges into the file each delta draft with the same path.
+- If each group is empty, say in one line that the archive promotes no item, and list the items that step 4 does not draft.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - Ask no question in the summary. Do not end your turn after the summary.
