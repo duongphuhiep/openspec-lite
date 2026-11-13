@@ -107,11 +107,11 @@ The guard path:
    - On the guard path, after section 2, step 10, go to guard step 2. Do not go to section 2, step 11.
    - On the guard path, if the user rejects each draft, write no ADR, and go to guard step 2.
    - On the guard path, do not change `design.md`.
-2. Search `specs/` and `design.md` of the change for 🤖.
+2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1 finds no `### Decision` entries, after the ADRs of guard step 1 are written, after the user says no to the offer of guard step 1, or after the user rejects each draft.
-   - If a line of `specs/` or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
+   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
    - If no line has a 🤖, you can say so in one line.
-   - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `specs/` and `design.md` again.
+   - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
    - Go to guard step 3.
 3. Name the open questions of a kept `plan.md`.
    - If `openspec/changes/<name>/plan.md` still exists, name each open question in `plan.md`.
@@ -300,6 +300,7 @@ When each item has a draft, go to step 6.
 - Print the full text of each draft.
 - Print the full text of each file of an earlier run of step 5 in this reply, also when you read the file or printed it before in this turn.
 - Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
+- On the guard path, also name each draft that holds content from another line of `proposal.md` or `design.md` with a 🤖, for example a `## Why` line, and name the line. The user did not confirm the line yet, and the draft holds no 🤖.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - For each delta file of an earlier run (step 5), ask the user to keep or delete the file, in the same reply as the drafts.
