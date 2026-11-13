@@ -381,3 +381,5 @@ When the checks are done, go to step 6.
 
 - Give each new item a number higher than each ID of its kind in the file.
 - Do not add an ID to an existing item that has none.
+- You can use the `plan.md` IDs in `plan.md`, in `tasks-preview.md`, and in your reply to the user, for example in the summary.
+- If the ID comment of an older `plan.md` gives another form of the ID rule, follow this ID rule.

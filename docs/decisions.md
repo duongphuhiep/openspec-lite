@@ -4069,6 +4069,8 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D289: Archive Prints a Short Summary and Asks No Approval for a Draft
 
+**Status**: Item 1 is revised by D290 and D291: the Goal outcomes are items, and an item with no ID or title gets a short form of its text. Item 4 is revised by D290: archive does not change or delete a requirement of the earlier file.
+
 **Decision**:
 
 1. Archive step 6 prints a short summary, not the full text of each draft. The summary gives one line for each promoted item, with its `plan.md` ID and title, in groups with a count: the decisions that go to an ADR, the constraints that go to a requirement, the decisions that are also a contract, the facts that go into a requirement text, the facts that go to the `## Context` of an ADR, each delta with its capability and counts, and the items that archive does not draft. Other points come after the groups, one line each.
@@ -4111,6 +4113,8 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D292: Fixes of Review Round 3 on v1.8.0..local
 
+**Status**: Item 3 is revised by D293 and D294: the condition of the line that archive promotes no item.
+
 **Decision**:
 
 1. The ID rule of `apply.instruction`, its copy in `docs/design.md`, the template copy in `docs/design.md`, `GLOSSARY.md`, and `README.md` allow the `plan.md` IDs in a reply to the user. This completes D291 item 1.
@@ -4130,3 +4134,14 @@ This revises D119, D166, D182, D219, and D256.
 4. Scenario 5 expects the Goal outcome of the fixture in the delta and in the main spec. Scenario 15 expects a short form of the text for an item with no title. Scenario 3 stages a `README.md` edit, and checks that the commit of `openspec-lite-apply` leaves the edit staged.
 
 **Rationale**: review round 4 on `v1.8.0..local` (`.review-reports/review_20261114001657_claude-opus-5-5_bead6c5-local.md`).
+
+## D294: Fixes of Review Round 5 on v1.8.0..local
+
+**Decision**:
+
+1. Archive says that it promotes no item only if step 5 has no draft, and finds no ADR and no delta file of an earlier run. A rerun that finds the work of an earlier run does not say it. Scenarios 13b and 21b check this. This revises D293 item 1.
+2. On the guard path, the archive summary has only the group of the decisions that go to an ADR, and the points about 🤖, `Supersedes:`, and the ADRs of an earlier run. The guard path has no delta file of an earlier run and no not-drafted group.
+3. The ID rule of the tasks preview allows the IDs in the reply to the user, and wins over the ID comment of an older `plan.md`, as in archive and `apply.instruction` (D293 item 3).
+4. Scenario 5 calls `Retry-After` a constraint, as `GLOSSARY.md` asks. D289 and D292 have Status lines.
+
+**Rationale**: review round 5 on `v1.8.0..local` (`.review-reports/review_20261114002126_claude-opus-5-5_bead6c5-local.md`). This was the last round of the loop of 5 rounds.

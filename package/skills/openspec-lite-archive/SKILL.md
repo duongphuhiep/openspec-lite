@@ -316,8 +316,9 @@ When each item has a draft, go to step 6.
   - For each draft with a `Supersedes:` line, name the old ADR, and say that the archive changes the `Status` line of the old ADR.
   - For each new decision that changes only part of an old ADR, say that both ADRs stay `Accepted`.
   - Name each ADR of an earlier run, with its title. Say that the earlier run wrote the ADR, and that this run does not write the ADR again.
-  - Name each delta file of an earlier run. Say that the archive keeps the file, and merges into the file each delta draft with the same path.
-- If no item goes to a requirement or to an ADR, say in one line that the archive promotes no item. Still give the group of the items that step 4 does not draft.
+  - Outside the guard path, name each delta file of an earlier run. Say that the archive keeps the file, and merges into the file each delta draft with the same path.
+- Outside the guard path, if step 5 has no draft, and finds no ADR and no delta file of an earlier run, say in one line that the archive promotes no item. Still give the group of the items that step 4 does not draft.
+- On the guard path, give only the group of the decisions that go to an ADR, and the points about 🤖, `Supersedes:`, and the ADRs of an earlier run.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - Ask no question in the summary. Do not end your turn after the summary.

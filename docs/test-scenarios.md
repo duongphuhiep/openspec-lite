@@ -159,7 +159,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. Start from the fixture `finished-rate-limit`. Its `plan.md` has a Goal outcome that is a contract (the limit of 100 requests per minute), one non-obvious requirement (the `Retry-After` constraint), and one `### Decision D<n>:` entry with no 🤖.
+1. Start from the fixture `finished-rate-limit`. Its `plan.md` has a Goal outcome that is a contract (the limit of 100 requests per minute), one non-obvious constraint (`Retry-After`), and one `### Decision D<n>:` entry with no 🤖.
 2. Run `openspec-lite-archive`.
 
 **Expected**:
@@ -282,7 +282,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Expected**:
 
 - Run 1 reports the archive failure and keeps the ADR.
-- Run 2 finds the ADR with `Change: <name>`, names it in the summary, and does not draft that decision again.
+- Run 2 finds the ADR with `Change: <name>`, names it in the summary, and does not draft that decision again. The summary does not say that the archive promotes no item (D294).
 - After run 2, `openspec/adr/` has one ADR for the decision, and the change is in `openspec/changes/archive/`.
 
 ## 14. Promotion into an existing capability
@@ -543,7 +543,7 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 1. Build the state after step 10 of `openspec-lite-archive` in 21a, but before the old ADR changed: the new ADR exists with `Supersedes:`, the old ADR still has `Status: Accepted`, and the change is not archived. `validate` passes.
 2. Run `openspec-lite-archive`.
 
-**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. If the earlier run wrote a delta, the agent keeps the delta, does not draft a requirement that the delta holds, and names the delta file in the summary. After the archive, the main spec holds each requirement once (D289). The summary names the new ADR. The agent asks no question about the new ADR, the delta file, or the `Status:` edit. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
+**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. If the earlier run wrote a delta, the agent keeps the delta, does not draft a requirement that the delta holds, and names the delta file in the summary. After the archive, the main spec holds each requirement once (D289). The summary names the new ADR, and does not say that the archive promotes no item (D294). The agent asks no question about the new ADR, the delta file, or the `Status:` edit. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
 
 ## 22. Goal with more than one outcome
 
