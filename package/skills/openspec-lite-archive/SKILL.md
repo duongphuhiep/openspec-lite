@@ -28,7 +28,7 @@ How to read this skill:
 - Write no source emoji in a spec, for example 👤 or 🔬. Give the source of a fact in words in the requirement text. An ADR keeps the source emoji of a fact.
 - If a fact of `plan.md` has no source emoji, add no emoji, and do not guess its source. Give the source in words only when the fact names it.
 - A 🤖 in an HTML comment, for example in a template comment of `plan.md`, is not a mark. A decision is a 🤖 decision only when its heading ends with 🤖.
-- The ID rule: use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md` and `tasks-preview.md`.
+- The ID rule: use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md`, in `tasks-preview.md`, and in your reply to the user, for example in the summary of step 6.
 - The ID rule also forbids a `plan.md` ID in another file, a code comment, a commit message, a pull request, or a ticket.
 - To refer to a `plan.md` item from outside `plan.md` and `tasks-preview.md`, use the item title, or a short form of its text, with the change name.
 
@@ -95,7 +95,7 @@ The guard path:
    - Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs, so this guard step copies the decisions before the archive.
    - A change that was upgraded from plan-lite has its decisions in `design.md`.
    - If `openspec/changes/<name>/design.md` has no `### Decision` entries, go to guard step 2.
-   - If `openspec/changes/<name>/design.md` has `### Decision` entries, draft an ADR for each `### Decision` with the form and the three checks of section 2, step 5. Ask no question.
+   - If `openspec/changes/<name>/design.md` has `### Decision` entries, draft an ADR for each `### Decision` with the ADR form, the sources of an ADR draft, the first check, the second check, and the third check of section 2, step 5. Ask no question.
    - Print the summary of the ADR drafts as in section 2, step 6.
    - Write each ADR draft with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
    - On the guard path, do not run section 2, steps 7 to 9.
@@ -105,6 +105,7 @@ The guard path:
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
    - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
+   - If a 🤖 line is the heading of a `design.md` decision that guard step 1 wrote to an ADR, name the ADR file. Tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
    - Go to guard step 3.
@@ -130,7 +131,7 @@ The guard path:
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare the version with the shipped version:
 
-   Shipped schema version: 6
+   Shipped schema version: 7
 
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
@@ -184,6 +185,7 @@ The guard path:
 
 - Input: the items of `<dir>/plan.md`.
 - Output: the selected items.
+- Each outcome of the Goal is an item, as each constraint, decision, and fact is an item.
 - Select each item that passes at least one filter. The filters are **Non-obvious**, **Surprising**, **Contract**, and **Non-obvious fact**.
 - **Non-obvious**: a reader cannot deduce the item from the code in 5 minutes.
 - **Surprising**: the item would surprise a new team member.
@@ -207,6 +209,7 @@ The guard path:
 - Input: the items of `<dir>/plan.md`, and the selected items of step 3.
 - Output: the list of items to draft, each with its destination, and the list of items that you do not draft.
 - A selected constraint goes to a spec, as a requirement.
+- A selected outcome of the Goal goes to a spec, as a requirement. If a constraint already states the outcome, draft one requirement for both.
 - A selected decision goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement. The rationale of the decision can also go to an ADR.
 - List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
@@ -273,7 +276,7 @@ The check for an earlier delta:
 
 - Before you draft a delta, list the files under `<dir>/specs/`.
 - If a file exists under `<dir>/specs/`, an earlier run of this archive wrote the file.
-- The user can have fixed a delta file of an earlier run after a `validate` failure. Keep each such file as it is.
+- The user can have fixed a delta file of an earlier run after a `validate` failure. Do not change or delete a requirement of such a file. Do not delete the file.
 - Do not draft a requirement that a delta file of an earlier run already holds.
 - Step 6 names each such file. Step 7 merges the new deltas into the file.
 
@@ -293,16 +296,17 @@ When each item has a draft, go to step 6.
 
 ### Step 6: Print the summary
 
-- Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft.
+- Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft. On the guard path, step 4 does not run, so the only group is the decisions that go to an ADR.
 - Output: the summary, in your reply.
 - Print a short summary of the promotion. Do not print the full text of a draft or of a file of an earlier run.
 - In the summary, write one line for each item: the `plan.md` ID and the title of the item, or the title of the `design.md` decision on the guard path.
 - In the summary, put the items in these groups. Start each group with its count. Omit an empty group.
   - The decisions that go to an ADR.
-  - The constraints that go to a requirement.
+  - The outcomes of the Goal and the constraints that go to a requirement.
   - The decisions that are also a contract and go to a requirement.
   - The facts that go into a requirement text as its reason.
   - The facts that go to the `## Context` of an ADR. Name the ADR for each fact.
+  - The facts that get an ADR of their own, from step 4.
   - The deltas. For each delta, give the capability, the count of requirements and scenarios, and the IDs of the items that the delta comes from.
   - The items that step 4 does not draft, each with its one-line reason.
 - After the groups, give each other point that the user must know, one line for each point:
@@ -322,7 +326,7 @@ When each item has a draft, go to step 6.
 
 - Input: the delta drafts of step 5, and the delta files of an earlier run.
 - Output: the deltas in `<dir>/specs/`.
-- Keep each delta file of an earlier run as it is.
+- Do not change or delete a requirement of a delta file of an earlier run. Do not delete the file.
 - Write each delta draft to `<dir>/specs/<capability>/spec.md`.
 - If a delta file of an earlier run has the same path as a delta draft, merge the delta draft into the file, with no duplicate requirement. If the file and the draft hold a requirement with the same name, keep the requirement of the file.
 - Before you go to step 8, check that each delta draft exists on disk. If a check fails, follow the failure rule.

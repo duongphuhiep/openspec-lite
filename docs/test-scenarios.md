@@ -73,7 +73,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision that `plan.md` had before the run (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
 - In step 4, before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has an open question that the agent cannot decide and cannot find the answer to, it asks it in the same reply, with its recommended answer. It gives no recommendation when the answer is a fact that only the user knows, for example where the report page is (D195, D223, D225).
-- In step 4, the agent tells the user the two facts of the `plan-status.mjs` line: `plan.md` is not committed, so a diff cannot show the changes of this run alone, and the user must commit it before the next run. The exact line or the same facts in other words both pass (D171, D193, D246). The note alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
+- In step 4, with stock `/opsx:apply`, the agent tells the user the two facts of the `plan-status.mjs` line: `plan.md` is not committed, so a diff cannot show the changes of this run alone, and the user must commit it before the next run. The exact line or the same facts in other words both pass (D171, D193, D246). With `openspec-lite-apply`, the agent commits only `plan.md`, and tells the user that it committed `plan.md` (D290). The note or the commit alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 - In step 5, the agent gives no stale warning.
 
 ## 4. Stock apply follows the plan-lite rules
@@ -127,12 +127,12 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - In step 2, the agent gives no "not committed" note, because `plan.md` is committed and `plan-status.mjs` prints nothing (D193).
 - After step 2, each decision of the preview ends its heading with 🤖. If apply asked a question in step 3 and the user answered it, the answer is a fact with 👤, a constraint, or a decision with no 🤖 (D181, D226, D240).
 - After step 2, if a decision of the preview says how `lookup` finds an unknown city, `plan.md` gives the reason for it: the tool reports an unknown city with an error body in its output, not with a failing exit. The 3 lines of `tools/geo.mjs` show this, so it is an obvious fact, also if a run showed it. It is in the "because" part of that decision, not in `## Facts` (D192, D198, D200). If a run read the exit code, it used `exit-code.mjs` (D197). The summary lists each new fact. No fact only restates what a reader can easily deduce from `tools/geo.mjs`, for example "geo.mjs is a CLI script, not a module", or what `geo.mjs` prints for Paris, which its code shows (D198). If such an obvious fact is the reason of a decision, it is in the "because" part of that decision (D184, D192). Goal and Constraints did not change. `plan-sha256` equals the output of `plan-hash.mjs` on `plan.md`.
-- In step 3, if step 2 changed `plan.md`, the agent says in one line that `plan.md` is not committed. If step 2 did not change it, the agent gives no such note (D193). It gives no stale warning. Before it writes code, it tries to decide or find the answer to each open question. A closed question is a fact, a 🤖 decision, or an answer only in the summary, and the question is gone (D223, D234). It asks each question that is still open with its recommended answer, and ends the turn. A question whose answer is a fact that only the user knows gets no recommendation (D195, D225).
+- In step 3, if step 2 changed `plan.md`, the agent commits only `plan.md`, and says in one line that it committed `plan.md`. If step 2 did not change it, the agent makes no commit and gives no note (D193, D290). It gives no stale warning. Before it writes code, it tries to decide or find the answer to each open question. A closed question is a fact, a 🤖 decision, or an answer only in the summary, and the question is gone (D223, D234). It asks each question that is still open with its recommended answer, and ends the turn. A question whose answer is a fact that only the user knows gets no recommendation (D195, D225).
 - After step 3, if apply asked a question and the user answered it, the answer is a fact with 👤, a constraint, or a decision with no 🤖 (D226, D240). If the user kept the first question open, it ends with "(kept open by the user)", apply writes no code that depends on it, and the done check names the part of the Goal that waits for it (D234). Each other question that it asked is still in `## Open Questions`, because the user said to leave it open, also if the agent could decide it later. Its text ends with "(kept open by the user)" (D223, D228). The agent does not ask them again, and it writes the code that depends on no kept question (D234). If a question is still open, the done check says that `## Open Questions` is not empty (D172).
 - After step 3, `## Facts` holds no fact about the error body. If `plan.md` has a decision on how `lookup` finds an unknown city, it still gives the error-body reason (D198, D200). The summary lists each fact, decision, and open question that apply added, changed, or removed.
 - In step 4, if archive drafts an ADR for the decision on how `lookup` finds an unknown city, the ADR gives the error-body reason. After the archive, `openspec/adr/` holds that ADR. If archive does not draft that ADR, it lists the decision as not drafted, with a reason (D179, D186).
 - After step 3, `lookup('Paris')` returns the coordinates, and `lookup('Atlantis')` returns `null`. The agent checks both with a run or a test.
-- In step 4, the agent names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
+- In step 4, the summary names each draft that comes from a decision with 🤖. No spec or ADR holds a 🤖 (D181).
 
 ### 4d. Preview and apply record a non-obvious fact
 
@@ -165,13 +165,13 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Expected**:
 
 - The agent does the done check first. It asks "Archive anyway?" only if an answer is "no".
-- The requirement draft states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR holds the reason of the decision and the rejected option. The agent does not print the full text of a draft. It prints a short summary with one line for each promoted item, its `plan.md` ID and title, in a group with a count, for example "1 constraint goes to a requirement". The summary asks no question, and the agent writes and archives in the same turn (D289). `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
+- The requirement in the delta states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR holds the reason of the decision and the rejected option. The agent does not print the full text of a draft. It prints a short summary with one line for each promoted item, its `plan.md` ID and title, in a group with a count, for example "1 constraint goes to a requirement". The summary asks no question, and the agent writes and archives in the same turn (D289). `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
 - `openspec validate` passes. `openspec/adr/YYYY-MM-DD-<slug>.md` exists with Status `Accepted`.
 - `openspec/specs/<capability>/spec.md` holds the requirement. The change is in `openspec/changes/archive/`.
 
 ## 6. Archive with nothing promoted
 
-**Steps**: Start from the fixture `finished-rate-limit`. Remove `skip_specs` from `.openspec.yaml` of the change. Delete each item of `## Constraints`, `## Facts`, and `## Decisions` of `plan.md`, and commit. Run `openspec-lite-archive`.
+**Steps**: Start from the fixture `finished-rate-limit`. Remove `skip_specs` from `.openspec.yaml` of the change. Delete each item of `## Constraints`, `## Facts`, and `## Decisions` of `plan.md`. Replace the Goal with an internal outcome that no client sees: "Move the window check of `src/rateLimit.js` into its own function." Commit. Run `openspec-lite-archive`.
 
 **Expected**: no item passes a filter. The summary says that the agent promotes nothing, and lists each item that it does not draft, for example each non-goal, with a reason. The agent sets `skip_specs: true`, and the archive succeeds. `openspec/specs/` does not change, and the agent writes no ADR (D289).
 
@@ -261,8 +261,8 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 1. Start from the fixture `finished-rate-limit`. From the temp folder, start `<path-to-this-repo>/scripts/break-delta.sh openspec/changes/add-rate-limit &`. Run `openspec-lite-archive`.
 2. The script breaks the delta before step 9 of the skill: it removes the `#### Scenario:` blocks right after the agent writes the delta. `validate` fails, and the skill stops before it writes any ADR.
-3. Fix the delta as run 1 asks: add a `#### Scenario:` block with **WHEN** and **THEN** lines to each requirement of the delta. Run `openspec-lite-archive` again.
-4. If run 1 ends with a question, for example to restore the delta, do not answer it. Start run 2 in a new session.
+3. If run 1 ends with a question, for example to restore the delta, do not answer it.
+4. Fix the delta as run 1 asks: add a `#### Scenario:` block with **WHEN** and **THEN** lines to each requirement of the delta. Start a new session, and run `openspec-lite-archive` again.
 
 **Expected**:
 
@@ -335,7 +335,7 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
 
 **Expected**:
 
-- The requirement drafts use the existing capability `auth`. The agent does not create a new capability such as `lockout` or `account-lockout`.
+- The deltas use the existing capability `auth`. The agent does not create a new capability such as `lockout` or `account-lockout`.
 - Each new rule has at least one `#### Scenario:`.
 - The delta form is free. "A locked account SHALL NOT log in, also with a valid password" can be a MODIFIED "Password login" (with its full text) or an ADDED requirement. Both pass if the main spec below ends up correct.
 - The decision becomes an ADR with `Change: lockout`.
@@ -384,10 +384,10 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 
 **Expected**:
 
-- Each item tagged `spec` is in a requirement draft. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. Each item tagged `ADR` is in an ADR draft.
+- Each item tagged `spec` is in a requirement of the delta. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. If no ADR holds the file name decision, the end summary says that the decision now exists only in `openspec/changes/archive/` (D204). Each item tagged `ADR` is in an ADR. The Goal outcome "Export the report table as CSV" is a requirement, or is in the requirement of a constraint, because it is a contract for the users (D290).
 - For each item that the agent does not draft, the summary names the item and says why it skips it. No item disappears with no word. The summary gives each promoted item by its `plan.md` ID and title, in its group, and does not print the full text of a draft (D289).
 - The reason for the semicolon (French Excel) stays in the requirement text or in the ADR, not only in a scenario title. It is the non-obvious part (D147).
-- No line of the spec drafts or of the written specs holds a source emoji, for example 👤. No draft gets a 👤 for an item that has none in `plan.md` (D252).
+- No line of the written deltas or specs holds a source emoji, for example 👤. No spec or ADR gets a 👤 for an item that has none in `plan.md` (D252).
 - The header row requirement gives its reason in its text: the finance import reads the columns by name. So a reader sees that a renamed column breaks the import, and a new column order does not (D191).
 - The ADR of the browser decision has the fact about the page load in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D142).
 - After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items, and `openspec/adr/` has the `ADR` item.
@@ -477,7 +477,7 @@ In each case, `.openspec.yaml`, `tasks.md`, and the other artifacts do not chang
 
 ## 20. Checks before a delete or a skip
 
-This scenario checks that upgrade does not prune `plan.md` with no check, (D120). It also checks that upgrade with no requirement keeps `skip_specs: true` (D108, D208). 20a also checks that upgrade uses `## Background` (D125) and prunes the sections that hold only a guidance comment (D127).
+This scenario checks that upgrade does not prune `plan.md` with no check (D120). It also checks that upgrade with no requirement keeps `skip_specs: true` (D108, D208). 20a also checks that upgrade uses `## Background` (D125) and prunes the sections that hold only a guidance comment (D127).
 
 ### 20a. Upgrade asks before it prunes
 
@@ -543,7 +543,7 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 1. Build the state after step 10 of `openspec-lite-archive` in 21a, but before the old ADR changed: the new ADR exists with `Supersedes:`, the old ADR still has `Status: Accepted`, and the change is not archived. `validate` passes.
 2. Run `openspec-lite-archive`.
 
-**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. It keeps the delta of the earlier run, and does not draft a requirement that the delta holds. After the archive, the main spec holds the requirement once (D289). The summary names the new ADR and the delta file of the earlier run. The agent asks no question about them or about the `Status:` edit. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
+**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. If the earlier run wrote a delta, the agent keeps the delta, does not draft a requirement that the delta holds, and names the delta file in the summary. After the archive, the main spec holds each requirement once (D289). The summary names the new ADR. The agent asks no question about them or about the `Status:` edit. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
 
 ## 22. Goal with more than one outcome
 

@@ -2712,7 +2712,7 @@ This revises D175, D177, D184, and D191.
 
 ## D193: The Prune Reply Holds the Summary, a Script Gives the Git Note, and Fixes From the Rerun on dd7ad75
 
-**Status**: Item 5 revised by D200: scenario 4c puts the error-body reason in the "because" part, also if a run showed it.
+**Status**: Item 5 revised by D200: scenario 4c puts the error-body reason in the "because" part, also if a run showed it. The commit note of the tasks preview and of `openspec-lite-apply` is revised by D290: the two skills commit `plan.md`.
 
 **Decision**:
 
@@ -2967,6 +2967,8 @@ This revises D181 and D182.
 **Rationale**: in scenario 4 on 5aa0025 and 743a6f3, apply put its own choices ("ES modules", "download it through a Blob") into a user decision, where the 🤖 rule cannot flag them (todo item 57). On f5422dd, it chose `"type": "module"` and CRLF line ends and recorded no decision (todo item 64). A decision with no 🤖 belongs to the user (D181), so an agent choice in it hides from the review. The 4b check already expected this. The other part of item 64, a code change against a user decision in 4d-2, already has a rule: ask the user, and end the turn. It stays in item 66 as an observation.
 
 ## D215: The Archive Guard Path Has a Rule for "No" to the ADR Offer, and No Question With a Condition
+
+**Status**: Item 1 is superseded by D289: the guard path makes no ADR offer.
 
 **Decision**:
 
@@ -3540,6 +3542,8 @@ This revises D152, D164, D191, and D215.
 
 ## D254: Fixes From Review Loop 4, Round 1, on 99d8656..local
 
+**Status**: The no branch of the ADR offer in item 1 is superseded by D289.
+
 **Decision**: from `.review-reports/review_20261112094239_claude-opus-5-5_99d8656-local.md`:
 
 1. The archive guard path has no first step that points to stock `/opsx:archive`. The ADR offer is guard step 1. A no to the offer goes to the 🤖 search, the open-question report, and the 🤖 block. Then, if no delta holds a 🤖, the guard tells the user to run stock `/opsx:archive`. While a delta holds a 🤖, the guard gives no pointer to `/opsx:archive`. Scenario 18 expects this.
@@ -3582,6 +3586,8 @@ This revises D133, D154, D196, and D254.
 **Rationale**: a fresh-context review found each gap. I checked each remark against the skills, `design.md`, and the decisions.
 
 ## D256: Fixes From Review Loop 4, Round 3, on 99d8656..local
+
+**Status**: Item 4 is superseded by D289: archive asks no keep-or-delete question.
 
 **Decision**: from `.review-reports/review_20261112103716_claude-opus-5-5_99d8656-local.md`:
 
@@ -3770,6 +3776,8 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D269: Triage of the Must-Fix Defects of the Run on 84abcb6
 
+**Status**: The full text rules of item 5 and the offer reply of item 6 are superseded by D289.
+
 **Decision**:
 
 1. A defect has the cause `llm` when a rule covers the case and the agent did not follow the rule. A defect has the cause `skill` when the flow misses a case, is illogical, or is inconsistent.
@@ -3795,6 +3803,8 @@ This revises D119, D166, D182, D219, and D256.
 **Rationale**: the rerun `.scenario-runs/20261112-2119a53/` passed 5 of 8 runs (1 of 8 on 84abcb6). D02 failed in 2 of 2 runs after D269 item 4. The agent said "I have no recommendation, because the report's data model isn't visible here", and then gave a default. OQ2 of scenario 4 depends on an intent (the columns that the user wants) and on a fact (the columns that exist). The skill had no branch for such a question. The user agreed with both findings.
 
 ## D271: Fixes From the Review of the Skill Text at 98efbdb
+
+**Status**: The full text of each draft in item 10 is superseded by D289.
 
 **Decision**:
 
@@ -3841,6 +3851,8 @@ This revises D119, D166, D182, D219, and D256.
 **Rationale**: the user asked for a second review round, with a check for ambiguous phrasing. The report is `.review-reports/review_20261112235649_eu.anthropic.claude-opus-5-5_3f1988c-package.md`, 29 remarks. The user asked to fix all of them.
 
 ## D273: Fixes From Review Round 3 of the Skill Text at 4eccc57
+
+**Status**: The rejected and edited drafts of item 6 are superseded by D289.
 
 **Decision**:
 
@@ -3913,6 +3925,8 @@ This revises D119, D166, D182, D219, and D256.
 **Rationale**: review round 7, the last round of the loop that the user asked for. The report is `.review-reports/review_20261113003410_eu.anthropic.claude-opus-5-5_3fb3150-package.md`, 9 remarks, no must fix, no hint.
 
 ## D278: Fixes of the Skill Defects of the Run on afb706a
+
+**Status**: The full text and the keep-or-delete question of item 1 are superseded by D289.
 
 **Decision**:
 
@@ -4062,3 +4076,18 @@ This revises D119, D166, D182, D219, and D256.
 7. Scenarios 5, 6, 13a, 18, 18b, 21a, and 21b follow the new flow. Scenario 20b is removed, because archive offers no skipped item. Scenario 6 has no draft to reject, so the change has no item that passes a filter.
 
 **Rationale**: in a real run with 1 spec delta and 11 ADR drafts, the question "Answer yes, no, or edit for each draft." was in the middle of a long reply. The user could not find the question, and did not know what to do after step 6. A user who finds the question answers yes, because the user cannot follow 12 full drafts. So the gate gave no real review, and only cost a turn. The user decided on this summary, and picked items 3, 4, and 5 when asked.
+
+## D290: Release 1.8.1 Rules, and the Fixes of Review Round 1 on v1.8.0..local
+
+**Decision**:
+
+1. The tasks preview and `openspec-lite-apply` commit `plan.md` when `plan-status.mjs` prints a line. The commit holds only `plan.md`: `git add -- <plan.md>`, then `git commit -m "<message>" -- <plan.md>`, so that a file that the user staged stays out of the commit. The messages are `plan.md: checkpoint before tasks-preview` and `plan.md: checkpoint before apply`. Stock `/opsx:apply` still only prints the note. This revises D193.
+2. `openspec-lite-apply` checks that `plan.md` exists before the commit step, so that it never commits the delete of a tracked `plan.md`.
+3. `plan-status.mjs` prints the note of D193 again, with "Commit plan.md before the next run.", because stock `/opsx:apply` copies the note to the user. The schema version goes from 6 to 7, because `plan-status.mjs` changed after v1.8.0 and CI failed on the v1.8.1 tag (D109).
+4. Propose keeps each guidance comment of the template, also each line of a comment that spans more than one line.
+5. Archive: each outcome of the Goal is an item for the filters. A selected outcome goes to a spec as a requirement, like a constraint. This keeps a contract that only the Goal states (D119).
+6. Archive: the `plan.md` IDs can appear in the reply to the user, for example in the summary of step 6. The ID rule still forbids them in each file other than `plan.md` and `tasks-preview.md`.
+7. Archive: the guard path uses the rule against a claim with no source. If the user deletes a 🤖 `design.md` decision that the guard copied, the guard tells the user to also delete the ADR file. The summary has a group for a fact with an ADR of its own. Archive does not change or delete a requirement of a delta file of an earlier run.
+8. Scenarios 3 and 4c expect the commit of `openspec-lite-apply`. Scenario 6 gets an internal Goal, so that no item passes a filter. Scenario 15 checks the end line for a decision with no ADR, and the Goal outcome.
+
+**Rationale**: review round 1 on `v1.8.0..local` (`.review-reports/review_20261113235446_claude-opus-5-5_bead6c5-local.md`). Release 1.8.1 had no decision. The user asked for the commit of `plan.md` in the session of 2026-11-13, so remark 7 keeps the commit. The user picked item 5 when asked.

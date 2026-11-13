@@ -100,7 +100,7 @@ Do these checks in order.
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare the version with the shipped version:
 
-   Shipped schema version: 6
+   Shipped schema version: 7
 
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.

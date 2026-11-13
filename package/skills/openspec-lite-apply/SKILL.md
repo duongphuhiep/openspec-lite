@@ -5,7 +5,7 @@ description: Implement a plan-lite change from plan.md, with tasks-preview.md as
 
 # openspec-lite-apply
 
-Implement a plan-lite change. The rules are in the plan-lite schema, so stock `/opsx:apply` uses the same rules. This skill adds the stop on a blocked state (section 2) and the general rules.
+Implement a plan-lite change. The rules are in the plan-lite schema, so stock `/opsx:apply` uses the same rules. This skill adds the commit of an uncommitted `plan.md` (section 2, step 1), the stop on a blocked state (section 2, step 2), and the general rules. Stock `/opsx:apply` only prints the note of `plan-status.mjs`.
 
 How to read this skill:
 
@@ -83,7 +83,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare the version with the shipped version:
 
-   Shipped schema version: 6
+   Shipped schema version: 7
 
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
@@ -107,11 +107,12 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 ### Step 1: Commit plan.md if it is not committed
 
 - Input: `openspec/changes/<name>/plan.md`.
+- If `openspec/changes/<name>/plan.md` does not exist, go to step 2. Step 2 stops on the missing `plan.md`.
 - Run `node openspec/schemas/plan-lite/plan-status.mjs openspec/changes/<name>/plan.md` from the OpenSpec root.
 - Run the `plan-status.mjs` command alone, not in a chain.
 - If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 2.
 - If `plan-status.mjs` prints nothing, go to step 2.
-- If `plan-status.mjs` prints a line, commit `openspec/changes/<name>/plan.md` from the OpenSpec root with the message `plan.md: checkpoint before apply`.
+- If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root, so that a file that the user staged stays out of the commit. Run `git add -- openspec/changes/<name>/plan.md` alone. Then run `git commit -m "plan.md: checkpoint before apply" -- openspec/changes/<name>/plan.md` alone.
 - If the commit succeeds, tell the user that you committed `plan.md`.
 - If the commit fails, show the error. Tell the user to commit `plan.md` themselves before the next run.
 - Go to step 2.
@@ -124,7 +125,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 1. Run `openspec instructions apply --change "<name>" --json`.
    - If `state` is `blocked`, `plan.md` is missing. Stop, and tell the user to run `openspec-lite-propose` to finish the change.
    - If the command fails, or its output has no `instruction` field, follow the failure rule. Do not write code without `instruction`.
-   - If `state` is not `blocked`, and the output has an `instruction` field, go to step 2.
+   - If `state` is not `blocked`, and the output has an `instruction` field, go to item 2 of this step.
 2. Read each file in `contextFiles`.
    - Follow `instruction`. The `instruction` field holds all plan-lite apply rules.
    - `<changeDir>` in the rules of `instruction` is the `changeDir` field.

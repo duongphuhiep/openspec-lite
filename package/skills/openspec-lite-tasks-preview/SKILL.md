@@ -64,7 +64,7 @@ Do these checks in order.
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare the version with the shipped version:
 
-   Shipped schema version: 6
+   Shipped schema version: 7
 
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
@@ -130,7 +130,7 @@ Do these checks in order.
 - Run the `plan-status.mjs` command alone, not in a chain.
 - If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 3.
 - If `plan-status.mjs` prints nothing, go to step 3.
-- If `plan-status.mjs` prints a line, commit `openspec/changes/<name>/plan.md` from the OpenSpec root with the message `plan.md: checkpoint before tasks-preview`.
+- If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root, so that a file that the user staged stays out of the commit. Run `git add -- openspec/changes/<name>/plan.md` alone. Then run `git commit -m "plan.md: checkpoint before tasks-preview" -- openspec/changes/<name>/plan.md` alone.
 - If the commit succeeds, tell the user that you committed `plan.md`.
 - If the commit fails, show the error. Tell the user to commit `plan.md` themselves before the next run.
 - Go to step 3.

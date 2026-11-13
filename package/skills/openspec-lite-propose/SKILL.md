@@ -103,7 +103,7 @@ Do these checks in order. When the checks are done, go to section 3.
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare the version with the shipped version:
 
-   Shipped schema version: 6
+   Shipped schema version: 7
 
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
@@ -157,7 +157,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - Fill only what is known. Leave the other sections empty.
    - Record each fact, constraint, or choice of the request, and of each reply that you kept before `plan.md` existed, with the answer rule.
    - Record each open point of the list in `## Open Questions` with the question rule.
-   - Do not remove any `<!-- ... -->` line from `plan.md`. Every guidance comment must still be in the file when you are done.
+   - Do not remove a `<!-- ... -->` guidance comment from `plan.md`, or a line of a guidance comment that spans more than one line. Each guidance comment must still be in the file when you are done.
    - Write the content of a section on the lines under the guidance comment, not in place of it.
    - Do not invent non-goals, constraints, facts, or decisions.
    - Do not write an outcome that the user moved out, also not in `## Non-Goals`. The summary of section 5 names the outcome.
