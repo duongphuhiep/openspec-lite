@@ -3929,6 +3929,8 @@ This revises D119, D166, D182, D219, and D256.
 
 **Rationale**: the user asked to investigate each other must-fix defect of `.scenario-runs/20261113-afb706a/defects.md`, and agreed with each cause and fix.
 
+**Status**: Item 2 revised by D281 item 2. Archive step 10 now calls the shared failure rule.
+
 ## D281: Error Handling in Each Skill
 
 **Decision**:
