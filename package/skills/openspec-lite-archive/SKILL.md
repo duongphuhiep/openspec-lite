@@ -61,8 +61,8 @@ Do these checks in order.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
-- If one folder matches, ask the user to confirm the folder as the root.
-- If more than one folder matches, ask the user to pick one folder.
+- If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
+- If more than one folder matches, ask the user to pick one folder. End your turn, and wait for the answer.
 - If the user rejects the folder, or picks no folder, stop. Tell the user to run the skill from the OpenSpec root.
 - If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.
@@ -72,11 +72,11 @@ Do these checks in order.
 - Input: the prompt, and the `changes` list of `openspec list --json`.
 - Output: the name of the change, written `<name>` in this skill.
 - If the prompt names a change, use that change.
-- If the named change is not in the `changes` list, or its `.openspec.yaml` is missing or has no `schema` line, show the active changes, and ask the user to pick one change.
+- If the named change is not in the `changes` list, or its `.openspec.yaml` is missing or has no `schema` line, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
 - The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
 - If only one active change exists, use that change.
-- If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts.
+- If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
 - If no active change exists, stop. Tell the user that no active change exists.
 
 ### Guard
@@ -212,8 +212,9 @@ The guard path:
 - Output: the list of items to draft, each with its destination, and the list of items that you do not draft.
 - A selected constraint goes to a spec, as a requirement.
 - A selected outcome of the Goal goes to a spec, as a requirement. If a constraint already states the outcome, draft one requirement for both.
-- A selected decision goes to an ADR.
-- If a decision is also a contract, draft the contract as a requirement. The rationale of the decision can also go to an ADR.
+- A selected decision that is not a contract goes to an ADR.
+- If a decision is also a contract, draft the contract as a requirement.
+- If a decision is also a contract, also draft an ADR for the decision only when the reason of the decision passes the **Non-obvious** or the **Surprising** filter. If the reason passes no filter, list the ADR as not drafted, with a one-line reason.
 - List each outcome, constraint, decision, and fact of `plan.md` that you do not draft, each non-goal, and each open question that is left, with a one-line reason. No item disappears with no word.
 - Do not list the items of `## Background`. `## Background` gives context, and stays in the archive folder.
 - A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to. Keep the source emoji of the fact.
@@ -273,6 +274,7 @@ The first check, for existing ADRs:
 - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`.
 - An earlier run of this archive can have written these files.
 - Do not draft a decision or a fact that already has an ADR.
+- An ADR with the line `Change: <name>` holds an item when its `## Decision`, or its `## Context` for a fact, records the same choice or the same fact as the item. The title alone does not decide the match.
 - Step 6 names each file that has the line `Change: <name>`, with its title.
 
 The check for an earlier delta:
@@ -281,6 +283,7 @@ The check for an earlier delta:
 - If a file exists under `<dir>/specs/`, an earlier run of this archive wrote the file.
 - The user can have fixed a delta file of an earlier run after a `validate` failure. Do not change or delete a requirement of such a file. Do not delete the file.
 - Do not draft a requirement that a delta file of an earlier run already holds.
+- A delta file holds a requirement when a requirement of the file states the same rule as the item.
 - Step 6 names each such file. Step 7 merges into the file each delta draft with the same path.
 
 The second check, for a **Superseded ADR**:

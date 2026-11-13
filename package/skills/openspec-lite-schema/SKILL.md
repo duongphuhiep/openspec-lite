@@ -48,8 +48,8 @@ How to read this skill:
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
-- If one folder matches, ask the user to confirm the folder as the root.
-- If more than one folder matches, ask the user to pick one folder.
+- If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
+- If more than one folder matches, ask the user to pick one folder. End your turn, and wait for the answer.
 - If the user rejects the folder, or picks no folder, stop. Tell the user to run the skill from the OpenSpec root.
 - If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.

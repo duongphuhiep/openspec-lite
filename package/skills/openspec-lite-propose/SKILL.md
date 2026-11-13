@@ -23,6 +23,7 @@ How to read this skill:
 - If `plan.md` does not exist yet, keep each part of the reply that the answer rule records, also a change of an outcome of the Goal. Record each part with the answer rule in section 3, step 5.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
+- When you add an item to `plan.md`, give the item an ID with the ID rule.
 
 ### Failure rule
 
@@ -91,8 +92,8 @@ Do these checks in order. When the checks are done, go to section 3.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
-- If one folder matches, ask the user to confirm the folder as the root.
-- If more than one folder matches, ask the user to pick one folder.
+- If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
+- If more than one folder matches, ask the user to pick one folder. End your turn, and wait for the answer.
 - If the user rejects the folder, or picks no folder, stop. Tell the user to run the skill from the OpenSpec root.
 - If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.
@@ -154,6 +155,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - Input: the request, the answers of the user, the outcomes that stay in this change, and the list of open points of section 1.
    - Output: `openspec/changes/<name>/plan.md`.
    - Fill only what is known. Leave the other sections empty.
+   - Write `## Goal` with the goal rule, from the outcomes that stay in this change.
    - Record each fact, constraint, or choice of the request, and each part of a reply that you kept before `plan.md` existed, with the answer rule.
    - Record each open point of the list in `## Open Questions` with the question rule.
    - Do not remove a `<!-- ... -->` guidance comment from `plan.md`, or a line of a guidance comment that spans more than one line. Each guidance comment must still be in the file when you are done.
@@ -213,6 +215,13 @@ Do these checks in order. When the checks are done, go to section 3.
 - `## Decisions` holds only the current decisions, not a history.
 - When you add a decision, remove each superseded decision.
 - When you add a decision, update each stale decision.
+
+### ID rule
+
+- Give each constraint, open question, fact, and decision an ID: `C<n>`, `OQ<n>`, `F<n>`, or `D<n>`, as the template comments of `plan.md` say.
+- Give each new item a number higher than each ID of its kind in the file.
+- You can use the `plan.md` IDs in `plan.md` and in your reply to the user, for example in the summary.
+- In another file, a code comment, or a commit message, refer to an item by its title, or a short form of its text, with the change name.
 
 ## 4. Upgrade signals
 

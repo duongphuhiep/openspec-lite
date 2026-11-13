@@ -1586,6 +1586,8 @@ This revises D103.
 
 ## D119: A Contract Goes to a Spec Even If It Is Obvious
 
+**Status**: The optional ADR of a contract decision is revised by D298.
+
 **Decision**: At archive, a third filter selects requirements:
 
 - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts.
@@ -4190,3 +4192,17 @@ This revises D119, D166, D182, D219, and D256.
 6. Propose, the tasks preview, and `apply.instruction` drop the bullet "Each time the user answers an open question, record the answer", because the bullet "Each time the user replies" covers it.
 
 **Rationale**: skill text review round 3 at 478d521 (`.review-reports/review_20261114004846_claude-opus-5-5_478d521-package.md`). The reviewer marked item 4 "no clear winner". Option A has a clear benefit: it keeps the report on an early stop, and it needs one edit of the shared block.
+
+## D298: Fixes of Skill Text Review Round 4 at 1301a78
+
+**Decision**:
+
+1. Propose section 3, step 5 writes `## Goal` with the goal rule, from the outcomes that stay in the change.
+2. Upgrade step 2.3: a 🤖 decision keeps its 🤖 in `design.md`, except when a choice of the answer supersedes the decision, or when the user says yes to a requirement from the decision.
+3. Archive: a selected decision that is not a contract goes to an ADR. A decision that is also a contract goes to a requirement. It also gets an ADR only when its reason passes the Non-obvious or the Surprising filter. Otherwise, archive lists the ADR as not drafted, and the end line says that the reason stays only in the archive folder. This replaces "The rationale can also go to an ADR" of D119, which had no test.
+4. The shared blocks OpenSpec root and Change selection end the turn after each question that asks the user to confirm or to pick, in each copy.
+5. The tasks-preview guard stops after the pointer and the open questions, as apply does.
+6. Archive matches an earlier ADR to an item by its `## Decision` or its `## Context`, not by the title alone. It matches an earlier delta to an item by the rule of the requirement.
+7. Propose has its own ID rule: the four ID forms, the numbering, the IDs in the reply, and the title in another file.
+
+**Rationale**: skill text review round 4 at 1301a78 (`.review-reports/review_20261114005426_claude-opus-5-5_1301a78-package.md`). The user picked item 3 when asked.
