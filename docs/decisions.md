@@ -3946,3 +3946,11 @@ This revises D119, D166, D182, D219, and D256.
    - Upgrade checks the four artifacts before the schema switch and reads the `schema` line after it, deletes `tasks-preview.md` only after `tasks.md` exists, sets `skip_specs: true` on "None", skips a requirement that the user did not answer, and follows the failure rule when `openspec instructions` fails.
 
 **Rationale**: the user asked for a review of the error handling of each step. The report is `.review-reports/review_20261113013108_eu.anthropic.claude-opus-5-5_ad4f78e-package-errors.md`, 25 remarks. Only archive step 10 (D280) had a failure branch for a write. Remark 12 named a broken step reference in upgrade step 2.4, but the reference was correct, so only its first part was fixed.
+
+## D282: Fixes of the Skill Defects D01, D02, D03, and D05 of the Run on eb2df49
+
+**Decision**:
+
+1. Archive step 5: a delta file of an earlier run does not replace a draft, because `validate` can have failed on the file. Archive drafts each selected requirement in full, also when a delta file of an earlier run holds the requirement. Step 7 merges a kept file with no duplicate requirement. An ADR of an earlier run is different: it passed `validate`, and the user approved it, so archive does not draft it again.
+
+**Rationale**: the user asked to investigate the must-fix defects and D05 of `.scenario-runs/20261113-eb2df49/defects.md`. The report is `investigation.md` in that folder. The user agreed with the cause and the fix of D01, D02, D03, and D05. D12 stays open. In D01 (13a run 1), the agent applied the ADR rule "Do not draft a decision that already has an ADR" to the delta of run 1. It offered the delta that failed `validate` as the requirement. After "Delete it.", archive archived the change with no spec.

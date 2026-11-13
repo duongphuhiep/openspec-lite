@@ -271,6 +271,7 @@ The check for an earlier delta:
 
 - Before you draft a delta, list the files under `<dir>/specs/`.
 - If a file exists under `<dir>/specs/`, an earlier run of this archive wrote the file.
+- A delta file of an earlier run does not replace a draft, because `validate` can have failed on the file. Draft each selected requirement in full, also when a delta file of an earlier run holds the requirement.
 - Print the full text of each such file in your reply.
 - Step 6 asks the user to keep or delete each such file.
 
