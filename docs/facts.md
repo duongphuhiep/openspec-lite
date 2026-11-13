@@ -1142,6 +1142,19 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.323: `claude -p` with no `--resume` in a folder with an earlier session starts a new session. A short answer such as "Yes, make the tasks preview." then starts a skill with no context of the earlier session (group C, `bogus/7-turn-2.json`).
 - Google Chrome 157.0.8103.51, headless: a page at a `file://` URL with `<script type="module">import {v} from "./m.js"</script>` does not load `m.js`. The console says "Access to script at 'file:///…/m.js' from origin 'null' has been blocked by CORS policy: Cross origin requests are only supported for protocol schemes: … http, https …". So a page that imports ES modules needs an HTTP server (my run in a temp folder, 2026-11-13).
 
+## Scenario Run on 484f35a with Opus 5.5
+
+**Source**: `.scenario-runs/20261113-484f35a-opus/group-*.md`, `raw/*/*/turn-*.json` (`permission_denials`), and the session logs, 2026-11-13.
+
+- Claude Code 2.1.323 on Bedrock: for the same scenarios, `total_cost_usd` with `eu.anthropic.claude-opus-5-5` is 2.2 to 2.9 times the cost with `eu.anthropic.claude-sonnet-5-5`. The token counts differ much less (group E: 6% to 16% more), so the price of the model is the main cause (all groups, against `.scenario-runs/20261113-eb2df49/`).
+- Opus 5.5, stock `/opsx:apply` on a plan-lite change: it called the `openspec-lite-apply` skill in 0 of 6 sessions. All 6 ran `openspec status` and `openspec instructions apply`. Sonnet 5.5 called the skill in 2 of 6 (group A).
+- Claude Code 2.1.323, `--permission-mode acceptEdits`: an allowed command on a path outside the session folder needs approval, for example `ls "/Applications/…"` and `mkdir -p /tmp/<dir> && cp -R …`. A Write to a path under `/tmp` outside the session folder is denied (groups A, I).
+- Claude Code 2.1.323: a Bash command with a quoted heredoc can be denied with "Quoted text in this command can't be checked before it runs" (group A, session `57f12b76`, as the agent quoted it).
+- Claude Code 2.1.323, scenario allowlist: `gh issue view 42` is denied with "This command requires approval" (group C, `raw/C/7-r2/turn-2.json`).
+- Claude Code 2.1.323, scenario allowlist: `cd <session folder> && find …; git rev-parse --show-toplevel` is denied with "This command changes directory before running a version-control command", also when the `cd` target is the session folder itself (group G, session `5d44e179`).
+- Claude Code 2.1.323, scenario allowlist: `test -f <rel file> && rm <rel file> && ls <dir>` runs with no denial. The same `rm` after `cd <dir> && ` is denied (group F, sessions `f29432b1`, `5d1f8804`).
+- Claude Code 2.1.323, `--allowedTools "Bash(npm:*)"`: `npm test` runs with no denial (group A, sessions `afe54b9b`, `57f12b76`).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
