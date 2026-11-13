@@ -4,7 +4,7 @@
 ## 1. CSV generation in the browser
 
 - 1.1 Add a function that turns the table's displayed rows and columns into CSV text, in the on-screen column order (C1), with proper escaping of commas, quotes, and newlines. The place of the function waits for the answer to OQ2, because the repo has no app code.
-  - Verify: unit tests cover column order, the header row, and values with commas, quotes, and newlines. The output matches the table's displayed rows.
+  - Verify: unit tests cover column order, the header row, values with commas, quotes, and newlines, and an empty table, which exports only the header row. The output matches the table's displayed rows.
 - 1.2 Build the column list of the export. The task waits for the answer to OQ1.
   - Verify: the column list is one input of the function in 1.1, so the answer to OQ1 changes only the code that builds that list.
 
