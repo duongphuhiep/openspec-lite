@@ -1140,6 +1140,7 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.323, scenario allowlist: a `;` chain with `echo "exit $?"` is denied. A `;` chain of `node <script>` calls with no `echo` is allowed (group I, sessions `0cc2834e`, `bbb5ab1d`).
 - Claude Code 2.1.323, Edit tool (observation, cause not known): an Edit from `<line>` to `<line> (kept open by the user)`, then an Edit from ` (kept open by the user)` to an empty string, left `plan.md` with no blank line after `<line>`. The tool inputs show no newline in `old_string` or `new_string` (group F, session `fde74651`).
 - Claude Code 2.1.323: `claude -p` with no `--resume` in a folder with an earlier session starts a new session. A short answer such as "Yes, make the tasks preview." then starts a skill with no context of the earlier session (group C, `bogus/7-turn-2.json`).
+- Google Chrome 157.0.8103.51, headless: a page at a `file://` URL with `<script type="module">import {v} from "./m.js"</script>` does not load `m.js`. The console says "Access to script at 'file:///…/m.js' from origin 'null' has been blocked by CORS policy: Cross origin requests are only supported for protocol schemes: … http, https …". So a page that imports ES modules needs an HTTP server (my run in a temp folder, 2026-11-13).
 
 ## Release 1.7.0
 
