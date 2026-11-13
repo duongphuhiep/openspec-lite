@@ -186,11 +186,11 @@ Read the answer of the user:
 
 ### Step 2.1: Write `proposal.md`
 
-- Input: the Goal and the scope in `plan.md`, and `## Background` of `plan.md` if it exists.
+- Input: `## Goal` of `plan.md`, and `## Background` of `plan.md` if it exists.
 - Output: `<dir>/proposal.md`.
 - If `<dir>/proposal.md` already exists, follow the resume rule, and go to step 2.2.
 - Run the instructions command for `proposal` with the instructions rule.
-- Write `proposal.md` from the Goal and the scope in `plan.md`.
+- Write `proposal.md` from `## Goal` of `plan.md`, and from `## Background` if it exists.
 - If the Goal has more than one outcome, give each outcome its own item in What Changes.
 - If `## Background` exists, use its scope items and source links for the proposal context.
 - Go to step 2.2.

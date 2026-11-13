@@ -4163,3 +4163,17 @@ This revises D119, D166, D182, D219, and D256.
 9. Upgrade: the question turn asks only when at least one of the four artifacts does not exist. The "Read the answer" rules for a yes, a no, or no answer apply only to a requirement that the question turn asked. The split rule sends a Goal edit to What Changes of `proposal.md`, and a change of a named `plan.md` item to the copy of the item in its artifact.
 
 **Rationale**: skill text review round 1 at 145986e (`.review-reports/review_20261114003449_claude-opus-5-5_145986e-package.md`). Item 1 follows the rule that a fix adds no example that hints the result of a scenario.
+
+## D296: Fixes of Skill Text Review Round 2 at 53028d2
+
+**Decision**:
+
+1. `apply.instruction` step 4: if a reply changes no item of `plan.md`, apply answers the reply. If step 6 already ran, step 5 and step 6 do not run again. If step 6 did not run yet, apply continues the step that waited for the reply. This revises D295 item 7, which ended the run before the tests and the end summary.
+2. The tasks preview runs step 8 again only for a reply that changes an item of `plan.md`. The condition "the reply does not make the preview stale" is removed, because it was never false.
+3. Propose records a reply with the answer rule only when `plan.md` exists. Before `plan.md` exists, it keeps each part of the reply that the answer rule records, also a change of a Goal outcome.
+4. The archive done check uses `git grep --untracked`, because `git grep` does not find a new file that is not committed (`docs/facts.md`).
+5. The archive guard path lists each ADR file that it wrote, and each old ADR whose `Status:` line it changed, because section 3 does not run on the guard path.
+6. Propose ends its turn after it asks for another change name.
+7. Upgrade step 2.1 reads `## Goal`, and `## Background` if it exists. "The scope in `plan.md`" named no section.
+
+**Rationale**: skill text review round 2 at 53028d2 (`.review-reports/review_20261114004112_claude-opus-5-5_53028d2-package.md`).

@@ -301,7 +301,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 
 ### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122, D148, D154, D155, D179, D180, D181, D184, D191, D193, D253, D289, D290)
 
-1. Ask the done check (see §4). To find the code, search for what each outcome of the Goal names, for example with `git -C <git root> grep`, so that the current folder does not matter (D209, D272). Name each outcome and each constraint that is not met, and each open question that is left (D148, D262). Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask only: "Archive anyway?", with no other options in this question. On no, give the paths below, then stop (D201). For each outcome or constraint that is not met, give two paths: implement it with `openspec-lite-apply`, or remove it from `plan.md` and propose it as a separate change. For each open question that is left, tell the user to run `openspec-lite-apply` with the answer, so that apply records it (D230, D232). Then tell the user to run archive again. If the user names an item that is not in `plan.md`, also say: to keep the item, add it to `plan.md` first (D155, D191, D271).
+1. Ask the done check (see §4). To find the code, search for what each outcome of the Goal names, for example with `git -C <git root> grep --untracked`, so that the current folder does not matter (D209, D272). Name each outcome and each constraint that is not met, and each open question that is left (D148, D262). Do not judge from the first lines of `git ls-files` (D121). If an answer is "no", show the warnings and ask only: "Archive anyway?", with no other options in this question. On no, give the paths below, then stop (D201). For each outcome or constraint that is not met, give two paths: implement it with `openspec-lite-apply`, or remove it from `plan.md` and propose it as a separate change. For each open question that is left, tell the user to run `openspec-lite-apply` with the answer, so that apply records it (D230, D232). Then tell the user to run archive again. If the user names an item that is not in `plan.md`, also say: to keep the item, add it to `plan.md` first (D155, D191, D271).
 2. Read `plan.md`. Do not read `tasks-preview.md` for promotion.
 3. Each outcome of the Goal is an item, like each constraint, decision, and fact (D290). Select each item that passes at least one filter:
    - **Non-obvious**: a reader cannot deduce it from the code in 5 minutes.
@@ -448,7 +448,7 @@ How to read these steps:
   - Record the point as an open question before you write the code that depends on the point.
   - Ask the open question with the ask rule.
   - End your turn.
-- When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule. If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs. If the reply changed no item of plan.md, answer the reply, and do not run step 5 or step 6 again.
+- When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule. If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs. If the reply changed no item of plan.md, answer the reply. If step 6 already ran, do not run step 5 or step 6 again. If step 6 did not run yet, continue the step that waited for the reply.
 - When the code is written, go to step 5.
 
 ## Step 5: Check plan.md against the code

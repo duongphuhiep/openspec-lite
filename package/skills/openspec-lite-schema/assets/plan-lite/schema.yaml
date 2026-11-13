@@ -108,7 +108,7 @@ apply:
       - Record the point as an open question before you write the code that depends on the point.
       - Ask the open question with the ask rule.
       - End your turn.
-    - When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule. If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs. If the reply changed no item of plan.md, answer the reply, and do not run step 5 or step 6 again.
+    - When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule. If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs. If the reply changed no item of plan.md, answer the reply. If step 6 already ran, do not run step 5 or step 6 again. If step 6 did not run yet, continue the step that waited for the reply.
     - When the code is written, go to step 5.
 
     ## Step 5: Check plan.md against the code

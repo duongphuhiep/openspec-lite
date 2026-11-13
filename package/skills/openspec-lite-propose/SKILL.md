@@ -20,8 +20,8 @@ How to read this skill:
 - When you write `## Goal`, follow the goal rule.
 - When you record an open point, follow the question rule.
 - Each time the user answers a question of `plan.md`, record the answer with the answer rule.
-- Each time the user replies, record the reply with the answer rule.
-- If `plan.md` does not exist yet, keep each fact, constraint, or choice of the reply. Record each one with the answer rule in section 3, step 5.
+- If `plan.md` exists, record each reply of the user with the answer rule.
+- If `plan.md` does not exist yet, keep each part of the reply that the answer rule records, also a change of an outcome of the Goal. Record each part with the answer rule in section 3, step 5.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
 
@@ -138,8 +138,8 @@ Do these checks in order. When the checks are done, go to section 3.
    - If the command fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`.
    - If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped after step 2. Ask: "Resume the change <name>?" End your turn, and wait for the answer.
    - On yes to the resume question, go to step 3.
-   - On no to the resume question, tell the user that the folder `openspec/changes/<name>/` stays, and that the user can delete it. Ask for another name. Then do step 2 again with the new name.
-   - If the change already exists, and has `plan.md` or a schema that is not `plan-lite`, show the error, and ask for another name. Then do step 2 again with the new name.
+   - On no to the resume question, tell the user that the folder `openspec/changes/<name>/` stays, and that the user can delete it. Ask for another name. End your turn, and wait for the answer. Then do step 2 again with the new name.
+   - If the change already exists, and has `plan.md` or a schema that is not `plan-lite`, show the error, and ask for another name. End your turn, and wait for the answer. Then do step 2 again with the new name.
    - In each other failure case, follow the failure rule. A new name does not fix the error.
 3. Read `openspec/changes/<name>/.openspec.yaml` before you edit the file.
    - OpenSpec 1.14.2 already writes `skip_specs: true` in `.openspec.yaml`.
@@ -155,7 +155,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - Input: the request, the answers of the user, the outcomes that stay in this change, and the list of open points of section 1.
    - Output: `openspec/changes/<name>/plan.md`.
    - Fill only what is known. Leave the other sections empty.
-   - Record each fact, constraint, or choice of the request, and of each reply that you kept before `plan.md` existed, with the answer rule.
+   - Record each fact, constraint, or choice of the request, and each part of a reply that you kept before `plan.md` existed, with the answer rule.
    - Record each open point of the list in `## Open Questions` with the question rule.
    - Do not remove a `<!-- ... -->` guidance comment from `plan.md`, or a line of a guidance comment that spans more than one line. Each guidance comment must still be in the file when you are done.
    - Write the content of a section on the lines under the guidance comment, not in place of it.

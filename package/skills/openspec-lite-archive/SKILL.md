@@ -101,7 +101,7 @@ The guard path:
    - Write each ADR draft with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
    - On the guard path, do not run section 2, steps 7 to 9.
    - On the guard path, after section 2, step 6, continue guard step 1 with the write of the ADR drafts. Do not go to section 2, step 7.
-   - On the guard path, after section 2, step 10, go to guard step 2. Do not go to section 2, step 11.
+   - On the guard path, after section 2, step 10, list each ADR file that you wrote, and each old ADR whose `Status:` line you changed. Then go to guard step 2. Do not go to section 2, step 11.
    - On the guard path, do not change `design.md`.
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
@@ -163,7 +163,7 @@ The guard path:
 - An HTML comment in `## Open Questions` does not count as a question.
 - To find the code, search for what each outcome of the Goal names, for example with `git grep`.
 - Get the git root with `git rev-parse --show-toplevel` as its own command.
-- Then search with `git -C <git root> grep <word>`.
+- Then search with `git -C <git root> grep --untracked <word>`, because a plain `git grep` does not find a new file that is not committed.
 - If `git rev-parse --show-toplevel` fails, the repo does not use git. Search the files under the OpenSpec root with the search tool of the harness, and skip `.git/`, `node_modules/`, and `apm_modules/`.
 - Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them.
 - Name each outcome and each constraint that is not met, and each open question that is left.
