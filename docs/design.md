@@ -142,7 +142,8 @@ openspec-lite/
 - An example in `package/` gives its own setup, for example what `plan.md` asks for. It does not depend on a test fixture or a test scenario of this repo, because only `package/` reaches the user (D259).
 - Do not add an example to `package/` only to steer the agent to the result of a test scenario. If a rule already covers a case and the agent misses the case, the cause is `llm`, and the skill does not change. Fix a skill only when its flow misses a case, is illogical, or is inconsistent (D269).
 - A rule phrase in `package/` does not describe the exact case of a test scenario, also not as an example (D271).
-- Each skill and `apply.instruction` have one failure rule. A denied chain is tried once more as single commands, or with the Read, Write, or Edit tool. A denied single command is not run again. If a step needs the output and the action still fails, the action is reported, and the run stops. If no step needs the output, for example an extra check or a read of a link, the agent names the error and goes on. A test run that a step names, and a file write, always have a step that needs them (D285). No missing output is made up, and no failed action is reported as done. A step that must go on, or must stop at a safe point, has its own failure branch, and that branch wins (D281).
+- Each skill and `apply.instruction` have one failure rule. A denied chain is tried once more as single commands, or with the Read, Write, or Edit tool. A denied single command is not run again. If a step needs the output and the action still fails, the action is reported, and the run stops. If no step needs the output, for example an extra check or a read of a link, the agent names the error and goes on. A test run that a step names, and a file write, always have a step that needs them (D285).
+- A question whose answer can change an outcome of the Goal quotes that outcome. Apply edits the outcome of the Goal on such an answer, and records no constraint or decision that contradicts the Goal. The tasks preview does not edit the Goal, and tells the user to change it (D288). No missing output is made up, and no failed action is reported as done. A step that must go on, or must stop at a safe point, has its own failure branch, and that branch wins (D281).
 
 The five workflow skills are propose, tasks-preview, apply, upgrade, and archive.
 
@@ -491,6 +492,7 @@ When the checks are done, go to step 6.
    - Say that the plan hash does not cover `## Facts`, `## Decisions`, and `## Open Questions`, so your edits of these sections do not make the preview stale.
    - If you added, changed, or removed a constraint, list the constraint with its ID.
    - If you added, changed, or removed a constraint, and the preview is not absent, say that the constraint edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
+   - If you changed the Goal, quote the old outcome and the new outcome. If the preview is not absent, say that the Goal edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
    - Ask each new open question of step 5 with the ask rule.
@@ -527,6 +529,7 @@ When the checks are done, go to step 6.
 - Give your recommended answer for each open question.
 - Give no recommendation when the answer is a fact that only the user knows. Say why you give no recommendation.
 - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
+- If the answer can change an outcome that the Goal states, quote that outcome of the Goal in the question, and say that the answer can change the Goal.
 
 ## Answer rule: record a reply of the user
 
@@ -539,6 +542,7 @@ When the checks are done, go to step 6.
 - Record each part of the reply in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - Record each constraint of the reply in `## Constraints`.
+- If a part of the reply changes an outcome that the Goal states, edit that outcome of the Goal to match the reply. Do not record a constraint or a decision that contradicts the Goal.
 - If the user names an item of plan.md, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".

@@ -4019,3 +4019,14 @@ This revises D119, D166, D182, D219, and D256.
 
 **Rationale**: an automated security review flagged two risks in `exit-code.mjs`: permission laundering through the wrapper, and `shell: true` with raw arguments on Windows. The user asked to fix the security findings after the scenario run. The skills already handle `exit: not run (...)` as "the command did not run" (D281).
 
+## D288: An Answer That Changes the Goal, a Problem That the Goal Fixes, and the Scenario 7 Fixture
+
+**Decision**:
+
+1. The ask rule of apply and of the tasks preview: if the answer can change an outcome that the Goal states, the question quotes that outcome, and says that the answer can change the Goal. A question about such an outcome is allowed, because the agent can find a gap in the Goal, for example "with code 0 otherwise" also for an invalid spec.
+2. The answer rule of apply: if a part of a reply changes an outcome that the Goal states, apply edits that outcome of the Goal to match the reply, and records no constraint or decision that contradicts the Goal. The end summary quotes the old and the new outcome. The plan hash covers the Goal, so the summary says that the edit makes the preview stale, as for a constraint edit. The user is the source of the edit.
+3. The tasks preview does not edit the Goal. A reply that changes an outcome of the Goal asks to change the Goal, so the preview tells the user to make the change in `plan.md` and to run the preview again, as for each other edit of the Goal.
+4. Scenario 4d checks the quote in the question, the Goal edit of apply, the summary, and that no constraint or decision contradicts the Goal. This replaces D286 item 7, which forbade the question and the Goal edit.
+
+**Rationale**: the user asked to investigate D01, D02, and D03 of `.scenario-runs/20261113-241f481-opus/defects.md` again, to confirm the cause, and to fix it. The user picked "apply edits the Goal" for item 2. In D01 (4d-2), the preview asked whether an invalid spec gives exit 1 or 0, and the Goal says "with code 0 otherwise". The question found a real gap in the Goal, so D286 item 7 was too strict. `apply.instruction` had no rule for the Goal, so apply recorded constraint C2 against the Goal, and the done check compared the code with two texts that disagree.
+

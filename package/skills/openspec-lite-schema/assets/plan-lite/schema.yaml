@@ -154,6 +154,7 @@ apply:
        - Say that the plan hash does not cover `## Facts`, `## Decisions`, and `## Open Questions`, so your edits of these sections do not make the preview stale.
        - If you added, changed, or removed a constraint, list the constraint with its ID.
        - If you added, changed, or removed a constraint, and the preview is not absent, say that the constraint edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
+       - If you changed the Goal, quote the old outcome and the new outcome. If the preview is not absent, say that the Goal edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
        - If you added no 🤖 decision, show no table.
        - Ask each new open question of step 5 with the ask rule.
@@ -190,6 +191,7 @@ apply:
     - Give your recommended answer for each open question.
     - Give no recommendation when the answer is a fact that only the user knows. Say why you give no recommendation.
     - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
+    - If the answer can change an outcome that the Goal states, quote that outcome of the Goal in the question, and say that the answer can change the Goal.
 
     ## Answer rule: record a reply of the user
 
@@ -202,6 +204,7 @@ apply:
     - Record each part of the reply in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
     - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
     - Record each constraint of the reply in `## Constraints`.
+    - If a part of the reply changes an outcome that the Goal states, edit that outcome of the Goal to match the reply. Do not record a constraint or a decision that contradicts the Goal.
     - If the user names an item of plan.md, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
     - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
     - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".

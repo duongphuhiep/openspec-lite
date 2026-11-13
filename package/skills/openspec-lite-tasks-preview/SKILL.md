@@ -97,6 +97,7 @@ Do these checks in order.
 - When you need the exit code of a command, use the exit-code rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
 - If the user moves the decision that records a constraint of the user to `## Constraints`, the preview is stale. Tell the user to run this skill again.
+- A reply that changes an outcome that the Goal states asks to change the existing text of the Goal.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. List each item that you recorded, with its ID. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
 - A new constraint in a reply follows the answer rule.
 - If a reply after step 8 changes no item of `plan.md`, answer the reply, and do not run step 8 again.
@@ -259,6 +260,7 @@ When the checks are done, go to step 6.
 - Give your recommended answer for each open question.
 - Give no recommendation when the answer is a fact that only the user knows. Say why you give no recommendation.
 - If the answer depends on an intent of the user and also on a fact that only the user knows, give your recommended answer for the intent, and name the fact that you need.
+- If the answer can change an outcome that the Goal states, quote that outcome of the Goal in the question, and say that the answer can change the Goal.
 
 ### Answer rule: record a reply of the user
 
