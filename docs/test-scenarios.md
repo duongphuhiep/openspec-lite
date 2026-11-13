@@ -261,12 +261,13 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 1. Start from the fixture `finished-rate-limit`. From the temp folder, start `<path-to-this-repo>/scripts/break-delta.sh openspec/changes/add-rate-limit &`. Run `openspec-lite-archive`. Approve one requirement and one decision.
 2. The script breaks the delta before step 9 of the skill: it removes the `#### Scenario:` blocks right after the agent writes the delta. `validate` fails, and the skill stops before it writes any ADR.
 3. Run `openspec-lite-archive` again. Approve the same drafts as in run 1. When the agent asks to keep or delete the delta of run 1, answer: "Delete it."
+4. If run 1 ends with a question, for example to restore the delta, do not answer it. Start run 2 in a new session.
 
 **Expected**:
 
 - Before it writes, the agent shows the delta from run 1 and asks to keep or delete it.
 - The agent drafts the decision again, because no ADR exists yet.
-- In run 1, the agent shows the `validate` error.
+- In run 1, the agent shows the `validate` error. A stop before `validate` also passes, if the agent read the delta back, says how the delta differs from the approved draft, and writes no ADR, because the failure rule checks each write on disk (D281).
 - After run 2, `openspec/adr/` has one ADR for the decision, with the plain lines `Status: Accepted` and `Change: <name>`. `openspec/specs/` holds the requirement once, and the change is in `openspec/changes/archive/`.
 
 ### 13b. After a failed `openspec archive`
