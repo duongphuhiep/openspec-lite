@@ -346,6 +346,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Ask the user to review all artifacts.
 - If an artifact has 🤖 items, list each 🤖 item with its new claim, or as an agent decision of `plan.md`.
 - Ask the user to review each 🤖 item: remove the mark to accept the item, or delete the item.
+- A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user, because only a yes in the question turn of step 2 removes the mark. Do not ask the user to confirm the decision again, also on a resumed run.
 - Ask for an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference.
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
