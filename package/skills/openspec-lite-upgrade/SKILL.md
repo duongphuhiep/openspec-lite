@@ -85,7 +85,8 @@ Do these checks in order.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
 - If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
 - If `schema` has any other value, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
-- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question. An earlier run may have stopped after step 3. A finished upgrade can also keep `plan.md`.
+- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question, because an earlier run can stop after it wrote the artifacts, and a finished upgrade can keep `plan.md`.
+- In the reply with the resume question, do not name a step number.
 - The resume question is: "The upgrade of <name> wrote the artifacts, and `plan.md` still exists. Finish the upgrade now: validate the artifacts, then decide what to delete from `plan.md`?"
 - After the resume question, end your turn, and wait for the answer. Do not run `validate` before the answer.
 - If the user answers no to the resume question, name each open question that stays in `plan.md`, and stop.
