@@ -19,7 +19,6 @@ How to read this skill:
 - Do not write code, except after a yes to the Level 1 question.
 - When you write `## Goal`, follow the goal rule.
 - When you record an open point, follow the question rule.
-- Each time the user answers a question of `plan.md`, record the answer with the answer rule.
 - If `plan.md` exists, record each reply of the user with the answer rule.
 - If `plan.md` does not exist yet, keep each part of the reply that the answer rule records, also a change of an outcome of the Goal. Record each part with the answer rule in section 3, step 5.
 - When you record a fact, follow the fact rule.
@@ -110,7 +109,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - If the user declines the copy of the schema, stop.
    - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
    - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - In your end summary, copy the report of `openspec-lite-schema`: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
+   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
@@ -179,7 +178,7 @@ Do these checks in order. When the checks are done, go to section 3.
 ### Answer rule
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- A yes or a no to a question that a step of this workflow asks, for example a resume, split, stale, or prune question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
+- An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
 - If the user answers an open question of `plan.md`, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.

@@ -27,7 +27,6 @@ apply:
 
     - If plan.md and tasks-preview.md conflict, follow plan.md.
     - Do not edit tasks-preview.md.
-    - Each time the user answers an open question, record the answer with the answer rule.
     - Each time the user replies, record the reply with the answer rule.
     - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
     - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
@@ -192,7 +191,7 @@ apply:
     ## Answer rule: record a reply of the user
 
     - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-    - A yes or a no to a question that a step of this workflow asks, for example a resume, split, stale, or prune question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
+    - An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
     - If a reply of the user answers an open question, remove the question from `## Open Questions`.
     - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
     - Add the "(kept open by the user)" marker only when the user says to keep the question open.

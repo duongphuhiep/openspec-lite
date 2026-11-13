@@ -71,7 +71,7 @@ Do these checks in order.
    - If the user declines the copy of the schema, stop.
    - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
    - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - In your end summary, copy the report of `openspec-lite-schema`: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
+   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
@@ -88,7 +88,6 @@ Do these checks in order.
 ### General rules
 
 - Edit `plan.md` only as the plan.md rule says.
-- Each time the user answers an open question, record the answer with the answer rule.
 - Each time the user replies, record the reply with the answer rule.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
@@ -267,7 +266,7 @@ When the checks are done, go to step 6.
 ### Answer rule: record a reply of the user
 
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- A yes or a no to a question that a step of this workflow asks, for example a resume, split, stale, or prune question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
+- An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
 - If a reply of the user in this session answers an open question, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.

@@ -90,7 +90,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
    - If the user declines the copy of the schema, stop.
    - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
    - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - In your end summary, copy the report of `openspec-lite-schema`: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
+   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.

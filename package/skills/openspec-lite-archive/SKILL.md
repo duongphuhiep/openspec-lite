@@ -139,7 +139,7 @@ The guard path:
    - If the user declines the copy of the schema, stop.
    - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
    - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - In your end summary, copy the report of `openspec-lite-schema`: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
+   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
@@ -214,7 +214,8 @@ The guard path:
 - A selected outcome of the Goal goes to a spec, as a requirement. If a constraint already states the outcome, draft one requirement for both.
 - A selected decision goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement. The rationale of the decision can also go to an ADR.
-- List each other item of `plan.md` that you do not draft, including each non-goal, with a one-line reason. No item disappears with no word.
+- List each outcome, constraint, decision, and fact of `plan.md` that you do not draft, each non-goal, and each open question that is left, with a one-line reason. No item disappears with no word.
+- Do not list the items of `## Background`. `## Background` gives context, and stays in the archive folder.
 - A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to. Keep the source emoji of the fact.
 - An obvious fact goes to the `## Context` of an ADR only when the fact justifies the decision of that ADR. Keep the source emoji of the fact.
 - A fact that justifies a requirement goes into the requirement text, as its reason, with no source emoji, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
@@ -313,7 +314,7 @@ When each item has a draft, go to step 6.
   - The items that step 4 does not draft, each with its one-line reason.
 - After the groups, give each other point that the user must know, one line for each point:
   - Name each draft that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`. Name the 🤖 decision. Say that the user did not confirm the decision, and that the archive promotes the decision.
-  - On the guard path, name each draft that holds content from another line of `proposal.md` or `design.md` with a 🤖, for example a `## Why` line. Name the line. The draft holds no 🤖.
+  - On the guard path, name each draft that holds content from another line of `proposal.md` or `design.md` with a 🤖. Name the line. The draft holds no 🤖.
   - For each draft with a `Supersedes:` line, name the old ADR, and say that the archive changes the `Status` line of the old ADR.
   - For each new decision that changes only part of an old ADR, say that both ADRs stay `Accepted`.
   - Name each ADR of an earlier run, with its title. Say that the earlier run wrote the ADR, and that this run does not write the ADR again.

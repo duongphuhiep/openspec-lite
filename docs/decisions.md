@@ -4177,3 +4177,16 @@ This revises D119, D166, D182, D219, and D256.
 7. Upgrade step 2.1 reads `## Goal`, and `## Background` if it exists. "The scope in `plan.md`" named no section.
 
 **Rationale**: skill text review round 2 at 53028d2 (`.review-reports/review_20261114004112_claude-opus-5-5_53028d2-package.md`).
+
+## D297: Fixes of Skill Text Review Round 3 at 478d521
+
+**Decision**:
+
+1. Archive drops the example "for example a `## Why` line" from the guard-path point, because the `after-upgrade` fixture plants a 🤖 `## Why` line. The general rule stays.
+2. The workflow-answer exception covers each answer to a question of the workflow, not only a yes or a no, for example a stale, name, or folder question. This revises D295 item 2.
+3. Upgrade step 2.1 reads each part of the answers that the split rule sends to `proposal.md`. If an answer changes a Goal outcome, What Changes holds the new outcome only.
+4. The shared schema check copies the report of `openspec-lite-schema` to the reply right after the schema skill finishes, also when the skill stops later. The old bullet named an end summary that no step of a skill named, and that a skill that stops early does not give. Option B, a bullet in each end summary, loses the report on an early stop.
+5. Archive step 4 lists each outcome, constraint, decision, and fact that it does not draft, each non-goal, and each open question that is left. It does not list the items of `## Background`, because they give context and stay in the archive folder.
+6. Propose, the tasks preview, and `apply.instruction` drop the bullet "Each time the user answers an open question, record the answer", because the bullet "Each time the user replies" covers it.
+
+**Rationale**: skill text review round 3 at 478d521 (`.review-reports/review_20261114004846_claude-opus-5-5_478d521-package.md`). The reviewer marked item 4 "no clear winner". Option A has a clear benefit: it keeps the report on an early stop, and it needs one edit of the shared block.
