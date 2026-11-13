@@ -1602,6 +1602,8 @@ The upgrade signal "a contract (spec) becomes necessary" stays. It means a contr
 
 ## D120: Upgrade Asks Before It Prunes plan.md, and Archive Lets the User Add an Item
 
+**Status**: The archive part is superseded by D289: archive offers no skipped item to draft.
+
 **Decision**:
 
 - Before upgrade deletes a `plan.md` section, it lists each section with its destination: the artifact and the heading that now hold its content, or "kept". It asks the user before the delete. On no, it keeps `plan.md` as it is, and the summary says that the moved sections in `plan.md` are old copies.
@@ -2139,7 +2141,7 @@ This revises D108 and D120.
 
 ## D154: Archive Can Copy the Decisions to ADRs After Its Guard
 
-**Status**: Revised by D191 item 5 and D192: after the ADRs, archive lists each 🤖 line, and offers the archive when no delta holds a 🤖.
+**Status**: Revised by D191 item 5 and D192: after the ADRs, archive lists each 🤖 line, and offers the archive when no delta holds a 🤖. Revised by D289: archive copies the decisions with no offer.
 
 **Decision**:
 
@@ -2207,6 +2209,8 @@ This extends D120, D140, and D142.
 ---
 
 ## D159: Scenario 20b Picks the Item After the Skipped List
+
+**Status**: Superseded by D289: scenario 20b is removed.
 
 **Decision**: Scenario 20b names the moment of the pick by its content: "In the first reply after the agent lists the skipped items, pick the toolbar item." If the agent asks "Archive anyway?", the tester answers yes in the same reply.
 
@@ -3519,6 +3523,8 @@ This revises D226, D227, D240, and D244.
 
 ## D253: Fixes for the Defects D03, D05, D06, and D07 of the Run on 3fb090c
 
+**Status**: The archive offer of the guard path is superseded by D289: the guard path copies the decisions with no offer.
+
 **Decision**: from `.scenario-runs/20261112-3fb090c/investigation-D01-D07.md`:
 
 1. Upgrade step 2.2 writes only the requirements that step 2 planned and that the user approved, or whose source is a constraint or an answer of the user. It writes no requirement that step 2 did not plan, also if the CLI instruction or the Goal suggests one. The summary names the source of each requirement. (D03)
@@ -3636,6 +3642,8 @@ This revises D255, D256, and D257.
 
 ## D260: Fixes for the Defects D01, D07 to D12, and D18 of the Run on b470899
 
+**Status**: The approval rules of archive are superseded by D289: archive asks no approval for a draft.
+
 **Decision**: from `.scenario-runs/20261112-b470899/defects.md`:
 
 1. Propose lists the open points of the outcomes before it decides on the Level 1 question. If the list is not empty, the outcomes are not small, and propose does not ask the Level 1 question. (D08)
@@ -3669,6 +3677,8 @@ This revises D119, D166, D182, D219, and D256.
 **Rationale**: in 4b, the agent read the constraint "status 429" as the whole response, and recorded no body. In 4 run 1, the answer "create it in this repo, scaffold a minimal report page" went to no section, because the decision rule says "Do not record your other choices". In 7 step 3, the skill defined a contract only in abstract words, so the agent called the CSV quoting "not a contract" in about 1 of 2 runs. Reruns with each fix in the temp copies: D02 3 of 3 recorded the 429 body, D03 3 of 3 passed, D05 3 of 3 planned the quoting requirement.
 
 ## D262: Fixes From Review Loop 5, Round 1, on 99d8656..local
+
+**Status**: The end of turn after the archive drafts is superseded by D289: step 6 prints a summary and goes on.
 
 **Decision**:
 
@@ -3949,6 +3959,8 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D282: Fixes of the Skill Defects D01, D02, D03, and D05 of the Run on eb2df49
 
+**Status**: The keep-or-delete question and the full redraft of an earlier delta are superseded by D289.
+
 **Decision**:
 
 1. Archive step 5: a delta file of an earlier run does not replace a draft, because `validate` can have failed on the file. Archive drafts each selected requirement in full, also when a delta file of an earlier run holds the requirement. Step 7 merges a kept file with no duplicate requirement. An ADR of an earlier run is different: it passed `validate`, and the user approved it, so archive does not draft it again.
@@ -3984,7 +3996,7 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D285: Fixes of the Skill Defects of the Run on 484f35a with Opus 5.5
 
-**Status**: Item 4 revised by D288.
+**Status**: Item 4 revised by D288. The quote of each inferred claim in an ADR draft is superseded by D289.
 
 **Decision**:
 
@@ -4036,3 +4048,17 @@ This revises D119, D166, D182, D219, and D256.
 
 **Rationale**: the user asked to investigate D01, D02, and D03 of `.scenario-runs/20261113-241f481-opus/defects.md` again, to confirm the cause, and to fix it. The user picked "apply edits the Goal" for item 2. In D01 (4d-2), the preview asked whether an invalid spec gives exit 1 or 0, and the Goal says "with code 0 otherwise". The question found a real gap in the Goal, so D286 item 7 was too strict. `apply.instruction` had no rule for the Goal, so apply recorded constraint C2 against the Goal, and the done check compared the code with two texts that disagree. In D02 (22a ×2), the D285 rule had no effect: the answer rule splits "fix the old bug where …" into an instruction and a fact, and the fact rule asks for the form "Before this change, …", so the fact did not look like a repeat of the Goal. The rule now sits in the answer rule, where the fact is recorded. In D03 (7 ×2), the empty-table check of D286 was a Verify line of a task. Upgrade copies a Verify line to `tasks.md`, and `tasks.md` has no 🤖, so no fixture line can force a spec scenario with 🤖.
 
+
+## D289: Archive Prints a Short Summary and Asks No Approval for a Draft
+
+**Decision**:
+
+1. Archive step 6 prints a short summary, not the full text of each draft. The summary gives one line for each promoted item, with its `plan.md` ID and title, in groups with a count: the decisions that go to an ADR, the constraints that go to a requirement, the decisions that are also a contract, the facts that go into a requirement text, the facts that go to the `## Context` of an ADR, each delta with its capability and counts, and the items that archive does not draft. Other points come after the groups, one line each.
+2. Archive asks no yes, no, or edit question for a draft, and the run goes on to step 7 in the same turn. Archive offers no skipped item to draft. This replaces the approval gate of D120, D260, and D262, and the pick of a skipped item of D159.
+3. A draft from a 🤖 decision is promoted. The summary names the draft and the 🤖 decision, and says that the user did not confirm the decision.
+4. A delta file of an earlier run stays as it is, because the user can have fixed the file after a `validate` failure. Archive does not draft a requirement that the file already holds, and merges the new deltas into the file. On a requirement with the same name, the requirement of the file stays. This replaces the keep-or-delete question and the full redraft of D282.
+5. Step 5 writes no claim that no source states, for example an inferred consequence. This replaces the quote of each inferred claim of D285, because no user reads the drafts now.
+6. On the guard path, archive copies each `### Decision` of `design.md` to an ADR with no offer and no question, and prints the same summary. The guard path keeps the 🤖 block and the archive question. This replaces the offer of D154 and D253, and the no branch of D215 and D254.
+7. Scenarios 5, 6, 13a, 18, 18b, 21a, and 21b follow the new flow. Scenario 20b is removed, because archive offers no skipped item. Scenario 6 has no draft to reject, so the change has no item that passes a filter.
+
+**Rationale**: in a real run with 1 spec delta and 11 ADR drafts, the question "Answer yes, no, or edit for each draft." was in the middle of a long reply. The user could not find the question, and did not know what to do after step 6. A user who finds the question answers yes, because the user cannot follow 12 full drafts. So the gate gave no real review, and only cost a turn. The user decided on this summary, and picked items 3, 4, and 5 when asked.

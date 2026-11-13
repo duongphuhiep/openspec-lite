@@ -1,6 +1,6 @@
 ---
 name: openspec-lite-archive
-description: Archive a finished plan-lite change. It promotes the non-obvious requirements and the contracts of plan.md to OpenSpec specs and the decisions to ADRs, with user approval, then runs openspec archive. Use this skill when the user asks for openspec-lite-archive, or asks to archive a change whose .openspec.yaml has schema plan-lite, also when the user types /opsx:archive. Stock /opsx:archive does not promote plan.md, so the knowledge in it is lost. Use this skill instead of it for a plan-lite change, before the change is archived.
+description: Archive a finished plan-lite change. It promotes the non-obvious requirements and the contracts of plan.md to OpenSpec specs and the decisions to ADRs, prints a short summary of the promotion, then runs openspec archive. Use this skill when the user asks for openspec-lite-archive, or asks to archive a change whose .openspec.yaml has schema plan-lite, also when the user types /opsx:archive. Stock /opsx:archive does not promote plan.md, so the knowledge in it is lost. Use this skill instead of it for a plan-lite change, before the change is archived.
 ---
 
 # openspec-lite-archive
@@ -19,11 +19,10 @@ How to read this skill:
 
 ## General rules
 
-- Write nothing before the user approves.
+- Ask no approval for a draft, an ADR of an earlier run, a delta file of an earlier run, or a `Status:` edit. Do not ask the user to answer yes, no, or edit for a draft.
+- Do not print the full text of a draft or of a file of an earlier run. Step 6 prints only a short summary.
 - The user does not see the output of a tool call. To print a text for the user, write the full text in your reply.
-- Write each approved draft exactly as the user approved it. If you must change an approved draft, print the full text of the changed draft, and ask for approval again.
-- An ADR that an earlier run wrote needs no new approval, because the user approved the ADR in that run. Print the full text of the ADR in your reply, and do not ask about the ADR.
-- The `Status:` edit of step 10 needs no approval, because the approval of the new ADR with the `Supersedes:` line covers the edit. Do not ask about the edit.
+- Write each draft exactly as step 5 drafted the draft.
 - Do not remove a 🤖 yourself. Only the user removes a 🤖.
 - Write no 🤖 in a spec or an ADR.
 - Write no source emoji in a spec, for example 👤 or 🔬. Give the source of a fact in words in the requirement text. An ADR keeps the source emoji of a fact.
@@ -90,25 +89,21 @@ Do these checks in order.
 
 The guard path:
 
-1. Offer to copy the decisions of `design.md` to ADRs.
+1. Copy the decisions of `design.md` to ADRs.
    - Input: `openspec/changes/<name>/design.md`.
-   - Output: the approved ADRs in `openspec/adr/`, and the answer of the user to the offer.
-   - If `openspec/changes/<name>/design.md` has no `### Decision` entries, go to guard step 2.
-   - If `openspec/changes/<name>/design.md` has `### Decision` entries, warn: "Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs. They stay only in the archive folder. To keep them as ADRs, copy them to `openspec/adr/` before you archive."
+   - Output: the ADRs in `openspec/adr/`.
+   - Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs, so this guard step copies the decisions before the archive.
    - A change that was upgraded from plan-lite has its decisions in `design.md`.
-   - Offer to copy each `### Decision` of `design.md` to an ADR. Write nothing before the user says yes.
-   - End your turn after the offer, and wait for the answer. In the same reply, say nothing about the 🤖 lines of `specs/`, and offer nothing else, also not the archive.
-   - If the user says no, write no ADR, and go to guard step 2.
-   - If the user says yes, draft each ADR with the form and the three checks of section 2, step 5.
-   - Print the full text of each draft as in section 2, step 6.
-   - Write each approved ADR with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
+   - If `openspec/changes/<name>/design.md` has no `### Decision` entries, go to guard step 2.
+   - If `openspec/changes/<name>/design.md` has `### Decision` entries, draft an ADR for each `### Decision` with the form and the three checks of section 2, step 5. Ask no question.
+   - Print the summary of the ADR drafts as in section 2, step 6.
+   - Write each ADR draft with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
    - On the guard path, do not run section 2, steps 7 to 9.
-   - On the guard path, after section 2, step 6, continue guard step 1 with the write of the approved ADRs. Do not go to section 2, step 7.
+   - On the guard path, after section 2, step 6, continue guard step 1 with the write of the ADR drafts. Do not go to section 2, step 7.
    - On the guard path, after section 2, step 10, go to guard step 2. Do not go to section 2, step 11.
-   - On the guard path, if the user rejects each draft, write no ADR, and go to guard step 2.
    - On the guard path, do not change `design.md`.
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
-   - Do this search after guard step 1 finds no `### Decision` entries, after the ADRs of guard step 1 are written, after the user says no to the offer of guard step 1, or after the user rejects each draft.
+   - Do this search after guard step 1.
    - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
@@ -121,12 +116,10 @@ The guard path:
    - If a delta in `specs/` holds a 🤖, do not offer the archive, and do not tell the user to run stock `/opsx:archive`, because the CLI copies the 🤖 into the main spec.
    - The block also forbids a question with a condition about the archive.
    - If a delta in `specs/` holds a 🤖, ask the user to remove the marks, and end your turn.
-   - When the user replies after guard step 4, go to guard step 2. Keep the answer of the user to the offer of guard step 1.
+   - When the user replies after guard step 4, go to guard step 2. Do not run guard step 1 again.
    - If no delta in `specs/` holds a 🤖, go to guard step 5.
 5. Give the archive step.
-   - If the user said no to the offer of guard step 1, tell the user to run stock `/opsx:archive`, and stop.
-   - If the user said no to the offer of guard step 1, do not offer the `openspec archive` command yourself. Do not offer to archive in any other words.
-   - In each other case, ask: "Archive the change now with `openspec archive <name> --yes`?"
+   - Ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
@@ -267,28 +260,28 @@ Change: <name>
 The sources of an ADR draft:
 
 - Write each section of an ADR from `plan.md`, from `design.md` on the guard path, from the code, and from the facts of `plan.md`.
-- If you add a claim that no source states, for example a consequence that you inferred, step 6 names the claim.
+- Write no claim that no source states, for example a consequence that you inferred. The user does not review the drafts, so a claim with no source goes into the ADR with no check.
 
 The first check, for existing ADRs:
 
 - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`.
 - An earlier run of this archive can have written these files.
-- Print the full text of each file that has the line `Change: <name>`, in your reply.
 - Do not draft a decision or a fact that already has an ADR.
+- Step 6 names each file that has the line `Change: <name>`, with its title.
 
 The check for an earlier delta:
 
 - Before you draft a delta, list the files under `<dir>/specs/`.
 - If a file exists under `<dir>/specs/`, an earlier run of this archive wrote the file.
-- A delta file of an earlier run does not replace a draft, because `validate` can have failed on the file. Draft each selected requirement in full, also when a delta file of an earlier run holds the requirement.
-- Print the full text of each such file in your reply.
-- Step 6 asks the user to keep or delete each such file.
+- The user can have fixed a delta file of an earlier run after a `validate` failure. Keep each such file as it is.
+- Do not draft a requirement that a delta file of an earlier run already holds.
+- Step 6 names each such file. Step 7 merges the new deltas into the file.
 
 The second check, for a **Superseded ADR**:
 
 - Read the title and `## Decision` of each ADR in `openspec/adr/` with the line `Status: Accepted`.
 - If a new decision fully replaces an old ADR, add the line `Supersedes: <old file name>` after the `Change:` line of the draft.
-- If a new decision changes only part of an old decision, add no line. Tell the user that both ADRs stay `Accepted`.
+- If a new decision changes only part of an old decision, add no line. Step 6 says that both ADRs stay `Accepted`.
 - If a new decision replaces no old ADR, add no line.
 
 The third check, for `plan.md` IDs:
@@ -298,35 +291,41 @@ The third check, for `plan.md` IDs:
 
 When each item has a draft, go to step 6.
 
-### Step 6: Print all drafts
+### Step 6: Print the summary
 
-- Input: the drafts of step 5.
-- Output: the approved drafts.
-- Print the full text of each draft.
-- Print the full text of each file of an earlier run of step 5 in this reply, also when you read the file or printed it before in this turn.
-- Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
-- On the guard path, also name each draft that holds content from another line of `proposal.md` or `design.md` with a 🤖, for example a `## Why` line, and name the line. The user did not confirm the line yet, and the draft holds no 🤖.
-- In each ADR draft, quote each sentence that adds a claim that `plan.md`, `design.md` on the guard path, the code, and the facts do not state, for example a consequence that you inferred. Say that the claim is your addition. The user approves, edits, or deletes the claim with the draft.
+- Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft.
+- Output: the summary, in your reply.
+- Print a short summary of the promotion. Do not print the full text of a draft or of a file of an earlier run.
+- In the summary, write one line for each item: the `plan.md` ID and the title of the item, or the title of the `design.md` decision on the guard path.
+- In the summary, put the items in these groups. Start each group with its count. Omit an empty group.
+  - The decisions that go to an ADR.
+  - The constraints that go to a requirement.
+  - The decisions that are also a contract and go to a requirement.
+  - The facts that go into a requirement text as its reason.
+  - The facts that go to the `## Context` of an ADR. Name the ADR for each fact.
+  - The deltas. For each delta, give the capability, the count of requirements and scenarios, and the IDs of the items that the delta comes from.
+  - The items that step 4 does not draft, each with its one-line reason.
+- After the groups, give each other point that the user must know, one line for each point:
+  - Name each draft that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`. Name the 🤖 decision. Say that the user did not confirm the decision, and that the archive promotes the decision.
+  - On the guard path, name each draft that holds content from another line of `proposal.md` or `design.md` with a 🤖, for example a `## Why` line. Name the line. The draft holds no 🤖.
+  - For each draft with a `Supersedes:` line, name the old ADR, and say that the archive changes the `Status` line of the old ADR.
+  - For each new decision that changes only part of an old ADR, say that both ADRs stay `Accepted`.
+  - Name each ADR of an earlier run, with its title. Say that the earlier run wrote the ADR, and that this run does not write the ADR again.
+  - Name each delta file of an earlier run. Say that the archive keeps the file and merges the new deltas into the file.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
-- For each delta file of an earlier run (step 5), ask the user to keep or delete the file, in the same reply as the drafts.
-- For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes. Do not ask the user to approve the `Status:` edit.
-- The user answers yes, no, or edit for each draft.
-- A file of an earlier run is not a draft. Ask no question about an ADR of an earlier run. Ask only the keep-or-delete question about a delta file of an earlier run.
-- After you apply an edit, print the full text of the edited draft, and ask for approval again.
-- Outside the guard path, tell the user that they can pick a skipped item to draft.
-- After you print the drafts, end your turn, and wait for the answer of the user.
-- If the user picks a skipped item, draft the item, print the full text of the draft for approval, end your turn, and wait for the answer.
-- When the user approved or rejected each draft, and answered keep or delete for each delta file of an earlier run, go to step 7.
+- Ask no question in the summary. Do not end your turn after the summary.
+- On the guard path, continue with guard step 1.
+- Outside the guard path, go to step 7.
 
 ### Step 7: Write the deltas
 
-- Input: the approved deltas of step 6, and the keep-or-delete answers of step 6.
+- Input: the delta drafts of step 5, and the delta files of an earlier run.
 - Output: the deltas in `<dir>/specs/`.
-- Delete each delta file of an earlier run that the user said to delete in step 6. Keep each other such file for the merge.
-- Write the approved deltas to `<dir>/specs/<capability>/spec.md`.
-- If a kept file has the same path as an approved delta, merge the new delta into the kept file, with no duplicate requirement.
-- Before you go to step 8, check that each approved delta exists, and that each file that the user said to delete is gone. If a check fails, follow the failure rule.
+- Keep each delta file of an earlier run as it is.
+- Write each delta draft to `<dir>/specs/<capability>/spec.md`.
+- If a delta file of an earlier run has the same path as a delta draft, merge the delta draft into the file, with no duplicate requirement. If the file and the draft hold a requirement with the same name, keep the requirement of the file.
+- Before you go to step 8, check that each delta draft exists on disk. If a check fails, follow the failure rule.
 - Go to step 8.
 
 ### Step 8: Set skip_specs
@@ -346,9 +345,9 @@ When each item has a draft, go to step 6.
 
 ### Step 10: Write the ADRs
 
-- Input: the approved ADRs of step 6.
+- Input: the ADR drafts of step 5.
 - Output: the ADR files in `openspec/adr/`.
-- Only after `validate` passes in step 9, write each approved ADR to `openspec/adr/YYYY-MM-DD-<slug>.md`.
+- Only after `validate` passes in step 9, write each ADR draft to `openspec/adr/YYYY-MM-DD-<slug>.md`.
 - Do not write an ADR in the same command as `validate`.
 - Use today's date.
 - Skip a decision or a fact that already has an ADR with `Change: <name>`.
@@ -356,7 +355,7 @@ When each item has a draft, go to step 6.
 - After you write a new ADR with a `Supersedes:` line, edit the old ADR. Change only the `Status:` line of the old ADR to `Status: Superseded by <new file name>`. Do not change any other line of the old ADR.
 - Then check each ADR with `Change: <name>` and a `Supersedes:` line, also the ADRs of an earlier run. If the old ADR of such an ADR does not have `Status: Superseded by`, edit the `Status:` line of the old ADR now.
 - If a write of an ADR, or an edit of a `Status:` line, fails, follow the failure rule. Do not go to step 11.
-- Before you go to step 11, check that each approved ADR file exists.
+- Before you go to step 11, check that the file of each ADR draft exists.
 - Go to step 11.
 
 ### Step 11: Archive
@@ -370,4 +369,4 @@ When each item has a draft, go to step 6.
 ## 3. End
 
 - List the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
-- If a decision of `plan.md` has no ADR, because step 4 did not draft it or the user rejected its draft, say that this decision now exists only in `openspec/changes/archive/`.
+- If a decision of `plan.md` has no ADR, because step 4 did not draft it, say that this decision now exists only in `openspec/changes/archive/`.

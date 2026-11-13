@@ -120,7 +120,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 1. On a new plan-lite change `city-lookup`, add `tools/geo.mjs`. For `node tools/geo.mjs Paris`, it prints `{"lat":48.86,"lon":2.35}`. For each other city, it prints `{"error":"city not found"}`, also with exit code 0. Write a `plan.md` from the template `openspec/schemas/plan-lite/templates/plan.md`, because `plan-hash.mjs` needs each of its headings. Give it the Goal "Add `lookup(city)` in `src/lookup.js`. It returns the coordinates from `tools/geo.mjs`, or `null` for an unknown city." and the constraint "- C1: Add no npm dependency." Commit.
 2. Run `openspec-lite-tasks-preview city-lookup`. Do not commit after it.
 3. Run `openspec-lite-apply city-lookup`. When it asks the open questions, answer only the first one: "Use your recommended answer for the first question. Leave the other questions open." If the first question has no recommended answer, answer: "Keep the first question open. Leave the other questions open." If it asks only one question, answer it the same way. If it asks no question, give no answer.
-4. Commit. Run `openspec-lite-archive city-lookup`. If it asks "Archive anyway?", answer yes. Approve each draft.
+4. Commit. Run `openspec-lite-archive city-lookup`. If it asks "Archive anyway?", answer yes.
 
 **Expected** (D171, D172, D179, D184):
 
@@ -160,20 +160,20 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Steps**:
 
 1. Start from the fixture `finished-rate-limit`. Its `plan.md` has one non-obvious requirement (the `Retry-After` constraint) and one `### Decision D<n>:` entry with no 🤖.
-2. Run `openspec-lite-archive`. Approve both drafts.
+2. Run `openspec-lite-archive`.
 
 **Expected**:
 
 - The agent does the done check first. It asks "Archive anyway?" only if an answer is "no".
-- The requirement draft states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR draft holds the reason of the decision and the rejected option. The agent writes nothing before the approval. `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
+- The requirement draft states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR holds the reason of the decision and the rejected option. The agent does not print the full text of a draft. It prints a short summary with one line for each promoted item, its `plan.md` ID and title, in a group with a count, for example "1 constraint goes to a requirement". The summary asks no question, and the agent writes and archives in the same turn (D289). `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
 - `openspec validate` passes. `openspec/adr/YYYY-MM-DD-<slug>.md` exists with Status `Accepted`.
 - `openspec/specs/<capability>/spec.md` holds the requirement. The change is in `openspec/changes/archive/`.
 
 ## 6. Archive with nothing promoted
 
-**Steps**: Start from the fixture `finished-rate-limit`. Remove `skip_specs` from `.openspec.yaml` of the change. Run `openspec-lite-archive`, and reject each draft.
+**Steps**: Start from the fixture `finished-rate-limit`. Remove `skip_specs` from `.openspec.yaml` of the change. Delete each item of `## Constraints`, `## Facts`, and `## Decisions` of `plan.md`, and commit. Run `openspec-lite-archive`.
 
-**Expected**: The archive succeeds, and `openspec/specs/` does not change. The agent writes no ADR. It tells the user that the decisions of `plan.md` now exist only in `openspec/changes/archive/`.
+**Expected**: no item passes a filter. The summary says that the agent promotes nothing, and lists each item that it does not draft, for example each non-goal, with a reason. The agent sets `skip_specs: true`, and the archive succeeds. `openspec/specs/` does not change, and the agent writes no ADR (D289).
 
 ## 7. Interrupted upgrade
 
@@ -259,16 +259,16 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. Start from the fixture `finished-rate-limit`. From the temp folder, start `<path-to-this-repo>/scripts/break-delta.sh openspec/changes/add-rate-limit &`. Run `openspec-lite-archive`. Approve one requirement and one decision.
+1. Start from the fixture `finished-rate-limit`. From the temp folder, start `<path-to-this-repo>/scripts/break-delta.sh openspec/changes/add-rate-limit &`. Run `openspec-lite-archive`.
 2. The script breaks the delta before step 9 of the skill: it removes the `#### Scenario:` blocks right after the agent writes the delta. `validate` fails, and the skill stops before it writes any ADR.
-3. Run `openspec-lite-archive` again. Approve the same drafts as in run 1. When the agent asks to keep or delete the delta of run 1, answer: "Delete it."
+3. Fix the delta as run 1 asks: add a `#### Scenario:` block with **WHEN** and **THEN** lines to each requirement of the delta. Run `openspec-lite-archive` again.
 4. If run 1 ends with a question, for example to restore the delta, do not answer it. Start run 2 in a new session.
 
 **Expected**:
 
-- Before it writes, the agent shows the delta from run 1 and asks to keep or delete it.
+- In run 2, the summary names the delta file of run 1, and says that the agent keeps the file. The agent asks no question about the file, and does not draft a requirement that the file holds. The fix of step 3 is still in the main spec after the archive (D289).
 - The agent drafts the decision again, because no ADR exists yet.
-- In run 1, the agent shows the `validate` error. A stop before `validate` also passes, if the agent read the delta back, says how the delta differs from the approved draft, and writes no ADR, because the failure rule checks each write on disk (D281).
+- In run 1, the agent shows the `validate` error. A stop before `validate` also passes, if the agent read the delta back, says how the delta differs from the draft, and writes no ADR, because the failure rule checks each write on disk (D281).
 - After run 2, `openspec/adr/` has one ADR for the decision, with the plain lines `Status: Accepted` and `Change: <name>`. `openspec/specs/` holds the requirement once, and the change is in `openspec/changes/archive/`.
 
 ### 13b. After a failed `openspec archive`
@@ -276,13 +276,13 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Steps**:
 
 1. Start from the fixture `finished-rate-limit`. Before the run, create the archive target folder `openspec/changes/archive/<today>-<name>/`. `openspec archive` then fails with "Archive '<today>-<name>' already exists".
-2. Run `openspec-lite-archive`. Approve one decision. The ADR is written at step 10, and step 11 fails. If the agent asks about the archive target folder, answer: "Do not delete the archive folder."
-3. Delete the folder from step 1. Run `openspec-lite-archive` again. Approve each draft.
+2. Run `openspec-lite-archive`. The ADR is written at step 10, and step 11 fails. If the agent asks about the archive target folder, answer: "Do not delete the archive folder."
+3. Delete the folder from step 1. Run `openspec-lite-archive` again.
 
 **Expected**:
 
 - Run 1 reports the archive failure and keeps the ADR.
-- Run 2 finds the ADR with `Change: <name>`, shows it, and does not draft that decision again.
+- Run 2 finds the ADR with `Change: <name>`, names it in the summary, and does not draft that decision again.
 - After run 2, `openspec/adr/` has one ADR for the decision, and the change is in `openspec/changes/archive/`.
 
 ## 14. Promotion into an existing capability
@@ -331,7 +331,7 @@ This scenario checks that archive puts the knowledge of `plan.md` into the right
    Chose per account because attackers rotate IP addresses. Rejected per IP because it also locks out users behind one office NAT.
    ```
 
-3. Run `openspec-lite-archive lockout`. Approve each draft.
+3. Run `openspec-lite-archive lockout`.
 
 **Expected**:
 
@@ -380,12 +380,12 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
    Chose `report-YYYY-MM-DD.csv`. The import script of the finance team finds the file by this name. [obvious decision, contract: spec]
    ```
 
-2. Run `openspec-lite-archive export-csv`. Approve each draft. Do not edit a draft.
+2. Run `openspec-lite-archive export-csv`.
 
 **Expected**:
 
 - Each item tagged `spec` is in a requirement draft. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. Each item tagged `ADR` is in an ADR draft.
-- For each item that the agent does not draft, it names the item and says why it skips it. No item disappears with no word.
+- For each item that the agent does not draft, the summary names the item and says why it skips it. No item disappears with no word. The summary gives each promoted item by its `plan.md` ID and title, in its group, and does not print the full text of a draft (D289).
 - The reason for the semicolon (French Excel) stays in the requirement text or in the ADR, not only in a scenario title. It is the non-obvious part (D147).
 - No line of the spec drafts or of the written specs holds a source emoji, for example 👤. No draft gets a 👤 for an item that has none in `plan.md` (D252).
 - The header row requirement gives its reason in its text: the finance import reads the columns by name. So a reader sees that a renamed column breaks the import, and a new column order does not (D191).
@@ -433,33 +433,31 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 
 1. Start from the fixture `after-upgrade`. Mark each task in `tasks.md` as done (`- [x]`). Commit.
 2. Run `openspec-lite-archive <name>`.
-3. If the agent offers to copy the decisions to ADRs, answer: "No, do not copy them."
 
 **Expected**:
 
-- The agent stops at the change schema guard. It drafts nothing and writes no spec and no ADR.
+- The agent stops at the change schema guard. It writes no spec.
 - The decisions from `plan.md` are in `design.md` → `## Decisions` (upgrade moved them, D62).
-- The agent warns that stock `/opsx:archive` does not turn these decisions into ADRs, and says to copy them to `openspec/adr/` first to keep them (D115).
-- The agent can offer to copy the decisions to ADRs. It writes nothing before a yes, and ends its turn after the offer (D154, D253). After the decline of step 3, it still lists the 🤖 lines of `specs/` and `design.md`. The delta of the fixture holds a 🤖, so the agent asks the user to remove the marks, and does not point to stock `/opsx:archive` yet. It never offers the `openspec archive` command itself after a decline (D215, D254). An offer to copy counts as "says to copy them".
+- The agent copies each decision of `design.md` to an ADR in `openspec/adr/`, with no offer and no question (D115, D289). The summary names each ADR by its title, and does not print the full text of an ADR.
+- After the ADRs, the agent lists the 🤖 lines of `specs/` and `design.md`. The delta of the fixture holds a 🤖, so the agent asks the user to remove the marks, and does not offer the archive or point to stock `/opsx:archive` yet (D192, D215).
 
 ### 18b. Archive copies the decisions to ADRs after the guard
 
-This scenario checks the yes path of the offer in scenario 18 (D154).
+This scenario checks the guard path with a kept `plan.md`, up to the archive (D154, D289).
 
 **Steps**:
 
 1. Start from the fixture `after-upgrade`. Copy `tests/fixtures/scenarios/kept-plan.md` to the change as `plan.md`. Mark each task in `tasks.md` as done (`- [x]`). Commit. The delta holds the 🤖 scenario "Table is empty", so the 🤖 block is always tested.
-2. Run `openspec-lite-archive add-csv-export-to-report-page` in a new session. Answer: "Yes, copy the decisions of `design.md` to ADRs." If the agent made no offer, ask for this copy in the same words.
-3. Approve each draft: "Yes to each draft."
-4. If the agent lists 🤖 lines of `specs/` or `design.md`, remove each 🤖 by hand. Then answer: "I removed the marks." When the agent asks the archive question, answer yes.
+2. Run `openspec-lite-archive add-csv-export-to-report-page` in a new session.
+3. If the agent lists 🤖 lines of `specs/` or `design.md`, remove each 🤖 by hand. Then answer: "I removed the marks." When the agent asks the archive question, answer yes.
 
 **Expected**:
 
-- The agent shows each ADR draft before it writes. Each draft has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
-- The draft reply names the draft of "Quote each cell", because its heading in `design.md` ends with 🤖 (D204).
-- After the approval, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
-- After step 3, `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
-- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of the fixture. It does not offer the archive while a delta holds a 🤖, also not as a question with a condition (D192, D215). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 4, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
+- The agent asks no question before it writes the ADRs. The summary names each ADR by its title. Each ADR has `# <Title>`, `Status: Accepted`, `Change: <name>`, `## Context`, `## Decision`, and `## Consequences`.
+- The summary names the ADR of "Quote each cell", because its heading in `design.md` ends with 🤖 (D204).
+- After step 2, `openspec/adr/` has one ADR for each `### Decision` of `design.md`, named `YYYY-MM-DD-<slug>.md`.
+- Before step 3, `design.md`, the specs, and `.openspec.yaml` are the same as before step 2.
+- After the ADRs, the agent lists each 🤖 line of `specs/` and `design.md`, for example the scenario "Table is empty" of the fixture. It does not offer the archive while a delta holds a 🤖, also not as a question with a condition (D192, D215). It removes no 🤖 itself, and it names each open question of a kept `plan.md` (D193). After step 3, it asks: "Archive the change now with `openspec archive <name> --yes`?". If `tasks.md` has unchecked tasks, the question names how many. After the archive, no file under `openspec/specs/` holds a 🤖. The change is in `openspec/changes/archive/`, and `openspec/specs/` holds the deltas of the change (D191).
 
 ## 19. Other openspec-lite skills after an upgrade
 
@@ -479,7 +477,7 @@ In each case, `.openspec.yaml`, `tasks.md`, and the other artifacts do not chang
 
 ## 20. Checks before a delete or a skip
 
-This scenario checks that upgrade does not prune `plan.md` with no check, and that the user can promote a skipped item (D120). It also checks that upgrade with no requirement keeps `skip_specs: true` (D108, D208). 20a also checks that upgrade uses `## Background` (D125) and prunes the sections that hold only a guidance comment (D127).
+This scenario checks that upgrade does not prune `plan.md` with no check, (D120). It also checks that upgrade with no requirement keeps `skip_specs: true` (D108, D208). 20a also checks that upgrade uses `## Background` (D125) and prunes the sections that hold only a guidance comment (D127).
 
 ### 20a. Upgrade asks before it prunes
 
@@ -499,12 +497,6 @@ This scenario checks that upgrade does not prune `plan.md` with no check, and th
 - `design.md` → `## Context` holds the fact (D135). `proposal.md`, `specs/`, and `design.md` hold no `plan.md` ID such as `C1` or `D1` (D142).
 - `tasks.md` holds no `plan.md` ID. Each task that had a `plan.md` ID names the item by its title, or a short form of its text, instead (D142).
 - After step 3, `plan.md` has only the ID comment and `## Open Questions` with the open questions that the user could not answer (D158). These questions have no "(kept open by the user)" marker, because "I do not know yet" does not ask to keep them open (D247). No section with only a guidance comment is left. Each other item is in `proposal.md`, `specs/`, or `design.md`. `proposal.md` and `design.md` do not restate an open question that stays in `plan.md`, and do not point to it, for example "See the open questions in tasks.md". This also applies to a question that the tasks preview added (D133, D196). In step 3, the turn ends at the resume question, before `validate` (D196). `tasks.md` starts with a `## 0. Open questions` group, with one task for each open question that the user could not answer, so that stock `/opsx:apply` meets them first (D191).
-
-### 20b. Archive drafts an item that the user picks
-
-**Steps**: Run scenario 15 again, from its own start state. Answer yes to "Archive anyway?". In the first reply after the agent lists the skipped items, pick the toolbar item. When the agent shows the toolbar draft, reject it. Approve the other drafts (D159).
-
-**Expected**: the agent drafts the toolbar item and shows it for approval. It writes nothing before the approval. After the archive, the result is the same as in scenario 15.
 
 ### 20c. Upgrade with no requirement
 
@@ -533,12 +525,12 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 1. Write `openspec/adr/2026-01-10-fixed-window-rate-limit.md` with `# Fixed Window Rate Limit`, `Status: Accepted`, `Change: add-rate-limit`, and the three sections. Its `## Decision` says: "Use a fixed 60-second window per API key."
 2. Write `openspec/adr/2026-01-12-store-audit-log.md` with `# Store the Audit Log in the Main Database`, `Status: Accepted`, `Change: add-audit-log`, and the three sections. It is not about rate limits.
 3. Create a plan-lite change `sliding-rate-limit`. Its `plan.md` has a Goal and one `### Decision D1: Use a sliding window` entry: "Chose a sliding 60-second window because the fixed window allows bursts at the window edge. Rejected the fixed window."
-4. Run `openspec-lite-archive`. Approve each draft.
+4. Run `openspec-lite-archive`.
 
 **Expected**:
 
-- The ADR draft has `Supersedes: 2026-01-10-fixed-window-rate-limit.md` after `Change: sliding-rate-limit`.
-- Before the approval, the agent names the old ADR and says that its `Status` line changes.
+- The new ADR has `Supersedes: 2026-01-10-fixed-window-rate-limit.md` after `Change: sliding-rate-limit`.
+- Before the write, the summary names the old ADR and says that its `Status` line changes. The agent asks no question (D289).
 - The new ADR is in `openspec/adr/`, with the `Supersedes:` line.
 - The old ADR has `Status: Superseded by <new file name>`. Each other line of the old ADR is the same as in step 1.
 - The summary lists the old ADR as superseded.
@@ -549,9 +541,9 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 **Steps**:
 
 1. Build the state after step 10 of `openspec-lite-archive` in 21a, but before the old ADR changed: the new ADR exists with `Supersedes:`, the old ADR still has `Status: Accepted`, and the change is not archived. `validate` passes.
-2. Run `openspec-lite-archive`. If the agent asks to keep or delete the delta of the earlier run, answer: "Keep it." Approve each draft in the same reply.
+2. Run `openspec-lite-archive`.
 
-**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. It drafts the requirement again, also when the delta of the earlier run holds it, and after the archive the main spec holds the requirement once (D282). It shows the new ADR, and asks no approval for the new ADR or for the `Status:` edit, because the user approved the ADR in the earlier run. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
+**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. It keeps the delta of the earlier run, and does not draft a requirement that the delta holds. After the archive, the main spec holds the requirement once (D289). The summary names the new ADR and the delta file of the earlier run. The agent asks no question about them or about the `Status:` edit. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
 
 ## 22. Goal with more than one outcome
 

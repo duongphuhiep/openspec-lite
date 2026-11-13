@@ -180,7 +180,7 @@ At archive time, the AI uses four filters to select what to promote:
 - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code.
 - **Non-obvious fact**: a fact of `plan.md` that needed a run, a test, research, or a long analysis of the code to find. A fact that you can easily see in the code is not one. It goes to the context of an ADR.
 
-An item needs to pass only one filter. The AI shows the list. You approve, reject, or edit each item in the conversation. You can also pick a skipped item, and the AI drafts it. The AI writes nothing before your approval.
+An item needs to pass only one filter. The AI prints a short summary: each promoted item with its ID and title, where the item goes, and each item that it skips, with the reason. Then it writes the specs and the ADRs, and archives the change with no question.
 
 ## Upgrade to a spec-driven change
 
@@ -195,7 +195,7 @@ Review all artifacts after the upgrade. Review `tasks.md` carefully, because it 
 
 If you keep `plan.md`, resolve the kept items before you run `/opsx:apply`. The stock skills do not read `plan.md`. So each open question that you could not answer is also the first task of `tasks.md`.
 
-After an upgrade, archive with stock `/opsx:archive`. It does not turn the decisions in `design.md` into ADRs. To keep them as ADRs, run `openspec-lite-archive` first. It stops, and can offer to copy the decisions to `openspec/adr/`. If it does not offer, ask it to. After the copy, it offers to archive the change for you.
+After an upgrade, archive with stock `/opsx:archive`. It does not turn the decisions in `design.md` into ADRs. To keep them as ADRs, run `openspec-lite-archive` first. It copies the decisions to `openspec/adr/`. Then it offers to archive the change for you.
 
 ### You may not need `openspec-lite-upgrade`
 
