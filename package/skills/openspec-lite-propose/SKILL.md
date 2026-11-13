@@ -184,6 +184,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
 - Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
+- A problem that the Goal fixes is part of the Goal, for example the bug in "fix the bug where the page shows dates in UTC". Do not record the problem as a fact.
 - Record each constraint in the answer in `## Constraints`.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
@@ -198,7 +199,6 @@ Do these checks in order. When the checks are done, go to section 3.
 
 - Start each fact with a source emoji, as the template comment of `## Facts` says, for example 👤 for a fact that the user gave.
 - Write a fact so that the fact stays true after the change, for example "Before this change, the thumbnail folder did not exist."
-- Do not record a fact that only repeats the Goal, a constraint, or a non-goal of `plan.md`, because `plan.md` already holds the fact.
 - Do not record statistics that soon go out of date.
 - A number as an example or a reference is OK in a fact.
 

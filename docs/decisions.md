@@ -3984,6 +3984,8 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D285: Fixes of the Skill Defects of the Run on 484f35a with Opus 5.5
 
+**Status**: Item 4 revised by D288.
+
 **Decision**:
 
 1. The shared failure rule, in each skill and in `apply.instruction`: a denied Bash call with more than one command is tried once more as single commands, or with the Read, Write, or Edit tool. A denied single command is not run again. If no step needs the output of a failed action, for example an extra check or a read of a link for more context, the agent names the action and the error, and goes on. A step always needs a test run that the step names, and a write, an edit, or a delete of a file. If a step needs the output, and the action fails again or a single command is denied, the agent reports and stops, as before. This revises D281 item 1.
@@ -3995,6 +3997,8 @@ This revises D119, D166, D182, D219, and D256.
 **Rationale**: the user asked to investigate the defects of `.scenario-runs/20261113-484f35a-opus/defects.md` with the cause `skill`. The report is `investigation-skill.md` in that folder. The user agreed with each fix, and picked option (a) for D07. D18 is not a defect, because D244 item 1 allows `plan.md` IDs in a reply. In D05, the tasks preview stopped after two denied `gh issue view 42` calls for a link in Background, and apply stopped after two denials of an extra check. In D12 of `.scenario-runs/20261113-eb2df49/`, apply ran the denied single command `npm test` again with no change. In D06 (18b ×2), an ADR draft copied the 🤖 `## Why` claim of `proposal.md` into `## Context`, and the reply did not name it. In D07 (14, 15, 20b, 18b), each ADR draft added a consequence that no source states, for example "If a later change pages or lazy-loads the table, the export must be revisited", and no reply named it. In D09 (22a ×2), propose wrote "F1: 👤 Before this change, the report page showed dates in UTC …", which repeats the second Goal bullet. In D16 (20a run 2), the resumed run asked the user to confirm two decisions that the user confirmed in step 2.
 
 ## D286: Scenario and Fixture Fixes of the Run on 484f35a with Opus 5.5
+
+**Status**: Items 4 and 7 revised by D288.
 
 **Decision**:
 
@@ -4027,6 +4031,7 @@ This revises D119, D166, D182, D219, and D256.
 2. The answer rule of apply: if a part of a reply changes an outcome that the Goal states, apply edits that outcome of the Goal to match the reply, and records no constraint or decision that contradicts the Goal. The end summary quotes the old and the new outcome. The plan hash covers the Goal, so the summary says that the edit makes the preview stale, as for a constraint edit. The user is the source of the edit.
 3. The tasks preview does not edit the Goal. A reply that changes an outcome of the Goal asks to change the Goal, so the preview tells the user to make the change in `plan.md` and to run the preview again, as for each other edit of the Goal.
 4. Scenario 4d checks the quote in the question, the Goal edit of apply, the summary, and that no constraint or decision contradicts the Goal. This replaces D286 item 7, which forbade the question and the Goal edit.
+5. The answer rule of propose: a problem that the Goal fixes is part of the Goal, so propose does not record the problem as a fact. This replaces D285 item 4, which was in the fact rule and said "only repeats the Goal".
 
-**Rationale**: the user asked to investigate D01, D02, and D03 of `.scenario-runs/20261113-241f481-opus/defects.md` again, to confirm the cause, and to fix it. The user picked "apply edits the Goal" for item 2. In D01 (4d-2), the preview asked whether an invalid spec gives exit 1 or 0, and the Goal says "with code 0 otherwise". The question found a real gap in the Goal, so D286 item 7 was too strict. `apply.instruction` had no rule for the Goal, so apply recorded constraint C2 against the Goal, and the done check compared the code with two texts that disagree.
+**Rationale**: the user asked to investigate D01, D02, and D03 of `.scenario-runs/20261113-241f481-opus/defects.md` again, to confirm the cause, and to fix it. The user picked "apply edits the Goal" for item 2. In D01 (4d-2), the preview asked whether an invalid spec gives exit 1 or 0, and the Goal says "with code 0 otherwise". The question found a real gap in the Goal, so D286 item 7 was too strict. `apply.instruction` had no rule for the Goal, so apply recorded constraint C2 against the Goal, and the done check compared the code with two texts that disagree. In D02 (22a ×2), the D285 rule had no effect: the answer rule splits "fix the old bug where …" into an instruction and a fact, and the fact rule asks for the form "Before this change, …", so the fact did not look like a repeat of the Goal. The rule now sits in the answer rule, where the fact is recorded.
 
