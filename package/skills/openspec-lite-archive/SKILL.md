@@ -231,6 +231,7 @@ The guard path:
 The delta format:
 
 - Before the first delta, run `openspec instructions specs --change "<name>" --schema spec-driven --json`.
+- If the command fails, or its output has no `instruction` field, follow the failure rule. Do not write a delta without `instruction`.
 - Follow the delta format in the `instruction` of the result. The `instruction` gives the format for each header, including the `**Reason**` and `**Migration**` lines of REMOVED and the `FROM:` and `TO:` lines of RENAMED.
 - If `skip_specs` is set, the result also has `skipped: true` and a warning. Ignore both, because step 8 removes `skip_specs` when a delta exists.
 
@@ -311,6 +312,7 @@ When each item has a draft, go to step 6.
 - Delete each delta file of an earlier run that the user said to delete in step 6. Keep each other such file for the merge.
 - Write the approved deltas to `<dir>/specs/<capability>/spec.md`.
 - If a kept file has the same path as an approved delta, merge the new delta into the kept file, with no duplicate requirement.
+- Before you go to step 8, check that each approved delta exists, and that each file that the user said to delete is gone. If a check fails, follow the failure rule.
 - Go to step 8.
 
 ### Step 8: Set skip_specs
@@ -325,7 +327,7 @@ When each item has a draft, go to step 6.
 ### Step 9: Validate
 
 - Run `openspec validate "<name>"`.
-- If `validate` fails, stop and report.
+- If `validate` fails, report each error. Tell the user to fix the errors, and to run `openspec-lite-archive` again. Then stop.
 - If `validate` passes, go to step 10.
 
 ### Step 10: Write the ADRs
@@ -339,7 +341,7 @@ When each item has a draft, go to step 6.
 - If the file name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR.
 - After you write a new ADR with a `Supersedes:` line, edit the old ADR. Change only the `Status:` line of the old ADR to `Status: Superseded by <new file name>`. Do not change any other line of the old ADR.
 - Then check each ADR with `Change: <name>` and a `Supersedes:` line, also the ADRs of an earlier run. If the old ADR of such an ADR does not have `Status: Superseded by`, edit the `Status:` line of the old ADR now.
-- If a write of an ADR fails, try the write once more with another tool. If the write fails again, report the error, and stop. Do not go to step 11.
+- If a write of an ADR, or an edit of a `Status:` line, fails, follow the failure rule. Do not go to step 11.
 - Before you go to step 11, check that each approved ADR file exists.
 - Go to step 11.
 
@@ -347,7 +349,7 @@ When each item has a draft, go to step 6.
 
 - Run `openspec archive "<name>" --yes`.
 - The CLI applies the deltas to `openspec/specs/`, and moves the change, with `plan.md` and `tasks-preview.md`, to `openspec/changes/archive/`.
-- If `openspec archive` fails, report the failure, and list the ADRs that you wrote. Then stop.
+- If `openspec archive` fails, report the failure, and list the ADRs that you wrote. Tell the user to fix the error, and to run `openspec-lite-archive` again. Then stop.
 - If `openspec archive` fails, keep the ADRs: each ADR is still a correct decision.
 - If `openspec archive` passes, go to section 3.
 
