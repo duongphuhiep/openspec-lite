@@ -124,7 +124,7 @@ openspec-lite/
 - `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to the `defects.md` of the run, or a new decision fixes the skill (D173, D251). Each scenario run is isolated: a new temp folder from `scripts/scenario-setup.sh`, a new session, and no output of another scenario or of an earlier run. A scenario that needs an earlier state starts from a fixture in `tests/fixtures/scenarios/` (D199).
 - `exit-code.test.mjs` skips the missing-command case on Windows, where the shell reports it (D202).
 - `scripts/break-delta.sh` is the 13a helper: it removes the `#### Scenario:` blocks of the first delta that the agent writes (D203).
-- `skills.test.mjs`: the shared blocks `### OpenSpec root`, `### Change selection`, and `### Schema check` are the same text in each skill that has them. When you edit one copy, edit each other copy (D237).
+- `skills.test.mjs`: the shared blocks `### OpenSpec root`, `### Change selection`, `### Schema check`, and `### Failure rule` are the same text in each skill that has them. The failure rule of `apply.instruction` is the same text as the `### Failure rule` of the skills. When you edit one copy, edit each other copy (D237, D281).
 - `scenario-fixtures.test.mjs`: the `tasks-preview.md` of the `after-preview` fixture has the `plan-sha256` of its `plan.md` (D199).
 
 ## 3. Skill Rules
@@ -142,6 +142,7 @@ openspec-lite/
 - An example in `package/` gives its own setup, for example what `plan.md` asks for. It does not depend on a test fixture or a test scenario of this repo, because only `package/` reaches the user (D259).
 - Do not add an example to `package/` only to steer the agent to the result of a test scenario. If a rule already covers a case and the agent misses the case, the cause is `llm`, and the skill does not change. Fix a skill only when its flow misses a case, is illogical, or is inconsistent (D269).
 - A rule phrase in `package/` does not describe the exact case of a test scenario, also not as an example (D271).
+- Each skill and `apply.instruction` have one failure rule. A failed, denied, or unknown action is tried once more in another form, then reported, and the run stops. No missing output is made up, and no failed action is reported as done. A step that must go on, or must stop at a safe point, has its own failure branch, and that branch wins (D281).
 
 The five workflow skills are propose, tasks-preview, apply, upgrade, and archive.
 

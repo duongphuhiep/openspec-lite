@@ -3928,3 +3928,19 @@ This revises D119, D166, D182, D219, and D256.
 2. D03 (13b, a denied ADR write, then the archive, and a false "I wrote" claim) has the cause `skill`, then `llm`. Archive step 10 had no branch for a failed write, so the agent went to step 11 and archived the change with no ADR. Now step 10 tries a failed write once more with another tool, reports the error and stops before step 11 if it fails again, and checks that each approved ADR file exists before step 11.
 
 **Rationale**: the user asked to investigate each other must-fix defect of `.scenario-runs/20261113-afb706a/defects.md`, and agreed with each cause and fix.
+
+## D281: Error Handling in Each Skill
+
+**Decision**:
+
+1. Each skill and `apply.instruction` have one shared failure rule, with equal text. `tests/skills.test.mjs` checks the copies. An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. A step with its own failure branch follows that branch. A denied Bash call is tried once more as one plain command, or with the Read, Write, or Edit tool. The agent does not make up a missing output, for example a template, a hash, a version, or a status line. If the action fails again, the agent shows the error, names each file that this run changed, tells the user what to fix and to start the workflow again, and stops. The agent checks a file on disk before it reports a write, an edit, or a delete as done. A reply to a yes-or-no question with no yes and no no is asked again.
+2. Archive step 10 calls the failure rule for a failed ADR write or `Status:` edit, and still checks each approved ADR file before step 11. This replaces the text of D280 item 2.
+3. Steps with their own branch:
+   - The shared OpenSpec root block stops when `openspec list --json` fails, and when the user rejects the root. The change selection asks again when the named change does not exist or has no `schema`. The schema check handles a version line with no known word as `fail:`.
+   - Apply stops when `openspec instructions apply` fails or has no `instruction` field. In apply, a failed `plan-status.mjs` gives no commit note, and the step goes on. In apply, `plan-hash.mjs` with no hash makes the preview stale. In the tasks preview, `plan-hash.mjs` with no hash follows the failure rule. `exit: not run` means that the command did not run.
+   - Propose asks for a new name only for an error about the name. It writes `plan.md` only from the `template` field. It names the folder that stays after a no to the resume question.
+   - The schema skill stops when `install.mjs` did not run, and does not copy files by hand. After a partial copy, it tells the user to delete `plan-lite/` and run again. A failed `config.yaml` edit is reported, and the install stays good.
+   - Archive needs the `instruction` field for the deltas, checks the delta writes and deletes before step 8, and tells the user to run archive again after a stop in step 9 or step 11.
+   - Upgrade checks the four artifacts before the schema switch and reads the `schema` line after it, deletes `tasks-preview.md` only after `tasks.md` exists, sets `skip_specs: true` on "None", skips a requirement that the user did not answer, and follows the failure rule when `openspec instructions` fails.
+
+**Rationale**: the user asked for a review of the error handling of each step. The report is `.review-reports/review_20261113013108_eu.anthropic.claude-opus-5-5_ad4f78e-package-errors.md`, 25 remarks. Only archive step 10 (D280) had a failure branch for a write. Remark 12 named a broken step reference in upgrade step 2.4, but the reference was correct, so only its first part was fixed.
