@@ -548,9 +548,9 @@ This scenario checks that archive links a new ADR to the old ADR that it replace
 **Steps**:
 
 1. Build the state after step 10 of `openspec-lite-archive` in 21a, but before the old ADR changed: the new ADR exists with `Supersedes:`, the old ADR still has `Status: Accepted`, and the change is not archived. `validate` passes.
-2. Run `openspec-lite-archive`. If the agent asks to keep or delete the delta of the earlier run, answer: "Keep it."
+2. Run `openspec-lite-archive`. If the agent asks to keep or delete the delta of the earlier run, answer: "Keep it." Approve each draft in the same reply.
 
-**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. It shows the new ADR, and asks no approval for the new ADR or for the `Status:` edit, because the user approved the ADR in the earlier run. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
+**Expected**: if the repo holds committed code that meets the Goal, the done check passes with no "Archive anyway?" question, and says nothing that the code is missing (D209). The agent does not draft the decision again. It drafts the requirement again, also when the delta of the earlier run holds it, and after the archive the main spec holds the requirement once (D282). It shows the new ADR, and asks no approval for the new ADR or for the `Status:` edit, because the user approved the ADR in the earlier run. It changes the `Status:` line of the old ADR to `Status: Superseded by <new file name>`, then archives the change.
 
 ## 22. Goal with more than one outcome
 
