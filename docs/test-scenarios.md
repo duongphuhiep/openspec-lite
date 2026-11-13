@@ -14,7 +14,7 @@ Setup for each scenario, unless it says otherwise:
 - `after-propose`: the change `add-csv-export-to-report-page`, with only the Goal in `plan.md`. It is a fixed start state, not the output of scenario 1: a propose run can also write open questions.
 - `after-preview`: the same change after a tasks preview, with three open questions and a current `tasks-preview.md`.
 - `rate-limit`: a small API server (`src/server.js`, `package.json`) and the change `add-rate-limit`, for scenario 4b.
-- `finished-rate-limit`: `src/rateLimit.js` and the finished change `add-rate-limit`, for scenarios 5, 6, 13a, and 13b.
+- `finished-rate-limit`: `src/rateLimit.js` and the finished change `add-rate-limit`, for scenarios 5, 6, 13a, and 13b. The limiter runs after the auth middleware, rejects a request with no API key with 401, and deletes the expired windows (D284).
 - `interrupted-upgrade`: the same change with a fresh preview, after an upgrade stopped right after it wrote `proposal.md`, for scenario 7 step 3.
 - `after-upgrade`: the same change after an upgrade (scenario 7), with no `plan.md`. Its delta holds the 🤖 scenario "Table is empty". `tests/fixtures/scenarios/kept-plan.md` is the `plan.md` that an upgrade keeps when an open question has no slot.
 

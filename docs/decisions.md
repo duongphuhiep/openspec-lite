@@ -3969,3 +3969,16 @@ This revises D119, D166, D182, D219, and D256.
 5. The headless allowlist of "Running the Scenarios Headless" has `"Bash(npm:*)"`, so that 4 and 4b can run the tests through `package.json`. The runs after this change are not equal to the earlier runs on this point.
 
 **Rationale**: the user asked to investigate the defects of `.scenario-runs/20261113-eb2df49/defects.md` with the cause `scenario`. The report is `investigation-scenario.md` in that folder. The user picked the option of each question. S5 and S6 need no change: D282 item 1 removes the cause of S5, and "Approve the other drafts" of 20b already covers a second ADR. In S1, group A had to invent an answer for the no-key question. In S2, both runs wrote one decision for the filter and the sort, and the old example "the filter and sort UI" accepted it. In S3, no run recorded the columns, and the Expected text did not say if the scaffold content needs a decision. In S4 and D10, run 2 loaded the page as ES modules with no `package.json`, and the group rated the fail with medium confidence, because the example named only `package.json`. In the harness part of D12, 4b could not run its tests, because each `npm` call was denied. The skill part of D12 (the retry rule) stays open.
+
+## D284: The Rate Limit Fixture Has No Known Security Defect
+
+**Decision**:
+
+1. `tests/fixtures/scenarios/finished-rate-limit/src/rateLimit.js` says that it runs after the auth middleware, which rejects a missing or unknown API key. So the key is a valid key, and a client cannot get a new window with a new key.
+2. The limiter fails closed: a request with no `x-api-key`, or an empty one, gets 401. No request shares the bucket of the key `undefined`.
+3. A timer deletes the expired windows once in each window, so that the map does not grow with each new key. The timer uses `unref()`, so that it does not keep a process alive.
+4. The 21a and 21b build helper of the run folder gets the same three changes for its sliding window.
+5. `plan.md` of the fixture does not change. The 401 is a result for a state that the auth middleware prevents, so the Goal and the decision stay correct.
+
+**Rationale**: the user asked to fix the findings of the automated security review of the scenario temp repos: an unbounded map, a rate limit key that the client controls, and a shared bucket for a missing key. In the run on 484f35a, an Opus summary of 13a also named "the shared counter for requests without an API key or the map that never drops old keys". A later archive run can now draft the 401 as a requirement. If a scenario of the fixture fails on that, the next run records it in its `defects.md`.
+
