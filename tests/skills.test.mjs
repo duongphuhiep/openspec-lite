@@ -20,6 +20,7 @@ const shared = {
   "OpenSpec root": ["apply", "archive", "tasks-preview", "upgrade", "propose", "schema"],
   "Change selection": ["apply", "archive", "tasks-preview", "upgrade"],
   "Schema check": ["apply", "archive", "tasks-preview", "upgrade", "propose"],
+  "Failure rule": ["apply", "archive", "tasks-preview", "upgrade", "propose", "schema"],
 };
 
 for (const [title, skills] of Object.entries(shared)) {
@@ -30,3 +31,11 @@ for (const [title, skills] of Object.entries(shared)) {
     for (const skill of others) assert.equal(block(read(skill), title), expected, `${skill} differs from ${first}`);
   });
 }
+
+test("apply.instruction holds the same failure rule as the skills", () => {
+  const yaml = readFileSync(fileURLToPath(new URL("../package/skills/openspec-lite-schema/assets/plan-lite/schema.yaml", import.meta.url)), "utf8").replace(/\r\n/g, "\n");
+  const instr = yaml.split("  instruction: |\n")[1].replace(/^    /gm, "");
+  const rule = block(instr.replace(/^## /gm, "### "), "Failure rule");
+  assert.ok(rule, "apply.instruction has no failure rule");
+  assert.equal(rule, block(read("apply"), "Failure rule"));
+});

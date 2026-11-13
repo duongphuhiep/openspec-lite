@@ -33,6 +33,17 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - In the question turn of step 2, edit `plan.md` only to add the "(kept open by the user)" marker, when the user keeps a question open.
 - A closed question stays in `plan.md` until the prune of step 5.
 
+### Failure rule
+
+- An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- If a step gives its own failure branch, follow that branch.
+- If a Bash call is denied, do the same action once more as one plain command, or with the Read, Write, or Edit tool. Do not try a third form.
+- Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
+- If the action fails again, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- Before you report a write, an edit, or a delete as done, check the file on disk.
+- Do not report a file as written, or a step as done, unless the action passed.
+- If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
+
 ## 1. Common checks
 
 Do these checks in order.

@@ -98,6 +98,17 @@ Do these checks in order.
 - If a reply after step 8 changes no item of `plan.md`, answer the reply, and do not run step 8 again.
 - If the user replies after step 8, the reply does not make the preview stale, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Update each task of the preview that the changed items make wrong. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again for the items that the reply changed.
 
+### Failure rule
+
+- An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- If a step gives its own failure branch, follow that branch.
+- If a Bash call is denied, do the same action once more as one plain command, or with the Read, Write, or Edit tool. Do not try a third form.
+- Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
+- If the action fails again, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- Before you report a write, an edit, or a delete as done, check the file on disk.
+- Do not report a file as written, or a step as done, unless the action passed.
+- If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
+
 ### Step 1: Check that plan.md exists
 
 - Input: `openspec/changes/<name>/plan.md`.
