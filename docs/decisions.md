@@ -3910,4 +3910,6 @@ This revises D119, D166, D182, D219, and D256.
 2. Archive can say in one line that no decision heading, or no line of `specs/` and `design.md`, ends with 🤖. It never says that a decision has a 🤖 when its heading does not end with 🤖. This revises D192 item 7, which asked for silence. A true line does not harm the user, and scenario 5 already accepts it (D193 item 5). In 15 of 15 archive replies with a decision draft, the agent gave the line. (D12 of the run)
 3. If no source supports a reason, the decision format ends the sentence after X or Z, and adds the sentence "Reason not checked." Before, "in place of the reason" met the template "because W", and gave "Rejected Z because Reason not checked." Same in `apply.instruction`, the tasks preview, and propose. (D13 of the run)
 
+4. The rerun `.scenario-runs/20261113-3008ff0/` shows that items 2 and 3 work, in 4 of 4 runs. Item 1 fixes the order of D02, in 2 of 2 runs, but the agent still gives a one-line summary of the earlier delta, not its full text. The rule says to print the full text, so this part has the cause `llm`.
+
 **Rationale**: the user asked to investigate each defect of the run `.scenario-runs/20261113-afb706a/` with the cause `skill`. The reports are `investigation-D02.md` and `investigation-D12.md` in that folder. The user agreed with the cause and the fix of each defect.
