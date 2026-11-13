@@ -1164,6 +1164,12 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.323, scenario allowlist: a single `find … -exec cat {} +` command is denied, also when it is not in a chain (group F).
 - Opus 5.5, stock `/opsx:apply` on a plan-lite change: it called the `openspec-lite-apply` skill in 1 of 6 sessions. On 484f35a, it called the skill in 0 of 6 (group A).
 
+## Scenario Run on 034148e with Opus 5.5 (Groups C, H, I)
+
+**Source**: `.scenario-runs/20261113-034148e-opus/group-I.md`, session `2a1e8c60`, 2026-11-13.
+
+- Claude Code 2.1.323, scenario allowlist, `acceptEdits`: `rm -rf <absolute path in the session folder>` is denied. `rm -r <relative path>` and `rmdir <relative path>` run with no denial.
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
