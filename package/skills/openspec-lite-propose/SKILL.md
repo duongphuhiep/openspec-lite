@@ -84,12 +84,14 @@ Do these checks in order. When the checks are done, go to section 3.
 - Input: the output of `openspec list --json`.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
+- If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
 - Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root.
 - If more than one folder matches, ask the user to pick one folder.
+- If the user rejects the folder, or picks no folder, stop. Tell the user to run the skill from the OpenSpec root.
 - If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.
 
@@ -115,6 +117,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - On `ok:`, continue with the next step of this skill.
    - On `warn:`, show the line as a warning. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Continue with the next step of this skill.
    - On `fail:`, show the line. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Stop.
+   - If the output has no line that starts with `ok:`, `warn:`, or `fail:`, handle the output as `fail:`.
 
 ## 3. Create the change
 
