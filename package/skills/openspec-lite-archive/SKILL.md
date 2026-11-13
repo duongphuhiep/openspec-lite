@@ -300,8 +300,9 @@ When each item has a draft, go to step 6.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - For each delta file of an earlier run (step 5), ask the user to keep or delete the file, in the same reply as the drafts.
-- For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes.
-- The user answers yes, no, or edit for each item.
+- For each draft with a `Supersedes:` line, name the old ADR, and say that the `Status` line of the old ADR changes. Do not ask the user to approve the `Status:` edit.
+- The user answers yes, no, or edit for each draft.
+- A file of an earlier run is not a draft. Ask no question about an ADR of an earlier run. Ask only the keep-or-delete question about a delta file of an earlier run.
 - After you apply an edit, print the full text of the edited draft, and ask for approval again.
 - Outside the guard path, tell the user that they can pick a skipped item to draft.
 - After you print the drafts, end your turn, and wait for the answer of the user.
