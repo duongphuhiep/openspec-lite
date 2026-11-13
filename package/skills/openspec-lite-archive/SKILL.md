@@ -29,6 +29,7 @@ How to read this skill:
 - If a fact of `plan.md` has no source emoji, add no emoji, and do not guess its source. Give the source in words only when the fact names it.
 - A 🤖 in an HTML comment, for example in a template comment of `plan.md`, is not a mark. A decision is a 🤖 decision only when its heading ends with 🤖.
 - The ID rule: use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md`, in `tasks-preview.md`, and in your reply to the user, for example in the summary of step 6.
+- If the ID comment of an older `plan.md` gives another form of the ID rule, follow the ID rule of this skill.
 - The ID rule also forbids a `plan.md` ID in another file, a code comment, a commit message, a pull request, or a ticket.
 - To refer to a `plan.md` item in a file other than `plan.md` and `tasks-preview.md`, use the item title, or a short form of its text, with the change name.
 
@@ -278,7 +279,7 @@ The check for an earlier delta:
 - If a file exists under `<dir>/specs/`, an earlier run of this archive wrote the file.
 - The user can have fixed a delta file of an earlier run after a `validate` failure. Do not change or delete a requirement of such a file. Do not delete the file.
 - Do not draft a requirement that a delta file of an earlier run already holds.
-- Step 6 names each such file. Step 7 merges the new deltas into the file.
+- Step 6 names each such file. Step 7 merges into the file each delta draft with the same path.
 
 The second check, for a **Superseded ADR**:
 
@@ -316,7 +317,7 @@ When each item has a draft, go to step 6.
   - For each new decision that changes only part of an old ADR, say that both ADRs stay `Accepted`.
   - Name each ADR of an earlier run, with its title. Say that the earlier run wrote the ADR, and that this run does not write the ADR again.
   - Name each delta file of an earlier run. Say that the archive keeps the file, and merges into the file each delta draft with the same path.
-- If each group is empty, say in one line that the archive promotes no item, and list the items that step 4 does not draft.
+- If no item goes to a requirement or to an ADR, say in one line that the archive promotes no item. Still give the group of the items that step 4 does not draft.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - Ask no question in the summary. Do not end your turn after the summary.

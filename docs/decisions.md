@@ -4119,3 +4119,14 @@ This revises D119, D166, D182, D219, and D256.
 4. Scenario 15 expects the end line of D291 item 3. Scenario 18b checks that guard step 2 names the ADR of "Quote each cell". Scenario 13a counts each requirement once. Scenario 21b names the subjects of "asks no question".
 
 **Rationale**: review round 3 on `v1.8.0..local` (`.review-reports/review_20261114001244_claude-opus-5-5_bead6c5-local.md`). No tag ships schema version 7 yet, so the edit of `schema.yaml` needs no second bump.
+
+## D293: Fixes of Review Round 4 on v1.8.0..local
+
+**Decision**:
+
+1. The archive summary says that archive promotes no item when no item goes to a requirement or to an ADR. The group of the items that archive does not draft still shows. This replaces the condition "each group is empty" of D292 item 3, which was never true while an item was not drafted.
+2. Archive step 5 says that step 7 merges each delta draft with the same path into the file of an earlier run. This completes the round 2 fix.
+3. Archive and the ID rule of `apply.instruction` follow their own ID rule when the ID comment of an older `plan.md` gives another form, because an existing `plan.md` keeps the old comment.
+4. Scenario 5 expects the Goal outcome of the fixture in the delta and in the main spec. Scenario 15 expects a short form of the text for an item with no title. Scenario 3 stages a `README.md` edit, and checks that the commit of `openspec-lite-apply` leaves the edit staged.
+
+**Rationale**: review round 4 on `v1.8.0..local` (`.review-reports/review_20261114001657_claude-opus-5-5_bead6c5-local.md`).

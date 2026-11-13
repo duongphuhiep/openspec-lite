@@ -65,7 +65,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 1. Start from the fixture `after-propose`. Run `openspec-lite-tasks-preview add-csv-export-to-report-page`. Commit after the preview.
 2. Check `tasks-preview.md`: the second line is `<!-- plan-sha256: <64 hex chars> -->`, and the tasks have no checkboxes.
-3. Add or edit a line under `## Constraints` in `plan.md`. Do not commit this edit.
+3. Add or edit a line under `## Constraints` in `plan.md`. Do not commit this edit. Add a line to `README.md`, and stage it with `git add README.md`.
 4. Run stock `/opsx:apply` (or `openspec-lite-apply`).
 5. Negative check: start from the fixture `after-preview` in a new folder. Edit only `## Open Questions`, `## Facts`, and `## Decisions` of `plan.md`, and commit. Run stock `/opsx:apply` in a new session.
 
@@ -73,7 +73,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 - In step 1, the agent gives no "not committed" note. The preview summary lists each fact, decision, and open question that the run added, changed, or removed in `plan.md`, or says that it changed none. It did not remove or change a decision that `plan.md` had before the run (D180). After the run, the `plan-sha256` of the preview equals the output of `plan-hash.mjs` on `plan.md`. Goal, Background, Non-Goals, and Constraints did not change (D171).
 - In step 4, before coding, the agent says that the preview is stale and offers to regenerate it. If `plan.md` has an open question that the agent cannot decide and cannot find the answer to, it asks it in the same reply, with its recommended answer. It gives no recommendation when the answer is a fact that only the user knows, for example where the report page is (D195, D223, D225).
-- In step 4, with stock `/opsx:apply`, the agent tells the user the two facts of the `plan-status.mjs` line: `plan.md` is not committed, so a diff cannot show the changes of this run alone, and the user must commit it before the next run. The exact line or the same facts in other words both pass (D171, D193, D246). With `openspec-lite-apply`, the agent commits only `plan.md`, and tells the user that it committed `plan.md` (D290). The note or the commit alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
+- In step 4, with stock `/opsx:apply`, the agent tells the user the two facts of the `plan-status.mjs` line: `plan.md` is not committed, so a diff cannot show the changes of this run alone, and the user must commit it before the next run. The exact line or the same facts in other words both pass (D171, D193, D246). With `openspec-lite-apply`, the agent commits only `plan.md`, and tells the user that it committed `plan.md`. After the commit, the `README.md` edit is still staged and not committed (D290). The note or the commit alone does not cause a stop. A stop for the stale warning or for the open questions is correct.
 - In step 5, the agent gives no stale warning.
 
 ## 4. Stock apply follows the plan-lite rules
@@ -159,15 +159,15 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Steps**:
 
-1. Start from the fixture `finished-rate-limit`. Its `plan.md` has one non-obvious requirement (the `Retry-After` constraint) and one `### Decision D<n>:` entry with no 🤖.
+1. Start from the fixture `finished-rate-limit`. Its `plan.md` has a Goal outcome that is a contract (the limit of 100 requests per minute), one non-obvious requirement (the `Retry-After` constraint), and one `### Decision D<n>:` entry with no 🤖.
 2. Run `openspec-lite-archive`.
 
 **Expected**:
 
 - The agent does the done check first. It asks "Archive anyway?" only if an answer is "no".
-- The requirement in the delta states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR holds the reason of the decision and the rejected option. The agent does not print the full text of a draft. It prints a short summary with one line for each promoted item, its `plan.md` ID and its title or a short form of its text, in groups with a count. The Goal outcome is a contract, so it is a requirement, or is in the requirement of a constraint (D290). The summary asks no question, and the agent writes and archives in the same turn (D289). `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
+- The delta holds the `Retry-After` requirement and the Goal outcome, as two requirements or as one. Each requirement states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR holds the reason of the decision and the rejected option. The agent does not print the full text of a draft. It prints a short summary with one line for each promoted item, its `plan.md` ID and its title or a short form of its text, in groups with a count. The Goal outcome is a contract, so it is a requirement, or is in the requirement of a constraint (D290). The summary asks no question, and the agent writes and archives in the same turn (D289). `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
 - `openspec validate` passes. `openspec/adr/YYYY-MM-DD-<slug>.md` exists with Status `Accepted`.
-- `openspec/specs/<capability>/spec.md` holds the requirement. The change is in `openspec/changes/archive/`.
+- `openspec/specs/<capability>/spec.md` holds the `Retry-After` rule and the Goal outcome. The change is in `openspec/changes/archive/`.
 
 ## 6. Archive with nothing promoted
 
@@ -385,7 +385,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 **Expected**:
 
 - Each item tagged `spec` is in a requirement of the delta. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. If no ADR holds the file name decision, the end summary says that the reason of the decision now exists only in `openspec/changes/archive/`, names the requirement that holds the decision, and says that the requirement keeps only the rule (D204, D291). Each item tagged `ADR` is in an ADR. The Goal outcome "Export the report table as CSV" is a requirement, or is in the requirement of a constraint, because it is a contract for the users (D290).
-- For each item that the agent does not draft, the summary names the item and says why it skips it. No item disappears with no word. The summary gives each promoted item by its `plan.md` ID and title, in its group, and does not print the full text of a draft (D289).
+- For each item that the agent does not draft, the summary names the item and says why it skips it. No item disappears with no word. The summary gives each promoted item by its `plan.md` ID, if it has one, and its title or a short form of its text, in its group, and does not print the full text of a draft (D289).
 - The reason for the semicolon (French Excel) stays in the requirement text or in the ADR, not only in a scenario title. It is the non-obvious part (D147).
 - No line of the written deltas or specs holds a source emoji, for example 👤. No spec or ADR gets a 👤 for an item that has none in `plan.md` (D252).
 - The header row requirement gives its reason in its text: the finance import reads the columns by name. So a reader sees that a renamed column breaks the import, and a new column order does not (D191).

@@ -320,3 +320,4 @@ apply:
     - Use the plan.md IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in plan.md, in tasks-preview.md, and in a reply to the user.
     - Do not write the plan.md IDs in another file, a code comment, a commit message, a pull request, or a ticket.
     - To refer to a plan.md item in a file other than plan.md and tasks-preview.md, use the item title, or a short form of its text, with the change name.
+    - If the ID comment of an older plan.md gives another form of this ID rule, follow this ID rule.
