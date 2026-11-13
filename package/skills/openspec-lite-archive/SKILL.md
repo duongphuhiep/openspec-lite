@@ -20,6 +20,7 @@ How to read this skill:
 ## General rules
 
 - Write nothing before the user approves.
+- The user does not see the output of a tool call. To print a text for the user, write the full text in your reply.
 - Write each approved draft exactly as the user approved it. If you must change an approved draft, print the full text of the changed draft, and ask for approval again.
 - An ADR that an earlier run wrote needs no new approval, because the user approved the ADR in that run. Print the full text of the ADR in your reply, and do not ask about the ADR.
 - The `Status:` edit of step 10 needs no approval, because the approval of the new ADR with the `Supersedes:` line covers the edit. Do not ask about the edit.
@@ -294,6 +295,7 @@ When each item has a draft, go to step 6.
 - Input: the drafts of step 5.
 - Output: the approved drafts.
 - Print the full text of each draft.
+- Print the full text of each file of an earlier run of step 5 in this reply, also when you read the file or printed it before in this turn.
 - Name each draft, a spec draft or an ADR draft, that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`, because the user did not confirm the decision yet. Name the 🤖 decision for each such draft.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
