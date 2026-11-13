@@ -93,7 +93,8 @@ The first output line is the status:
 - If the status is `status: current`, there is nothing to do. Go to section 4.
 - If the status is `status: newer`, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
 - If the output has no `status:` line, and an `install:` line says that the shipped `schema.yaml` is missing, the shipped assets are damaged. Stop, and tell the user to reinstall openspec-lite.
-- If the output has no `status:` line in each other case, a file system error occurred. Show each `install:` line. If an `install:` line names the folder of the old schema, tell the user where the old schema folder is. Then stop.
+- If the output has no `status:` line and no `install:` line, the script did not run. Follow the failure rule. Do not copy the schema files with another tool.
+- If the output has no `status:` line in each other case, a file system error occurred. Show each `install:` line. If an `install:` line names the folder of the old schema, tell the user where the old schema folder is. Also tell the user to delete `openspec/schemas/plan-lite/`, which can be a partial copy, and to run this skill again. Then stop.
 
 ## 4. Archive guidance
 
@@ -120,6 +121,7 @@ operations:
 - If `operations.archive.guidance` is a list and the list does not have the item yet, add the item. Keep the other items and keys.
 - If `operations.archive.guidance` is a list and the list already has the item, do not edit `openspec/config.yaml`.
 - If `guidance` is a plain string, OpenSpec ignores the string. Do not edit the string. Show the user how to change the string to a list.
+- If the edit of `openspec/config.yaml` fails, or the file is not valid YAML, do not edit the file again. Report that the hint is not added, and show the item block for a manual edit. Say that the schema install is still good.
 - Go to section 5.
 
 ## 5. End

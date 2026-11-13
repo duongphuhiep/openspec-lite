@@ -135,8 +135,9 @@ Do these checks in order. When the checks are done, go to section 3.
    - If the command fails because the change already exists, read `openspec/changes/<name>/.openspec.yaml`.
    - If `schema` is `plan-lite` and `plan.md` is missing, an earlier run stopped after step 2. Ask: "Resume the change <name>?" End your turn, and wait for the answer.
    - On yes to the resume question, go to step 3.
-   - On no to the resume question, ask for another name. Then do step 2 again with the new name.
-   - In each other failure case, show the error, and ask for another name. Then do step 2 again with the new name.
+   - On no to the resume question, tell the user that the folder `openspec/changes/<name>/` stays, and that the user can delete it. Ask for another name. Then do step 2 again with the new name.
+   - If the change already exists, and has `plan.md` or a schema that is not `plan-lite`, show the error, and ask for another name. Then do step 2 again with the new name.
+   - In each other failure case, follow the failure rule. A new name does not fix the error.
 3. Read `openspec/changes/<name>/.openspec.yaml` before you edit the file.
    - OpenSpec 1.14.2 already writes `skip_specs: true` in `.openspec.yaml`.
    - If the `skip_specs: true` line exists, do not edit `.openspec.yaml`.
@@ -144,6 +145,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - Do not add a second `skip_specs` line. A second `skip_specs` line is a duplicate key, and the duplicate key breaks each CLI command on the change.
    - Go to step 4.
 4. Run `openspec instructions plan --change "<name>" --json`.
+   - If the command fails, or its output has no `template` field, follow the failure rule. Do not write `plan.md` from memory.
    - Write `openspec/changes/<name>/plan.md` from the `template` field of the output.
    - Go to step 5.
 5. Fill `plan.md`:
@@ -221,7 +223,7 @@ Do these checks in order. When the checks are done, go to section 3.
 ## 5. End
 
 1. Give the summary:
-   - Show the change name and the path of `plan.md`.
+   - Show the change name and the path of `plan.md`, if `plan.md` exists.
    - Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
    - List each open question that you recorded in `plan.md`, so that the user can answer it.
    - Go to step 2.
