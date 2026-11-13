@@ -164,7 +164,7 @@ Ask the question turn:
   - if you plan no requirement at all, and `<dir>/specs/` holds no delta, the question if the change has a requirement.
 - If the question list is empty, do not ask. Go to step 2.1.
 - If each of the four artifacts already exists, do not ask. Go to step 2.1.
-- If the question list is not empty, ask all items of the question list in one reply, before you write any artifact.
+- If the question list is not empty, and at least one of the four artifacts does not exist, ask all items of the question list in one reply, before you write any artifact.
 - Ask each open question with the ask rule.
 - For each planned requirement in the reply, show its text, and ask if you can write it.
 - For each decision with 🤖 in `plan.md` that you do not plan as a requirement, give in the reply the reason why the decision is not a contract, in one sentence.
@@ -176,9 +176,9 @@ Read the answer of the user:
 
 - Split each answer of the user with the split rule, and plan each part for its artifact. Steps 2.1 to 2.4 write the parts.
 - If `<dir>/specs/` holds no delta, plan a requirement for each constraint of the answer, with no new question.
-- If the user says yes to a planned requirement, the user is the source of that requirement.
-- If the user says no to a planned requirement, do not write that requirement.
-- If the user gave no answer for a planned requirement, do not write that requirement. Name it in the summary.
+- If the user says yes to a planned requirement that the question turn asked, the user is the source of that requirement.
+- If the user says no to a planned requirement that the question turn asked, do not write that requirement.
+- If the user gave no answer for a planned requirement that the question turn asked, do not write that requirement. Name it in the summary.
 - If the user cannot answer an open question now, keep the question in `plan.md`, with no marker.
 - If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -384,6 +384,8 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - A constraint of the answer is a requirement source, like a constraint of `plan.md`. If `<dir>/specs/` holds no delta, write its requirement with no new question, because the answer of the user is the source of the requirement. If the resume rule kept a delta in `<dir>/specs/`, follow the kept-artifact bullet of this rule.
 - A choice of the answer goes to the specs only when the choice is a contract.
 - A choice of the answer that is not a contract goes to `## Decisions` of `design.md`.
+- A part of the answer that changes an outcome of the Goal goes to What Changes of `proposal.md`, and to the requirement of that outcome if step 2 planned one.
+- A part of the answer that changes or removes a named item of `plan.md` changes or removes the copy of the item in the artifact that holds the copy.
 
 ### Inferred-item rule
 

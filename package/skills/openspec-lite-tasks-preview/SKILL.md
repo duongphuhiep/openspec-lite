@@ -267,6 +267,7 @@ When the checks are done, go to step 6.
 ### Answer rule: record a reply of the user
 
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
+- A yes or a no to a question that a step of this workflow asks, for example a resume, split, stale, or prune question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
 - If a reply of the user in this session answers an open question, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.

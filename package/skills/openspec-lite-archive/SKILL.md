@@ -164,6 +164,7 @@ The guard path:
 - To find the code, search for what each outcome of the Goal names, for example with `git grep`.
 - Get the git root with `git rev-parse --show-toplevel` as its own command.
 - Then search with `git -C <git root> grep <word>`.
+- If `git rev-parse --show-toplevel` fails, the repo does not use git. Search the files under the OpenSpec root with the search tool of the harness, and skip `.git/`, `node_modules/`, and `apm_modules/`.
 - Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them.
 - Name each outcome and each constraint that is not met, and each open question that is left.
 - If each answer is "yes", go to step 2.
@@ -318,7 +319,7 @@ When each item has a draft, go to step 6.
   - Name each ADR of an earlier run, with its title. Say that the earlier run wrote the ADR, and that this run does not write the ADR again.
   - Outside the guard path, name each delta file of an earlier run. Say that the archive keeps the file, and merges into the file each delta draft with the same path.
 - Outside the guard path, if step 5 has no draft, and finds no ADR and no delta file of an earlier run, say in one line that the archive promotes no item. Still give the group of the items that step 4 does not draft.
-- On the guard path, give only the group of the decisions that go to an ADR, and the points about 🤖, `Supersedes:`, and the ADRs of an earlier run.
+- On the guard path, give only the group of the decisions that go to an ADR, and the points about 🤖, `Supersedes:`, a new decision that changes only part of an old ADR, and the ADRs of an earlier run.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - Ask no question in the summary. Do not end your turn after the summary.

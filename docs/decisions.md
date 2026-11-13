@@ -4055,6 +4055,8 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D288: An Answer That Changes the Goal, a Problem That the Goal Fixes, and the Scenario 7 Fixture
 
+**Status**: The example of item 5 is removed by D295.
+
 **Decision**:
 
 1. The ask rule of apply and of the tasks preview: if the answer can change an outcome that the Goal states, the question quotes that outcome, and says that the answer can change the Goal. A question about such an outcome is allowed, because the agent can find a gap in the Goal, for example "with code 0 otherwise" also for an invalid spec.
@@ -4145,3 +4147,19 @@ This revises D119, D166, D182, D219, and D256.
 4. Scenario 5 calls `Retry-After` a constraint, as `GLOSSARY.md` asks. D289 and D292 have Status lines.
 
 **Rationale**: review round 5 on `v1.8.0..local` (`.review-reports/review_20261114002126_claude-opus-5-5_bead6c5-local.md`). This was the last round of the loop of 5 rounds.
+
+## D295: Fixes of Skill Text Review Round 1 at 145986e
+
+**Decision**:
+
+1. Propose drops the example of the bug in "fix the bug where the page shows dates in UTC", because the example copies the prompt of scenario 22a. The general rule stays: a problem that the Goal fixes is part of the Goal. This revises D288 item 5.
+2. The answer rules of propose, the tasks preview, and `apply.instruction` say that a yes or a no to a question of the workflow, for example a resume, split, stale, or prune question, is not a fact, a constraint, or a choice. The step that asked the question says what to do.
+3. Propose edits the Goal when a part of an answer changes an outcome of the Goal, as `apply.instruction` does (D288 item 2).
+4. The decision rule of propose gives "Rejected Z because W." before "Reason not checked.", so that Z has a meaning when the agent reads the second bullet.
+5. Apply: a text of the CLI output outside the `instruction` field that names another skill is not followed. The new wording has one reading.
+6. `apply.instruction` checks the upgrade conditions in the end summary of step 6, with an else branch, not as a general rule.
+7. `apply.instruction` step 4: a reply that changes no item of `plan.md` gets an answer, and step 5 and step 6 do not run again. The plan-hash note of step 6 shows only when a preview exists and the run edited `## Facts`, `## Decisions`, or `## Open Questions`.
+8. Archive: the guard-path summary names a new decision that changes only part of an old ADR. The done check searches with the search tool of the harness when the repo does not use git.
+9. Upgrade: the question turn asks only when at least one of the four artifacts does not exist. The "Read the answer" rules for a yes, a no, or no answer apply only to a requirement that the question turn asked. The split rule sends a Goal edit to What Changes of `proposal.md`, and a change of a named `plan.md` item to the copy of the item in its artifact.
+
+**Rationale**: skill text review round 1 at 145986e (`.review-reports/review_20261114003449_claude-opus-5-5_145986e-package.md`). Item 1 follows the rule that a fix adds no example that hints the result of a scenario.

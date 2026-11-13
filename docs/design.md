@@ -377,11 +377,6 @@ How to read these steps:
 - When you need the exit code of a command, use the exit-code rule.
 - When you change a behavior, follow the test rule.
 - When you add an item to plan.md, or write another file or a commit message, follow the ID rule.
-- Suggest running openspec-lite-upgrade when one of these conditions is true:
-  - Another person or agent must continue the work.
-  - The change touches more than one capability.
-  - The change touches more than one repo.
-  - A contract (spec) becomes necessary.
 
 ## Failure rule
 
@@ -453,7 +448,7 @@ How to read these steps:
   - Record the point as an open question before you write the code that depends on the point.
   - Ask the open question with the ask rule.
   - End your turn.
-- When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule. If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs.
+- When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule. If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs. If the reply changed no item of plan.md, answer the reply, and do not run step 5 or step 6 again.
 - When the code is written, go to step 5.
 
 ## Step 5: Check plan.md against the code
@@ -491,13 +486,14 @@ When the checks are done, go to step 6.
 1. Give the end summary:
    - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
    - For each open question that you removed, give its answer.
-   - Say that the plan hash does not cover `## Facts`, `## Decisions`, and `## Open Questions`, so your edits of these sections do not make the preview stale.
+   - If the preview is not absent, and you edited `## Facts`, `## Decisions`, or `## Open Questions`, say that the plan hash does not cover these sections, so your edits do not make the preview stale.
    - If you added, changed, or removed a constraint, list the constraint with its ID.
    - If you added, changed, or removed a constraint, and the preview is not absent, say that the constraint edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
    - If you changed the Goal, quote the old outcome and the new outcome. If the preview is not absent, say that the Goal edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
    - Ask each new open question of step 5 with the ask rule.
+   - If one of these conditions is true, suggest running openspec-lite-upgrade: another person or agent must continue the work, the change touches more than one capability or more than one repo, or a contract (spec) becomes necessary. If no condition is true, do not suggest an upgrade.
 2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
 3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
 4. If the tests did not run, and the test check did not pass, tell the user to run the test command, and to run apply again.
@@ -536,6 +532,7 @@ When the checks are done, go to step 6.
 ## Answer rule: record a reply of the user
 
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
+- A yes or a no to a question that a step of this workflow asks, for example a resume, split, stale, or prune question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
 - If a reply of the user answers an open question, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.

@@ -179,12 +179,14 @@ Do these checks in order. When the checks are done, go to section 3.
 ### Answer rule
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
+- A yes or a no to a question that a step of this workflow asks, for example a resume, split, stale, or prune question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
 - If the user answers an open question of `plan.md`, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
 - Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
-- A problem that the Goal fixes is part of the Goal, for example the bug in "fix the bug where the page shows dates in UTC". Do not record the problem as a fact.
+- A problem that the Goal fixes is part of the Goal. Do not record the problem as a fact.
+- If a part of the answer changes an outcome that the Goal states, edit that outcome of the Goal to match the answer. Do not record a constraint or a decision that contradicts the Goal.
 - Record each constraint in the answer in `## Constraints`.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
@@ -206,8 +208,8 @@ Do these checks in order. When the checks are done, go to section 3.
 
 - Write `### Decision D<n>: <title>`, then "Chose X because Y."
 - One decision records one choice. If the user made two choices, write two decisions.
-- If the user gave no reason, end the sentence after X or Z, and add the sentence "Reason not checked." Do not guess a reason.
 - If there was an alternative, add "Rejected Z because W."
+- If the user gave no reason, end the sentence after X or Z, and add the sentence "Reason not checked." Do not guess a reason.
 - A decision of propose records a choice of the user. Write no 🤖 on a decision of propose.
 - `## Decisions` holds only the current decisions, not a history.
 - When you add a decision, remove each superseded decision.

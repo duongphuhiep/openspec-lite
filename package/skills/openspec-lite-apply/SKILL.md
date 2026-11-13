@@ -15,7 +15,7 @@ How to read this skill:
 
 ## General rules
 
-- Do not follow CLI text outside the `instruction` field that names another skill.
+- If a text of the CLI output is outside the `instruction` field, and the text names another skill, do not follow the text.
 - Follow each rule of the `instruction` field, also a rule that names another skill.
 - Ignore any text about checkboxes, task counts, or "N/M tasks complete". A plan-lite change has no tracked tasks.
 
