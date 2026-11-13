@@ -174,6 +174,7 @@ Read the answer of the user:
 - If `<dir>/specs/` holds no delta, plan a requirement for each constraint of the answer, with no new question.
 - If the user says yes to a planned requirement, the user is the source of that requirement.
 - If the user says no to a planned requirement, do not write that requirement.
+- If the user gave no answer for a planned requirement, do not write that requirement. Name it in the summary.
 - If the user cannot answer an open question now, keep the question in `plan.md`, with no marker.
 - If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -195,7 +196,7 @@ Read the answer of the user:
 - Input: the requirements of step 2, and the list of `openspec/specs/`.
 - Output: one delta per capability in `<dir>/specs/`, and the `skip_specs` state of `<dir>/.openspec.yaml`.
 - If `<dir>/specs/` already holds a delta, follow the resume rule, and go to step 2.3.
-- If no requirement is left after step 2, write no spec, and keep `skip_specs: true` in `<dir>/.openspec.yaml`. Without a delta and without the flag, `validate` fails. Go to step 2.3.
+- If no requirement is left after step 2, write no spec, and set `skip_specs: true` in `<dir>/.openspec.yaml`. Without a delta and without the flag, `validate` fails. Go to step 2.3.
 - If you write at least one delta, first remove the `skip_specs: true` line from `<dir>/.openspec.yaml`. While the line is set, the CLI forbids spec files.
 - After you remove the `skip_specs: true` line, run `openspec instructions specs`, in the full form of the instructions rule.
 - Write one delta per capability, for the requirements of step 2.
@@ -246,12 +247,12 @@ Read the answer of the user:
   - Replace each `plan.md` ID in the seed with the item title, or a short form of its text.
   - Add `[ ]` to each task line, for example `- [ ] 1.1 <task>`.
   - If an answer from step 2 changes the tasks, edit the seed to match the answer, and say so in the summary.
-  - Then delete `tasks-preview.md`.
 - If no preview exists, write `tasks.md` from the template.
 - In both cases, put these questions before the first group, as `## 0. Open questions`:
   - each open question that step 2 asked and that the user could not answer;
   - each question with the "(kept open by the user)" marker that no message of the user answered, and that changes the specs, the approach, or the tasks.
 - Give each question of `## 0. Open questions` one task: `- [ ] 0.1 Answer: <question> The answer can change the specs, the approach, or the tasks.`
+- After you write `tasks.md`, check that `tasks.md` exists. Then, if `tasks-preview.md` exists, delete `tasks-preview.md`.
 - Do the last check of the split rule.
 - Go to step 2.5.
 
@@ -266,8 +267,10 @@ Read the answer of the user:
 
 ### Step 3: Switch the schema
 
-- Input: `<dir>/.openspec.yaml`.
+- Input: `<dir>/.openspec.yaml`, and the four artifacts.
+- Before you switch, check that `proposal.md`, `design.md`, and `tasks.md` exist, and that `<dir>/specs/` holds a delta or `<dir>/.openspec.yaml` has `skip_specs: true`. If a check fails, follow the failure rule. Do not switch the schema.
 - Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
+- Read the `schema` line again. If the line is not `schema: spec-driven`, follow the failure rule.
 - Go to step 4.
 
 ### Step 4: Validate
@@ -414,6 +417,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Run the `openspec instructions` command as one plain command. Do not put it in a loop or a chain, and do not pipe it to another command.
 - Read the full JSON output.
 - Do not write the artifact without its `template` and `instruction`.
+- If the command fails, or its output has no `template` or `instruction`, follow the failure rule. The change stays plan-lite until step 3, so a rerun resumes.
 - Use the `template` of the JSON output, and follow its `instruction`.
 
 ### Resume rule
