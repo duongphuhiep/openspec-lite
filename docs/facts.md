@@ -1130,6 +1130,17 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.323, scenario allowlist: after `cd <subfolder>;`, the denial names only the parts of the command with a `../../` path (group F).
 - Sonnet 5.5, stock `/opsx:apply` on a plan-lite change: it called the `openspec-lite-apply` skill in 2 of 6 sessions. On 84abcb6, it called no skill in 6 of 6 sessions (group A).
 
+## Scenario Run on eb2df49
+
+**Source**: `.scenario-runs/20261113-eb2df49/group-*.md`, `raw/*/*/turn-*.json` (`permission_denials`), and the session logs, 2026-11-13.
+
+- Claude Code 2.1.323 on this machine: the Bash tool runs `grep` as `ugrep`. A missing file gives "ugrep: warning: ..." and exit code 2. A step that reads the exit code of a `grep` call can see 2, not 1 (group D, session `2e0ffe2b`).
+- Claude Code 2.1.323: a Bash call that starts with `cd <dir> && ` changes the working folder of the next call only if the call exits with 0. After a call with exit code 2, the next call starts in the old folder (group D, session `2e0ffe2b`).
+- Claude Code 2.1.323, scenario allowlist: `sed -n '/apply:/,$p' <file>` is denied with "sed command requires approval (contains potentially dangerous operations)". A `sed -n <n>,<m>p <file>` range runs (group F, session `57da7bc3`).
+- Claude Code 2.1.323, scenario allowlist: a `;` chain with `echo "exit $?"` is denied. A `;` chain of `node <script>` calls with no `echo` is allowed (group I, sessions `0cc2834e`, `bbb5ab1d`).
+- Claude Code 2.1.323, Edit tool (observation, cause not known): an Edit from `<line>` to `<line> (kept open by the user)`, then an Edit from ` (kept open by the user)` to an empty string, left `plan.md` with no blank line after `<line>`. The tool inputs show no newline in `old_string` or `new_string` (group F, session `fde74651`).
+- Claude Code 2.1.323: `claude -p` with no `--resume` in a folder with an earlier session starts a new session. A short answer such as "Yes, make the tasks preview." then starts a skill with no context of the earlier session (group C, `bogus/7-turn-2.json`).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
