@@ -6,5 +6,5 @@ import { spawnSync } from "node:child_process";
 
 const r = spawnSync("git", ["status", "--porcelain", "--", process.argv[2] ?? "plan.md"], { encoding: "utf8" });
 if (r.status === 0 && r.stdout.trim()) {
-  console.log("plan.md is not committed, so git diff cannot show the changes of this run alone. Commit plan.md before the next run.");
+  console.log("plan.md is not committed. Git diff cannot show only this run's changes.");
 }

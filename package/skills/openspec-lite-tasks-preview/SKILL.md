@@ -123,14 +123,16 @@ Do these checks in order.
 - If `openspec/changes/<name>/plan.md` is missing, stop. Tell the user to run `openspec-lite-propose`.
 - If `openspec/changes/<name>/plan.md` exists, go to step 2.
 
-### Step 2: Report the commit state of plan.md
+### Step 2: Commit plan.md if it is not committed
 
 - Input: `openspec/changes/<name>/plan.md`.
 - Run `node openspec/schemas/plan-lite/plan-status.mjs openspec/changes/<name>/plan.md` from the OpenSpec root.
 - Run the `plan-status.mjs` command alone, not in a chain.
-- If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 3. The commit note is only information.
-- If `plan-status.mjs` prints a line, copy the line to the user as it is.
-- If `plan-status.mjs` prints nothing, say nothing about commits.
+- If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 3.
+- If `plan-status.mjs` prints nothing, go to step 3.
+- If `plan-status.mjs` prints a line, commit `openspec/changes/<name>/plan.md` from the OpenSpec root with the message `plan.md: checkpoint before tasks-preview`.
+- If the commit succeeds, tell the user that you committed `plan.md`.
+- If the commit fails, show the error. Tell the user to commit `plan.md` themselves before the next run.
 - Go to step 3.
 
 ### Step 3: Explore, and close the open questions

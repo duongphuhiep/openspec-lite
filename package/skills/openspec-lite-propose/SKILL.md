@@ -157,8 +157,8 @@ Do these checks in order. When the checks are done, go to section 3.
    - Fill only what is known. Leave the other sections empty.
    - Record each fact, constraint, or choice of the request, and of each reply that you kept before `plan.md` existed, with the answer rule.
    - Record each open point of the list in `## Open Questions` with the question rule.
-   - Keep each `<!-- ... -->` guidance comment, also in a section that you fill.
-   - Write the content of a section on the lines under the guidance comment.
+   - Do not remove any `<!-- ... -->` line from `plan.md`. Every guidance comment must still be in the file when you are done.
+   - Write the content of a section on the lines under the guidance comment, not in place of it.
    - Do not invent non-goals, constraints, facts, or decisions.
    - Do not write an outcome that the user moved out, also not in `## Non-Goals`. The summary of section 5 names the outcome.
    - Go to section 4.

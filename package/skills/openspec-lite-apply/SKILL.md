@@ -104,6 +104,20 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 
 ## 2. Apply
 
+### Step 1: Commit plan.md if it is not committed
+
+- Input: `openspec/changes/<name>/plan.md`.
+- Run `node openspec/schemas/plan-lite/plan-status.mjs openspec/changes/<name>/plan.md` from the OpenSpec root.
+- Run the `plan-status.mjs` command alone, not in a chain.
+- If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 2.
+- If `plan-status.mjs` prints nothing, go to step 2.
+- If `plan-status.mjs` prints a line, commit `openspec/changes/<name>/plan.md` from the OpenSpec root with the message `plan.md: checkpoint before apply`.
+- If the commit succeeds, tell the user that you committed `plan.md`.
+- If the commit fails, show the error. Tell the user to commit `plan.md` themselves before the next run.
+- Go to step 2.
+
+### Step 2: Run apply
+
 - Input: the output of `openspec instructions apply --change "<name>" --json`.
 - Output: the code, and the updates of `plan.md`, as `instruction` says.
 
