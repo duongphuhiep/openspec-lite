@@ -606,7 +606,7 @@ You can run each scenario without a person at the keyboard, with Claude Code in 
    claude -p "<prompt>" --model <full model id> --output-format json \
      --setting-sources project,local \
      --permission-mode acceptEdits \
-     --allowedTools "Bash(openspec:*)" "Bash(node:*)" "Bash(git:*)" "Bash(ls:*)" "Bash(cat:*)" "Bash(mkdir:*)" \
+     --allowedTools "Bash(openspec:*)" "Bash(node:*)" "Bash(git:*)" "Bash(ls:*)" "Bash(cat:*)" "Bash(mkdir:*)" "Bash(npm:*)" \
      < /dev/null
    ```
 
