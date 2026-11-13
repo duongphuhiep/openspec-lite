@@ -3982,3 +3982,11 @@ This revises D119, D166, D182, D219, and D256.
 
 **Rationale**: the user asked to fix the findings of the automated security review of the scenario temp repos: an unbounded map, a rate limit key that the client controls, and a shared bucket for a missing key. In the run on 484f35a, an Opus summary of 13a also named "the shared counter for requests without an API key or the map that never drops old keys". A later archive run can now draft the 401 as a requirement. If a scenario of the fixture fails on that, the next run records it in its `defects.md`.
 
+## D285: Fixes of the Skill Defects of the Run on 484f35a with Opus 5.5
+
+**Decision**:
+
+1. The shared failure rule, in each skill and in `apply.instruction`: a denied Bash call with more than one command is tried once more as single commands, or with the Read, Write, or Edit tool. A denied single command is not run again. If no step needs the output of a failed action, for example an extra check or a read of a link for more context, the agent names the action and the error, and goes on. A step always needs a test run that the step names, and a write, an edit, or a delete of a file. If a step needs the output, and the action fails again or a single command is denied, the agent reports and stops, as before. This revises D281 item 1.
+
+**Rationale**: the user asked to investigate the defects of `.scenario-runs/20261113-484f35a-opus/defects.md` with the cause `skill`. The report is `investigation-skill.md` in that folder. The user agreed with each fix, and picked option (a) for D07. D18 is not a defect, because D244 item 1 allows `plan.md` IDs in a reply. In D05, the tasks preview stopped after two denied `gh issue view 42` calls for a link in Background, and apply stopped after two denials of an extra check. In D12 of `.scenario-runs/20261113-eb2df49/`, apply ran the denied single command `npm test` again with no change.
+

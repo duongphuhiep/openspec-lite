@@ -142,7 +142,7 @@ openspec-lite/
 - An example in `package/` gives its own setup, for example what `plan.md` asks for. It does not depend on a test fixture or a test scenario of this repo, because only `package/` reaches the user (D259).
 - Do not add an example to `package/` only to steer the agent to the result of a test scenario. If a rule already covers a case and the agent misses the case, the cause is `llm`, and the skill does not change. Fix a skill only when its flow misses a case, is illogical, or is inconsistent (D269).
 - A rule phrase in `package/` does not describe the exact case of a test scenario, also not as an example (D271).
-- Each skill and `apply.instruction` have one failure rule. A failed, denied, or unknown action is tried once more in another form, then reported, and the run stops. No missing output is made up, and no failed action is reported as done. A step that must go on, or must stop at a safe point, has its own failure branch, and that branch wins (D281).
+- Each skill and `apply.instruction` have one failure rule. A denied chain is tried once more as single commands, or with the Read, Write, or Edit tool. A denied single command is not run again. If a step needs the output and the action still fails, the action is reported, and the run stops. If no step needs the output, for example an extra check or a read of a link, the agent names the error and goes on. A test run that a step names, and a file write, always have a step that needs them (D285). No missing output is made up, and no failed action is reported as done. A step that must go on, or must stop at a safe point, has its own failure branch, and that branch wins (D281).
 
 The five workflow skills are propose, tasks-preview, apply, upgrade, and archive.
 
@@ -384,9 +384,12 @@ How to read these steps:
 
 - An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - If a step gives its own failure branch, follow that branch.
-- If a Bash call is denied, do the same action once more as one plain command, or with the Read, Write, or Edit tool. Do not try a third form.
+- If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
+- Do not run a denied single command again.
+- If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
+- A step always needs a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If the action fails again, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
