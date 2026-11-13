@@ -4007,3 +4007,15 @@ This revises D119, D166, D182, D219, and D256.
 7. Scenario 4d checks that the preview and apply ask no question about a result that the Goal states, that no constraint or decision contradicts the Goal, and that the agent records no part of an answer that contradicts the Goal. It names the conflict, and tells the user to change the Goal in `plan.md` first, because the tasks preview and apply do not edit the Goal.
 
 **Rationale**: the user asked to investigate the defects of `.scenario-runs/20261113-484f35a-opus/defects.md` with the cause `scenario`, and to enhance the scenarios and the fixtures. The report is `investigation-scenario.md` in that folder. S8 needs no change: 4b already answers "I have no preference." to each other question, and D285 lets the agent skip an extra check that is denied. In S1, Opus read the delta back after the write, as the failure rule asks, saw the break of `break-delta.sh`, and stopped before `validate`. The stop is correct, so the old check was too strict. In S2, D282 made archive draft the requirement again, and the steps gave no answer for the new draft. In S3, upgrade asked about a requirement from a 🤖 decision, and the steps named only the Goal and the tasks preview. In S4, the Expected example "Table is empty" had no source in the fixture, so the 🤖 check of scenario 7 had no planted item to find. In S5 and S6, the groups had to judge these two cases with no Expected text. In S7, both runs finished the fixed window before the instruction, and the groups could not see when to give it. In S9 (D04), the preview asked about a point that the Goal fixes, recommended the other result, and the answer gave a constraint that contradicts the Goal. The done check still said "the Goal is met", and no check of 4d saw it.
+
+## D287: exit-code.mjs Refuses a Shell Operator on Windows
+
+**Decision**:
+
+1. On Windows, `exit-code.mjs` refuses a command or an argument with a shell operator (`&`, `|`, `<`, `>`, `^`, `%`, `"`, `!`, or a line break). It prints `exit: not run (unsafe argument)`, and runs nothing. The shell stays on Windows, because Node does not start a `.cmd` shim such as `openspec.cmd` with no shell. On other platforms, the script runs the command with no shell, as before.
+2. The header of the script says that the script runs any command that it gets, so a permission rule that allows the script allows each command. The user gives the agent a narrow allow rule for the real commands.
+3. The script exports `unsafeOnWindows`, and runs only when Node starts it as a script, so that `tests/exit-code.test.mjs` can test the check on each platform. The check of the start path resolves a symlink.
+4. No fixed list of allowed commands: each repo has its own test command, and `node -e` already runs any code with the same permission.
+
+**Rationale**: an automated security review flagged two risks in `exit-code.mjs`: permission laundering through the wrapper, and `shell: true` with raw arguments on Windows. The user asked to fix the security findings after the scenario run. The skills already handle `exit: not run (...)` as "the command did not run" (D281).
+
