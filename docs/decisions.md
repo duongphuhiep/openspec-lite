@@ -3963,5 +3963,6 @@ This revises D119, D166, D182, D219, and D256.
 **Decision**:
 
 1. Scenario 4b step 2 gives the answer "I have no preference." to each other question, for example about a request with no key. The Expected text does not change: after this answer, the agent picks, so the point is a 🤖 decision.
+2. Scenario 4: the filter UI and the sort UI are two decisions, because "One decision records one choice", and the user can change one and keep the other.
 
-**Rationale**: the user asked to investigate the defects of `.scenario-runs/20261113-eb2df49/defects.md` with the cause `scenario`. The report is `investigation-scenario.md` in that folder. The user picked the option of each question. S5 and S6 need no change: D282 item 1 removes the cause of S5, and "Approve the other drafts" of 20b already covers a second ADR. In S1, group A had to invent an answer for the no-key question.
+**Rationale**: the user asked to investigate the defects of `.scenario-runs/20261113-eb2df49/defects.md` with the cause `scenario`. The report is `investigation-scenario.md` in that folder. The user picked the option of each question. S5 and S6 need no change: D282 item 1 removes the cause of S5, and "Approve the other drafts" of 20b already covers a second ADR. In S1, group A had to invent an answer for the no-key question. In S2, both runs wrote one decision for the filter and the sort, and the old example "the filter and sort UI" accepted it.
