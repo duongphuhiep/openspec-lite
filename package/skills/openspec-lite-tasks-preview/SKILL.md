@@ -132,7 +132,7 @@ Do these checks in order.
 - If `plan-status.mjs` prints nothing, go to step 3.
 - If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root, so that a file that the user staged stays out of the commit. Run `git add -- openspec/changes/<name>/plan.md` alone. Then run `git commit -m "plan.md: checkpoint before tasks-preview" -- openspec/changes/<name>/plan.md` alone.
 - If the commit succeeds, tell the user that you committed `plan.md`.
-- If the commit fails, show the error. Tell the user to commit `plan.md` themselves before the next run.
+- If `git add` or `git commit` fails, show the error. Tell the user to commit `plan.md` themselves before the next run.
 - Go to step 3.
 
 ### Step 3: Explore, and close the open questions

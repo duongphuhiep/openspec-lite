@@ -30,7 +30,7 @@ How to read this skill:
 - A 🤖 in an HTML comment, for example in a template comment of `plan.md`, is not a mark. A decision is a 🤖 decision only when its heading ends with 🤖.
 - The ID rule: use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md`, in `tasks-preview.md`, and in your reply to the user, for example in the summary of step 6.
 - The ID rule also forbids a `plan.md` ID in another file, a code comment, a commit message, a pull request, or a ticket.
-- To refer to a `plan.md` item from outside `plan.md` and `tasks-preview.md`, use the item title, or a short form of its text, with the change name.
+- To refer to a `plan.md` item in a file other than `plan.md` and `tasks-preview.md`, use the item title, or a short form of its text, with the change name.
 
 ### Failure rule
 
@@ -105,7 +105,7 @@ The guard path:
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
    - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
-   - If a 🤖 line is the heading of a `design.md` decision that guard step 1 wrote to an ADR, name the ADR file. Tell the user to also delete the ADR file if the user deletes the decision.
+   - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file. The ADR can come from this run or from an earlier run. Tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
    - Go to guard step 3.
@@ -299,7 +299,7 @@ When each item has a draft, go to step 6.
 - Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft. On the guard path, step 4 does not run, so the only group is the decisions that go to an ADR.
 - Output: the summary, in your reply.
 - Print a short summary of the promotion. Do not print the full text of a draft or of a file of an earlier run.
-- In the summary, write one line for each item: the `plan.md` ID and the title of the item, or the title of the `design.md` decision on the guard path.
+- In the summary, write one line for each item: the `plan.md` ID, if the item has an ID, and the title of the item. If the item has no title, for example a constraint, a fact, or an outcome of the Goal, write a short form of its text. On the guard path, write the title of the `design.md` decision.
 - In the summary, put the items in these groups. Start each group with its count. Omit an empty group.
   - The decisions that go to an ADR.
   - The outcomes of the Goal and the constraints that go to a requirement.
@@ -315,7 +315,7 @@ When each item has a draft, go to step 6.
   - For each draft with a `Supersedes:` line, name the old ADR, and say that the archive changes the `Status` line of the old ADR.
   - For each new decision that changes only part of an old ADR, say that both ADRs stay `Accepted`.
   - Name each ADR of an earlier run, with its title. Say that the earlier run wrote the ADR, and that this run does not write the ADR again.
-  - Name each delta file of an earlier run. Say that the archive keeps the file and merges the new deltas into the file.
+  - Name each delta file of an earlier run. Say that the archive keeps the file, and merges into the file each delta draft with the same path.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
 - Ask no question in the summary. Do not end your turn after the summary.
@@ -373,4 +373,4 @@ When each item has a draft, go to step 6.
 ## 3. End
 
 - List the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
-- If a decision of `plan.md` has no ADR, because step 4 did not draft it, say that this decision now exists only in `openspec/changes/archive/`.
+- If a decision of `plan.md` has no ADR, say that the reason of this decision now exists only in `openspec/changes/archive/`. If a requirement holds the decision, name the requirement, and say that the requirement keeps only the rule.

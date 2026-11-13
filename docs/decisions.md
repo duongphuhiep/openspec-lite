@@ -4091,3 +4091,16 @@ This revises D119, D166, D182, D219, and D256.
 8. Scenarios 3 and 4c expect the commit of `openspec-lite-apply`. Scenario 6 gets an internal Goal, so that no item passes a filter. Scenario 15 checks the end line for a decision with no ADR, and the Goal outcome.
 
 **Rationale**: review round 1 on `v1.8.0..local` (`.review-reports/review_20261113235446_claude-opus-5-5_bead6c5-local.md`). Release 1.8.1 had no decision. The user asked for the commit of `plan.md` in the session of 2026-11-13, so remark 7 keeps the commit. The user picked item 5 when asked.
+
+## D291: Fixes of Review Round 2 on v1.8.0..local
+
+**Decision**:
+
+1. The ID rule allows the `plan.md` IDs in a reply to the user in each place: the archive skill and the comment of the plan template. The rule to use the title applies in a file other than `plan.md` and `tasks-preview.md`.
+2. A summary line of archive step 6 gives the ID if the item has one, and the title, or a short form of the text for an item with no title, for example a constraint, a fact, or a Goal outcome.
+3. The end of archive names each decision with no ADR, also a contract decision that only a requirement holds. The reason of such a decision exists only in the archive folder, and the requirement keeps only the rule.
+4. Guard step 2 names the ADR of a 🤖 `design.md` decision also when an earlier run wrote the ADR.
+5. The commit step of the tasks preview and of apply has a failure branch for `git add` and for `git commit`.
+6. Scenario 5 expects the Goal outcome of the fixture as a requirement, and gives no count example. Scenario 6 uses an internal Goal that the fixture code meets. Scenario 15 tags the Goal outcome, and counts it in the final check. Scenario 13a points to the fix of step 4.
+
+**Rationale**: review round 2 on `v1.8.0..local` (`.review-reports/review_20261114000637_claude-opus-5-5_bead6c5-local.md`). Items 1, 3, and 6 complete fixes of round 1 (D290).

@@ -165,13 +165,13 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 **Expected**:
 
 - The agent does the done check first. It asks "Archive anyway?" only if an answer is "no".
-- The requirement in the delta states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR holds the reason of the decision and the rejected option. The agent does not print the full text of a draft. It prints a short summary with one line for each promoted item, its `plan.md` ID and title, in a group with a count, for example "1 constraint goes to a requirement". The summary asks no question, and the agent writes and archives in the same turn (D289). `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
+- The requirement in the delta states the rule of `plan.md`, and has at least one `#### Scenario:`. The ADR holds the reason of the decision and the rejected option. The agent does not print the full text of a draft. It prints a short summary with one line for each promoted item, its `plan.md` ID and its title or a short form of its text, in groups with a count. The Goal outcome is a contract, so it is a requirement, or is in the requirement of a constraint (D290). The summary asks no question, and the agent writes and archives in the same turn (D289). `plan.md` has no 🤖, so the agent makes no claim that a decision is marked. A true line such as "No decision has a 🤖" is OK (D192, D193).
 - `openspec validate` passes. `openspec/adr/YYYY-MM-DD-<slug>.md` exists with Status `Accepted`.
 - `openspec/specs/<capability>/spec.md` holds the requirement. The change is in `openspec/changes/archive/`.
 
 ## 6. Archive with nothing promoted
 
-**Steps**: Start from the fixture `finished-rate-limit`. Remove `skip_specs` from `.openspec.yaml` of the change. Delete each item of `## Constraints`, `## Facts`, and `## Decisions` of `plan.md`. Replace the Goal with an internal outcome that no client sees: "Move the window check of `src/rateLimit.js` into its own function." Commit. Run `openspec-lite-archive`.
+**Steps**: Start from the fixture `finished-rate-limit`. Remove `skip_specs` from `.openspec.yaml` of the change. Delete each item of `## Constraints`, `## Facts`, and `## Decisions` of `plan.md`. Replace the Goal with an internal outcome that no client sees, and that the code meets: "Delete the expired windows of `src/rateLimit.js` once in each window." Commit. Run `openspec-lite-archive`.
 
 **Expected**: no item passes a filter. The summary says that the agent promotes nothing, and lists each item that it does not draft, for example each non-goal, with a reason. The agent sets `skip_specs: true`, and the archive succeeds. `openspec/specs/` does not change, and the agent writes no ADR (D289).
 
@@ -266,7 +266,7 @@ This scenario checks a fact that only a run can find (D184, D186). OpenSpec 1.14
 
 **Expected**:
 
-- In run 2, the summary names the delta file of run 1, and says that the agent keeps the file. The agent asks no question about the file, and does not draft a requirement that the file holds. The fix of step 3 is still in the main spec after the archive (D289).
+- In run 2, the summary names the delta file of run 1, and says that the agent keeps the file. The agent asks no question about the file, and does not draft a requirement that the file holds. The fix of step 4 is still in the main spec after the archive (D289).
 - The agent drafts the decision again, because no ADR exists yet.
 - In run 1, the agent shows the `validate` error. A stop before `validate` also passes, if the agent read the delta back, says how the delta differs from the draft, and writes no ADR, because the failure rule checks each write on disk (D281).
 - After run 2, `openspec/adr/` has one ADR for the decision, with the plain lines `Status: Accepted` and `Change: <name>`. `openspec/specs/` holds the requirement once, and the change is in `openspec/changes/archive/`.
@@ -356,7 +356,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 
    ```markdown
    ## Goal
-   Export the report table as CSV.
+   Export the report table as CSV. [contract: spec, alone or in the requirement of a constraint]
 
    ## Non-Goals
    - No Excel export. [obvious: skip]
@@ -390,7 +390,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 - No line of the written deltas or specs holds a source emoji, for example 👤. No spec or ADR gets a 👤 for an item that has none in `plan.md` (D252).
 - The header row requirement gives its reason in its text: the finance import reads the columns by name. So a reader sees that a renamed column breaks the import, and a new column order does not (D191).
 - The ADR of the browser decision has the fact about the page load in its `## Context`. No spec or ADR holds a `plan.md` ID such as `C1`, `F1`, or `D1` (D142).
-- After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items, and `openspec/adr/` has the `ADR` item.
+- After the archive, `openspec/specs/<capability>/spec.md` has the four `spec` items and the Goal outcome, and `openspec/adr/` has the `ADR` item.
 
 Record each mismatch with the answer key. A tagged `spec` or `ADR` item that is not promoted, and not named as skipped, is a failure.
 

@@ -180,7 +180,7 @@ At archive time, the AI uses four filters to select what to promote:
 - **Contract**: externally observable behavior that a client or another team depends on. Internal helpers, log text, and UI layout are not contracts. It goes to a spec, even if it is obvious from the code.
 - **Non-obvious fact**: a fact of `plan.md` that needed a run, a test, research, or a long analysis of the code to find. A fact that you can easily see in the code is not one. It goes to the context of an ADR.
 
-An item needs to pass only one filter. The AI prints a short summary: each promoted item with its ID and title, where the item goes, and each item that it skips, with the reason. Then it writes the specs and the ADRs, and archives the change. It asks no question about the drafts.
+An item needs to pass only one filter. The AI prints a short summary: each promoted item with its ID and its title or a short form of its text, where the item goes, and each item that it skips, with the reason. Then it writes the specs and the ADRs, and archives the change. It asks no question about the drafts.
 
 ## Upgrade to a spec-driven change
 
