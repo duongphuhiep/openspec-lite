@@ -1155,6 +1155,15 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - Claude Code 2.1.323, scenario allowlist: `test -f <rel file> && rm <rel file> && ls <dir>` runs with no denial. The same `rm` after `cd <dir> && ` is denied (group F, sessions `f29432b1`, `5d1f8804`).
 - Claude Code 2.1.323, `--allowedTools "Bash(npm:*)"`: `npm test` runs with no denial (group A, sessions `afe54b9b`, `57f12b76`).
 
+## Scenario Run on 241f481 with Opus 5.5
+
+**Source**: `.scenario-runs/20261113-241f481-opus/group-*.md`, `raw/*/*/turn-*.json`, and the session logs, 2026-11-13.
+
+- Claude Code 2.1.323, print mode, `acceptEdits`, the scenario allowlist: a WebFetch of `https://developer.mozilla.org/...` ran with no denial, and a WebFetch of `https://owasp.org/www-community/attacks/CSV_Injection` was denied (group A, session `3966a0dc` and 3 step 1 run 2).
+- Claude Code 2.1.323: a WebFetch call adds `eu.anthropic.claude-haiku-4-5-20251001-v1:0` to `modelUsage` of the turn (group A, `raw/A/4-r1/turn-2.json`). A check that a turn uses only one model must allow this.
+- Claude Code 2.1.323, scenario allowlist: a single `find … -exec cat {} +` command is denied, also when it is not in a chain (group F).
+- Opus 5.5, stock `/opsx:apply` on a plan-lite change: it called the `openspec-lite-apply` skill in 1 of 6 sessions. On 484f35a, it called the skill in 0 of 6 (group A).
+
 ## Release 1.7.0
 
 **Source**: release of `v1.7.0` (commit `99d8656`), 2026-11-08.
