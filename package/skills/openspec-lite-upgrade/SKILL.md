@@ -19,7 +19,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Section 4 holds the named rules of this skill, for example the requirement-source rule.
 - The general rules apply at all times, in each step.
 - A named rule applies in each step where its topic comes up, also when the step does not name the rule.
-- The question rule, the ask rule, the decision rule, and the answer rule are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these four rules in that file.
+- The question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these six rules in that file.
 - `<name>` is the name of the change. The change selection check gives `<name>`.
 - `<dir>` is `openspec/changes/<name>`.
 
@@ -96,7 +96,7 @@ Do these checks in order.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, go to the schema check.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
-- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
+- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`. If `design.md` of the change has `### Decision` entries, also say that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` copies them to `openspec/adr/`: run it before `/opsx:archive`.
 - If `schema` has any other value, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
 - If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question, because an earlier run can stop after it wrote the artifacts, and a finished upgrade can keep `plan.md`.
 - In the reply with the resume question, do not name a step number.
@@ -255,7 +255,7 @@ Read the answer of the user:
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
-- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading.
+- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless the user said yes to a requirement from that decision. For that case, follow the bullet about a yes in the question turn of step 2.
 - Write each choice from the answer of the user that is not a contract to `## Decisions`, with no 🤖.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.

@@ -228,7 +228,7 @@ The guard path:
   - a long analysis of the code
   - other work that is worth an agent to find it
 - A fact that a reader can easily deduce from the code or the file list is never a non-obvious fact, also if a run found the fact: a run alone is not enough.
-- A fact that the user gave (👤) is always non-obvious.
+- A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact.
 - Step 4 says where a non-obvious fact goes.
 - Go to step 4.
 

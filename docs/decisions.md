@@ -4312,3 +4312,14 @@ This revises D119, D166, D182, D219, and D256.
 4. Archive guard step 3 has an Input line. The tasks-preview guard has an Output line.
 
 **Rationale**: review loop round 7 on `v1.8.0..local` (`.review-reports/review_20261114193748_claude-opus-5-5_bead6c5-local.md`).
+
+## D308: Fixes of Review Loop Round 8 on v1.8.0..local
+
+**Decision**:
+
+1. Upgrade step 2.3 writes a planned 🤖 decision with its mark, unless the user said yes to a requirement from the decision. The bullet about a yes then applies, so the two bullets no longer give different marks for one decision.
+2. Archive step 3 says that the rules about obvious facts do not apply to a 👤 fact, as `apply.instruction` and the tasks preview say.
+3. The upgrade guard for a spec-driven change with no `plan.md` also says, when `design.md` has `### Decision` entries, that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` must run first.
+4. Upgrade reads six rules of `apply.instruction`: the four rules, the fact rule, and the fact format, because upgrade uses the terms that only these two rules define.
+
+**Rationale**: review loop round 8 on `v1.8.0..local` (`.review-reports/review_20261114194807_claude-opus-5-5_bead6c5-local.md`).
