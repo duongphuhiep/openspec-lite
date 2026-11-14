@@ -50,6 +50,8 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 ### Reply order rule
 
 - If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove.
+- Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
@@ -327,7 +329,7 @@ Do steps 5.1 to 5.4 in order.
 
 - Write one reply in this order: the result of step 4, the list from step 5.1, the summary of section 3, and last the prune question.
 - The prune question is: "Delete the moved sections from `plan.md`?"
-- If `validate` failed, recommend to keep `plan.md` until the errors are fixed.
+- If `validate` failed, write in the line just before the prune question: keep `plan.md` until the errors are fixed.
 - The summary must not say that `plan.md` is deleted or kept, because the user did not answer yet. This ban is about the whole file. Name each item that stays in `plan.md` after any answer, as section 3 says.
 - The prune question is the last line of the reply.
 - End your turn, and wait for the answer. Then go to step 5.4.

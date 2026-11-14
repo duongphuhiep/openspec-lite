@@ -395,6 +395,8 @@ How to read these steps:
 ## Reply order rule
 
 - If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove.
+- Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
@@ -506,10 +508,10 @@ When the checks are done, go to step 6.
 4. If the tests did not run, and the test check did not pass, tell the user to run the test command, and to run apply again.
 5. If a test fails, name the test that fails, and say what blocks the fix.
 6. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
-7. If an open question that is not a kept question is left, tell the user to answer the open question in the next message, so that you record the answer. For each open question that is left, kept or not, name the part of the Goal that waits for the answer. Do not ask for the answer of a kept question. When the user replies, step 4 says what to do.
+7. For each open question that is left, kept or not, name the part of the Goal that waits for the answer.
 8. If the test check and the done check pass, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 9. If the test check or the done check fails, do not suggest an archive.
-10. Last, ask each new open question of step 5 with the ask rule. Put these questions and the request of item 7 together at the end of the reply, after items 1 to 9, as the reply order rule says.
+10. Last, ask each open question that is left and is not a kept question, once, with the ask rule, also each new open question of step 5. Tell the user to answer in the next message, so that you record the answer. Do not ask for the answer of a kept question. When the user replies, step 4 says what to do. Put these questions at the end of the reply, after items 1 to 9, as the reply order rule says.
 
 ## Question rule: close an open question
 

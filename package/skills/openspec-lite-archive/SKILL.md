@@ -50,6 +50,8 @@ How to read this skill:
 ### Reply order rule
 
 - If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove.
+- Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
@@ -113,13 +115,14 @@ The guard path:
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
    - Search only the files and folders that exist. A missing `proposal.md`, `specs/`, or `design.md` holds no 🤖.
-   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line. Put this request at the end of the reply, with the open questions of guard step 3 and the question of guard step 4 or 5, as the reply order rule says.
+   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line. Put this request at the end of the reply, with the question of guard step 4 or 5, as the reply order rule says.
    - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file. The ADR can come from this run or from an earlier run. Tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
    - Go to guard step 3.
 3. Name the open questions of a kept `plan.md`.
-   - If `openspec/changes/<name>/plan.md` still exists, name each open question in `plan.md`.
+   - If `openspec/changes/<name>/plan.md` still exists, list each open question in `plan.md`, before the questions and the requests of the reply.
+   - Archive does not record an answer on the guard path. Tell the user to write the answer of each open question in an artifact of the change before the archive, because the stock skills do not read `plan.md`.
    - If `openspec/changes/<name>/plan.md` does not exist, say nothing about `plan.md`.
    - Go to guard step 4.
 4. Block the archive while a delta holds a 🤖.

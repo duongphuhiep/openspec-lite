@@ -4233,3 +4233,14 @@ This revises D119, D166, D182, D219, and D256.
 7. `docs/test-scenarios.md` checks the order in each scenario.
 
 **Rationale**: the user asked to scan each skill, because a question in the middle of a long reply is easy to miss. D289 fixed one case in archive step 6. The scan found seven more steps that put a question before other content of the same reply.
+
+## D301: Fixes of Review Loop Round 1 on v1.8.0..local, After D300
+
+**Decision**:
+
+1. The reply order rule defines a request: an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove. Advice for later, for example the next skill to run, or a file to read or commit, is not a request, and comes before the first question. The reviewer marked this "no clear winner" between this option and moving each "Tell the user to" line to the end list. The second option fills the end list with advice, and buries the questions again, which D300 must prevent.
+2. Apply step 6: item 7 only names the part of the Goal that waits for each open question. Item 10 asks each open question that is left and is not kept, once, also each new open question, and tells the user to answer in the next message.
+3. The archive guard path lists the open questions of a kept `plan.md` before the end list, not in it, because archive records no answer on the guard path. It tells the user to write each answer in an artifact before the archive.
+4. Upgrade step 5.3 puts the advice to keep `plan.md` after a failed `validate` in the line just before the prune question.
+
+**Rationale**: review loop round 1 on `v1.8.0..local` (`.review-reports/review_20261114185709_claude-opus-5-5_bead6c5-local.md`).
