@@ -55,7 +55,8 @@ Do these checks in order.
 - If the schema is not `plan-lite`, and `openspec/changes/<name>/tasks.md` exists, point the user to stock `/opsx:apply`.
 - If the schema is not `plan-lite`, and `openspec/changes/<name>/tasks.md` does not exist, point the user to stock `/opsx:continue`.
 - If the schema is not `plan-lite`, and `openspec/changes/<name>/plan.md` still exists, name each open question of `plan.md`.
-- If you name an open question of `plan.md`, tell the user to write the answer of the open question in an artifact of the change before the stock skill, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+- For each open question of `plan.md`, check if `tasks.md` → `## 0. Open questions` or `design.md` → `## Open Questions` of the change holds the question. If an artifact holds the question, name the artifact, because the stock skills meet the question there.
+- If no artifact holds the question, tell the user to write the answer of the question in an artifact of the change before the stock skill, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - If the schema is not `plan-lite`, stop after the pointer and the open questions. Do not write `tasks-preview.md`.
 
@@ -126,7 +127,7 @@ Do these checks in order.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
-- A request can end with the step that the user does after the action, for example a re-run of this skill. Keep that step in the request, after the action.
+- A request can end with the step that the user does after the action, for example a re-run of this workflow. Keep that step in the request, after the action.
 
 ### Step 1: Check that plan.md exists
 

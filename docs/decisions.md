@@ -4278,3 +4278,15 @@ This revises D119, D166, D182, D219, and D256.
 4. Upgrade does not call an open question that the user cannot answer an item with no slot, because `## 0. Open questions` of `tasks.md` holds it (D191). The summary and step 5.4 name only a kept item that no artifact holds.
 
 **Rationale**: review loop round 4 on `v1.8.0..local` (`.review-reports/review_20261114191114_claude-opus-5-5_bead6c5-local.md`).
+
+## D305: Fixes of Review Loop Round 5 on v1.8.0..local
+
+**Decision**:
+
+1. Each guard that names the open questions of a kept `plan.md` (apply, the tasks preview, archive, and the no branch of the upgrade resume question) checks if `tasks.md` → `## 0. Open questions` or `design.md` → `## Open Questions` holds each question. For a question that an artifact holds, the guard names the artifact. Only for a question that no artifact holds, the guard tells the user to write the answer in an artifact. The archive question of the guard path counts only the questions that no artifact holds. This revises D303 item 4 and D304 item 3, because upgrade puts these questions in the artifacts on purpose (D191).
+2. Upgrade step 5.1 drops the bullet "Keep a section that has no slot.", because step 5.2 covers the content in no artifact.
+3. Upgrade has one advice rule for a kept item that no artifact holds, in section 3: add the item to an artifact by hand, or resolve it before `/opsx:apply`. Step 5.2 and step 5.4 do not repeat the advice. Step 5.4 repeats the advice of section 3 in one line after a yes.
+4. The reply order rule says "a re-run of this workflow", as the failure rule does, because stock `/opsx:apply` also runs `apply.instruction`.
+5. Scenario 17b expects the artifact that holds the open question, not the advice to copy the answer.
+
+**Rationale**: review loop round 5 on `v1.8.0..local` (`.review-reports/review_20261114191616_claude-opus-5-5_bead6c5-local.md`).

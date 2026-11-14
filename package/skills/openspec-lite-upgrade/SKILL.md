@@ -55,7 +55,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
-- A request can end with the step that the user does after the action, for example a re-run of this skill. Keep that step in the request, after the action.
+- A request can end with the step that the user does after the action, for example a re-run of this workflow. Keep that step in the request, after the action.
 
 ## 1. Common checks
 
@@ -102,7 +102,7 @@ Do these checks in order.
 - In the reply with the resume question, do not name a step number.
 - The resume question is: "The upgrade of <name> wrote the artifacts, and `plan.md` still exists. Finish the upgrade now: validate the artifacts, then decide what to delete from `plan.md`?"
 - After the resume question, end your turn, and wait for the answer. Do not run `validate` before the answer.
-- If the user answers no to the resume question, name each open question that stays in `plan.md`. Tell the user to write the answer of each open question in an artifact of the change, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`. Then stop.
+- If the user answers no to the resume question, name each open question that stays in `plan.md`. For each open question of `plan.md`, check if `tasks.md` → `## 0. Open questions` or `design.md` → `## Open Questions` of the change holds the question. If an artifact holds the question, name the artifact, because the stock skills meet the question there. If no artifact holds the question, tell the user to write the answer of the question in an artifact of the change, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`. Then stop.
 - If the user answers yes to the resume question, do the schema check. Then go to step 4 of section 2, not to step 1.
 
 ### Schema check
@@ -316,14 +316,12 @@ Do steps 5.1 to 5.4 in order.
 - If no artifact holds a question, and its answer is a non-obvious fact or a decision that the decision rule records, the destination is "kept, in no artifact". This case occurs when step 2.3 kept a `design.md` of an earlier run.
 - If no artifact holds a question, and you cannot decide the question or find its answer, the destination is "kept, in no artifact".
 - If the items of one section go to different destinations, list each item.
-- Keep a section that has no slot.
 - Go to step 5.2.
 
 ### Step 5.2: Find the content in no artifact
 
 - If a section has content that is in no artifact, list the content as "kept, in no artifact".
 - A yes to the prune question does not delete content that is "kept, in no artifact".
-- In the summary, name each content that is "kept, in no artifact". Tell the user to add the content to an artifact by hand, to keep it in an artifact.
 - Go to step 5.3.
 
 ### Step 5.3: Ask the prune question
@@ -347,7 +345,7 @@ Do steps 5.1 to 5.4 in order.
 - After a yes, keep the ID comment at the top of `plan.md` while a section is left.
 - After a yes, if no section is left, delete `plan.md`. A section with only an HTML comment counts as no section.
 - After a yes, say in one line what you deleted and what you kept.
-- After a yes, if an item is kept and no artifact holds it, tell the user to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`.
+- After a yes, if an item is kept and no artifact holds it, repeat in one line the advice of section 3 for the item.
 - Do not write the summary again.
 - Upgrade ends here.
 
@@ -362,7 +360,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
 - Name each part of the answer whose artifact the resume rule kept. Tell the user to add the part to that artifact by hand.
-- Name each `plan.md` item that stays in `plan.md` and that no artifact holds. The stock skills do not read `plan.md`.
+- Name each `plan.md` item that stays in `plan.md` and that no artifact holds, also each content that step 5.2 lists as "kept, in no artifact". Name each item one time. Advise the user to add the item to an artifact by hand, or to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`.
 - If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs.
 - If `design.md` has `### Decision` entries, say: to keep them as ADRs, copy them to `openspec/adr/` before the archive. `openspec-lite-archive` can do this copy: run it before `/opsx:archive`.
 - At the end of the summary, advise the user to review all artifacts. If an artifact has 🤖 items, advise the user to review each 🤖 item: remove the mark to accept the item, or delete the item. Advise an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference. This advice comes before the prune question of step 5.3.

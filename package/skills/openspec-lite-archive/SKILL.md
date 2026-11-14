@@ -55,7 +55,7 @@ How to read this skill:
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
-- A request can end with the step that the user does after the action, for example a re-run of this skill. Keep that step in the request, after the action.
+- A request can end with the step that the user does after the action, for example a re-run of this workflow. Keep that step in the request, after the action.
 
 ## 1. Common checks
 
@@ -123,7 +123,8 @@ The guard path:
    - Go to guard step 3.
 3. Name the open questions of a kept `plan.md`.
    - If `openspec/changes/<name>/plan.md` still exists, list each open question in `plan.md`, before the questions and the requests of the reply.
-   - Archive does not record an answer on the guard path. Tell the user to write the answer of each open question in an artifact of the change before the archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+   - Archive does not record an answer on the guard path. For each open question of `plan.md`, check if `tasks.md` → `## 0. Open questions` or `design.md` → `## Open Questions` of the change holds the question. If an artifact holds the question, name the artifact, because the stock skills meet the question there.
+   - If no artifact holds the question, tell the user to write the answer of the question in an artifact of the change before the archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
    - If `openspec/changes/<name>/plan.md` does not exist, say nothing about `plan.md`.
    - Go to guard step 4.
 4. Block the archive while a delta holds a 🤖.
@@ -136,7 +137,7 @@ The guard path:
    - Ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
-   - If a kept `plan.md` still has open questions, name how many in the same question, because the archive moves `plan.md` to the archive folder, and no artifact of the change holds a question that the user did not record.
+   - If a kept `plan.md` still has open questions that no artifact holds, name how many in the same question, because the archive moves `plan.md` to the archive folder, and the answers of these questions are in no artifact.
    - After the archive question, end your turn, and wait for the answer.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.

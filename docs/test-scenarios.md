@@ -427,7 +427,7 @@ This scenario checks the risk of a lost promotion. Stock `/opsx:archive` does no
 - The agent stops at the change schema guard. It writes no code and changes no file.
 - It tells the user to run stock `/opsx:apply`, because the change is spec-driven now.
 
-**Variant 17b**: before step 2, copy `tests/fixtures/scenarios/kept-plan.md` to the change as `plan.md`, and commit. It holds only an open question, as an upgrade keeps it when a section has no slot. Expected: `openspec-lite-apply` still refuses. Only `openspec-lite-upgrade` has the resume exception (D106). It also says that `plan.md` holds an open question that stock `/opsx:apply` does not read, and tells the user to resolve it first.
+**Variant 17b**: before step 2, copy `tests/fixtures/scenarios/kept-plan.md` to the change as `plan.md`, and commit. It holds only an open question, as an upgrade keeps it when a section has no slot. Expected: `openspec-lite-apply` still refuses. Only `openspec-lite-upgrade` has the resume exception (D106). It also names the open question of `plan.md`, and says that `tasks.md` → `## 0. Open questions` holds it, so stock `/opsx:apply` meets it as its first task. It does not tell the user to copy the answer to an artifact (D305).
 
 ## 18. `openspec-lite-archive` after an upgrade
 
