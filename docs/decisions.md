@@ -4323,3 +4323,15 @@ This revises D119, D166, D182, D219, and D256.
 4. Upgrade reads six rules of `apply.instruction`: the four rules, the fact rule, and the fact format, because upgrade uses the terms that only these two rules define.
 
 **Rationale**: review loop round 8 on `v1.8.0..local` (`.review-reports/review_20261114194807_claude-opus-5-5_bead6c5-local.md`).
+
+## D309: Fixes of Review Loop Round 9 on v1.8.0..local
+
+**Decision**:
+
+1. The 🤖 exception of upgrade step 2.3 points to the bullet of the same step that starts with "If the user said yes in the question turn of step 2", not to a yes bullet of the question turn.
+2. Upgrade says that a step number in the six rules of `apply.instruction` names a step of `apply.instruction`, and that a fact goes only to `## Context` of `design.md`.
+3. The upgrade guard Input names the `### Decision` entries of `design.md`, and the guard bullet gives the full path.
+4. The archive question of the guard path only counts the open questions that no artifact holds. The advice to record the answers stays in guard step 3, through the leftover block, so the reply gives it one time.
+5. Upgrade uses one phrase, "did not answer", for an open question with no answer, also when the user skips the question with no word about it.
+
+**Rationale**: review loop round 9 on `v1.8.0..local` (`.review-reports/review_20261114195306_claude-opus-5-5_bead6c5-local.md`).

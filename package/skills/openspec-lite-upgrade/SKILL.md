@@ -19,7 +19,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Section 4 holds the named rules of this skill, for example the requirement-source rule.
 - The general rules apply at all times, in each step.
 - A named rule applies in each step where its topic comes up, also when the step does not name the rule.
-- The question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these six rules in that file.
+- The question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these six rules in that file. A step number in these rules names a step of `apply.instruction`, not a step of this skill. In this skill, a fact goes only to `## Context` of `design.md`, not to `plan.md`.
 - `<name>` is the name of the change. The change selection check gives `<name>`.
 - `<dir>` is `openspec/changes/<name>`.
 
@@ -91,12 +91,12 @@ Do these checks in order.
 
 ### Guard
 
-- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, the file `openspec/changes/<name>/plan.md`, and the input of the leftover plan.md questions rule.
+- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, the file `openspec/changes/<name>/plan.md`, the `### Decision` entries of `openspec/changes/<name>/design.md`, and the input of the leftover plan.md questions rule.
 - Output: the next check or step, or a stop.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, go to the schema check.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
-- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`. If `design.md` of the change has `### Decision` entries, also say that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` copies them to `openspec/adr/`: run it before `/opsx:archive`.
+- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`. If `openspec/changes/<name>/design.md` has `### Decision` entries, also say that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` copies them to `openspec/adr/`: run it before `/opsx:archive`.
 - If `schema` has any other value, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
 - If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question, because an earlier run can stop after it wrote the artifacts, and a finished upgrade can keep `plan.md`.
 - In the reply with the resume question, do not name a step number.
@@ -204,7 +204,7 @@ Read the answer of the user:
 - If the user says yes to a planned requirement that the question turn asked, the user is the source of that requirement.
 - If the user says no to a planned requirement that the question turn asked, do not write that requirement.
 - If the user gave no answer for a planned requirement that the question turn asked, do not write that requirement. Name it in the summary.
-- If the user cannot answer an open question now, keep the question in `plan.md`, with no marker.
+- If the user did not answer an open question, keep the question in `plan.md`, with no marker.
 - If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
 - Go to step 2.1.
@@ -255,13 +255,13 @@ Read the answer of the user:
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji.
-- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless the user said yes to a requirement from that decision. For that case, follow the bullet about a yes in the question turn of step 2.
+- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless the user said yes to a requirement from that decision. For that case, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
 - Write each choice from the answer of the user that is not a contract to `## Decisions`, with no 🤖.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
 - A kept question that no message of the user answered, and that does not change the specs, the approach, or the tasks, goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
-- If the user has no answer to a question that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
+- If the user did not answer a question that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
 - If a kept question that no message of the user answered changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
 - Go to step 2.4.
 
@@ -279,7 +279,7 @@ Read the answer of the user:
   - If an answer from step 2 changes the tasks, edit the seed to match the answer, and say so in the summary.
 - If no preview exists, write `tasks.md` from the template.
 - In both cases, put these questions before the first group, as `## 0. Open questions`:
-  - each open question that step 2 asked and that the user could not answer;
+  - each open question that step 2 asked and that the user did not answer;
   - each question with the "(kept open by the user)" marker that no message of the user answered, and that changes the specs, the approach, or the tasks.
 - Give each question of `## 0. Open questions` one task: `- [ ] 0.1 Answer: <question> The answer can change the specs, the approach, or the tasks.`
 - After you write `tasks.md`, check that `tasks.md` exists. Then, if `tasks-preview.md` exists, delete `tasks-preview.md`.

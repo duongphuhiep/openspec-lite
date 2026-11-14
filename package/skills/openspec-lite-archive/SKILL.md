@@ -136,7 +136,7 @@ The guard path:
    - Ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
-   - If `plan.md` still has open questions that no artifact holds, name how many in the same question, because the archive moves `plan.md` to the archive folder, and no artifact holds these questions. Say that the user can first write each answer in an artifact and delete the question from `plan.md`.
+   - If `plan.md` still has open questions that no artifact holds, name how many in the same question, because the archive moves `plan.md` to the archive folder, and no artifact holds these questions.
    - After the archive question, end your turn, and wait for the answer.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
