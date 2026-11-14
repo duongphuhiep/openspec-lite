@@ -19,7 +19,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Section 4 holds the named rules of this skill, for example the requirement-source rule.
 - The general rules apply at all times, in each step.
 - A named rule applies in each step where its topic comes up, also when the step does not name the rule.
-- The question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these six rules in that file. A step number in these rules names a step of `apply.instruction`, not a step of this skill. In this skill, a fact goes only to `## Context` of `design.md`, not to `plan.md`.
+- The question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these six rules in that file. A step number in these rules names a step of `apply.instruction`, not a step of this skill. In this skill, only step 2.3 writes a fact, to `## Context` of `design.md`, not to `plan.md`. If you find a fact after step 2.3, or if the resume rule kept `design.md`, do not edit `design.md`: name the fact in the summary as content in no artifact.
 - `<name>` is the name of the change. The change selection check gives `<name>`.
 - `<dir>` is `openspec/changes/<name>`.
 
@@ -250,12 +250,12 @@ Read the answer of the user:
 - Run the instructions command for `design` with the instructions rule.
 - Non-Goals go to `## Goals / Non-Goals`.
 - Each `### Decision` entry of `plan.md` goes to `## Decisions`.
-- If a choice of the answer supersedes or changes a decision of `plan.md`, write only the decision that follows the answer, with no 🤖. Do not copy the old decision.
+- If a part of the answer supersedes, changes, or corrects a decision of `plan.md`, or a fact or a 🤖 decision that the question turn of step 2 planned, write only the item that follows the answer, with no 🤖. Do not copy the old item.
 - A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet. Two bullets of this step are exceptions: a choice of the answer that supersedes the decision, and a yes to a requirement from the decision.
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
-- Write each fact that step 2 planned to `## Context`, with its source emoji.
-- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless the user said yes to a requirement from that decision. For that case, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
+- Write each fact that step 2 planned to `## Context`, with its source emoji, unless a part of the answer corrected the fact.
+- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless a part of the answer superseded the decision, or the user said yes to a requirement from that decision. For that case, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
 - Write each choice from the answer of the user that is not a contract to `## Decisions`, with no 🤖.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.

@@ -116,7 +116,9 @@ The guard path:
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
    - Search only the files and folders that exist. A missing `proposal.md`, `specs/`, or `design.md` holds no 🤖.
-   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Advise the user to accept the line (remove the mark) or delete the line. The guard path does not wait for this edit, so the advice comes before the request of guard step 4 or the question of guard step 5. If the 🤖 line is in a delta of `specs/`, give no advice for the line, because guard step 4 makes the request.
+   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line.
+   - For each 🤖 line of `proposal.md` or `design.md`, advise the user to accept the line (remove the mark) or delete the line. For a 🤖 line in a delta of `specs/`, give no advice, because guard step 4 makes the request.
+   - The guard path does not wait for the edit of a 🤖 line of `proposal.md` or `design.md`, so this advice comes before the request of guard step 4 or the question of guard step 5.
    - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file. The ADR can come from this run or from an earlier run. Tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
@@ -215,6 +217,8 @@ The guard path:
 - Output: the selected items.
 - Each outcome of the Goal is an item, as each constraint, decision, and fact is an item.
 - Select each item that passes at least one filter. The filters are **Non-obvious**, **Surprising**, **Contract**, and **Non-obvious fact**.
+- Apply the **Non-obvious**, **Surprising**, and **Contract** filters to each outcome, constraint, and decision.
+- Apply only the **Non-obvious fact** filter to a fact.
 - **Non-obvious**: a reader cannot deduce the item from the code in 5 minutes.
 - **Surprising**: the item would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on.

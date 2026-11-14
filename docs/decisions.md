@@ -4335,3 +4335,14 @@ This revises D119, D166, D182, D219, and D256.
 5. Upgrade uses one phrase, "did not answer", for an open question with no answer, also when the user skips the question with no word about it.
 
 **Rationale**: review loop round 9 on `v1.8.0..local` (`.review-reports/review_20261114195306_claude-opus-5-5_bead6c5-local.md`).
+
+## D310: Fixes of Review Loop Round 10 on v1.8.0..local
+
+**Decision**:
+
+1. In upgrade, only step 2.3 writes a fact, to `## Context` of `design.md`. A fact that upgrade finds after step 2.3, or for a `design.md` that the resume rule kept, goes in the summary as content in no artifact. This completes D309 item 2.
+2. Upgrade step 2.3: a part of the answer that supersedes, changes, or corrects a decision of `plan.md`, or a fact or a 🤖 decision that the question turn planned, replaces the old item. The bullets that write the planned facts and 🤖 decisions name this exception.
+3. Archive step 3 applies the Non-obvious, Surprising, and Contract filters to outcomes, constraints, and decisions, and only the Non-obvious fact filter to a fact. A fact that the code shows no longer passes the 5-minute filter (D290 item 5 made a fact an item).
+4. Archive guard step 2 splits its bullet: list the 🤖 lines, advise only for the lines of `proposal.md` and `design.md`, and place the advice before the end list.
+
+**Rationale**: review loop round 10 on `v1.8.0..local` (`.review-reports/review_20261114195816_claude-opus-5-5_bead6c5-local.md`). This was the last round of the loop of 10 rounds.
