@@ -109,6 +109,7 @@ openspec-lite/
     20. Upgrade lists the destination of each `plan.md` section and asks before it prunes. The fact goes to `design.md`, and no artifact holds a `plan.md` ID (D135, D142). Upgrade with no requirement ends with `skip_specs: true` set, and the summary says so (D108, D120, D153, D160).
     21. Archive with a decision that replaces an `Accepted` ADR: the new ADR has `Supersedes:`, and only the `Status:` line of the old ADR changes. A rerun fixes an old ADR that an earlier run did not mark (D122).
     22. Goal with more than one outcome: (a) propose keeps related outcomes as bullets in one change; (b) propose asks before it leaves out an outcome that can ship alone; (c) archive names the outcome that is not met, asks only "Archive anyway?", and on no gives the paths for that outcome (D148, D155, D191).
+    23. One skill at a time, each from a start state built by hand in a domain that no other scenario uses: (a) the tasks preview commits only `plan.md` and asks its open questions last; (b) apply commits only `plan.md`, asks a question that only the user can answer with no recommendation, writes and tests the code, and answers a reply that changes no item with no new run of the checks; (c) archive prints one summary with no approval question, promotes the Goal outcome, each contract, and the non-obvious decision, and gives no ADR to a contract decision with an obvious reason (D311).
 
 ## 2a. Tests (D84)
 

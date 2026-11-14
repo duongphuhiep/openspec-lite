@@ -1,6 +1,6 @@
 # Test Scenarios
 
-Run scenarios 1–9 and 11–22 by hand before each release tag (D69). Number 10 is not used. The `apm-install` CI workflow does the real APM install from the tag (D130). The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
+Run scenarios 1–9 and 11–23 by hand before each release tag (D69). Number 10 is not used. The `apm-install` CI workflow does the real APM install from the tag (D130). The automated tests (`node --test`) cover the scripts and the schema. These scenarios cover the skills, which only an agent can run.
 
 Setup for each scenario, unless it says otherwise:
 
@@ -590,6 +590,105 @@ This scenario checks the rules for a Goal with more than one outcome (D148).
 - For the date outcome, it gives two paths: implement it with `openspec-lite-apply`, or remove it from `## Goal` and propose it as a separate change. Then it tells the user to run archive again (D191).
 
 ---
+
+## 23. One skill at a time
+
+Each scenario of this group tests one skill in one session. It builds its own start state by hand, and does not use the output of another scenario. The domain of the change is new to the scenarios, so the skills cannot hold a hint for it (D311).
+
+Common start state for 23a and 23b:
+
+1. Do the setup at the top of this file. Install the schema: `node .claude/skills/openspec-lite-schema/scripts/install.mjs .`.
+2. Add `package.json` with `{ "name": "blog", "version": "1.0.0", "scripts": { "test": "node --test" } }`, and a `README.md` with the line "Blog tools.". Create an empty `src/` folder with a `.gitkeep` file. Commit.
+3. Run `openspec new change add-slugify --schema plan-lite`. Write `openspec/changes/add-slugify/plan.md` from the template `openspec/schemas/plan-lite/templates/plan.md`, because `plan-hash.mjs` needs each of its headings. Keep the template comments. Give it the Goal "Add `slugify(title)` in `src/slug.js`. It turns the title of a blog post into the slug of the post URL." and the constraint "- C1: Add no npm dependency."
+
+### 23a. The tasks preview alone
+
+**Steps**:
+
+1. Build the common start state. Do not commit `plan.md`. Add the line "Slugs are for post URLs." to `README.md`, and stage it with `git add README.md`. Do not commit it.
+2. Run `openspec-lite-tasks-preview add-slugify`. If it asks open questions, do not answer them in this scenario.
+
+**Expected**:
+
+- Before it explores, the agent commits only `plan.md`, with the message `plan.md: checkpoint before tasks-preview`, and says so in one line. After the run, the `README.md` edit is still staged and not committed (D290, D293).
+- `tasks-preview.md` exists. Its second line is `<!-- plan-sha256: <64 hex chars> -->`, equal to the output of `plan-hash.mjs` on `plan.md`. The tasks have no checkboxes, and each task has a `Verify:` line. A test task covers `slugify`.
+- The agent writes no code. `## Goal`, `## Background`, `## Non-Goals`, and `## Constraints` of `plan.md` do not change. Each template comment is still in `plan.md`.
+- Each visible result that the preview plans and that `plan.md` does not say is a 🤖 decision or an open question, for example the separator between words, the result for a letter with an accent, the result for a title with no letter or digit, or a length limit (D219, D220). A point that depends only on an intent of the user is an open question with a recommended answer, or a 🤖 decision. A point that depends on a fact that only the user knows, for example the format of the existing post URLs, is an open question with no recommended answer (D195, D225).
+- The end reply has this order: the summary of the items that the run added, changed, or removed, the table of the added 🤖 decisions, the advice to read the preview and to correct `plan.md` on a disagreement, and last the open questions in one numbered list. Nothing comes after the last question (D300, D301).
+
+### 23b. Apply alone
+
+**Steps**:
+
+1. Build the common start state. Add the open question "- OQ1: What separator do the existing post URLs use between words?" to `## Open Questions` of `plan.md`. Do not commit `plan.md`. Do not write `tasks-preview.md`.
+2. Run `openspec-lite-apply add-slugify`.
+3. If the agent asks about the separator, answer: "The existing post URLs use `-` between words." Answer each other question with: "Use your recommended answer." If a question has no recommended answer, answer: "I have no preference."
+4. After the turn in which apply gives its end summary, ask: "Why did you put `slugify` in its own file?"
+
+**Expected**:
+
+- Before it reads the CLI instructions, the agent commits only `plan.md`, with the message `plan.md: checkpoint before apply`, and says so in one line (D290).
+- The preview is absent, so the agent gives no stale warning and asks no stale question.
+- Before it writes code, the agent asks OQ1 with no recommended answer, because only the user knows the format of the existing URLs. The question is at the end of the reply (D195, D300). The agent writes no code that depends on the separator before the answer.
+- After step 3, OQ1 is gone from `## Open Questions`. The answer is in `plan.md` as a fact with 👤, a constraint, or a decision with no 🤖 (D226, D240).
+- `src/slug.js` exports `slugify`. A test file covers it, and the test fails if the separator is not `-`. The agent runs the tests, and they pass. `package.json` has no new dependency.
+- Each visible result that the agent put in the code and that `plan.md` and the user did not say is a 🤖 decision, for example the result for a letter with an accent or for a title with no letter or digit (D219, D220). The end summary has the table of these decisions.
+- The end summary gives no note about the plan hash, because no preview exists (D295). If the test check and the done check pass, it tells the user to archive with `openspec-lite-archive`. If an open question is left, the question is the last part of the reply (D300).
+- In step 4, the agent answers the question. It changes no item of `plan.md`, does not run the tests again, and does not give the end summary again (D296, D304).
+
+### 23c. Archive alone
+
+**Steps**:
+
+1. Do the setup at the top of this file. Install the schema. Add `package.json` as in the common start state. Write `src/slug.js`:
+
+   ```js
+   function slugify(title) {
+     const words = title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter(Boolean);
+     let slug = words.join("-");
+     if (slug.length > 60) slug = slug.slice(0, 60).replace(/-[^-]*$/, "");
+     return slug;
+   }
+   module.exports = { slugify };
+   ```
+
+2. Run `openspec new change add-slugify --schema plan-lite`. Write `plan.md` from the template, and keep the template comments. Fill the sections with the items below. Each item has a tag in brackets that the agent does not see in a real repo. Remove the tags before the run, and keep this list as your answer key:
+
+   ```markdown
+   ## Goal
+   Add `slugify(title)` in `src/slug.js`. It turns the title of a blog post into the slug of the post URL. [contract: spec, alone or in the requirement of a constraint]
+
+   ## Non-Goals
+   - No transliteration of letters with an accent. [skip, or in an ADR]
+
+   ## Constraints
+   - C1: A slug holds only lowercase ASCII letters, digits, and `-`. [contract: spec]
+   - C2: A slug is at most 60 characters, because the CMS rejects a longer URL path. [non-obvious: spec, with the reason]
+
+   ## Facts
+   - F1: 👤 The CMS rejects a URL path over 60 characters. Source: the user. [👤: reason of the C2 requirement, or ADR Context]
+   - F2: `src/slug.js` exports one function. [obvious: not drafted, with a reason]
+
+   ## Decisions
+   ### Decision D1: Compute each slug again, with no cache
+   Chose to compute each slug again because the site build runs once each night, so a cache saves no time. Rejected an in-memory cache because it adds code for no gain. [non-obvious reason: ADR]
+   ### Decision D2: Join the words with `-`
+   Chose `-` because C1 allows only `-` as a separator. [contract with an obvious reason: spec, no ADR]
+   ### Decision D3: Return an empty string for a title with no letter or digit 🤖
+   Chose an empty string because the code then needs no error path. [🤖 contract: spec; the summary names it as not confirmed]
+   ```
+
+3. Commit. Run `openspec-lite-archive add-slugify`.
+
+**Expected**:
+
+- The done check passes with no "Archive anyway?" question, because the committed code meets the Goal and each constraint, and `## Open Questions` is empty (D209).
+- The agent does not print the full text of a draft, and asks no yes, no, or edit question. It prints one summary, and then writes and archives in the same turn (D289).
+- The summary groups the items with a count for each group. Each line gives the `plan.md` ID, if the item has one, and the title or a short form of the text. The groups hold: D1 in the ADR group; the Goal outcome, C1, and C2 in the requirement group; D2 and D3 in the contract decision group; F1 in a requirement text or in the `## Context` of an ADR; and the not-drafted group with F2 and the non-goal, each with a reason (D289, D290, D291). The summary names D3 as a 🤖 decision that the user did not confirm, and says that the archive promotes it (D289).
+- F2 is not selected, because a fact passes only the Non-obvious fact filter, and a reader sees F2 in the code (D310). F1 is never in the not-drafted group, because a 👤 fact is always non-obvious (D308).
+- `openspec/specs/<capability>/spec.md` holds requirements for the Goal outcome, C1, C2, D2, and D3. Each requirement has at least one `#### Scenario:`. The C2 requirement keeps its reason, the CMS limit, in its text. No line of the spec holds a 🤖, a 👤, or a `plan.md` ID such as `C1` or `D2` (D142, D181, D252).
+- `openspec/adr/` holds an ADR for D1, with `Status: Accepted` and `Change: add-slugify`. The ADR makes no claim that `plan.md`, the code, or the facts do not state (D289). An ADR for D2 fails, because its reason passes no filter (D298). An ADR for D3 is optional.
+- The end summary names D2 as a decision with no ADR, names the requirement that holds it, and says that its reason now exists only in `openspec/changes/archive/` (D291). The change is in `openspec/changes/archive/`.
 
 ## Running the Scenarios Headless
 

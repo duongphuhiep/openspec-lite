@@ -4346,3 +4346,14 @@ This revises D119, D166, D182, D219, and D256.
 4. Archive guard step 2 splits its bullet: list the 🤖 lines, advise only for the lines of `proposal.md` and `design.md`, and place the advice before the end list.
 
 **Rationale**: review loop round 10 on `v1.8.0..local` (`.review-reports/review_20261114195816_claude-opus-5-5_bead6c5-local.md`). This was the last round of the loop of 10 rounds.
+
+## D311: Scenarios 23a to 23c Test One Skill at a Time
+
+**Decision**:
+
+1. Scenario group 23 has three scenarios: 23a for the tasks preview, 23b for apply, and 23c for archive. Each scenario tests one skill in one session, from a start state that the scenario builds by hand. No scenario uses the output of another scenario.
+2. The three scenarios use a new domain, a `slugify(title)` function for the URLs of blog posts. No other scenario and no example of the skills uses this domain, so the skills cannot hold a hint for it.
+3. Each scenario checks the rules of D289 to D310 for its skill: the commit of only `plan.md`, the order of a reply with questions, a question that only the user can answer, a reply that changes no item, the archive summary with no approval, the Goal outcome as an item, the filters for a fact, and no ADR for a contract decision with an obvious reason.
+4. Scenario 23c has an answer key with tags, as scenario 15 has.
+
+**Rationale**: the user asked for three isolated scenarios, one for each of the tasks preview, apply, and archive. The older scenarios often chain the skills, or share fixtures and domains with the examples of earlier rule fixes.
