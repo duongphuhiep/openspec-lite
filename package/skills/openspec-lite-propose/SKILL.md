@@ -39,6 +39,13 @@ How to read this skill:
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
 
+### Reply order rule
+
+- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- Put each summary, list, warning, report, and result of the reply before the first question or request.
+- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- Write nothing after the last question or request: no note, no summary line, and no offer.
+
 ## 1. Split and Level 1 questions
 
 ### Main outcome
@@ -239,9 +246,10 @@ Do these checks in order. When the checks are done, go to section 3.
 1. Give the summary:
    - Show the change name and the path of `plan.md`, if `plan.md` exists.
    - Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
-   - List each open question that you recorded in `plan.md`, so that the user can answer it.
    - Go to step 2.
-2. Ask: "Do you want a tasks preview?"
+2. At the end of the reply, after the summary, write the questions in one numbered list:
+   - First, each open question that you recorded in `plan.md`, so that the user can answer it.
+   - Last, the question: "Do you want a tasks preview?"
    - After the question, end your turn, and wait for the answer.
    - When the user replies, first record the reply with the answer rule.
    - If you added, changed, or removed an item in `plan.md`, list each such item, with its ID.

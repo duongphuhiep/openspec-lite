@@ -124,7 +124,7 @@ openspec-lite/
 - `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to the `defects.md` of the run, or a new decision fixes the skill (D173, D251). The sample code of a fixture has no known security defect, for example an unbounded map or a shared bucket for a missing key, so that a security review of a scenario repo flags nothing (D284). The headless allowlist has `npm`, so that a scenario can run the tests of its `package.json` (D283). Each scenario run is isolated: a new temp folder from `scripts/scenario-setup.sh`, a new session, and no output of another scenario or of an earlier run. A scenario that needs an earlier state starts from a fixture in `tests/fixtures/scenarios/` (D199).
 - `exit-code.test.mjs` skips the missing-command case on Windows, where the shell reports it (D202).
 - `scripts/break-delta.sh` is the 13a helper: it removes the `#### Scenario:` blocks of the first delta that the agent writes (D203).
-- `skills.test.mjs`: the shared blocks `### OpenSpec root`, `### Change selection`, `### Schema check`, and `### Failure rule` are the same text in each skill that has them. The failure rule of `apply.instruction` is the same text as the `### Failure rule` of the skills. When you edit one copy, edit each other copy (D237, D281).
+- `skills.test.mjs`: the shared blocks `### OpenSpec root`, `### Change selection`, `### Schema check`, `### Failure rule`, and `### Reply order rule` are the same text in each skill that has them. The failure rule and the reply order rule of `apply.instruction` are the same text as the blocks of the skills (D300). When you edit one copy, edit each other copy (D237, D281).
 - `scenario-fixtures.test.mjs`: the `tasks-preview.md` of the `after-preview` fixture has the `plan-sha256` of its `plan.md` (D199).
 
 ## 3. Skill Rules
@@ -231,7 +231,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - `## Goal` holds one outcome by preference. If the change has more than one outcome, write one outcome per bullet, in one or two sentences each (D148).
 - If an upgrade signal is present (see §5), suggest an upgrade.
 - In the summary, show the change name. Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it (D148).
-- At the end, ask: "Do you want a tasks preview?" When the user replies, propose first records each part of the reply with the answer rule. Then, on yes, it runs `openspec-lite-tasks-preview`. On no, it ends its turn. If the reply has no yes and no no, it asks again (D266, D271).
+- At the end, ask the open questions of `plan.md` and then "Do you want a tasks preview?", in one numbered list, as the last part of the reply (D300). When the user replies, propose first records each part of the reply with the answer rule. Then, on yes, it runs `openspec-lite-tasks-preview`. On no, it ends its turn. If the reply has no yes and no no, it asks again (D266, D271).
 - Do not write code, except after a yes to the Level 1 question (D202).
 
 ### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172, D174, D177, D180, D181, D182, D183, D184, D193, D211, D217, D218, D219, D220, D221, D222, D223, D224, D225, D226, D227, D228, D229, D230, D231, D236, D290)
@@ -297,7 +297,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 3. Before the switch, check that `proposal.md`, `design.md`, and `tasks.md` exist, and that `specs/` holds a delta or `skip_specs: true` is set. Then change `schema: plan-lite` to `schema: spec-driven` in `.openspec.yaml`, and read the line again (D281). If a step before this one fails, the change is still plan-lite, and a new upgrade run resumes it.
 4. Run `openspec validate "<name>"`. Report each error. Do not fix errors silently. Upgrade validates before the prune question, so that the user decides on the delete with the result (D191).
 5. List each `plan.md` section with its destination artifact and heading, or "kept". A question that no artifact holds is "closed" only when its answer is obvious, or is a decision that the decision rule does not record. On the resume path, upgrade uses the test of the question rule again to find that answer. A non-obvious fact or a recorded decision that no artifact holds is "kept, in no artifact", and the summary tells the user to add it to an artifact by hand (D255, D256, D258, D276). If the items of one section go to different destinations, list each item. Keep a section that has no slot, for example an open question that the user cannot answer now. List each content that is in no artifact as "kept, in no artifact". A yes to the prune question does not delete it. The summary names it, and tells the user to add it to an artifact by hand (D206, D276). Write one reply in this order: the `validate` result, the summary of step 6, the list, and last the question "Delete the moved sections from `plan.md`?". If `validate` failed, recommend to keep `plan.md` until the errors are fixed. The summary does not say that `plan.md` is deleted or kept: its file list names the files that upgrade wrote, and `tasks-preview.md` if it deleted it (D210). The question is the last line. End the turn, and wait for the answer (D132, D191, D193). On yes, delete each section or item whose content moved. Keep the ID comment at the top while a section is left (D158). If no section is left, delete `plan.md`. A section with only an HTML comment counts as no section. Then say in one line what was deleted and what was kept, and tell the user to resolve a kept item before `/opsx:apply`. On no, keep `plan.md`, and say in one line that its moved sections are old copies, and that the artifacts are the source of truth (D120, D121, D127). Do not write the summary again (D193).
-6. The summary comes in the reply of step 5, before the question (D193). In the summary, ask the user to review all artifacts. List each 🤖 item with its new claim (D167), and ask the user to remove the mark to accept it, or to delete the item (D152). Ask for an extra review of `tasks.md`, because it is a contract. Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none (D153). Name each `plan.md` item that has no slot and stays in `plan.md`. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`. If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` can copy them to `openspec/adr/` before it (D115, D154).
+6. The summary comes in the reply of step 5, before the question (D193). The review requests come at the end of the summary, just before the prune question (D300). In the summary, ask the user to review all artifacts. List each 🤖 item with its new claim (D167), and ask the user to remove the mark to accept it, or to delete the item (D152). Ask for an extra review of `tasks.md`, because it is a contract. Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none (D153). Name each `plan.md` item that has no slot and stays in `plan.md`. The stock skills do not read `plan.md`. Tell the user to resolve the kept items before `/opsx:apply`. If `design.md` has `### Decision` entries, warn that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` can copy them to `openspec/adr/` before it (D115, D154).
 
 ### openspec-lite-archive (D3, D6, D8, D9, D18, D30, D47, D55, D58, D59, D60, D74, D77, D105, D119, D120, D121, D122, D148, D154, D155, D179, D180, D181, D184, D191, D193, D253, D289, D290)
 
@@ -373,6 +373,7 @@ How to read these steps:
 - When you find a fact, record the fact with the fact rule and the fact format.
 - When you ask an open question, follow the ask rule.
 - When an action fails, follow the failure rule.
+- When you write a reply to the user, follow the reply order rule.
 - When you need the exit code of a command, use the exit-code rule.
 - When you change a behavior, follow the test rule.
 - When you add an item to plan.md, or write another file or a commit message, follow the ID rule.
@@ -390,6 +391,13 @@ How to read these steps:
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
+
+## Reply order rule
+
+- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- Put each summary, list, warning, report, and result of the reply before the first question or request.
+- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- Write nothing after the last question or request: no note, no summary line, and no offer.
 
 ## Step 1: Report the commit state of plan.md
 
@@ -424,8 +432,9 @@ How to read these steps:
   - If the preview is stale, add the stale question: "Regenerate the preview with openspec-lite-tasks-preview, or continue from plan.md?"
   - Add each open question that is not a kept question, and that you did not ask yet in this session.
 - If the list of questions to ask is empty, go to step 4.
-- If the list of questions to ask is not empty, ask all questions of the list in one reply, with the ask rule:
-  - In the same reply, give the answer of each question that you closed.
+- If the list of questions to ask is not empty, write one reply:
+  - First, give the answer of each question that you closed.
+  - Last, ask all questions of the list, with the ask rule.
   - End your turn, and wait for the reply of the user.
 - When the user replies to the questions of step 3:
   - Record each answer with the answer rule.
@@ -491,7 +500,6 @@ When the checks are done, go to step 6.
    - If you changed the Goal, quote the old outcome and the new outcome. If the preview is not absent, say that the Goal edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
-   - Ask each new open question of step 5 with the ask rule.
    - If one of these conditions is true, suggest running openspec-lite-upgrade: another person or agent must continue the work, the change touches more than one capability or more than one repo, or a contract (spec) becomes necessary. If no condition is true, do not suggest an upgrade.
 2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
 3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
@@ -501,6 +509,7 @@ When the checks are done, go to step 6.
 7. If an open question that is not a kept question is left, tell the user to answer the open question in the next message, so that you record the answer. For each open question that is left, kept or not, name the part of the Goal that waits for the answer. Do not ask for the answer of a kept question. When the user replies, step 4 says what to do.
 8. If the test check and the done check pass, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.
 9. If the test check or the done check fails, do not suggest an archive.
+10. Last, ask each new open question of step 5 with the ask rule. Put these questions and the request of item 7 together at the end of the reply, after items 1 to 9, as the reply order rule says.
 
 ## Question rule: close an open question
 

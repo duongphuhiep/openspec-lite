@@ -47,6 +47,13 @@ How to read this skill:
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
 
+### Reply order rule
+
+- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- Put each summary, list, warning, report, and result of the reply before the first question or request.
+- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- Write nothing after the last question or request: no note, no summary line, and no offer.
+
 ## 1. Common checks
 
 Do these checks in order.
@@ -106,7 +113,7 @@ The guard path:
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
    - Search only the files and folders that exist. A missing `proposal.md`, `specs/`, or `design.md` holds no 🤖.
-   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
+   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line. Put this request at the end of the reply, with the open questions of guard step 3 and the question of guard step 4 or 5, as the reply order rule says.
    - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file. The ADR can come from this run or from an earlier run. Tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.

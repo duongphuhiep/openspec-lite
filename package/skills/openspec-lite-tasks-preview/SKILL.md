@@ -116,6 +116,13 @@ Do these checks in order.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
 
+### Reply order rule
+
+- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- Put each summary, list, warning, report, and result of the reply before the first question or request.
+- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- Write nothing after the last question or request: no note, no summary line, and no offer.
+
 ### Step 1: Check that plan.md exists
 
 - Input: `openspec/changes/<name>/plan.md`.
@@ -210,12 +217,12 @@ When the checks are done, go to step 6.
    - List each fact, decision, and open question that you added, changed, or removed in `plan.md`, with its ID.
    - If you added, changed, or removed no item in `plan.md`, say that you changed no item.
    - For each open question that you removed, give its answer.
-   - Ask each open question that is still open and is not a kept question, new or existing, with the ask rule.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
    - For each decision that you added in this run to record a constraint of the user, say that the user can move the decision to `## Constraints`.
 4. Tell the user to read the preview.
 5. Tell the user what to do on disagreement: put the correction in `plan.md`, and run this skill again. The user does not edit `tasks-preview.md`.
+6. Last, ask each open question that is still open and is not a kept question, new or existing, with the ask rule. Put the questions at the end of the reply, after items 3 to 5, as the reply order rule says.
 
 ## 3. Rules
 

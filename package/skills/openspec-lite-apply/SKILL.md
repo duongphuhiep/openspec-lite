@@ -33,6 +33,13 @@ How to read this skill:
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
 
+### Reply order rule
+
+- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- Put each summary, list, warning, report, and result of the reply before the first question or request.
+- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- Write nothing after the last question or request: no note, no summary line, and no offer.
+
 ## 1. Common checks
 
 Do these checks in order: OpenSpec root, change selection, guard, and schema check. When the checks are done, go to section 2.

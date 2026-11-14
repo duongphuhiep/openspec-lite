@@ -47,6 +47,13 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
 
+### Reply order rule
+
+- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
+- Put each summary, list, warning, report, and result of the reply before the first question or request.
+- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- Write nothing after the last question or request: no note, no summary line, and no offer.
+
 ## 1. Common checks
 
 Do these checks in order.
@@ -165,11 +172,12 @@ Ask the question turn:
 - If the question list is empty, do not ask. Go to step 2.1.
 - If each of the four artifacts already exists, do not ask. Go to step 2.1.
 - If the question list is not empty, and at least one of the four artifacts does not exist, ask all items of the question list in one reply, before you write any artifact.
+- First in the reply, give the answer of each question that you closed.
+- Then, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, give the reason why the decision is not a contract, in one sentence.
+- Last in the reply, ask all items of the question list, in one numbered list.
 - Ask each open question with the ask rule.
-- For each planned requirement in the reply, show its text, and ask if you can write it.
-- For each decision with 🤖 in `plan.md` that you do not plan as a requirement, give in the reply the reason why the decision is not a contract, in one sentence.
+- For each planned requirement in the list, show its text, and ask if you can write it.
 - For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", upgrade writes no spec (step 2.2).
-- In the same reply, give the answer of each question that you closed.
 - End the turn, and wait for the answer.
 
 Read the answer of the user:
@@ -317,7 +325,7 @@ Do steps 5.1 to 5.4 in order.
 
 ### Step 5.3: Ask the prune question
 
-- Write one reply in this order: the result of step 4, the summary of section 3, the list from step 5.1, and last the prune question.
+- Write one reply in this order: the result of step 4, the list from step 5.1, the summary of section 3, and last the prune question.
 - The prune question is: "Delete the moved sections from `plan.md`?"
 - If `validate` failed, recommend to keep `plan.md` until the errors are fixed.
 - The summary must not say that `plan.md` is deleted or kept, because the user did not answer yet. This ban is about the whole file. Name each item that stays in `plan.md` after any answer, as section 3 says.
@@ -346,17 +354,15 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 - List the files that you wrote, and `tasks-preview.md` if you deleted it.
 - Do not name `plan.md` in the file list, as deleted or as kept. Step 5.4 says what happens to `plan.md` after the answer.
-- Ask the user to review all artifacts.
 - If an artifact has 🤖 items, list each 🤖 item with its new claim, or as an agent decision of `plan.md`.
-- Ask the user to review each 🤖 item: remove the mark to accept the item, or delete the item.
 - A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user, because the mark goes away only after an action of the user: a yes in the question turn of step 2, an answer that supersedes the decision, or an edit of the user. Do not ask the user to confirm the decision again, also on a resumed run.
-- Ask for an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference.
 - Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
 - Name each part of the answer whose artifact the resume rule kept. Tell the user to add the part to that artifact by hand.
 - Name each `plan.md` item that has no slot and stays in `plan.md`, for example an open question that the user cannot answer now. The stock skills do not read `plan.md`.
 - If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs.
 - If `design.md` has `### Decision` entries, say: to keep them as ADRs, copy them to `openspec/adr/` before the archive. `openspec-lite-archive` can do this copy: run it before `/opsx:archive`.
+- At the end of the summary, ask the user to review all artifacts. If an artifact has 🤖 items, ask the user to review each 🤖 item: remove the mark to accept the item, or delete the item. Ask for an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference. The prune question of step 5.3 comes after these requests.
 
 ## 4. Rules
 

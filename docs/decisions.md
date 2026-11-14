@@ -4219,3 +4219,17 @@ This revises D119, D166, D182, D219, and D256.
 6. The schema skill tells the user to commit only when `git rev-parse --show-toplevel` succeeds.
 
 **Rationale**: skill text review round 5 at 40a289c (`.review-reports/review_20261114010818_claude-opus-5-5_40a289c-package.md`). This was the last round of the loop of 5 rounds.
+
+## D300: Questions and Requests Come Last in Each Reply
+
+**Decision**:
+
+1. Each skill and `apply.instruction` have a shared block `Reply order rule`. If a reply asks the user a question or asks for an action, each question and each request goes at the end of the reply. Each summary, list, warning, report, and result comes first. More than one question goes together in one numbered list at the end. Nothing comes after the last question. `tests/skills.test.mjs` checks that each copy is equal.
+2. Apply step 3 gives the answers of the closed questions first, and asks the questions last. Apply step 6 asks the new open questions in a last item 10, after the test check, the done check, and the archive and upgrade advice.
+3. Tasks-preview step 8 asks the open questions in a last item 6, after the summary, the 🤖 table, and the advice on the preview.
+4. The upgrade question turn gives the closed answers and the 🤖 reasons first, and asks the question list last. The reply of step 5.3 puts the destination list before the summary. The review requests come at the end of the summary, just before the prune question.
+5. Propose section 5 asks the open questions of `plan.md` and the tasks-preview question in one numbered list at the end. The tasks-preview question is the last item.
+6. The archive guard path puts the request to accept or delete each 🤖 line at the end, with the open questions and the question of guard step 4 or 5.
+7. `docs/test-scenarios.md` checks the order in each scenario.
+
+**Rationale**: the user asked to scan each skill, because a question in the middle of a long reply is easy to miss. D289 fixed one case in archive step 6. The scan found seven more steps that put a question before other content of the same reply.

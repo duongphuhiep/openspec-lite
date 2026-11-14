@@ -18,6 +18,8 @@ Setup for each scenario, unless it says otherwise:
 - `interrupted-upgrade`: the same change with a fresh preview, after an upgrade stopped right after it wrote `proposal.md`, for scenario 7 step 3.
 - `after-upgrade`: the same change after an upgrade (scenario 7), with no `plan.md`. Its delta holds the 🤖 scenario "Table is empty". `tests/fixtures/scenarios/kept-plan.md` is the `plan.md` that an upgrade keeps when an open question has no slot.
 
+Check for each scenario (D300): in each reply that asks the user a question, or asks the user to act, the questions and the requests come last, after each summary, list, warning, and report. If a reply has more than one question, they are together at the end. A question in the middle of a reply fails the scenario.
+
 Isolation rules (D199):
 
 - Each scenario run starts in a new temp folder, from the setup above or from a fixture. Do not start from the output of another scenario, and do not copy or clone the folder of an earlier run.

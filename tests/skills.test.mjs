@@ -21,6 +21,7 @@ const shared = {
   "Change selection": ["apply", "archive", "tasks-preview", "upgrade"],
   "Schema check": ["apply", "archive", "tasks-preview", "upgrade", "propose"],
   "Failure rule": ["apply", "archive", "tasks-preview", "upgrade", "propose", "schema"],
+  "Reply order rule": ["apply", "archive", "tasks-preview", "upgrade", "propose", "schema"],
 };
 
 for (const [title, skills] of Object.entries(shared)) {
@@ -32,10 +33,12 @@ for (const [title, skills] of Object.entries(shared)) {
   });
 }
 
-test("apply.instruction holds the same failure rule as the skills", () => {
-  const yaml = readFileSync(fileURLToPath(new URL("../package/skills/openspec-lite-schema/assets/plan-lite/schema.yaml", import.meta.url)), "utf8").replace(/\r\n/g, "\n");
-  const instr = yaml.split("  instruction: |\n")[1].replace(/^    /gm, "");
-  const rule = block(instr.replace(/^## /gm, "### "), "Failure rule");
-  assert.ok(rule, "apply.instruction has no failure rule");
-  assert.equal(rule, block(read("apply"), "Failure rule"));
-});
+for (const title of ["Failure rule", "Reply order rule"]) {
+  test(`apply.instruction holds the same ${title.toLowerCase()} as the skills`, () => {
+    const yaml = readFileSync(fileURLToPath(new URL("../package/skills/openspec-lite-schema/assets/plan-lite/schema.yaml", import.meta.url)), "utf8").replace(/\r\n/g, "\n");
+    const instr = yaml.split("  instruction: |\n")[1].replace(/^    /gm, "");
+    const rule = block(instr.replace(/^## /gm, "### "), title);
+    assert.ok(rule, `apply.instruction has no ${title.toLowerCase()}`);
+    assert.equal(rule, block(read("apply"), title));
+  });
+}
