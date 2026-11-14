@@ -1177,3 +1177,5 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - `gh workflow run apm-install.yml` with the local `gh` login fails with "HTTP 403: Must have admin rights to Repository". A run of the `apm-install` workflow needs a login with admin rights, or the Actions tab.
 - The same check by hand passes: in an empty `git init` folder, `apm install 'duongphuhiep/openspec-lite/package#^1.0.0' --target claude` (APM 0.33.0) writes `resolved_ref: v1.7.0` in `apm.lock.yaml`, the six `openspec-lite-*` skills, and `assets/plan-lite/` with `exit-code.mjs`, `plan-status.mjs`, and `schema.yaml` at `version: 5`. `apm_modules/duongphuhiep/openspec-lite/` holds only `package/`.
 - The `test` workflow passed on the `main` push and on the `v1.7.0` tag push.
+
+- OpenSpec 1.14.2: in the stock `spec-driven` schema, `design.md` is optional. The `design` instruction says "create only if any apply", for example a cross-cutting change or a new external dependency. So a spec-driven change can have no `design.md`. Source: `schemas/spec-driven/schema.yaml` of the installed `@fission-ai/openspec` 1.14.2, 2026-11-14.

@@ -133,4 +133,4 @@ operations:
 - If section 3 did not run, report "The plan-lite schema is already current."
 - Report the `config.yaml` line that you added, or why you did not add the line.
 - If the script printed a `backup:` line, tell the user to compare the backup with the new schema and then delete the backup.
-- Tell the user to commit `openspec/schemas/plan-lite/` and `openspec/config.yaml` to git.
+- Run `git rev-parse --show-toplevel` alone. If the command succeeds, tell the user to commit `openspec/schemas/plan-lite/` and `openspec/config.yaml`. If the command fails, the repo does not use git: say nothing about commits.

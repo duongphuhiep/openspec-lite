@@ -4206,3 +4206,16 @@ This revises D119, D166, D182, D219, and D256.
 7. Propose has its own ID rule: the four ID forms, the numbering, the IDs in the reply, and the title in another file.
 
 **Rationale**: skill text review round 4 at 1301a78 (`.review-reports/review_20261114005426_claude-opus-5-5_1301a78-package.md`). The user picked item 3 when asked.
+
+## D299: Fixes of Skill Text Review Round 5 at 40a289c
+
+**Decision**:
+
+1. Archive guard step 5 ends the turn after the archive question, because `--yes` skips the CLI prompt.
+2. Archive guard steps 1 and 2 accept a change with no `design.md`, `proposal.md`, or `specs/`. A missing file holds no 🤖 and no decision. A stock spec-driven change can have no `design.md` (`docs/facts.md`).
+3. Upgrade step 4: a non-zero exit of `validate` with a list of errors is a result, not a failure. Upgrade reports each error and goes to step 5. A `validate` that does not run follows the failure rule.
+4. The upgrade summary says that the mark of a 🤖 decision goes away only after an action of the user: a yes in the question turn, an answer that supersedes the decision, or an edit of the user.
+5. Propose: after a yes to the Level 1 question, the direct fix follows each fact, constraint, and choice of the request and of the kept replies. After the tasks-preview question, a Goal edit is quoted with the old and the new outcome.
+6. The schema skill tells the user to commit only when `git rev-parse --show-toplevel` succeeds.
+
+**Rationale**: skill text review round 5 at 40a289c (`.review-reports/review_20261114010818_claude-opus-5-5_40a289c-package.md`). This was the last round of the loop of 5 rounds.

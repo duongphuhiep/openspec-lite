@@ -95,7 +95,7 @@ The guard path:
    - Output: the ADRs in `openspec/adr/`.
    - Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs, so this guard step copies the decisions before the archive.
    - A change that was upgraded from plan-lite has its decisions in `design.md`.
-   - If `openspec/changes/<name>/design.md` has no `### Decision` entries, go to guard step 2.
+   - If `openspec/changes/<name>/design.md` does not exist, or has no `### Decision` entries, go to guard step 2. A stock spec-driven change can have no `design.md`.
    - If `openspec/changes/<name>/design.md` has `### Decision` entries, draft an ADR for each `### Decision` with the ADR form, the sources of an ADR draft, the first check, the second check, and the third check of section 2, step 5. Ask no question.
    - Print the summary of the ADR drafts as in section 2, step 6.
    - Write each ADR draft with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
@@ -105,6 +105,7 @@ The guard path:
    - On the guard path, do not change `design.md`.
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
+   - Search only the files and folders that exist. A missing `proposal.md`, `specs/`, or `design.md` holds no 🤖.
    - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line.
    - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file. The ADR can come from this run or from an earlier run. Tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
@@ -124,6 +125,7 @@ The guard path:
    - Ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
+   - After the archive question, end your turn, and wait for the answer.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
 

@@ -73,7 +73,7 @@ How to read this skill:
 - If the outcomes that stay are not small, do not ask the Level 1 question. Go to section 2.
 - Ask: "This looks small. Implement directly with no change?"
 - After the Level 1 question, end your turn, and wait for the answer.
-- On yes, make the fix directly, with no change and no file under `openspec/`.
+- On yes, make the fix directly, with no change and no file under `openspec/`. Follow each fact, constraint, and choice of the request and of the replies that you kept.
 - On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
 - On yes, stop after the fix and the names.
 - On no, continue with section 2.
@@ -245,6 +245,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - After the question, end your turn, and wait for the answer.
    - When the user replies, first record the reply with the answer rule.
    - If you added, changed, or removed an item in `plan.md`, list each such item, with its ID.
+   - If you changed an outcome of the Goal, quote the old outcome and the new outcome.
    - Then, on yes, run the `openspec-lite-tasks-preview` skill.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
    - On no, end your turn.
