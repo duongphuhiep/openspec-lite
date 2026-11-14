@@ -40,7 +40,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
 - Do not run a denied single command again.
 - If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
-- A step always needs a run of the tests that the step names, and a write, an edit, or a delete of a file.
+- A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
 - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
@@ -91,7 +91,7 @@ Do these checks in order.
 
 ### Guard
 
-- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, and the file `openspec/changes/<name>/plan.md`.
+- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, the file `openspec/changes/<name>/plan.md`, and the input of the kept plan.md questions rule.
 - Output: the next check or step, or a stop.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, go to the schema check.
@@ -102,8 +102,20 @@ Do these checks in order.
 - In the reply with the resume question, do not name a step number.
 - The resume question is: "The upgrade of <name> wrote the artifacts, and `plan.md` still exists. Finish the upgrade now: validate the artifacts, then decide what to delete from `plan.md`?"
 - After the resume question, end your turn, and wait for the answer. Do not run `validate` before the answer.
-- If the user answers no to the resume question, name each open question that stays in `plan.md`. For each open question of `plan.md`, check if `tasks.md` → `## 0. Open questions` or `design.md` → `## Open Questions` of the change holds the question. If an artifact holds the question, name the artifact, because the stock skills meet the question there. If no artifact holds the question, tell the user to write the answer of the question in an artifact of the change, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`. Then stop.
+- If the user answers no to the resume question:
+  - Name the open questions of `plan.md` with the kept plan.md questions rule.
+  - Then stop.
 - If the user answers yes to the resume question, do the schema check. Then go to step 4 of section 2, not to step 1.
+
+### Kept plan.md questions
+
+- Run this rule only when a step of the guard calls it. It is not a check of its own.
+- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, and `## Open Questions` of `openspec/changes/<name>/design.md`.
+- Output: each open question of `plan.md`, with the artifact that holds the question.
+- If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
+- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
+- If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
+- If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
@@ -357,7 +369,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Do not name `plan.md` in the file list, as deleted or as kept. Step 5.4 says what happens to `plan.md` after the answer.
 - If an artifact has 🤖 items, list each 🤖 item with its new claim, or as an agent decision of `plan.md`.
 - A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user, because the mark goes away only after an action of the user: a yes in the question turn of step 2, an answer that supersedes the decision, or an edit of the user. Do not ask the user to confirm the decision again, also on a resumed run.
-- Say the `skip_specs` state at the end: absent, because the change has spec deltas, or set, because it has none.
+- Say the final `skip_specs` state: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
 - Name each part of the answer whose artifact the resume rule kept. Tell the user to add the part to that artifact by hand.
 - Name each `plan.md` item that stays in `plan.md` and that no artifact holds, also each content that step 5.2 lists as "kept, in no artifact". Name each item one time. Advise the user to add the item to an artifact by hand, or to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`.

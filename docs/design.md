@@ -124,7 +124,7 @@ openspec-lite/
 - `docs/test-scenarios.md` holds the agent scenarios, which we run by hand or headless before each release (D69). Each expected result is the best result for the end user, not a copy of the current skill behavior. A scenario can fail on the current skills. Then the gap goes to the `defects.md` of the run, or a new decision fixes the skill (D173, D251). The sample code of a fixture has no known security defect, for example an unbounded map or a shared bucket for a missing key, so that a security review of a scenario repo flags nothing (D284). The headless allowlist has `npm`, so that a scenario can run the tests of its `package.json` (D283). Each scenario run is isolated: a new temp folder from `scripts/scenario-setup.sh`, a new session, and no output of another scenario or of an earlier run. A scenario that needs an earlier state starts from a fixture in `tests/fixtures/scenarios/` (D199).
 - `exit-code.test.mjs` skips the missing-command case on Windows, where the shell reports it (D202).
 - `scripts/break-delta.sh` is the 13a helper: it removes the `#### Scenario:` blocks of the first delta that the agent writes (D203).
-- `skills.test.mjs`: the shared blocks `### OpenSpec root`, `### Change selection`, `### Schema check`, `### Failure rule`, and `### Reply order rule` are the same text in each skill that has them. The failure rule and the reply order rule of `apply.instruction` are the same text as the blocks of the skills (D300). When you edit one copy, edit each other copy (D237, D281).
+- `skills.test.mjs`: the shared blocks `### OpenSpec root`, `### Change selection`, `### Schema check`, `### Kept plan.md questions`, `### Failure rule`, and `### Reply order rule` are the same text in each skill that has them. The failure rule and the reply order rule of `apply.instruction` are the same text as the blocks of the skills (D300). When you edit one copy, edit each other copy (D237, D281).
 - `scenario-fixtures.test.mjs`: the `tasks-preview.md` of the `after-preview` fixture has the `plan-sha256` of its `plan.md` (D199).
 
 ## 3. Skill Rules
@@ -385,7 +385,7 @@ How to read these steps:
 - If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
 - Do not run a denied single command again.
 - If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
-- A step always needs a run of the tests that the step names, and a write, an edit, or a delete of a file.
+- A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
 - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.

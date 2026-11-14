@@ -21,6 +21,7 @@ const shared = {
   "Change selection": ["apply", "archive", "tasks-preview", "upgrade"],
   "Schema check": ["apply", "archive", "tasks-preview", "upgrade", "propose"],
   "Failure rule": ["apply", "archive", "tasks-preview", "upgrade", "propose", "schema"],
+  "Kept plan.md questions": ["apply", "archive", "tasks-preview", "upgrade"],
   "Reply order rule": ["apply", "archive", "tasks-preview", "upgrade", "propose", "schema"],
 };
 

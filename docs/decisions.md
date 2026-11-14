@@ -4290,3 +4290,14 @@ This revises D119, D166, D182, D219, and D256.
 5. Scenario 17b expects the artifact that holds the open question, not the advice to copy the answer.
 
 **Rationale**: review loop round 5 on `v1.8.0..local` (`.review-reports/review_20261114191616_claude-opus-5-5_bead6c5-local.md`).
+
+## D306: Fixes of Review Loop Round 6 on v1.8.0..local
+
+**Decision**:
+
+1. The check of the open questions of a kept `plan.md` is one shared block, `### Kept plan.md questions`, in apply, archive, the tasks preview, and upgrade. Each guard calls the block. The block has its Input and Output lines, and runs only when a guard step calls it. `tests/skills.test.mjs` checks that each copy is equal. The advice says "before the next stock skill or archive", for each caller.
+2. The no branch of the upgrade resume question has two sub-bullets: name the questions with the block, then stop.
+3. The upgrade summary says "the final `skip_specs` state", because the review advice now has the end of the summary.
+4. The failure rule says that a step always needs the output of a test run, or of a write, an edit, or a delete, not that each step must run tests or write a file.
+
+**Rationale**: review loop round 6 on `v1.8.0..local` (`.review-reports/review_20261114192437_claude-opus-5-5_bead6c5-local.md`).

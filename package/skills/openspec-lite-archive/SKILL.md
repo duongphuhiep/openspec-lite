@@ -40,7 +40,7 @@ How to read this skill:
 - If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
 - Do not run a denied single command again.
 - If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
-- A step always needs a run of the tests that the step names, and a write, an edit, or a delete of a file.
+- A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
 - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
@@ -122,10 +122,8 @@ The guard path:
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
    - Go to guard step 3.
 3. Name the open questions of a kept `plan.md`.
-   - If `openspec/changes/<name>/plan.md` still exists, list each open question in `plan.md`, before the questions and the requests of the reply.
-   - Archive does not record an answer on the guard path. For each open question of `plan.md`, check if `tasks.md` → `## 0. Open questions` or `design.md` → `## Open Questions` of the change holds the question. If an artifact holds the question, name the artifact, because the stock skills meet the question there.
-   - If no artifact holds the question, tell the user to write the answer of the question in an artifact of the change before the archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
-   - If `openspec/changes/<name>/plan.md` does not exist, say nothing about `plan.md`.
+   - Archive does not record an answer on the guard path.
+   - Name the open questions of `plan.md` with the kept plan.md questions rule, before the questions and the requests of the reply.
    - Go to guard step 4.
 4. Block the archive while a delta holds a 🤖.
    - If a delta in `specs/` holds a 🤖, do not offer the archive, and do not tell the user to run stock `/opsx:archive`, because the CLI copies the 🤖 into the main spec.
@@ -141,6 +139,16 @@ The guard path:
    - After the archive question, end your turn, and wait for the answer.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
+
+### Kept plan.md questions
+
+- Run this rule only when a step of the guard calls it. It is not a check of its own.
+- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, and `## Open Questions` of `openspec/changes/<name>/design.md`.
+- Output: each open question of `plan.md`, with the artifact that holds the question.
+- If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
+- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
+- If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
+- If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
