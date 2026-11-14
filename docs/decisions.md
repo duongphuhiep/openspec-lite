@@ -4357,3 +4357,12 @@ This revises D119, D166, D182, D219, and D256.
 4. Scenario 23c has an answer key with tags, as scenario 15 has.
 
 **Rationale**: the user asked for three isolated scenarios, one for each of the tasks preview, apply, and archive. The older scenarios often chain the skills, or share fixtures and domains with the examples of earlier rule fixes.
+
+## D312: Triage of the Run of Scenarios 23a to 23c on 909b01f
+
+**Decision**:
+
+1. The defects of the run are in `.scenario-runs/20261114-909b01f-opus/defects.md`: one must fix (D01, the archive summary comes only after the writes), three should fix (D02 the non-goal reason, D03 the "keeps only the rule" line, D04 a question about data outside the repo), two low (D05 wait for the commit, D08 the length-limit example of 23a), and five with no action.
+2. No skill or scenario changes in this decision. Each fix waits for the choice of the user.
+
+**Rationale**: the user asked to commit and run the new scenarios. 23b passed 2 of 2 runs. 23a and 23c failed 0 of 2 runs each. The failures of 23c come from the place of the summary in the reply, not from the content of the specs and the ADRs, which passed in both runs.
