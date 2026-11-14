@@ -60,6 +60,7 @@ apply:
     - Put each summary, list, warning, report, and result of the reply before the first question or request.
     - If a reply has more than one question or request, put them together at the end, in one numbered list.
     - Write nothing after the last question or request: no note, no summary line, and no offer.
+    - A request can end with the step that the user does after the action, for example a re-run of this skill. Keep that step in the request, after the action.
 
     ## Step 1: Report the commit state of plan.md
 
@@ -118,7 +119,10 @@ apply:
       - Record the point as an open question before you write the code that depends on the point.
       - Ask the open question with the ask rule.
       - End your turn.
-    - When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule. If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs. If the reply changed no item of plan.md, answer the reply. If step 6 already ran, do not run step 5 or step 6 again. If step 6 did not run yet, continue the step that waited for the reply.
+    - When the user replies in step 4, step 5, or step 6, or after step 6, record the reply with the answer rule.
+      - If the reply changed an item of plan.md, go to step 4, and write the code that the reply needs. Then run step 5 and step 6 again, also when step 6 already ran.
+      - If the reply changed no item of plan.md, and step 6 already ran, answer the reply, and do not run step 5 or step 6 again.
+      - If the reply changed no item of plan.md, and step 6 did not run yet, answer the reply, and continue the step that waited for the reply.
     - When the code is written, go to step 5.
 
     ## Step 5: Check plan.md against the code

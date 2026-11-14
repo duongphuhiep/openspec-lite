@@ -4267,3 +4267,14 @@ This revises D119, D166, D182, D219, and D256.
 5. `apply.instruction` step 6, item 10 asks each question one time in the reply, also a question that step 3 or step 4 asked before.
 
 **Rationale**: review loop round 3 on `v1.8.0..local` (`.review-reports/review_20261114190621_claude-opus-5-5_bead6c5-local.md`).
+
+## D304: Fixes of Review Loop Round 4 on v1.8.0..local
+
+**Decision**:
+
+1. `apply.instruction` step 4 splits the reply branch into three bullets. A reply that changes an item of `plan.md` gets the code, and then step 5 and step 6 run again, also when step 6 already ran. A reply that changes no item gets an answer. Then the run either stops after step 6, or continues the step that waited.
+2. The reply order rule says that a request can end with the step that the user does after the action, for example a re-run of the skill. That step stays in the request, after the action.
+3. Each pointer that tells the user to write the answer of an open question in an artifact also says that the question can then be deleted from `plan.md`. The archive question of the guard path counts the open questions that are still in `plan.md`.
+4. Upgrade does not call an open question that the user cannot answer an item with no slot, because `## 0. Open questions` of `tasks.md` holds it (D191). The summary and step 5.4 name only a kept item that no artifact holds.
+
+**Rationale**: review loop round 4 on `v1.8.0..local` (`.review-reports/review_20261114191114_claude-opus-5-5_bead6c5-local.md`).

@@ -41,6 +41,7 @@ How to read this skill:
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
+- A request can end with the step that the user does after the action, for example a re-run of this skill. Keep that step in the request, after the action.
 
 ## 1. Common checks
 
@@ -83,7 +84,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - If `schema` is not `plan-lite`, and `openspec/changes/<name>/tasks.md` exists, tell the user to run stock `/opsx:apply`.
 - If `schema` is not `plan-lite`, and `openspec/changes/<name>/tasks.md` does not exist, tell the user to run stock `/opsx:continue`, because stock `/opsx:apply` needs `tasks.md`.
 - If `schema` is not `plan-lite`, and `openspec/changes/<name>/plan.md` still exists, name each open question of `plan.md`.
-- If you name an open question of `plan.md`, tell the user to write the answer of the open question in an artifact of the change before the stock skill, because the stock skills do not read `plan.md`.
+- If you name an open question of `plan.md`, tell the user to write the answer of the open question in an artifact of the change before the stock skill, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - If `schema` is not `plan-lite`, stop after the pointer and the open questions.
 

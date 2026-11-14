@@ -41,6 +41,7 @@ How to read this skill:
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
+- A request can end with the step that the user does after the action, for example a re-run of this skill. Keep that step in the request, after the action.
 
 ## 1. Find the folders
 
