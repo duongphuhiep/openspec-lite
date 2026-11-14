@@ -43,11 +43,11 @@ apply:
     - An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
     - If a step gives its own failure branch, follow that branch.
     - If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
-    - Do not run a denied single command again.
+    - Do not run a denied single command again. If the Read, Write, or Edit tool can do the same action, do the action once with that tool.
     - If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
     - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
     - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-    - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+    - If a step needs the output, and the action fails again, or a single command is denied and no Read, Write, or Edit tool can do the same action, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
     - Before you report a write, an edit, or a delete as done, check the file on disk.
     - Do not report a file as written, or a step as done, unless the action passed.
     - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
@@ -182,6 +182,7 @@ apply:
     - A question is open only while you cannot decide the question and cannot find its answer.
     - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
     - You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. For example, the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
+    - If the user answered that a point is left to you, the point is not open any more, also when the code must match something outside the repo. Decide the point with the decision rule, and record a 🤖 decision that says that the user left the choice to you.
     - To close a question, read the code and the docs, or run a command.
     - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
     - If you find the answer, and the answer is obvious, give the answer in the end summary.

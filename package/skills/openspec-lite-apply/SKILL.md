@@ -24,11 +24,11 @@ How to read this skill:
 - An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
-- Do not run a denied single command again.
+- Do not run a denied single command again. If the Read, Write, or Edit tool can do the same action, do the action once with that tool.
 - If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- If a step needs the output, and the action fails again, or a single command is denied and no Read, Write, or Edit tool can do the same action, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
@@ -131,7 +131,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - Run `node openspec/schemas/plan-lite/plan-status.mjs openspec/changes/<name>/plan.md` from the OpenSpec root.
 - Run the `plan-status.mjs` command alone, not in a chain.
 - If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 2.
-- If `plan-status.mjs` prints nothing, go to step 2.
+- If `plan-status.mjs` prints nothing, say nothing about commits, and go to step 2.
 - If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root, so that a file that the user staged stays out of the commit. Run `git add -- openspec/changes/<name>/plan.md` alone. Then run `git commit -m "plan.md: checkpoint before apply" -- openspec/changes/<name>/plan.md` alone.
 - If the commit succeeds, tell the user that you committed `plan.md`.
 - If `git add` or `git commit` fails, show the error. Tell the user to commit `plan.md` themselves before the next run.

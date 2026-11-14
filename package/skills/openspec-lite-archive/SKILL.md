@@ -38,11 +38,11 @@ How to read this skill:
 - An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
-- Do not run a denied single command again.
+- Do not run a denied single command again. If the Read, Write, or Edit tool can do the same action, do the action once with that tool.
 - If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- If a step needs the output, and the action fails again, or a single command is denied and no Read, Write, or Edit tool can do the same action, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
@@ -241,6 +241,8 @@ The guard path:
 - Input: the items of `<dir>/plan.md`, and the selected items of step 3.
 - Output: the list of items to draft, each with its destination, and the list of items that you do not draft.
 - A selected constraint goes to a spec, as a requirement.
+- A constraint that limits only how this change is built, and that no later change must keep, passes no filter, also when the code does not show the limit. List the constraint as not drafted, with the reason that it applies only to this change.
+- A constraint that a later change must keep, for example because a client or another team depends on it, goes through the filters as each other constraint.
 - A selected outcome of the Goal goes to a spec, as a requirement. If a constraint already states the outcome, draft one requirement for both.
 - A selected decision that is not a contract goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement.
@@ -411,7 +413,7 @@ When each item has a draft, go to step 6.
 
 ## 3. End
 
-- Start the end reply with the summary of step 6, with its groups and its counts.
+- Start the end reply with the summary of step 6, with its groups and its counts. One line with the result of the archive can come before the summary.
 - Then list the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
 - If a decision of `plan.md` has no ADR, name the decision. If a requirement holds the decision, name the requirement.
 - If a requirement holds the reason of such a decision, name that requirement. The requirement can be another requirement than the requirement that holds the decision.

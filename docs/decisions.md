@@ -4396,3 +4396,17 @@ This revises D119, D166, D182, D219, and D256.
 6. No change for the unstated ADR claim, the status sentence before the summary, and the indented line of a task: the rules exist, and the model missed them. The literal combining characters are a harness fact.
 
 **Rationale**: the user asked to run the three scenarios again on d9dc701, 2 runs each, and to fix each defect that the skill or the scenario causes. 23a passed 2/2, 23b passed 2/2, and 23c failed 0/2 (6/8 and 7/8). Investigation: `.scenario-runs/20261114-d9dc701-opus/defects.md`.
+
+## D315: Fixes of the Full Scenario Run on 482ccfa
+
+**Decision**:
+
+1. Archive: a constraint that limits only how this change is built, and that no later change must keep, passes no filter. Archive lists it as not drafted, with the reason that it applies only to this change. A constraint that a later change must keep goes through the filters as each other constraint. Before this rule, the same `plan.md` gave a requirement in some runs and nothing in other runs (5, 13a, 13b, 4c).
+2. `openspec-lite-apply` step 1 and tasks-preview step 2 say nothing about commits when `plan-status.mjs` prints nothing, as `apply.instruction` already says (3, 4b).
+3. The question rule of the tasks preview and of `apply.instruction`: if the user answered that a point is left to the agent, the point is not open, also when the code must match something outside the repo. The agent decides the point, and records a 🤖 decision that says that the user left the choice. This removes a conflict with the answer rule of D314 item 4 (23b: one run recorded 🤖 decisions, the other run asked again).
+4. Archive section 3: one line with the result of the archive can come before the summary. Five runs in a row wrote such a line, and the line hides no question. Scenario 23c accepts it.
+5. The shared failure rule: after a denied single command, the agent does the same action once with the Read, Write, or Edit tool, if the tool can do it. The agent stops only when no such tool can do the action. Before, the rule asked for a stop, and 20c showed that the Edit path is better for the user.
+6. Scenario 21a checks the summary of the end reply, not a summary before the write (D313). Scenario 4 allows a Goal edit on the OQ2 answer, if the rule itself is in the constraint.
+7. No change for the defects that the model causes while the skill text is clear: a missing reason in a decision, an inferred ADR claim, a third command form, a count in the summary, a contract decision in the not-drafted group, and a fallback recommendation for a fact that only the user knows.
+
+**Rationale**: the user asked to run all scenarios, to ignore the defects that the model causes, and to confirm and fix each defect that a skill or a scenario causes. Run: `.scenario-runs/20261114-482ccfa-full/`. Result: 48 of 52 runs pass. The four failures are 4 r2 (llm), 4c-1 (llm), 21a (scenario), and 23a r1 plus 23c ×2 (llm, and the 23c result line).
