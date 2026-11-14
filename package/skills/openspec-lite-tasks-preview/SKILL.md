@@ -275,6 +275,7 @@ When the checks are done, go to step 6.
 - When you close a question, remove the question from `## Open Questions`.
 - Do not record a point that you can decide as an open question.
 - Write a new open question as `- OQ<n>: <question>`.
+- One open question asks one thing. If you have two questions, write two open questions.
 - A question that ends with "(kept open by the user)" is a kept question.
 - Keep each kept question until a message of the user answers the kept question, also if you can decide the kept question.
 - Do not ask a kept question.
@@ -301,6 +302,7 @@ When the checks are done, go to step 6.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - If the user names an item of `## Facts`, `## Decisions`, or `## Open Questions`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
+- If a part of the reply leaves a choice to you, record no decision for that part. Decide the point with the decision rule, and record a 🤖 decision if the decision rule records the choice.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.

@@ -4197,6 +4197,8 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D298: Fixes of Skill Text Review Round 4 at 1301a78
 
+**Status**: Item 3 is revised by D314: a contract decision with no ADR stays in the group of the contract decisions, not in the not-drafted list.
+
 **Decision**:
 
 1. Propose section 3, step 5 writes `## Goal` with the goal rule, from the outcomes that stay in the change.
@@ -4381,3 +4383,16 @@ This revises D119, D166, D182, D219, and D256.
 6. Defects D06, D07, and D09 need no skill change: the rules "Tell the user to read the preview.", "One decision records one choice.", and the 🤖 mark rule already exist, and the model missed them.
 
 **Rationale**: the user asked to investigate each skill defect of `.scenario-runs/20261114-909b01f-opus/defects.md`, to confirm that the skill causes it, and to fix it. The session logs of 23c show the order of the text and the tool calls.
+
+## D314: Fixes of the Run of Scenarios 23a to 23c on d9dc701
+
+**Decision**:
+
+1. Archive step 4: a contract decision whose reason passes no filter gets no ADR, and stays in the group of the contract decisions of the summary. The old text "list the ADR as not drafted" put the decision in the not-drafted group, against step 6 (23c r1 on 909b01f and on d9dc701).
+2. Archive section 3 names the requirement that holds the reason of a decision with no ADR, also when it is another requirement than the requirement of the decision. Only when no ADR and no requirement holds the reason, the reply says that the reason exists only in the archive folder. Scenario 23c accepts the reason in another requirement, because the user does not lose it.
+3. The question rule of the tasks preview and of `apply.instruction` says that one open question asks one thing (23a r2 joined three questions in one item).
+4. The answer rule of the tasks preview and of `apply.instruction`: a part of a reply that leaves a choice to the agent gets no decision. The agent decides the point with the decision rule, and records a 🤖 decision if the decision rule records the choice (23b r2 recorded such an answer as a decision with no 🤖).
+5. Scenario 23a allows another summary block before the advice, and other check results in the commit line. Scenario 23c allows a requirement that states the non-goal as a rule.
+6. No change for the unstated ADR claim, the status sentence before the summary, and the indented line of a task: the rules exist, and the model missed them. The literal combining characters are a harness fact.
+
+**Rationale**: the user asked to run the three scenarios again on d9dc701, 2 runs each, and to fix each defect that the skill or the scenario causes. 23a passed 2/2, 23b passed 2/2, and 23c failed 0/2 (6/8 and 7/8). Investigation: `.scenario-runs/20261114-d9dc701-opus/defects.md`.

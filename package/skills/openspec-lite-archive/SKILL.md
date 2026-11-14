@@ -244,7 +244,7 @@ The guard path:
 - A selected outcome of the Goal goes to a spec, as a requirement. If a constraint already states the outcome, draft one requirement for both.
 - A selected decision that is not a contract goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement.
-- If a decision is also a contract, also draft an ADR for the decision only when the reason of the decision passes the **Non-obvious** or the **Surprising** filter. If the reason passes no filter, list the ADR as not drafted, with a one-line reason.
+- If a decision is also a contract, also draft an ADR for the decision only when the reason of the decision passes the **Non-obvious** or the **Surprising** filter. If the reason passes no filter, draft no ADR for the decision. The decision is in the group of the contract decisions of the summary, not in the group of the items that you do not draft.
 - List each outcome, constraint, decision, and fact of `plan.md` that you do not draft, each non-goal, and each open question that is left, with a one-line reason. No item disappears with no word.
 - Do not list the items of `## Background`. `## Background` gives context, and stays in the archive folder.
 - A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to. Keep the source emoji of the fact.
@@ -414,4 +414,5 @@ When each item has a draft, go to step 6.
 - Start the end reply with the summary of step 6, with its groups and its counts.
 - Then list the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
 - If a decision of `plan.md` has no ADR, name the decision. If a requirement holds the decision, name the requirement.
-- If no ADR and no requirement holds the reason of such a decision, say that the reason now exists only in `openspec/changes/archive/`. If the requirement holds the reason, say nothing about the archive folder for the reason.
+- If a requirement holds the reason of such a decision, name that requirement. The requirement can be another requirement than the requirement that holds the decision.
+- If no ADR and no requirement holds the reason of such a decision, say that the reason now exists only in `openspec/changes/archive/`.
