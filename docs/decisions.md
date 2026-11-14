@@ -4104,6 +4104,8 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D291: Fixes of Review Round 2 on v1.8.0..local
 
+**Status**: Item 3 is revised by D313: the line about the archive folder applies only when no ADR and no requirement holds the reason.
+
 **Decision**:
 
 1. The ID rule allows the `plan.md` IDs in a reply to the user in each place: the archive skill and the comment of the plan template. The rule to use the title applies in a file other than `plan.md` and `tasks-preview.md`.
@@ -4366,3 +4368,16 @@ This revises D119, D166, D182, D219, and D256.
 2. No skill or scenario changes in this decision. Each fix waits for the choice of the user.
 
 **Rationale**: the user asked to commit and run the new scenarios. 23b passed 2 of 2 runs. 23a and 23c failed 0 of 2 runs each. The failures of 23c come from the place of the summary in the reply, not from the content of the specs and the ADRs, which passed in both runs.
+
+## D313: Fixes of the Skill Defects of the Run on 909b01f
+
+**Decision**:
+
+1. Archive step 6 builds the summary, and does not print it. The end reply of section 3 starts with the summary, with its groups and its counts, and then lists the written files. On the guard path, guard step 1 prints the summary after the ADR writes. With no approval gate (D289), a summary before the writes gives the user nothing to act on. In both runs of 23c, the agent printed only progress notes before the writes, and in one run it dropped the groups in the end reply (defect D01).
+2. The not-drafted group of the summary names each kind of item: an outcome, a constraint, a decision, or a fact that archive does not draft, each non-goal, and each open question that is left. A decision that goes only to a requirement is in the group of the contract decisions (defect D02).
+3. Section 3 names each decision with no ADR and the requirement that holds it. It says that the reason exists only in the archive folder only when no ADR and no requirement holds the reason. This replaces "the requirement keeps only the rule" of D291 item 3, because a requirement can hold the reason (defect D03).
+4. The tasks preview and apply wait for the result of `git commit` before the next step (defect D05).
+5. Scenario 23a gives `## Background` the scope item that the published post URLs must not change, so the format of the slug must match data outside the repo. The question rule already covers this case. Without the item, the start state did not show such data (defect D04, a scenario defect). The examples of Expected item 4 are examples, and a preview with no length limit passes (defect D08).
+6. Defects D06, D07, and D09 need no skill change: the rules "Tell the user to read the preview.", "One decision records one choice.", and the 🤖 mark rule already exist, and the model missed them.
+
+**Rationale**: the user asked to investigate each skill defect of `.scenario-runs/20261114-909b01f-opus/defects.md`, to confirm that the skill causes it, and to fix it. The session logs of 23c show the order of the text and the tool calls.

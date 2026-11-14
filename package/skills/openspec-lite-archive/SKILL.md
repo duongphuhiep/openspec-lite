@@ -20,7 +20,7 @@ How to read this skill:
 ## General rules
 
 - Ask no approval for a draft, an ADR of an earlier run, a delta file of an earlier run, or a `Status:` edit. Do not ask the user to answer yes, no, or edit for a draft.
-- Do not print the full text of a draft or of a file of an earlier run. Step 6 prints only a short summary.
+- Do not print the full text of a draft or of a file of an earlier run. The end reply holds only the short summary of step 6.
 - The user does not see the output of a tool call. To print a text for the user, write the full text in your reply.
 - Write each draft exactly as step 5 drafted the draft.
 - Do not remove a 🤖 yourself. Only the user removes a 🤖.
@@ -107,11 +107,11 @@ The guard path:
    - A change that was upgraded from plan-lite has its decisions in `design.md`.
    - If `openspec/changes/<name>/design.md` does not exist, or has no `### Decision` entries, go to guard step 2. A stock spec-driven change can have no `design.md`.
    - If `openspec/changes/<name>/design.md` has `### Decision` entries, draft an ADR for each `### Decision` with the ADR form, the sources of an ADR draft, the first check, the second check, and the third check of section 2, step 5. Ask no question.
-   - Print the summary of the ADR drafts as in section 2, step 6.
+   - Build the summary of the ADR drafts as in section 2, step 6.
    - Write each ADR draft with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
    - On the guard path, do not run section 2, steps 7 to 9.
    - On the guard path, after section 2, step 6, continue guard step 1 with the write of the ADR drafts. Do not go to section 2, step 7.
-   - On the guard path, after section 2, step 10, list each ADR file that you wrote, and each old ADR whose `Status:` line you changed. Then go to guard step 2. Do not go to section 2, step 11.
+   - On the guard path, after section 2, step 10, print the summary of section 2, step 6, then list each ADR file that you wrote, and each old ADR whose `Status:` line you changed. Then go to guard step 2. Do not go to section 2, step 11.
    - On the guard path, do not change `design.md`.
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
@@ -305,7 +305,7 @@ The first check, for existing ADRs:
 - An earlier run of this archive can have written these files.
 - Do not draft a decision or a fact that already has an ADR.
 - An ADR with the line `Change: <name>` holds an item when its `## Decision`, or its `## Context` for a fact, records the same choice or the same fact as the item. The title alone does not decide the match.
-- Step 6 names each file that has the line `Change: <name>`, with its title.
+- The summary of step 6 names each file that has the line `Change: <name>`, with its title.
 
 The check for an earlier delta:
 
@@ -314,13 +314,13 @@ The check for an earlier delta:
 - The user can have fixed a delta file of an earlier run after a `validate` failure. Do not change or delete a requirement of such a file. Do not delete the file.
 - Do not draft a requirement that a delta file of an earlier run already holds.
 - A delta file holds a requirement when a requirement of the file states the same rule as the item.
-- Step 6 names each such file. Step 7 merges into the file each delta draft with the same path.
+- The summary of step 6 names each such file. Step 7 merges into the file each delta draft with the same path.
 
 The second check, for a **Superseded ADR**:
 
 - Read the title and `## Decision` of each ADR in `openspec/adr/` with the line `Status: Accepted`.
 - If a new decision fully replaces an old ADR, add the line `Supersedes: <old file name>` after the `Change:` line of the draft.
-- If a new decision changes only part of an old decision, add no line. Step 6 says that both ADRs stay `Accepted`.
+- If a new decision changes only part of an old decision, add no line. The summary of step 6 says that both ADRs stay `Accepted`.
 - If a new decision replaces no old ADR, add no line.
 
 The third check, for `plan.md` IDs:
@@ -330,11 +330,12 @@ The third check, for `plan.md` IDs:
 
 When each item has a draft, go to step 6.
 
-### Step 6: Print the summary
+### Step 6: Build the summary
 
 - Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft. On the guard path, step 4 does not run, so the only group is the decisions that go to an ADR.
-- Output: the summary, in your reply.
-- Print a short summary of the promotion. Do not print the full text of a draft or of a file of an earlier run.
+- Output: the summary, for the end reply.
+- Build a short summary of the promotion. Do not print the summary now. Section 3 prints the summary at the start of the end reply, after the writes and the archive. On the guard path, guard step 1 prints the summary after the ADR writes.
+- Do not print the full text of a draft or of a file of an earlier run.
 - In the summary, write one line for each item: the `plan.md` ID, if the item has an ID, and the title of the item. If the item has no title, for example a constraint, a fact, or an outcome of the Goal, write a short form of its text. On the guard path, write the title of the `design.md` decision.
 - In the summary, put the items in these groups. Start each group with its count. Omit an empty group.
   - The decisions that go to an ADR.
@@ -344,7 +345,7 @@ When each item has a draft, go to step 6.
   - The facts that go to the `## Context` of an ADR. Name the ADR for each fact.
   - The facts that get an ADR of their own, from step 4.
   - The deltas. For each delta, give the capability, the count of requirements and scenarios, and the items that the delta comes from: the ID of each item that has an ID, or a short form of the text of each item that has no ID.
-  - The items that step 4 does not draft, each with its one-line reason.
+  - The items that step 4 does not draft, each with its one-line reason: each outcome, constraint, decision, and fact that you do not draft, each non-goal, and each open question that is left. A decision that goes only to a requirement is in the group of the contract decisions, not in this group.
 - After the groups, give each other point that the user must know, one line for each point:
   - Name each draft that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`. Name the 🤖 decision. Say that the user did not confirm the decision, and that the archive promotes the decision.
   - On the guard path, name each draft that holds content from another line of `proposal.md` or `design.md` with a 🤖. Name the line. The draft holds no 🤖.
@@ -356,7 +357,7 @@ When each item has a draft, go to step 6.
 - On the guard path, give only the group of the decisions that go to an ADR, and the points about 🤖, `Supersedes:`, a new decision that changes only part of an old ADR, and the ADRs of an earlier run.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
-- Ask no question in the summary. Do not end your turn after the summary.
+- Ask no question about the summary. Do not end your turn after you build the summary.
 - On the guard path, continue with guard step 1.
 - Outside the guard path, go to step 7.
 
@@ -410,5 +411,7 @@ When each item has a draft, go to step 6.
 
 ## 3. End
 
-- List the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
-- If a decision of `plan.md` has no ADR, say that the reason of this decision now exists only in `openspec/changes/archive/`. If a requirement holds the decision, name the requirement, and say that the requirement keeps only the rule.
+- Start the end reply with the summary of step 6, with its groups and its counts.
+- Then list the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
+- If a decision of `plan.md` has no ADR, name the decision. If a requirement holds the decision, name the requirement.
+- If no ADR and no requirement holds the reason of such a decision, say that the reason now exists only in `openspec/changes/archive/`. If the requirement holds the reason, say nothing about the archive folder for the reason.

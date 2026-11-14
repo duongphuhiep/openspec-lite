@@ -599,7 +599,7 @@ Common start state for 23a and 23b:
 
 1. Do the setup at the top of this file. Install the schema: `node .claude/skills/openspec-lite-schema/scripts/install.mjs .`.
 2. Add `package.json` with `{ "name": "blog", "version": "1.0.0", "scripts": { "test": "node --test" } }`, and a `README.md` with the line "Blog tools.". Create an empty `src/` folder with a `.gitkeep` file. Commit.
-3. Run `openspec new change add-slugify --schema plan-lite`. Write `openspec/changes/add-slugify/plan.md` from the template `openspec/schemas/plan-lite/templates/plan.md`, because `plan-hash.mjs` needs each of its headings. Keep the template comments. Give it the Goal "Add `slugify(title)` in `src/slug.js`. It turns the title of a blog post into the slug of the post URL." and the constraint "- C1: Add no npm dependency."
+3. Run `openspec new change add-slugify --schema plan-lite`. Write `openspec/changes/add-slugify/plan.md` from the template `openspec/schemas/plan-lite/templates/plan.md`, because `plan-hash.mjs` needs each of its headings. Keep the template comments. Give it the Goal "Add `slugify(title)` in `src/slug.js`. It turns the title of a blog post into the slug of the post URL." and the constraint "- C1: Add no npm dependency." Give `## Background` the scope item "- The blog has published posts on a hosted site. Their URLs must not change."
 
 ### 23a. The tasks preview alone
 
@@ -613,7 +613,8 @@ Common start state for 23a and 23b:
 - Before it explores, the agent commits only `plan.md`, with the message `plan.md: checkpoint before tasks-preview`, and says so in one line. After the run, the `README.md` edit is still staged and not committed (D290, D293).
 - `tasks-preview.md` exists. Its second line is `<!-- plan-sha256: <64 hex chars> -->`, equal to the output of `plan-hash.mjs` on `plan.md`. The tasks have no checkboxes, and each task has a `Verify:` line. A test task covers `slugify`.
 - The agent writes no code. `## Goal`, `## Background`, `## Non-Goals`, and `## Constraints` of `plan.md` do not change. Each template comment is still in `plan.md`.
-- Each visible result that the preview plans and that `plan.md` does not say is a 🤖 decision or an open question, for example the separator between words, the result for a letter with an accent, the result for a title with no letter or digit, or a length limit (D219, D220). A point that depends only on an intent of the user is an open question with a recommended answer, or a 🤖 decision. A point that depends on a fact that only the user knows, for example the format of the existing post URLs, is an open question with no recommended answer (D195, D225).
+- Each visible result that the preview plans and that `plan.md` does not say is a 🤖 decision or an open question (D219, D220). The separator, the result for a letter with an accent, and the result for a title with no letter or digit are examples, not a list of musts: a preview that plans no length limit passes. A point that depends only on an intent of the user is an open question with a recommended answer, or a 🤖 decision.
+- The format of the slug must match the existing post URLs, which are outside the repo. So the format is an open question with no recommended answer, not a 🤖 decision that follows a convention (D195, D225).
 - The end reply has this order: the summary of the items that the run added, changed, or removed, the table of the added 🤖 decisions, the advice to read the preview and to correct `plan.md` on a disagreement, and last the open questions in one numbered list. Nothing comes after the last question (D300, D301).
 
 ### 23b. Apply alone
@@ -683,12 +684,12 @@ Common start state for 23a and 23b:
 **Expected**:
 
 - The done check passes with no "Archive anyway?" question, because the committed code meets the Goal and each constraint, and `## Open Questions` is empty (D209).
-- The agent does not print the full text of a draft, and asks no yes, no, or edit question. It prints one summary, and then writes and archives in the same turn (D289).
-- The summary groups the items with a count for each group. Each line gives the `plan.md` ID, if the item has one, and the title or a short form of the text. The groups hold: D1 in the ADR group; the Goal outcome, C1, and C2 in the requirement group; D2 and D3 in the contract decision group; F1 in a requirement text or in the `## Context` of an ADR; and the not-drafted group with F2 and the non-goal, each with a reason (D289, D290, D291). The summary names D3 as a 🤖 decision that the user did not confirm, and says that the archive promotes it (D289).
+- The agent does not print the full text of a draft, and asks no yes, no, or edit question. It writes and archives in the same turn. The end reply starts with the summary, and the list of the written files comes after it (D289, D313).
+- The summary groups the items with a count for each group. Each line gives the `plan.md` ID, if the item has one, and the title or a short form of the text. The groups hold: D1 in the ADR group; the Goal outcome, C1, and C2 in the requirement group; D2 and D3 in the contract decision group; F1 in a requirement text or in the `## Context` of an ADR; and the not-drafted group with F2 and the non-goal, each with a reason. D2 and D3 are not in the not-drafted group (D289, D290, D291, D313). The summary names D3 as a 🤖 decision that the user did not confirm, and says that the archive promotes it (D289).
 - F2 is not selected, because a fact passes only the Non-obvious fact filter, and a reader sees F2 in the code (D310). F1 is never in the not-drafted group, because a 👤 fact is always non-obvious (D308).
 - `openspec/specs/<capability>/spec.md` holds requirements for the Goal outcome, C1, C2, D2, and D3. Each requirement has at least one `#### Scenario:`. The C2 requirement keeps its reason, the CMS limit, in its text. No line of the spec holds a 🤖, a 👤, or a `plan.md` ID such as `C1` or `D2` (D142, D181, D252).
 - `openspec/adr/` holds an ADR for D1, with `Status: Accepted` and `Change: add-slugify`. The ADR makes no claim that `plan.md`, the code, or the facts do not state (D289). An ADR for D2 fails, because its reason passes no filter (D298). An ADR for D3 is optional.
-- The end summary names D2 as a decision with no ADR, names the requirement that holds it, and says that its reason now exists only in `openspec/changes/archive/` (D291). The change is in `openspec/changes/archive/`.
+- The end summary names D2 as a decision with no ADR, and names the requirement that holds it. It says that the reason of D2 exists only in `openspec/changes/archive/` only if the requirement does not hold the reason (D291, D313). The change is in `openspec/changes/archive/`.
 
 ## Running the Scenarios Headless
 
