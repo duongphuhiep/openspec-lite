@@ -91,7 +91,7 @@ Do these checks in order.
 
 ### Guard
 
-- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, the file `openspec/changes/<name>/plan.md`, and the input of the kept plan.md questions rule.
+- Input: the `schema` line of `openspec/changes/<name>/.openspec.yaml`, the file `openspec/changes/<name>/plan.md`, and the input of the leftover plan.md questions rule.
 - Output: the next check or step, or a stop.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, go to the schema check.
@@ -103,17 +103,19 @@ Do these checks in order.
 - The resume question is: "The upgrade of <name> wrote the artifacts, and `plan.md` still exists. Finish the upgrade now: validate the artifacts, then decide what to delete from `plan.md`?"
 - After the resume question, end your turn, and wait for the answer. Do not run `validate` before the answer.
 - If the user answers no to the resume question:
-  - Name the open questions of `plan.md` with the kept plan.md questions rule.
+  - Name the open questions of `plan.md` with the leftover plan.md questions rule.
   - Then stop.
 - If the user answers yes to the resume question, do the schema check. Then go to step 4 of section 2, not to step 1.
 
-### Kept plan.md questions
+### Leftover plan.md questions
 
 - Run this rule only when a step of the guard calls it. It is not a check of its own.
 - Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, and `## Open Questions` of `openspec/changes/<name>/design.md`.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
+- An HTML comment in `## Open Questions` of `plan.md` is not a question.
+- An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 

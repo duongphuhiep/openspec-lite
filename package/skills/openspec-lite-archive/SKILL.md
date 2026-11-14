@@ -121,9 +121,10 @@ The guard path:
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
    - Go to guard step 3.
-3. Name the open questions of a kept `plan.md`.
+3. Name the open questions of a `plan.md` that still exists.
+   - Input: the input of the leftover plan.md questions rule.
    - Archive does not record an answer on the guard path.
-   - Name the open questions of `plan.md` with the kept plan.md questions rule, before the questions and the requests of the reply.
+   - Name the open questions of `plan.md` with the leftover plan.md questions rule, before the questions and the requests of the reply.
    - Go to guard step 4.
 4. Block the archive while a delta holds a 🤖.
    - If a delta in `specs/` holds a 🤖, do not offer the archive, and do not tell the user to run stock `/opsx:archive`, because the CLI copies the 🤖 into the main spec.
@@ -135,18 +136,20 @@ The guard path:
    - Ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
-   - If a kept `plan.md` still has open questions that no artifact holds, name how many in the same question, because the archive moves `plan.md` to the archive folder, and the answers of these questions are in no artifact.
+   - If `plan.md` still has open questions that no artifact holds, name how many in the same question, because the archive moves `plan.md` to the archive folder, and no artifact holds these questions. Say that the user can first write each answer in an artifact and delete the question from `plan.md`.
    - After the archive question, end your turn, and wait for the answer.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
 
-### Kept plan.md questions
+### Leftover plan.md questions
 
 - Run this rule only when a step of the guard calls it. It is not a check of its own.
 - Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, and `## Open Questions` of `openspec/changes/<name>/design.md`.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
+- An HTML comment in `## Open Questions` of `plan.md` is not a question.
+- An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 

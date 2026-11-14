@@ -4301,3 +4301,14 @@ This revises D119, D166, D182, D219, and D256.
 4. The failure rule says that a step always needs the output of a test run, or of a write, an edit, or a delete, not that each step must run tests or write a file.
 
 **Rationale**: review loop round 6 on `v1.8.0..local` (`.review-reports/review_20261114192437_claude-opus-5-5_bead6c5-local.md`).
+
+## D307: Fixes of Review Loop Round 7 on v1.8.0..local
+
+**Decision**:
+
+1. The shared block of D306 is `### Leftover plan.md questions`, and archive says "a `plan.md` that still exists". The word "kept" stays only for a kept question, a question with "(kept open by the user)".
+2. The block says that an HTML comment of `## Open Questions` is not a question, and that an artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words do not decide the match, because upgrade writes the task of `## 0. Open questions` with no ID.
+3. The archive question of the guard path says that no artifact holds the counted questions, not that no artifact holds their answers, because the block checks only the questions. It says that the user can first write each answer in an artifact and delete the question.
+4. Archive guard step 3 has an Input line. The tasks-preview guard has an Output line.
+
+**Rationale**: review loop round 7 on `v1.8.0..local` (`.review-reports/review_20261114193748_claude-opus-5-5_bead6c5-local.md`).
