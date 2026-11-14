@@ -4244,3 +4244,14 @@ This revises D119, D166, D182, D219, and D256.
 4. Upgrade step 5.3 puts the advice to keep `plan.md` after a failed `validate` in the line just before the prune question.
 
 **Rationale**: review loop round 1 on `v1.8.0..local` (`.review-reports/review_20261114185709_claude-opus-5-5_bead6c5-local.md`).
+
+## D302: Fixes of Review Loop Round 2 on v1.8.0..local
+
+**Decision**:
+
+1. The reply order rule starts with "If a reply has a question or a request", because advice also asks for an action. A mark is a request only when the workflow waits for its removal. So the review requests of the upgrade summary are advice, and stay in the summary before the prune question. The reviewer marked this "no clear winner" with an option that puts the review lines in the end list. That option breaks the "waits for" test of D301.
+2. The archive question of the guard path names how many open questions a kept `plan.md` has, because the archive moves them with no answer.
+3. Guard step 2 does not ask to accept or delete a 🤖 line of a delta, because guard step 4 asks to remove the mark. Guard step 2 names "the request of guard step 4", not a question.
+4. The general rules of the tasks preview call the failure rule and the reply order rule, because the two blocks are sibling headings of the general rules there.
+
+**Rationale**: review loop round 2 on `v1.8.0..local` (`.review-reports/review_20261114190146_claude-opus-5-5_bead6c5-local.md`).

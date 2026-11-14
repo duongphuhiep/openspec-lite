@@ -394,8 +394,8 @@ How to read these steps:
 
 ## Reply order rule
 
-- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
-- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove.
+- If a reply has a question or a request, put each question and each request at the end of the reply.
+- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove before the workflow can go on.
 - Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.

@@ -49,8 +49,8 @@ How to read this skill:
 
 ### Reply order rule
 
-- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
-- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove.
+- If a reply has a question or a request, put each question and each request at the end of the reply.
+- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove before the workflow can go on.
 - Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
@@ -115,7 +115,7 @@ The guard path:
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
    - Search only the files and folders that exist. A missing `proposal.md`, `specs/`, or `design.md` holds no 🤖.
-   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line. Put this request at the end of the reply, with the question of guard step 4 or 5, as the reply order rule says.
+   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line. Put this request at the end of the reply, with the request of guard step 4 or the question of guard step 5, as the reply order rule says. If the 🤖 line is in a delta of `specs/`, do not make this request, because guard step 4 asks the user to remove the mark.
    - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file. The ADR can come from this run or from an earlier run. Tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
@@ -135,6 +135,7 @@ The guard path:
    - Ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
+   - If a kept `plan.md` has open questions, name how many in the same question, because the archive moves them to the archive folder with no answer.
    - After the archive question, end your turn, and wait for the answer.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.

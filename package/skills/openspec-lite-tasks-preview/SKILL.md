@@ -94,6 +94,8 @@ Do these checks in order.
 - When you find a fact, record the fact with the fact rule and the fact format.
 - When you ask an open question, follow the ask rule.
 - When you need the exit code of a command, use the exit-code rule.
+- When an action fails, follow the failure rule.
+- When you write a reply to the user, follow the reply order rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
 - If the user moves the decision that records a constraint of the user to `## Constraints`, the preview is stale. Tell the user to run this skill again.
 - A reply that changes an outcome that the Goal states asks to change the existing text of the Goal.
@@ -118,8 +120,8 @@ Do these checks in order.
 
 ### Reply order rule
 
-- If a reply asks the user a question, or asks the user to do an action, put each question and each request at the end of the reply.
-- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove.
+- If a reply has a question or a request, put each question and each request at the end of the reply.
+- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove before the workflow can go on.
 - Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
 - If a reply has more than one question or request, put them together at the end, in one numbered list.
