@@ -4255,3 +4255,15 @@ This revises D119, D166, D182, D219, and D256.
 4. The general rules of the tasks preview call the failure rule and the reply order rule, because the two blocks are sibling headings of the general rules there.
 
 **Rationale**: review loop round 2 on `v1.8.0..local` (`.review-reports/review_20261114190146_claude-opus-5-5_bead6c5-local.md`).
+
+## D303: Fixes of Review Loop Round 3 on v1.8.0..local
+
+**Decision**:
+
+1. The upgrade summary advises the review of the artifacts, of each 🤖 item, and of `tasks.md`. The words "ask" and "requests" are gone, because upgrade does not wait for the review (D302 item 1).
+2. Guard step 4 of archive asks the user to accept each 🤖 line of a delta (remove the mark) or to delete the line, because guard step 2 makes no request for a delta line (D302 item 3).
+3. Guard step 2 of archive advises the accept-or-delete edit of a 🤖 line of `proposal.md` or `design.md`. The guard path does not wait for the edit, so the advice comes before the end list. The reviewer marked this "no clear winner" with an option that widens the term request. That option breaks the "waits for" test of D301, and upgrade already treats the same line as advice.
+4. The guards of apply and the tasks preview, and the no branch of the upgrade resume question, tell the user to write the answer of each open question of `plan.md` in an artifact of the change, because the stock skills do not read `plan.md`, as D301 item 3 does for archive.
+5. `apply.instruction` step 6, item 10 asks each question one time in the reply, also a question that step 3 or step 4 asked before.
+
+**Rationale**: review loop round 3 on `v1.8.0..local` (`.review-reports/review_20261114190621_claude-opus-5-5_bead6c5-local.md`).

@@ -55,7 +55,7 @@ Do these checks in order.
 - If the schema is not `plan-lite`, and `openspec/changes/<name>/tasks.md` exists, point the user to stock `/opsx:apply`.
 - If the schema is not `plan-lite`, and `openspec/changes/<name>/tasks.md` does not exist, point the user to stock `/opsx:continue`.
 - If the schema is not `plan-lite`, and `openspec/changes/<name>/plan.md` still exists, name each open question of `plan.md`.
-- If you name an open question of `plan.md`, tell the user to answer the open question before the stock skill, because the stock skills do not read `plan.md`.
+- If you name an open question of `plan.md`, tell the user to write the answer of the open question in an artifact of the change before the stock skill, because the stock skills do not read `plan.md`.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - If the schema is not `plan-lite`, stop after the pointer and the open questions. Do not write `tasks-preview.md`.
 

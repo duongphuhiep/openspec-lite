@@ -115,7 +115,7 @@ The guard path:
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
    - Search only the files and folders that exist. A missing `proposal.md`, `specs/`, or `design.md` holds no 🤖.
-   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Tell the user to accept the line (remove the mark) or delete the line. Put this request at the end of the reply, with the request of guard step 4 or the question of guard step 5, as the reply order rule says. If the 🤖 line is in a delta of `specs/`, do not make this request, because guard step 4 asks the user to remove the mark.
+   - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line. Advise the user to accept the line (remove the mark) or delete the line. The guard path does not wait for this edit, so the advice comes before the request of guard step 4 or the question of guard step 5. If the 🤖 line is in a delta of `specs/`, give no advice for the line, because guard step 4 makes the request.
    - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file. The ADR can come from this run or from an earlier run. Tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
@@ -128,7 +128,7 @@ The guard path:
 4. Block the archive while a delta holds a 🤖.
    - If a delta in `specs/` holds a 🤖, do not offer the archive, and do not tell the user to run stock `/opsx:archive`, because the CLI copies the 🤖 into the main spec.
    - The block also forbids a question with a condition about the archive.
-   - If a delta in `specs/` holds a 🤖, ask the user to remove the marks, and end your turn.
+   - If a delta in `specs/` holds a 🤖, ask the user to accept each 🤖 line of the delta (remove the mark) or delete the line, and end your turn.
    - When the user replies after guard step 4, go to guard step 2. Do not run guard step 1 again.
    - If no delta in `specs/` holds a 🤖, go to guard step 5.
 5. Give the archive step.
