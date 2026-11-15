@@ -19,30 +19,50 @@ How to read this skill:
 
 ## General rules
 
-- Ask no approval for a draft, an ADR of an earlier run, a delta file of an earlier run, or a `Status:` edit. Do not ask the user to answer yes, no, or edit for a draft.
-- Do not print the full text of a draft or of a file of an earlier run. In place of the text of a draft, the end reply holds the short summary of step 6.
+- Ask no approval for a draft, an ADR of an earlier run, a delta file of an earlier run, or a `Status:` edit.
+- Do not ask the user to answer yes, no, or edit for a draft.
+- Do not print the full text of a draft or of a file of an earlier run.
+- In place of the text of a draft, the end reply holds the short summary of step 6.
 - The user does not see the output of a tool call. To print a text for the user, write the full text in your reply.
 - Write each draft exactly as step 5 drafted the draft.
 - Do not remove a 🤖 yourself. Only the user removes a 🤖.
 - Write no 🤖 in a spec or an ADR.
-- Write no source emoji in a spec, for example 👤 or 🔬. Give the source of a fact in words in the requirement text. An ADR keeps the source emoji of a fact.
-- If a fact of `plan.md` has no source emoji, add no emoji, and do not guess its source. Give the source in words only when the fact names it.
-- A 🤖 in an HTML comment, for example in a template comment of `plan.md`, is not a mark. A decision is a 🤖 decision only when its heading ends with 🤖.
-- The ID rule: use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md`, in `tasks-preview.md`, and in your reply to the user, for example in the summary of step 6.
+- Write no source emoji in a spec, for example 👤 or 🔬. Give the source of a fact in words in the requirement text.
+- An ADR keeps the source emoji of a fact.
+- If a fact of `plan.md` has no source emoji, add no emoji, and do not guess the source of the fact. Give the source in words only when the fact names the source.
+- A 🤖 in an HTML comment, for example in a template comment of `plan.md`, is not a mark.
+- A decision is a 🤖 decision only when the heading of the decision ends with 🤖.
+
+### ID rule
+
+- Use the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) only in `plan.md`, in `tasks-preview.md`, and in your reply to the user, for example in the summary of step 6.
+- Do not write a `plan.md` ID in another file, a code comment, a commit message, a pull request, or a ticket.
+- To refer to a `plan.md` item in a file other than `plan.md` and `tasks-preview.md`, use the item title, or a short form of the item text, with the change name.
 - If the ID comment of an older `plan.md` gives another form of the ID rule, follow the ID rule of this skill.
-- The ID rule also forbids a `plan.md` ID in another file, a code comment, a commit message, a pull request, or a ticket.
-- To refer to a `plan.md` item in a file other than `plan.md` and `tasks-preview.md`, use the item title, or a short form of its text, with the change name.
+
+### Earlier delta rule
+
+- The user can have fixed a delta file of an earlier run after a `validate` failure.
+- Do not change or delete a requirement of a delta file of an earlier run.
+- Do not delete a delta file of an earlier run.
 
 ### Failure rule
 
-- An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
 - If a step gives its own failure branch, follow that branch.
-- If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
+- If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
+- Do not try a third form.
 - Do not run a denied single command again.
-- If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
+- If no step needs the output of the failed action, do not stop. Name the action and the error in your reply, and go on without the output.
+- Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+  1. Show the command or the file, and the error text.
+  2. Name each file that this run changed.
+  3. Tell the user what to fix, and to start this workflow again.
+  4. Stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
@@ -50,10 +70,12 @@ How to read this skill:
 ### Reply order rule
 
 - If a reply has a question or a request, put each question and each request at the end of the reply.
-- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove before the workflow can go on.
-- Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
+- A request is an action that the workflow waits for before the workflow can go on.
+- Examples of a request: an answer, a fix that a stop needs, or a mark that the user must remove.
+- Advice for later is not a request, for example the next skill to run, or a file to read or commit.
+- Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
-- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- If a reply has more than one question or request, put all the questions and requests together at the end of the reply, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
 - A request can end with the step that the user does after the action, for example a re-run of this workflow. Keep that step in the request, after the action.
 
@@ -67,8 +89,10 @@ Do these checks in order.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
 - If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
-- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
-- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
+- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
+- Read each `openspec/...` path from the OpenSpec root.
+- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
+- The `cd <root> && ` prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
@@ -82,9 +106,12 @@ Do these checks in order.
 - Input: the prompt, and the `changes` list of `openspec list --json`.
 - Output: the name of the change, written `<name>` in this skill.
 - If the prompt names a change, use that change.
-- If the named change is not in the `changes` list, or its `.openspec.yaml` is missing or has no `schema` line, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
+- If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
+  - The named change is not in the `changes` list.
+  - The `.openspec.yaml` of the named change is missing.
+  - The `.openspec.yaml` of the named change has no `schema` line.
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
-- The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
+- If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If only one active change exists, use that change.
 - If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
 - If no active change exists, stop. Tell the user that no active change exists.
@@ -105,21 +132,28 @@ The guard path:
    - Output: the ADRs in `openspec/adr/`.
    - Stock `/opsx:archive` does not turn the decisions in `design.md` into ADRs, so this guard step copies the decisions before the archive.
    - A change that was upgraded from plan-lite has its decisions in `design.md`.
-   - If `openspec/changes/<name>/design.md` does not exist, or has no `### Decision` entries, go to guard step 2. A stock spec-driven change can have no `design.md`.
-   - If `openspec/changes/<name>/design.md` has `### Decision` entries, draft an ADR for each `### Decision` with the ADR form, the sources of an ADR draft, the first check, the second check, and the third check of section 2, step 5. Ask no question.
+   - A stock spec-driven change can have no `design.md`.
+   - If `openspec/changes/<name>/design.md` does not exist, or has no `### Decision` entries, go to guard step 2.
+   - If `openspec/changes/<name>/design.md` has `### Decision` entries, draft an ADR for each `### Decision`. Use these parts of section 2, step 5: the ADR form, the sources of an ADR draft, the first check, the second check, and the third check.
+   - Ask no question in guard step 1.
    - Build the summary of the ADR drafts as in section 2, step 6.
-   - Write each ADR draft with the file rules and the `Supersedes:` edits of section 2, step 10, without its `validate` condition.
-   - On the guard path, do not run section 2, steps 7 to 9.
-   - On the guard path, after section 2, step 6, continue guard step 1 with the write of the ADR drafts. Do not go to section 2, step 7.
-   - On the guard path, after section 2, step 10, print the summary of section 2, step 6, then list each ADR file that you wrote, and each old ADR whose `Status:` line you changed. Then go to guard step 2. Do not go to section 2, step 11.
-   - On the guard path, do not change `design.md`.
+   - After section 2, step 6, continue guard step 1 with the write of the ADR drafts. Do not go to section 2, step 7.
+   - Do not run section 2, steps 7 to 9.
+   - Write each ADR draft with the file rules and the `Supersedes:` edits of section 2, step 10. Do not apply the `validate` condition of section 2, step 10.
+   - After section 2, step 10, print the summary of section 2, step 6.
+   - After the summary, list each ADR file that you wrote, and each old ADR whose `Status:` line you changed.
+   - After section 2, step 10, go to guard step 2. Do not go to section 2, step 11.
+   - Do not change `design.md`.
 2. Search `proposal.md`, `specs/`, and `design.md` of the change for 🤖.
    - Do this search after guard step 1.
    - Search only the files and folders that exist. A missing `proposal.md`, `specs/`, or `design.md` holds no 🤖.
    - If a line of `proposal.md`, `specs/`, or `design.md` has a 🤖, list each such line.
-   - For each 🤖 line of `proposal.md` or `design.md`, advise the user to accept the line (remove the mark) or delete the line. For a 🤖 line in a delta of `specs/`, give no advice, because guard step 4 makes the request.
-   - The guard path does not wait for the edit of a 🤖 line of `proposal.md` or `design.md`, so this advice comes before the request of guard step 4 or the question of guard step 5.
-   - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file. The ADR can come from this run or from an earlier run. Tell the user to also delete the ADR file if the user deletes the decision.
+   - For each 🤖 line of `proposal.md` or `design.md`, advise the user to accept the line (remove the mark) or delete the line.
+   - For a 🤖 line in a delta of `specs/`, give no advice, because guard step 4 makes the request.
+   - The guard path does not wait for the edit of a 🤖 line of `proposal.md` or `design.md`. So the advice for these lines comes before the request of guard step 4 or the question of guard step 5.
+   - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, name the ADR file.
+   - The ADR of a 🤖 decision heading can come from this run or from an earlier run.
+   - If a 🤖 line is the heading of a `design.md` decision that has an ADR with the line `Change: <name>`, tell the user to also delete the ADR file if the user deletes the decision.
    - If no line has a 🤖, you can say so in one line.
    - In guard steps 2 to 4, before each reply that says what holds a 🤖, search `proposal.md`, `specs/`, and `design.md` again.
    - Go to guard step 3.
@@ -137,26 +171,35 @@ The guard path:
    - If no delta in `specs/` holds a 🤖, go to guard step 5.
 5. Give the archive step.
    - Ask: "Archive the change now with `openspec archive <name> --yes`?"
-   - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
+   - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for the unchecked tasks.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
-   - If `plan.md` still has open questions that no artifact holds, and whose answer no artifact holds, name how many in the same question, because the archive moves `plan.md` to the archive folder, and no artifact holds these questions.
+   - If `plan.md` still has open questions that no artifact holds, and whose answer no artifact holds, name how many in the same question.
+   - The count of these open questions matters because the archive moves `plan.md` to the archive folder, and no artifact holds these questions.
    - After the archive question, end your turn, and wait for the answer.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
 
 ### Leftover plan.md questions
 
-- Run this rule only when a step of the guard calls it. It is not a check of its own.
-- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, `## Open Questions` of `openspec/changes/<name>/design.md`, and the other content of `design.md` and `specs/` of the change, for an answer.
+- Run this rule only when a step of the guard calls this rule.
+- Input: these sections of `openspec/changes/<name>/`:
+  - `## Open Questions` of `plan.md`.
+  - `## 0. Open questions` of `tasks.md`.
+  - `## Open Questions` of `design.md`.
+  - The other content of `design.md` and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
-- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
+- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question.
+- A missing file holds no question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
-- If no artifact holds the question, and no artifact holds its answer, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+- If no artifact holds the question, and no artifact holds the answer of the question, do these steps:
+  1. Name the question.
+  2. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`.
+  3. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
@@ -165,18 +208,23 @@ The guard path:
 
    Shipped schema version: 8
 
+   - If the version equals the shipped version, go to item 3 of the schema check.
+   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
    - If the user declines the copy of the schema, stop.
-   - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
-   - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
-   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-   - If the version equals the shipped version, go to item 3 of the schema check.
+   - Do not end your turn after `openspec-lite-schema` finishes.
+   - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
+   - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
+   - Copy the `status:`, `backup:`, and `copied:` lines as `install.mjs` printed them.
+   - After the copy of the schema, read the version again.
+   - After the copy of the schema, if the version still differs from the shipped version, stop, and report both versions.
+   - After the copy of the schema, if the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
    - The script compares `openspec --version` with the range in `schema.yaml`. The script prints one line that starts with `ok:`, `warn:`, or `fail:`.
    - Run the script alone, not in a chain.
-   - Read the first word of the line, not the exit code. Do not compare the versions yourself.
+   - Read the first word of the line, not the exit code.
+   - Do not compare the versions yourself.
    - On `ok:`, continue with the next step of this skill.
    - On `warn:`, show the line as a warning. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Continue with the next step of this skill.
    - On `fail:`, show the line. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Stop.
@@ -195,15 +243,16 @@ The guard path:
 - To find the code, search for what each outcome of the Goal names, for example with `git grep`.
 - Get the git root with `git rev-parse --show-toplevel` as its own command.
 - Then search with `git -C <git root> grep --untracked <word>`, because a plain `git grep` does not find a new file that is not committed.
-- If `git rev-parse --show-toplevel` fails, the repo does not use git. Search the files under the OpenSpec root with the search tool of the harness, and skip `.git/`, `node_modules/`, and `apm_modules/`.
+- If `git rev-parse --show-toplevel` fails, the repo does not use git. Then search the files under the OpenSpec root with the search tool of the harness.
+- In a search with the search tool of the harness, skip `.git/`, `node_modules/`, and `apm_modules/`.
 - Do not judge from the first lines of `git ls-files`, because tool folders such as `.claude/` and `apm_modules/` fill them.
 - Name each outcome and each constraint that is not met, and each open question that is left.
 - If each answer is "yes", go to step 2.
 - If an answer is "no", show the warnings, and ask only: "Archive anyway?" Give no other options in this question. End your turn.
 - If the user says yes to "Archive anyway?", go to step 2.
 - If the user says no to "Archive anyway?", give the paths below, then stop:
-  - For each outcome or constraint that is not met, give two paths: implement it with `openspec-lite-apply`, or remove it from `plan.md` and propose it as a separate change with `openspec-lite-propose`.
-  - For each open question that is left and does not end with "(left to the agent by the user)", tell the user to run `openspec-lite-apply` with the answer, so that apply records it.
+  - For each outcome or constraint that is not met, give two paths. Path 1: implement the item with `openspec-lite-apply`. Path 2: remove the item from `plan.md`, and propose the item as a separate change with `openspec-lite-propose`.
+  - For each open question that is left and does not end with "(left to the agent by the user)", tell the user to run `openspec-lite-apply` with the answer, so that apply records the answer.
   - For each open question that ends with "(left to the agent by the user)", tell the user to run `openspec-lite-apply`, which decides the point.
   - Tell the user to run `openspec-lite-archive` again.
   - If the user names an item that is not in `plan.md`, say: to keep the item, add it to `plan.md` first.
@@ -223,8 +272,9 @@ The guard path:
 - Select each item that passes at least one filter. The filters are **Non-obvious**, **Surprising**, **Contract**, and **Non-obvious fact**.
 - Apply the **Non-obvious**, **Surprising**, and **Contract** filters to each outcome, constraint, and decision.
 - Apply only the **Non-obvious fact** filter to a fact.
-- If `plan.md` says that a constraint applies only to this change, do not select the constraint. Its not-drafted reason is that it applies only to this change.
-- A constraint that says only what the change must not add limits only how this change is built. Do not select such a constraint, unless `plan.md` says that a later change must keep it. Its not-drafted reason is that it limits only how this change is built.
+- If `plan.md` says that a constraint applies only to this change, do not select the constraint. The not-drafted reason of the constraint is that the constraint applies only to this change.
+- A constraint that says only what the change must not add limits only how this change is built.
+- Do not select a constraint that says only what the change must not add, unless `plan.md` says that a later change must keep the constraint. The not-drafted reason of the constraint is that the constraint limits only how this change is built.
 - **Non-obvious**: a reader cannot deduce the item from the code in 5 minutes.
 - **Surprising**: the item would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on.
@@ -237,7 +287,7 @@ The guard path:
   - research of remote sources, for example documentation on the internet, another repo, logs, or a remote database
   - a long analysis of the code
   - other work that is worth an agent to find it
-- A fact that a reader can easily deduce from the code or the file list is never a non-obvious fact, also if a run found the fact: a run alone is not enough.
+- A fact that a reader can easily deduce from the code or the file list is never a non-obvious fact, also if a run found the fact.
 - A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact.
 - Step 4 says where a non-obvious fact goes.
 - Go to step 4.
@@ -245,18 +295,25 @@ The guard path:
 ### Step 4: Sort each item
 
 - Input: the items of `<dir>/plan.md`, and the selected items of step 3.
-- Output: the list of items to draft, each with its destination, and the list of items that you do not draft.
+- Output: the list of items to draft, each with its destination, and the not-drafted list.
 - A selected constraint goes to a spec, as a requirement.
 - A selected outcome of the Goal goes to a spec, as a requirement. If a constraint already states the outcome, draft one requirement for both.
 - A selected decision that is not a contract goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement.
-- If a decision is also a contract, also draft an ADR for the decision only when the reason of the decision passes the **Non-obvious** or the **Surprising** filter. If the reason passes no filter, draft no ADR for the decision.
-- List each outcome, constraint, decision, and fact of `plan.md` that you do not draft, each non-goal, and each open question that is left, with a one-line reason. No item disappears with no word. A fact that goes into another draft is drafted: do not list the fact as not drafted.
-- Do not list the items of `## Background`. `## Background` gives context, and stays in the archive folder.
+- If a decision is also a contract, and the reason of the decision passes the **Non-obvious** or the **Surprising** filter, also draft an ADR for the decision.
+- If a decision is also a contract, and the reason of the decision passes no filter, draft no ADR for the decision.
+- Make the not-drafted list for the summary of step 6. Do not write the list to a file. The not-drafted list holds each outcome, constraint, decision, and fact of `plan.md` that you do not draft, each non-goal, and each open question that is left.
+- Give each item of the not-drafted list a one-line reason. No item disappears with no word.
+- A fact that goes into another draft is drafted. Do not put the fact in the not-drafted list.
+- Do not put the items of `## Background` in the not-drafted list. `## Background` gives context, and stays in the archive folder.
 - A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to. Keep the source emoji of the fact.
 - An obvious fact goes to the `## Context` of an ADR only when the fact justifies the decision of that ADR. Keep the source emoji of the fact.
 - A fact that justifies a requirement goes into the requirement text, as its reason, with no source emoji, for example "The token SHALL expire after 24 hours, because the mobile app caches it for one day."
-- If no drafted ADR holds a non-obvious fact, no drafted requirement holds the fact as its reason, and the change depends on the fact, draft an ADR for the fact:
+- Draft a fact ADR for a non-obvious fact when all these conditions are true:
+  - No drafted ADR holds the fact.
+  - No drafted requirement holds the fact as its reason.
+  - The change depends on the fact.
+- The parts of a fact ADR:
   - The `## Context` of the fact ADR holds the fact and its source.
   - The `## Decision` of the fact ADR says how the change uses or handles the fact, as the code shows.
   - The `## Consequences` of the fact ADR says what a later change must keep.
@@ -309,14 +366,16 @@ The first check, for existing ADRs:
 - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`.
 - An earlier run of this archive can have written these files.
 - Do not draft a decision or a fact that already has an ADR.
-- An ADR with the line `Change: <name>` holds an item when its `## Decision`, or its `## Context` for a fact, records the same choice or the same fact as the item. The title alone does not decide the match.
+- An ADR with the line `Change: <name>` holds a decision when the `## Decision` of the ADR records the same choice as the decision.
+- An ADR with the line `Change: <name>` holds a fact when the `## Context` of the ADR records the same fact.
+- The title of the ADR alone does not decide the match.
 - The summary of step 6 names each file that has the line `Change: <name>`, with its title.
 
 The check for an earlier delta:
 
 - Before you draft a delta, list the files under `<dir>/specs/`.
 - If a file exists under `<dir>/specs/`, an earlier run of this archive wrote the file.
-- The user can have fixed a delta file of an earlier run after a `validate` failure. Do not change or delete a requirement of such a file. Do not delete the file.
+- Follow the earlier delta rule.
 - Do not draft a requirement that a delta file of an earlier run already holds.
 - A delta file holds a requirement when a requirement of the file states the same rule as the item.
 - The summary of step 6 names each such file. Step 7 merges into the file each delta draft with the same path.
@@ -337,11 +396,15 @@ When each item has a draft, go to step 6.
 
 ### Step 6: Build the summary
 
-- Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft. On the guard path, step 4 does not run.
+- Input: the drafts of step 5, the files of an earlier run of step 5, and the not-drafted list of step 4. On the guard path, step 4 does not run.
 - Output: the summary, for the end reply.
-- Build a short summary of the promotion. Do not print the summary now. Section 3 prints the summary at the start of the end reply, after the writes and the archive. If a step from step 7 to step 11 stops, print the summary before the stop report. On the guard path, guard step 1 prints the summary after the ADR writes.
-- Do not print the full text of a draft or of a file of an earlier run.
-- In the summary, write one line for each item: the `plan.md` ID, if the item has an ID, and the title of the item. If the item has no title, for example a constraint, a fact, or an outcome of the Goal, write a short form of its text. On the guard path, write the title of the `design.md` decision.
+- Build a short summary of the promotion. Do not print the summary now.
+- Outside the guard path, section 3 prints the summary at the start of the end reply, after the writes and the archive.
+- If a step from step 7 to step 11 stops, print the summary before the stop report.
+- On the guard path, guard step 1 prints the summary after the ADR writes.
+- In the summary, write one line for each item: the `plan.md` ID, if the item has an ID, and the title of the item.
+- If the item has no title, for example a constraint, a fact, or an outcome of the Goal, write a short form of the item text.
+- On the guard path, write the title of the `design.md` decision.
 - In the summary, put the items in these groups. Start each group with its count. Omit an empty group.
   - The decisions that go to an ADR.
   - The outcomes of the Goal and the constraints that go to a requirement.
@@ -349,16 +412,17 @@ When each item has a draft, go to step 6.
   - The facts that go into a requirement text as its reason.
   - The facts that go to the `## Context` of an ADR. Name the ADR for each fact.
   - The facts that get an ADR of their own, from step 4.
-  - The deltas. For each delta, give the capability, the count of requirements and scenarios, and the items that the delta comes from: the ID of each item that has an ID, or a short form of the text of each item that has no ID.
-  - The items that step 4 does not draft, each with its one-line reason: each outcome, constraint, decision, and fact that you do not draft, each non-goal, and each open question that is left. A decision that goes only to a requirement is in the group of the contract decisions, not in this group.
+  - The deltas. For each delta, give the capability, the count of requirements and scenarios, and the items that the delta comes from. Give the ID of each item that has an ID, or a short form of the text of each item that has no ID.
+  - The not-drafted list of step 4, with the one-line reason of each item. A decision that goes only to a requirement is in the group of the contract decisions, not in this group.
 - After the groups, give each other point that the user must know, one line for each point:
-  - Name each draft that holds content from a decision whose heading ends with 🤖, in `plan.md` or, on the guard path, in `design.md`. Name the 🤖 decision. Say that the user did not confirm the decision, and that the archive promotes the decision.
+  - Name each draft that holds content from a 🤖 decision of `plan.md` or, on the guard path, of `design.md`. Name the 🤖 decision. Say that the user did not confirm the decision, and that the archive promotes the decision.
   - On the guard path, name each draft that holds content from another line of `proposal.md` or `design.md` with a 🤖. Name the line. The draft holds no 🤖.
   - For each draft with a `Supersedes:` line, name the old ADR, and say that the archive changes the `Status` line of the old ADR.
   - For each new decision that changes only part of an old ADR, say that both ADRs stay `Accepted`.
   - Name each ADR of an earlier run, with its title. Say that the earlier run wrote the ADR, and that this run does not write the ADR again.
   - Outside the guard path, name each delta file of an earlier run. Say that the archive keeps the file, and merges into the file each delta draft with the same path.
-- Outside the guard path, if step 5 has no draft, and finds no ADR and no delta file of an earlier run, say in one line that the archive promotes no item. Still give the group of the items that step 4 does not draft.
+- Outside the guard path, if step 5 has no draft, and finds no ADR and no delta file of an earlier run, say in one line that the archive promotes no item.
+- Outside the guard path, if step 5 has no draft, and finds no ADR and no delta file of an earlier run, still give the group of the not-drafted list.
 - On the guard path, give only the group of the decisions that go to an ADR, and the points about 🤖, `Supersedes:`, a new decision that changes only part of an old ADR, and the ADRs of an earlier run.
 - If no decision heading ends with 🤖, you can say so in one line.
 - Do not say that a decision has a 🤖 when its heading does not end with 🤖.
@@ -370,7 +434,7 @@ When each item has a draft, go to step 6.
 
 - Input: the delta drafts of step 5, and the delta files of an earlier run.
 - Output: the deltas in `<dir>/specs/`.
-- Do not change or delete a requirement of a delta file of an earlier run. Do not delete the file.
+- Follow the earlier delta rule.
 - Write each delta draft to `<dir>/specs/<capability>/spec.md`.
 - If a delta file of an earlier run has the same path as a delta draft, merge the delta draft into the file, with no duplicate requirement. If the file and the draft hold a requirement with the same name, keep the requirement of the file.
 - Before you go to step 8, check that each delta draft exists on disk. If a check fails, follow the failure rule.

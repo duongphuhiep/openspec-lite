@@ -5,7 +5,11 @@ description: Implement a plan-lite change from plan.md, with tasks-preview.md as
 
 # openspec-lite-apply
 
-Implement a plan-lite change. The rules are in the plan-lite schema, so stock `/opsx:apply` uses the same rules. This skill adds the commit of an uncommitted `plan.md` (section 2, step 1), the stop on a blocked state (section 2, step 2), and the general rules. Stock `/opsx:apply` only prints the note of `plan-status.mjs`.
+Implement a plan-lite change. The plan-lite schema holds the apply rules, so stock `/opsx:apply` uses the same apply rules. This skill adds these items to stock `/opsx:apply`:
+
+- The commit of an uncommitted `plan.md` (section 2, step 1). Stock `/opsx:apply` only prints the note of `plan-status.mjs`.
+- The stop on a blocked state (section 2, step 2).
+- The general rules.
 
 How to read this skill:
 
@@ -21,14 +25,21 @@ How to read this skill:
 
 ### Failure rule
 
-- An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
 - If a step gives its own failure branch, follow that branch.
-- If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
+- If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
+- Do not try a third form.
 - Do not run a denied single command again.
-- If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
+- If no step needs the output of the failed action, do not stop. Name the action and the error in your reply, and go on without the output.
+- Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+  1. Show the command or the file, and the error text.
+  2. Name each file that this run changed.
+  3. Tell the user what to fix, and to start this workflow again.
+  4. Stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
@@ -36,10 +47,12 @@ How to read this skill:
 ### Reply order rule
 
 - If a reply has a question or a request, put each question and each request at the end of the reply.
-- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove before the workflow can go on.
-- Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
+- A request is an action that the workflow waits for before the workflow can go on.
+- Examples of a request: an answer, a fix that a stop needs, or a mark that the user must remove.
+- Advice for later is not a request, for example the next skill to run, or a file to read or commit.
+- Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
-- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- If a reply has more than one question or request, put all the questions and requests together at the end of the reply, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
 - A request can end with the step that the user does after the action, for example a re-run of this workflow. Keep that step in the request, after the action.
 
@@ -53,8 +66,10 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
 - If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
-- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
-- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
+- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
+- Read each `openspec/...` path from the OpenSpec root.
+- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
+- The `cd <root> && ` prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
@@ -68,37 +83,48 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - Input: the prompt, and the `changes` list of `openspec list --json`.
 - Output: the name of the change, written `<name>` in this skill.
 - If the prompt names a change, use that change.
-- If the named change is not in the `changes` list, or its `.openspec.yaml` is missing or has no `schema` line, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
+- If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
+  - The named change is not in the `changes` list.
+  - The `.openspec.yaml` of the named change is missing.
+  - The `.openspec.yaml` of the named change has no `schema` line.
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
-- The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
+- If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If only one active change exists, use that change.
 - If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
 - If no active change exists, stop. Tell the user that no active change exists.
 
 ### Guard
 
-- Input: `openspec/changes/<name>/.openspec.yaml`, the file list of `openspec/changes/<name>/`, and the input of the leftover plan.md questions rule.
+- Input: `openspec/changes/<name>/.openspec.yaml`, the file list of `openspec/changes/<name>/`, and the input of the Leftover plan.md questions rule.
 - Output: continue or stop.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, continue with the schema check.
-- If `schema` is not `plan-lite`, and `openspec/changes/<name>/tasks.md` exists, tell the user to run stock `/opsx:apply`.
-- If `schema` is not `plan-lite`, and `openspec/changes/<name>/tasks.md` does not exist, tell the user to run stock `/opsx:continue`, because stock `/opsx:apply` needs `tasks.md`.
-- If `schema` is not `plan-lite`, name the open questions of `plan.md` with the leftover plan.md questions rule.
-- If `schema` is not `plan-lite`, stop after the pointer and the open questions.
+- If `schema` is not `plan-lite`, do these steps in order, and then stop:
+  1. If `openspec/changes/<name>/tasks.md` exists, tell the user to run stock `/opsx:apply`.
+  2. If `openspec/changes/<name>/tasks.md` does not exist, tell the user to run stock `/opsx:continue`, because stock `/opsx:apply` needs `tasks.md`.
+  3. Name the open questions of `plan.md` with the Leftover plan.md questions rule.
 
 ### Leftover plan.md questions
 
-- Run this rule only when a step of the guard calls it. It is not a check of its own.
-- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, `## Open Questions` of `openspec/changes/<name>/design.md`, and the other content of `design.md` and `specs/` of the change, for an answer.
+- Run this rule only when a step of the guard calls this rule.
+- Input: these sections of `openspec/changes/<name>/`:
+  - `## Open Questions` of `plan.md`.
+  - `## 0. Open questions` of `tasks.md`.
+  - `## Open Questions` of `design.md`.
+  - The other content of `design.md` and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
-- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
+- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question.
+- A missing file holds no question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
-- If no artifact holds the question, and no artifact holds its answer, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+- If no artifact holds the question, and no artifact holds the answer of the question, do these steps:
+  1. Name the question.
+  2. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`.
+  3. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
@@ -107,18 +133,23 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 
    Shipped schema version: 8
 
+   - If the version equals the shipped version, go to item 3 of the schema check.
+   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
    - If the user declines the copy of the schema, stop.
-   - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
-   - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
-   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-   - If the version equals the shipped version, go to item 3 of the schema check.
+   - Do not end your turn after `openspec-lite-schema` finishes.
+   - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
+   - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
+   - Copy the `status:`, `backup:`, and `copied:` lines as `install.mjs` printed them.
+   - After the copy of the schema, read the version again.
+   - After the copy of the schema, if the version still differs from the shipped version, stop, and report both versions.
+   - After the copy of the schema, if the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
    - The script compares `openspec --version` with the range in `schema.yaml`. The script prints one line that starts with `ok:`, `warn:`, or `fail:`.
    - Run the script alone, not in a chain.
-   - Read the first word of the line, not the exit code. Do not compare the versions yourself.
+   - Read the first word of the line, not the exit code.
+   - Do not compare the versions yourself.
    - On `ok:`, continue with the next step of this skill.
    - On `warn:`, show the line as a warning. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Continue with the next step of this skill.
    - On `fail:`, show the line. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Stop.
@@ -132,9 +163,11 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - If `openspec/changes/<name>/plan.md` does not exist, go to step 2. Step 2 stops on the missing `plan.md`.
 - Run `node openspec/schemas/plan-lite/plan-status.mjs openspec/changes/<name>/plan.md` from the OpenSpec root.
 - Run the `plan-status.mjs` command alone, not in a chain.
-- If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 2.
-- If `plan-status.mjs` prints nothing, say nothing about commits, and go to step 2.
-- If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root, so that a file that the user staged stays out of the commit. Run `git add -- openspec/changes/<name>/plan.md` alone. Then run `git commit -m "plan.md: checkpoint before apply" -- openspec/changes/<name>/plan.md` alone.
+- If `plan-status.mjs` does not run, prints an error, or prints nothing, say nothing about commits, and go to step 2.
+- If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root. Run these two commands in order, each command alone:
+  1. `git add -- openspec/changes/<name>/plan.md`
+  2. `git commit -m "plan.md: checkpoint before apply" -- openspec/changes/<name>/plan.md`
+- The commit holds only `openspec/changes/<name>/plan.md`, so that a file that the user staged stays out of the commit.
 - If the commit succeeds, tell the user that you committed `plan.md`.
 - If `git add` or `git commit` fails, show the error, and give no other commit advice. Step 2 copies the note of `plan-status.mjs`, and the note tells the user to commit `plan.md`.
 - Wait for the result of `git commit` before you go to step 2. Do not run a command of step 2 in parallel with the commit.

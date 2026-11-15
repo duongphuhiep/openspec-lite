@@ -4772,3 +4772,16 @@ This revises D323.
 6. No change for the defects that the model causes while the skill text is clear, and for two defects that the triage did not confirm: the kept `proposal.md` gap on a resumed upgrade, and a fact ADR for a test-runner quirk.
 
 **Rationale**: the user asked to run all scenarios, to ignore the defects that the model causes, and to confirm and fix each defect that a skill or a scenario causes. Run: `.scenario-runs/20261115-77bf20a-full/`. Result: 44 of 49 runs and 320 of 325 checks pass, and each failed run has the class llm. For item 1, the same constraint was a requirement in 3 runs and not drafted in 3 runs. The user chose "not drafted by default": a spec keeps behavior, and such a constraint keeps a place in a spec only when `plan.md` says that it must stay.
+
+---
+
+## D340: Refactor of the Skill Text With Named Rules
+
+**Decision**:
+
+1. Each `SKILL.md` and `apply.instruction` split long bullets into one bullet per job, split long sentences, put each "If..." clause first, and replaced "it" or "this" where a reader can misread them.
+2. Inside one file, a rule that appeared more than once is now written once, as a named rule, and the other places refer to it by its name. New named rules: the plan hash rule and the wait rule (`apply.instruction`); the ID rule and the earlier delta rule (archive); the moved-out outcome rule (propose); the own-choice rule (tasks preview); the agent-decision rule and the no-artifact answer rule (upgrade); the newer schema rule (schema). A reference never crosses files, because an agent loads one skill at a time (D237).
+3. The six shared blocks got the same refactor in each copy, so the copies stay equal.
+4. The refactor changes no behavior. A review of the diff against the old text found 8 changes of behavior, and each one was restored: a condition for the newer schema rule, the scope of the wait rule (check 5 of apply does not end the turn), a local term that collided with "a question that is left", the source of exception 2 of the agent-decision rule, the `Change: <name>` filter of the ADR delete advice, the exact condition of the "promotes no item" case, the not-drafted list as a list for the summary and not a file, and the sections that the fact rule names.
+
+**Rationale**: the user asked to refactor long bullets and complex phrases, as the "Write Instructions as Code" rules of `CLAUDE.md` say, and to treat a rule that appears in more than one place of a file like shared code. A named rule has one copy to keep correct, as a function does.

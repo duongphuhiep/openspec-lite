@@ -25,8 +25,10 @@ Do these checks in order.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
 - If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
-- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
-- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
+- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
+- Read each `openspec/...` path from the OpenSpec root.
+- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
+- The `cd <root> && ` prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
@@ -40,9 +42,12 @@ Do these checks in order.
 - Input: the prompt, and the `changes` list of `openspec list --json`.
 - Output: the name of the change, written `<name>` in this skill.
 - If the prompt names a change, use that change.
-- If the named change is not in the `changes` list, or its `.openspec.yaml` is missing or has no `schema` line, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
+- If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
+  - The named change is not in the `changes` list.
+  - The `.openspec.yaml` of the named change is missing.
+  - The `.openspec.yaml` of the named change has no `schema` line.
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
-- The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
+- If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If only one active change exists, use that change.
 - If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
 - If no active change exists, stop. Tell the user that no active change exists.
@@ -60,17 +65,25 @@ Do these checks in order.
 
 ### Leftover plan.md questions
 
-- Run this rule only when a step of the guard calls it. It is not a check of its own.
-- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, `## Open Questions` of `openspec/changes/<name>/design.md`, and the other content of `design.md` and `specs/` of the change, for an answer.
+- Run this rule only when a step of the guard calls this rule.
+- Input: these sections of `openspec/changes/<name>/`:
+  - `## Open Questions` of `plan.md`.
+  - `## 0. Open questions` of `tasks.md`.
+  - `## Open Questions` of `design.md`.
+  - The other content of `design.md` and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
-- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
+- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question.
+- A missing file holds no question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
-- If no artifact holds the question, and no artifact holds its answer, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+- If no artifact holds the question, and no artifact holds the answer of the question, do these steps:
+  1. Name the question.
+  2. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`.
+  3. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
@@ -79,18 +92,23 @@ Do these checks in order.
 
    Shipped schema version: 8
 
+   - If the version equals the shipped version, go to item 3 of the schema check.
+   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
    - If the user declines the copy of the schema, stop.
-   - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
-   - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
-   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-   - If the version equals the shipped version, go to item 3 of the schema check.
+   - Do not end your turn after `openspec-lite-schema` finishes.
+   - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
+   - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
+   - Copy the `status:`, `backup:`, and `copied:` lines as `install.mjs` printed them.
+   - After the copy of the schema, read the version again.
+   - After the copy of the schema, if the version still differs from the shipped version, stop, and report both versions.
+   - After the copy of the schema, if the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
    - The script compares `openspec --version` with the range in `schema.yaml`. The script prints one line that starts with `ok:`, `warn:`, or `fail:`.
    - Run the script alone, not in a chain.
-   - Read the first word of the line, not the exit code. Do not compare the versions yourself.
+   - Read the first word of the line, not the exit code.
+   - Do not compare the versions yourself.
    - On `ok:`, continue with the next step of this skill.
    - On `warn:`, show the line as a warning. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Continue with the next step of this skill.
    - On `fail:`, show the line. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Stop.
@@ -111,21 +129,39 @@ Do these checks in order.
 - When you write a reply to the user, follow the reply order rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
 - A reply that changes an outcome that the Goal states asks to change the existing text of the Goal.
-- If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. List each item that you recorded, with its ID. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
+- If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, do these actions in order:
+  1. Record the other parts of the reply with the answer rule.
+  2. List each item that you recorded, with its ID.
+  3. Tell the user to make the change in `plan.md` and to run this skill again.
+  4. End your turn.
 - A new constraint in a reply follows the answer rule.
-- If a reply after step 8 changes no item of `plan.md`, answer the reply, and do not run step 8 again.
-- If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Add, update, or remove each task, so that the preview follows the changed items. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 7 and step 8 again. In the end summary of item 3, list only the items that the reply changed, and show the table only for the 🤖 decisions that you added after the reply. Item 8 asks each open question that is still open.
+- If a reply after step 8 changes no item of `plan.md`, answer the reply. Do not run step 8 again.
+- If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, do these actions in order:
+  1. Record the reply with the general rules.
+  2. Add, update, or remove each task, so that the preview follows the changed items.
+  3. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task. Change that task to follow the answer.
+  4. Run step 7 and step 8 again.
+- When step 8 runs again after a reply, list in the end summary of item 3 only the items that the reply changed.
+- When step 8 runs again after a reply, show the table of item 3 only for the 🤖 decisions that you added after the reply.
+- When step 8 runs again after a reply, item 8 asks each open question that is still open.
 
 ### Failure rule
 
-- An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
 - If a step gives its own failure branch, follow that branch.
-- If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
+- If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
+- Do not try a third form.
 - Do not run a denied single command again.
-- If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
+- If no step needs the output of the failed action, do not stop. Name the action and the error in your reply, and go on without the output.
+- Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+  1. Show the command or the file, and the error text.
+  2. Name each file that this run changed.
+  3. Tell the user what to fix, and to start this workflow again.
+  4. Stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
@@ -133,10 +169,12 @@ Do these checks in order.
 ### Reply order rule
 
 - If a reply has a question or a request, put each question and each request at the end of the reply.
-- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove before the workflow can go on.
-- Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
+- A request is an action that the workflow waits for before the workflow can go on.
+- Examples of a request: an answer, a fix that a stop needs, or a mark that the user must remove.
+- Advice for later is not a request, for example the next skill to run, or a file to read or commit.
+- Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
-- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- If a reply has more than one question or request, put all the questions and requests together at the end of the reply, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
 - A request can end with the step that the user does after the action, for example a re-run of this workflow. Keep that step in the request, after the action.
 
@@ -153,7 +191,8 @@ Do these checks in order.
 - Run the `plan-status.mjs` command alone, not in a chain.
 - If `plan-status.mjs` does not run, or prints an error, say nothing about commits, and go to step 3.
 - If `plan-status.mjs` prints nothing, say nothing about commits, and go to step 3.
-- If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root, so that a file that the user staged stays out of the commit. Run `git add -- openspec/changes/<name>/plan.md` alone. Then run `git commit -m "plan.md: checkpoint before tasks-preview" -- openspec/changes/<name>/plan.md` alone.
+- If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root. A file that the user staged then stays out of the commit.
+- To commit `plan.md`, run `git add -- openspec/changes/<name>/plan.md` alone. Then run `git commit -m "plan.md: checkpoint before tasks-preview" -- openspec/changes/<name>/plan.md` alone.
 - If the commit succeeds, tell the user that you committed `plan.md`.
 - If `git add` or `git commit` fails, show the error. Tell the user to commit `plan.md` themselves before the next run.
 - Wait for the result of `git commit` before you go to step 3. Do not run a command of step 3 in parallel with the commit.
@@ -189,7 +228,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 
 1. Fact check: check each fact that you added in this run, except a fact that the user gave (👤).
    - Read the code or the file list that the fact is about.
-   - If a reader can easily deduce the fact from the code or the file list, with no long analysis, the fact is obvious, also if you found the fact with a run.
+   - Decide if the fact is obvious with the fact rule.
    - Move each obvious fact to the "because" part of the decision that the fact justifies, or remove the obvious fact.
 2. 🤖 decision check: check each 🤖 decision that you added in this run.
    - If a 🤖 decision matches none of the criteria (1), (2), and (3) of the decision rule, remove the 🤖 decision from `plan.md`.
@@ -238,7 +277,7 @@ When the checks are done, go to step 6.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1), (2), or (3) of the decision rule. In the Why column, write the visible result for (1), the close options for (2), or what can surprise for (3).
    - If you added no 🤖 decision, show no table.
    - Give each other item that a step or a rule sends to the end summary.
-   - For each decision that you added in this run to record a constraint of the user, say that the user can move the decision to `## Constraints`, and that the move makes the preview stale, so the user runs this skill again after the move.
+   - For each decision that you added in this run to record a constraint of the user, say that the user can move the decision to `## Constraints`. Also say that the move makes the preview stale, so the user runs this skill again after the move.
 4. In one sentence, give a tip: `openspec-lite-upgrade` can convert the change to a stock spec-driven OpenSpec change, if the team convention requires one. Do not recommend the upgrade. If you gave the tip in an earlier reply of this run, do not give the tip again.
 5. Tell the user to read the preview.
 6. Tell the user what to do on disagreement: put the correction in `plan.md`, and run this skill again. The user does not edit `tasks-preview.md`.
@@ -270,13 +309,19 @@ When the checks are done, go to step 6.
 
 - A question is open only while you cannot decide the question and cannot find its answer.
 - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
-- You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. For example, the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
-- If the user answered that a point is left to you, or the question ends with "(left to the agent by the user)", the point is not open any more, also when the code must match something outside the repo. If the point is an intent or a choice, decide the point: record a 🤖 decision only if the decision rule records the choice, as for each other choice of yours, and otherwise give the choice in the end summary. If the point is a fact that only the user knows, do not record a guess as a fact: choose the value that the tasks plan for the code, record the choice as a 🤖 decision, and say in the end summary that the fact stays unknown. This decision matches criterion (3) of the decision rule, because a guessed value can surprise a reader. If the point depends on an intent and also on a fact that only the user knows, do both branches.
+- You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows what the code must match. For example, the folder where a deploy tool expects the build output.
+- A convention or "Reason not checked." does not decide a point that must match something outside the repo, because the other side can use another form.
+- Record a point that must match something outside the repo, and that you cannot decide, as an open question, not as a 🤖 decision.
+- The user left a point to you when the user answered that the point is left to you, or when the question ends with "(left to the agent by the user)".
+- A point that the user left to you is not open any more, also when the code must match something outside the repo.
+- If the user left a point to you, and the point is an intent or a choice, decide the point with the own-choice rule.
+- If the user left a point to you, and the point is a fact that only the user knows, do not record a guess as a fact. Choose the value that the tasks plan for the code. Record the choice as a 🤖 decision. Say in the end summary that the fact stays unknown.
+- A 🤖 decision that records a value for a fact that only the user knows matches criterion (3) of the decision rule, because a guessed value can surprise a reader.
+- If the user left a point to you, and the point depends on an intent and also on a fact that only the user knows, follow both the intent bullet and the fact bullet of this rule.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary of step 8.
-- If you can decide the question, also when no option is a clear winner, and the decision rule records the choice, record a 🤖 decision.
-- If you can decide the question, and the decision rule does not record the choice, record no decision. Give the answer in the end summary of step 8.
+- If you can decide the question, also when no option is a clear winner, decide the question with the own-choice rule.
 - When you close a question, remove the question from `## Open Questions`.
 - Do not record a point that you can decide as an open question.
 - Write a new open question as `- OQ<n>: <question>`.
@@ -285,6 +330,11 @@ When the checks are done, go to step 6.
 - Keep each kept question until a message of the user answers the kept question, also if you can decide the kept question.
 - Do not ask a kept question.
 - If a message of the user answers a kept question, record the answer with the answer rule.
+
+### Own-choice rule: record a choice that you decide
+
+- If the decision rule records your choice, record the choice as a 🤖 decision.
+- If the decision rule does not record your choice, record no decision. Give the choice in the end summary of step 8.
 
 ### Ask rule: ask an open question
 
@@ -296,10 +346,12 @@ When the checks are done, go to step 6.
 ### Answer rule: record a reply of the user
 
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
+- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. Examples are a resume, split, stale, prune, name, or folder question.
+- For an answer to a question that a step of this workflow asks, follow the step that asked the question. Record the other parts of the reply.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
-- Sort each other part of the reply into one of three kinds. Each part has one kind. A part that the bullets above handle has no kind.
+- Sort each other part of the reply into one of three kinds. Each part has one kind.
+- These parts have no kind: a part that only asks you to run a command or a skill, or asks you a question; an answer to a question that a step of this workflow asks; and a part that says to keep a question open.
 - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that you named is a choice of the user.
 - Kind 2, a part that leaves a choice to you: the user names no option, and says that you can choose, or that each option is good for the user. Follow the question rule for the point.
 - Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing.
@@ -309,11 +361,14 @@ When the checks are done, go to step 6.
 - Record each part of the reply in one section only.
 - If a part limits the result and also says how to build the result, record the limit and the build choice as two decisions with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
-- If the user names an item of `## Facts`, `## Decisions`, or `## Open Questions`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
-- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖. A part that leaves a choice to you is not a choice of the user.
+- The user can name an item of `## Facts`, `## Decisions`, or `## Open Questions`, for example by its ID or its title.
+- If the user names an item and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
+- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
+- A part that leaves a choice to you is not a choice of the user.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
-- Record each part of kind 1 in a section of plan.md, also an answer to an open question. Do not put a part of kind 1 only in the end summary. A part that asks to change Goal, Background, Non-Goals, or Constraints follows the general rules of this skill, not this bullet.
+- Record each part of kind 1 in a section of plan.md, also an answer to an open question. Do not put a part of kind 1 only in the end summary.
+- A part that asks to change Goal, Background, Non-Goals, or Constraints follows the general rules of section 2. Do not record that part in a section of plan.md.
 - After you record the reply, read the reply again, part by part. If a part of kind 1 is in no section of plan.md, record the part now.
 - You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
@@ -322,7 +377,7 @@ When the checks are done, go to step 6.
 ### Decision rule: when to record a decision
 
 - Record a decision when criterion (1), criterion (2), or criterion (3) is true.
-- Criterion (1): you plan something for the code that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
+- Criterion (1): you plan something for the code that changes a visible result, and plan.md and the user did not say that thing.
 - A visible result is one of these things:
   - a UI, a public interface, or the signature of an exported function
   - the input or output of a program, or a data format
@@ -356,16 +411,18 @@ When the checks are done, go to step 6.
 - A decision with no 🤖 belongs to the user, also a decision that the user wrote by hand.
 - A decision with no 🤖 holds only what the user said. Put each choice that you add, and that the decision rule records, in its own 🤖 decision.
 - When you update a 🤖 decision to follow an answer or an instruction of the user, remove the 🤖 of that decision.
-- If the answer leaves the new choice to you, decide the new choice with the question rule. Each part that the user chose keeps no 🤖.
+- If the answer of the user leaves the new choice of a 🤖 decision to you, decide the new choice with the question rule.
+- Each part that the user chose keeps no 🤖.
 - The user removes the 🤖 to accept a decision.
 
 ### Current-decisions rule: keep `## Decisions` current
 
 - `## Decisions` holds only the current decisions.
 - Remove each 🤖 decision that a new decision supersedes.
-- If a new instruction of the user supersedes a decision with no 🤖, and the instruction does not name the decision, remove the old decision. Record each part that the user chose as a decision with no 🤖. Decide each part that the user leaves to you with the question rule. An instruction that names the decision follows the answer rule.
+- If a new instruction of the user supersedes a decision with no 🤖, and the instruction does not name the decision, remove the old decision. Record each part that the user chose as a decision with no 🤖. Decide each part that the user leaves to you with the question rule.
+- If a new instruction of the user supersedes a decision with no 🤖, and the instruction names the decision, follow the answer rule.
 - Update each 🤖 decision that a new decision makes stale.
-- Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`, and record no question.
+- Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`. Record no question for that conflict.
 - Change a decision with no 🤖 only when the user tells you to in this session, when a new instruction of the user supersedes the decision, or to move a choice that you added into its own 🤖 decision.
 - If the tasks of the preview cannot follow a constraint or a decision with no 🤖, record the conflict as an open question.
 - After you update the decisions, remove each fact that justifies no current decision or constraint, except a non-obvious fact.
@@ -379,8 +436,7 @@ When the checks are done, go to step 6.
   - research of remote sources, for example documentation on the internet, another repo, logs, or a remote database
   - a long analysis of the code
   - other work that is worth an agent to find the fact
-- A fact that a reader can easily deduce from the code is never a non-obvious fact, also if a run found the fact.
-- A run alone does not make a fact non-obvious. The result must be one that a reader cannot see in the code or in the file list.
+- A fact that a reader can easily deduce from the code or the file list, with no long analysis, is an obvious fact, also if a run found the fact.
 - A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact, also not the fact check of step 5.
 - When a command, a tool, or a service gives an error or an output that makes you change what you do, and the output is a non-obvious fact, record the output as a fact, with the command and the error text.
 - Do not record an obvious fact or a well-known fact in `## Facts`.

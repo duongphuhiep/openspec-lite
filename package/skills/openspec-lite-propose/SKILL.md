@@ -27,14 +27,21 @@ How to read this skill:
 
 ### Failure rule
 
-- An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
 - If a step gives its own failure branch, follow that branch.
-- If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
+- If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
+- Do not try a third form.
 - Do not run a denied single command again.
-- If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
+- If no step needs the output of the failed action, do not stop. Name the action and the error in your reply, and go on without the output.
+- Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+  1. Show the command or the file, and the error text.
+  2. Name each file that this run changed.
+  3. Tell the user what to fix, and to start this workflow again.
+  4. Stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
@@ -42,10 +49,12 @@ How to read this skill:
 ### Reply order rule
 
 - If a reply has a question or a request, put each question and each request at the end of the reply.
-- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove before the workflow can go on.
-- Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
+- A request is an action that the workflow waits for before the workflow can go on.
+- Examples of a request: an answer, a fix that a stop needs, or a mark that the user must remove.
+- Advice for later is not a request, for example the next skill to run, or a file to read or commit.
+- Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
-- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- If a reply has more than one question or request, put all the questions and requests together at the end of the reply, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
 - A request can end with the step that the user does after the action, for example a re-run of this workflow. Keep that step in the request, after the action.
 
@@ -77,20 +86,31 @@ How to read this skill:
 ### Level 1 question
 
 - Input: the outcomes that stay in this change.
-- Before you decide on the Level 1 question, list the open points of the outcomes for yourself. Do not write them yet: section 3, step 5 records them in `plan.md` with the question rule.
+- Before you decide on the Level 1 question, list the open points of the outcomes for yourself.
+- Do not write the open points yet. Section 3, step 5 records the open points in `plan.md` with the question rule.
 - Put each point that the user leaves to the agent in the list too, so that section 3, step 5 records the point with its marker.
 - A constraint of the request does not block the Level 1 question, because the fix follows each constraint of the request.
-- If the outcomes that stay are one obvious fix, and each open point of the list is a point that the user leaves to the agent, ask: "This looks small. Implement directly with no change?" An empty list also passes this test.
+- If the outcomes that stay are one obvious fix, and each open point of the list is a point that the user leaves to the agent, ask: "This looks small. Implement directly with no change?"
+- An empty list of open points also passes the test for the Level 1 question.
 - Otherwise, do not ask the Level 1 question. Go to section 2.
 - After the Level 1 question, end your turn, and wait for the answer.
-- On yes, make the fix directly, with no change and no file under `openspec/`. Follow each fact, constraint, and choice of the request and of the replies that you kept.
-- On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
+- On yes, make the fix directly, with no change and no file under `openspec/`.
+- On yes, follow each fact, constraint, and choice of the request and of the replies that you kept.
+- On yes, follow the moved-out outcome rule.
 - On yes, decide each point that the user leaves to the agent in the fix.
-- On yes, in the reply, name each point that the user left to the agent, and the choice that the fix made. If a choice is a guessed value of a fact that only the user knows, say so.
-- On yes, if you find a point during the fix that you cannot decide, and that the user did not leave to you, stop the fix. You cannot decide a point when the point is an intent of the user, a fact that only the user knows, or a value that must match something outside the repo that no code or doc that you can reach shows. Name the point and the code that you already changed. Ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
-- After the stop, if the user answers the point, finish the fix with the answer, and give the reply of a yes.
-- After the stop, if the user asks for a change, add the point that stopped the fix to the list of open points, and continue with section 2. In the summary of section 4, name the code that the stopped fix already changed.
-- After the stop, if the reply is not an answer and not a request for a change, do not continue the fix, and create no change. Do what the reply asks. If the reply asks to undo the fix, revert only the code that the stopped fix changed. Name the code that the stopped fix changed.
+- On yes, in the reply, name each point that the user left to the agent, and the choice that the fix made.
+- On yes, if a choice of the fix is a guessed value of a fact that only the user knows, say so in the reply.
+- On yes, if you find a point during the fix that you cannot decide, and that the user did not leave to you, stop the fix.
+- You cannot decide a point when the point is an intent of the user, or a fact that only the user knows.
+- You also cannot decide a point when the point is a value that must match something outside the repo, and no code or doc that you can reach shows the value.
+- At the stop, name the point and the code that you already changed.
+- At the stop, ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
+- After the stop, if the user answers the point, finish the fix with the answer, and give the reply that the "On yes" bullets describe.
+- After the stop, if the user asks for a change, add the point that stopped the fix to the list of open points, and continue with section 2.
+- After the stop, if the user asks for a change, name the code that the stopped fix already changed in the summary of section 4.
+- After the stop, if the reply is not an answer and not a request for a change, do not continue the fix, and create no change. Do what the reply asks.
+- After the stop, if the reply asks to undo the fix, revert only the code that the stopped fix changed.
+- After the stop, if the reply is not an answer and not a request for a change, name the code that the stopped fix changed.
 - On yes, stop after the fix and the names.
 - On no, continue with section 2.
 
@@ -104,8 +124,10 @@ Do these checks in order. When the checks are done, go to section 3.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
 - If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
-- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
-- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
+- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
+- Read each `openspec/...` path from the OpenSpec root.
+- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
+- The `cd <root> && ` prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
@@ -121,18 +143,23 @@ Do these checks in order. When the checks are done, go to section 3.
 
    Shipped schema version: 8
 
+   - If the version equals the shipped version, go to item 3 of the schema check.
+   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
    - If the user declines the copy of the schema, stop.
-   - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
-   - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
-   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-   - If the version equals the shipped version, go to item 3 of the schema check.
+   - Do not end your turn after `openspec-lite-schema` finishes.
+   - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
+   - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
+   - Copy the `status:`, `backup:`, and `copied:` lines as `install.mjs` printed them.
+   - After the copy of the schema, read the version again.
+   - After the copy of the schema, if the version still differs from the shipped version, stop, and report both versions.
+   - After the copy of the schema, if the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
    - The script compares `openspec --version` with the range in `schema.yaml`. The script prints one line that starts with `ok:`, `warn:`, or `fail:`.
    - Run the script alone, not in a chain.
-   - Read the first word of the line, not the exit code. Do not compare the versions yourself.
+   - Read the first word of the line, not the exit code.
+   - Do not compare the versions yourself.
    - On `ok:`, continue with the next step of this skill.
    - On `warn:`, show the line as a warning. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Continue with the next step of this skill.
    - On `fail:`, show the line. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Stop.
@@ -172,9 +199,12 @@ Do these checks in order. When the checks are done, go to section 3.
    - Output: `openspec/changes/<name>/plan.md`.
    - Fill only what is known. Leave the other sections empty.
    - Write `## Goal` with the goal rule, from the outcomes that stay in this change.
-   - Record each fact, constraint, or choice of the request, and each part of a reply that you kept before `plan.md` existed, with the answer rule.
+   - Record each fact, constraint, or choice of the request with the answer rule.
+   - Record each part of a reply that you kept before `plan.md` existed with the answer rule.
    - Record each open point of the list in `## Open Questions` with the question rule.
-   - Do not remove a `<!-- ... -->` guidance comment from `plan.md`, or a line of a guidance comment that spans more than one line. Each guidance comment must still be in the file when you are done.
+   - Do not remove a `<!-- ... -->` guidance comment from `plan.md`.
+   - Do not remove a line of a guidance comment that spans more than one line.
+   - Each guidance comment must still be in `plan.md` when you are done.
    - Write the content of a section on the lines under the guidance comment, not in place of it.
    - Do not invent non-goals, constraints, facts, or decisions.
    - Do not write an outcome that the user moved out, also not in `## Non-Goals`. The summary of section 4 names the outcome.
@@ -192,32 +222,41 @@ Do these checks in order. When the checks are done, go to section 3.
 - Record each open point as an open question in `## Open Questions`. The tasks preview tries to decide the open question later.
 - If the user says to keep a question open, end the text of the question with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
-- If the request or a reply of the user leaves a point to the agent, keep or record the point as an open question in `## Open Questions`, and end the text of the question with "(left to the agent by the user)". The tasks preview or apply decides the point later.
+- If the request or a reply of the user leaves a point to the agent, keep or record the point as an open question in `## Open Questions`.
+- If the request or a reply of the user leaves a point to the agent, end the text of the question with "(left to the agent by the user)".
+- The tasks preview or apply decides a point that the user left to the agent later.
 
 ### Answer rule
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
+- An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md.
+- For an answer to a question of a workflow step, follow the step that asked the question. Record the other parts of the answer.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
-- Sort each other part of the answer into one of three kinds. Each part has one kind. A part that the bullets above handle has no kind.
+- Sort each other part of the answer into one of three kinds. Each part has one kind.
+- These parts have no kind: a part that only asks for a command, a skill, or an answer; an answer to a question of a workflow step; and a part that says to keep a question open.
 - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that the agent named is a choice of the user.
 - Kind 2, a part that leaves a choice to the agent: the user names no option, and says that the agent can choose, or that each option is good for the user. Follow the question rule for the point.
 - Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing.
 - If a part of kind 1 answers an open question of `plan.md`, remove that question from `## Open Questions`. Remove no other question.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
-- Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
+- Record each part of the answer in one section only.
+- If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
 - A problem that the Goal fixes is part of the Goal. Do not record the problem as a fact.
-- If a part of the answer changes an outcome that the Goal states, edit that outcome of the Goal to match the answer. Do not record a constraint or a decision that contradicts the Goal.
+- If a part of the answer changes an outcome that the Goal states, edit that outcome of the Goal to match the answer.
+- Do not record a constraint or a decision that contradicts the Goal.
 - Record each constraint in the answer in `## Constraints`.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - If the user names an item of `plan.md`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
-- Record each other choice or instruction in the answer as a decision with no 🤖. A part of kind 2 is not a choice of the user.
+- Record each other choice or instruction in the answer as a decision with no 🤖.
+- A part of kind 2 is not a choice of the user.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
-- Record each part of kind 1 in a section of plan.md, also an answer to an open question. Do not put a part of kind 1 only in the end summary.
-- After you record the answer, read the answer again, part by part. If a part of kind 1 is in no section of plan.md, record the part now.
+- Record each part of kind 1 in a section of plan.md, also an answer to an open question.
+- Do not put a part of kind 1 only in the end summary.
+- After you record the answer, read the answer again, part by part.
+- If a part of kind 1 is in no section of plan.md after the second read, record the part now.
 
 ### Fact rule
 
@@ -244,14 +283,19 @@ Do these checks in order. When the checks are done, go to section 3.
 - You can use the `plan.md` IDs in `plan.md` and in your reply to the user, for example in the summary.
 - In another file, a code comment, or a commit message, refer to an item by its title, or a short form of its text, with the change name.
 
+### Moved-out outcome rule
+
+- Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
+
 ## 4. End
 
 1. Give the summary:
    - Show the change name and the path of `plan.md`, if `plan.md` exists.
-   - Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
+   - Follow the moved-out outcome rule.
    - Go to step 2.
 2. At the end of the reply, after the summary, write the questions in one numbered list:
-   - First, each open question that you recorded in `plan.md`, so that the user can answer it. Do not ask a kept question, or a question that ends with "(left to the agent by the user)".
+   - First, each open question that you recorded in `plan.md`, so that the user can answer the open question.
+   - Do not ask a question that ends with "(kept open by the user)", or a question that ends with "(left to the agent by the user)".
    - Last, the question: "Do you want a tasks preview?"
    - After the question, end your turn, and wait for the answer.
    - When the user replies, first record the reply with the answer rule.

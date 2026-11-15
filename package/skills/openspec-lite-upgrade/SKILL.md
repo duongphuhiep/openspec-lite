@@ -19,7 +19,12 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Section 4 holds the named rules of this skill, for example the requirement-source rule.
 - The general rules apply at all times, in each step.
 - A named rule applies in each step where its topic comes up, also when the step does not name the rule.
-- The question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these six rules in that file. A step number in these rules names a step of `apply.instruction`, not a step of this skill. In this skill, a fact goes to `## Context` of `design.md`, not to `plan.md`. Two writers add a fact: step 2.3, and the last check of the split rule for a fact of the answer. If you find another fact after step 2.3, or if the resume rule kept `design.md`, do not edit `design.md`: name the fact in the summary as content in no artifact.
+- These six rules are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: the question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format. Read these six rules in that file.
+- A step number in the six rules of `apply.instruction` names a step of `apply.instruction`, not a step of this skill.
+- In this skill, a fact goes to `## Context` of `design.md`, not to `plan.md`.
+- Two writers add a fact to `design.md`: step 2.3, and the last check of the split rule for a fact of the answer.
+- If you find another fact after step 2.3, do not edit `design.md`. Name the fact in the summary as content in no artifact.
+- If the resume rule kept `design.md`, do not edit `design.md` for a fact. Name the fact in the summary as content in no artifact.
 - `<name>` is the name of the change. The change selection check gives `<name>`.
 - `<dir>` is `openspec/changes/<name>`.
 
@@ -36,14 +41,21 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
 ### Failure rule
 
-- An action fails when it exits non-zero, is denied, gives an error, or prints an output that the steps do not name. An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
+- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
 - If a step gives its own failure branch, follow that branch.
-- If a Bash call with more than one command is denied, do the same action once more as single commands, one command in each call, or with the Read, Write, or Edit tool. Do not try a third form.
+- If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
+- Do not try a third form.
 - Do not run a denied single command again.
-- If no step needs the output of the failed action, for example an extra check, or a read of a link for more context, do not stop. Name the action and the error in your reply, and go on without the output.
+- If no step needs the output of the failed action, do not stop. Name the action and the error in your reply, and go on without the output.
+- Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
+- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+  1. Show the command or the file, and the error text.
+  2. Name each file that this run changed.
+  3. Tell the user what to fix, and to start this workflow again.
+  4. Stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
 - If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
@@ -51,10 +63,12 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 ### Reply order rule
 
 - If a reply has a question or a request, put each question and each request at the end of the reply.
-- A request is an action that the workflow waits for before it can go on, for example an answer, a fix that a stop needs, or a mark that the user must remove before the workflow can go on.
-- Advice for later is not a request, for example the next skill to run, or a file to read or commit. Put advice before the first question or request.
+- A request is an action that the workflow waits for before the workflow can go on.
+- Examples of a request: an answer, a fix that a stop needs, or a mark that the user must remove.
+- Advice for later is not a request, for example the next skill to run, or a file to read or commit.
+- Put advice before the first question or request.
 - Put each summary, list, warning, report, and result of the reply before the first question or request.
-- If a reply has more than one question or request, put them together at the end, in one numbered list.
+- If a reply has more than one question or request, put all the questions and requests together at the end of the reply, in one numbered list.
 - Write nothing after the last question or request: no note, no summary line, and no offer.
 - A request can end with the step that the user does after the action, for example a re-run of this workflow. Keep that step in the request, after the action.
 
@@ -68,8 +82,10 @@ Do these checks in order.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
 - Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
 - If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
-- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root. Read each `openspec/...` path from the OpenSpec root.
-- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `. This prefix does not count as a chain.
+- Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
+- Read each `openspec/...` path from the OpenSpec root.
+- If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
+- The `cd <root> && ` prefix does not count as a chain.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
@@ -83,9 +99,12 @@ Do these checks in order.
 - Input: the prompt, and the `changes` list of `openspec list --json`.
 - Output: the name of the change, written `<name>` in this skill.
 - If the prompt names a change, use that change.
-- If the named change is not in the `changes` list, or its `.openspec.yaml` is missing or has no `schema` line, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
+- If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
+  - The named change is not in the `changes` list.
+  - The `.openspec.yaml` of the named change is missing.
+  - The `.openspec.yaml` of the named change has no `schema` line.
 - If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
-- The `changes` list does not give the schema, so read `schema` from the `.openspec.yaml` of each change.
+- If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If only one active change exists, use that change.
 - If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
 - If no active change exists, stop. Tell the user that no active change exists.
@@ -97,9 +116,11 @@ Do these checks in order.
 - Read `schema` from `openspec/changes/<name>/.openspec.yaml`.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, go to the schema check.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
-- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`. If `openspec/changes/<name>/design.md` has `### Decision` entries, also say that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` copies them to `openspec/adr/`: run it before `/opsx:archive`.
+- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
+- If `schema` is `spec-driven`, `openspec/changes/<name>/plan.md` does not exist, and `openspec/changes/<name>/design.md` has `### Decision` entries, also say that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` copies them to `openspec/adr/`: run it before `/opsx:archive`.
 - If `schema` has any other value, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
-- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question, because an earlier run can stop after it wrote the artifacts, and a finished upgrade can keep `plan.md`.
+- If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question.
+- The guard asks the resume question because an earlier run can stop after it wrote the artifacts, and a finished upgrade can keep `plan.md`.
 - In the reply with the resume question, do not name a step number.
 - The resume question is: "The upgrade of <name> wrote the artifacts, and `plan.md` still exists. Finish the upgrade now: validate the artifacts, then decide what to delete from `plan.md`?"
 - After the resume question, end your turn, and wait for the answer. Do not run `validate` before the answer.
@@ -110,17 +131,25 @@ Do these checks in order.
 
 ### Leftover plan.md questions
 
-- Run this rule only when a step of the guard calls it. It is not a check of its own.
-- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, `## Open Questions` of `openspec/changes/<name>/design.md`, and the other content of `design.md` and `specs/` of the change, for an answer.
+- Run this rule only when a step of the guard calls this rule.
+- Input: these sections of `openspec/changes/<name>/`:
+  - `## Open Questions` of `plan.md`.
+  - `## 0. Open questions` of `tasks.md`.
+  - `## Open Questions` of `design.md`.
+  - The other content of `design.md` and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
-- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
+- For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question.
+- A missing file holds no question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
-- If no artifact holds the question, and no artifact holds its answer, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+- If no artifact holds the question, and no artifact holds the answer of the question, do these steps:
+  1. Name the question.
+  2. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`.
+  3. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
@@ -129,18 +158,23 @@ Do these checks in order.
 
    Shipped schema version: 8
 
+   - If the version equals the shipped version, go to item 3 of the schema check.
+   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
    - If the user declines the copy of the schema, stop.
-   - After the copy, read the version again. If the version still differs from the shipped version, stop, and report both versions.
-   - After the copy, if the version equals the shipped version, go to item 3 of the schema check. Do not end your turn after `openspec-lite-schema` finishes.
-   - After `openspec-lite-schema` finishes, copy its report to your reply, also when this skill stops later: the `status:`, `backup:`, and each `copied:` line that `install.mjs` printed, as they are, and the `config.yaml` line.
-   - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-   - If the version equals the shipped version, go to item 3 of the schema check.
+   - Do not end your turn after `openspec-lite-schema` finishes.
+   - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
+   - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
+   - Copy the `status:`, `backup:`, and `copied:` lines as `install.mjs` printed them.
+   - After the copy of the schema, read the version again.
+   - After the copy of the schema, if the version still differs from the shipped version, stop, and report both versions.
+   - After the copy of the schema, if the version equals the shipped version, go to item 3 of the schema check.
 3. Run `node openspec/schemas/plan-lite/openspec-version.mjs`.
    - The script compares `openspec --version` with the range in `schema.yaml`. The script prints one line that starts with `ok:`, `warn:`, or `fail:`.
    - Run the script alone, not in a chain.
-   - Read the first word of the line, not the exit code. Do not compare the versions yourself.
+   - Read the first word of the line, not the exit code.
+   - Do not compare the versions yourself.
    - On `ok:`, continue with the next step of this skill.
    - On `warn:`, show the line as a warning. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Continue with the next step of this skill.
    - On `fail:`, show the line. Point to https://github.com/duongphuhiep/openspec-lite#compatibility. Stop.
@@ -172,13 +206,16 @@ Close the open questions of `plan.md`:
 - Read each question in `## Open Questions` of `plan.md`.
 - A question that ends with "(kept open by the user)" is a kept question.
 - A question that ends with "(left to the agent by the user)" is a point that the user left to you. Decide the point with the question rule, and do not ask the question.
-- For each question that is not a kept question, try to decide the question or find its answer. Use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
-- In the question turn of step 2, do not do the `plan.md` writes of the question rule: record no fact or decision in `plan.md`, and remove no question from `plan.md`. Plan each answer for an artifact or for the summary, as the next bullets say.
+- For each question that is not a kept question, try to decide the question or find its answer.
+- To try, use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
+- In the question turn of step 2, do not do the `plan.md` writes of the question rule. Record no fact or decision in `plan.md`, and remove no question from `plan.md`.
+- In the question turn of step 2, plan each answer for an artifact or for the summary, as the next bullets say.
 - If you find an answer that is a non-obvious fact, plan the answer as a fact in `design.md` → `## Context`.
-- If you find an answer that is obvious, plan the answer for no artifact. Give the answer in the question-turn reply, or in the summary if no question turn runs.
+- If you find an answer that is obvious, follow the no-artifact answer rule.
 - If you decide a point, and the decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` records the choice, plan a decision with 🤖 in `design.md`.
-- If you decide a point, and the point matches no criterion of the decision rule, plan the answer for no artifact. Give the answer in the question-turn reply, or in the summary if no question turn runs.
-- If the user left to you a fact that only the user knows, plan a decision with 🤖 in `design.md` for the value that you choose for the code, and say in the summary that the fact stays unknown. The question rule says that this decision matches criterion (3).
+- If you decide a point, and the point matches no criterion of the decision rule, follow the no-artifact answer rule.
+- If the user left to you a fact that only the user knows, plan a decision with 🤖 in `design.md` for the value that you choose for the code.
+- If the user left to you a fact that only the user knows, say in the summary that the fact stays unknown. The question rule says that the decision for this fact matches criterion (3).
 - If a decided point is a contract, and `<dir>/specs/` holds no delta, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
 - Do not ask a question that you closed.
 
@@ -206,11 +243,12 @@ Read the answer of the user:
 - If `<dir>/specs/` holds no delta, plan a requirement for each constraint of the answer, with no new question.
 - If the user says yes to a planned requirement that the question turn asked, the user is the source of that requirement.
 - If the user says no to a planned requirement that the question turn asked, do not write that requirement.
-- If the user gave no answer for a planned requirement that the question turn asked, do not write that requirement. Name it in the summary.
+- If the user gave no answer for a planned requirement that the question turn asked, do not write that requirement. Name the requirement in the summary.
 - If the user did not answer an open question, keep the question in `plan.md`, with no marker.
 - If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
-- If the user answers yes to the question if the change has a requirement, but gives no requirement text, ask for the text, and end the turn. Do not write an artifact before the answer. When the user gives the text, keep the plans of the earlier reply, and read only the new reply with this part.
+- If the user answers yes to the question if the change has a requirement, but gives no requirement text, ask for the text, and end the turn. Do not write an artifact before the answer.
+- When the user gives the requirement text, keep the plans of the earlier reply. Read only the new reply with the "Read the answer of the user" part of step 2.
 - If the user gives no answer to the question if the change has a requirement, write no spec, as for "None", and name the question in the summary.
 - Go to step 2.1.
 
@@ -231,13 +269,16 @@ Read the answer of the user:
 - Input: the requirements of step 2, and the list of `openspec/specs/`.
 - Output: one delta per capability in `<dir>/specs/`, and the `skip_specs` state of `<dir>/.openspec.yaml`.
 - If `<dir>/specs/` already holds a delta, follow the resume rule, and go to step 2.3.
-- If no requirement is left after step 2, write no spec, and set `skip_specs: true` in `<dir>/.openspec.yaml`. Without a delta and without the flag, `validate` fails. Go to step 2.3.
-- If you write at least one delta, first remove the `skip_specs: true` line from `<dir>/.openspec.yaml`. While the line is set, the CLI forbids spec files.
+- If no requirement is left after step 2, write no spec, and set `skip_specs: true` in `<dir>/.openspec.yaml`. Then go to step 2.3.
+- Without a delta and without the `skip_specs: true` line, `validate` fails.
+- If you write at least one delta, first remove the `skip_specs: true` line from `<dir>/.openspec.yaml`.
+- While the `skip_specs: true` line is set, the CLI forbids spec files.
 - After you remove the `skip_specs: true` line, run `openspec instructions specs`, in the full form of the instructions rule.
 - Write one delta per capability, for the requirements of step 2.
 - To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new capability only when none matches.
 - For a new capability, start the delta with a `## Purpose` section of one or two sentences on what the capability covers. Without a `## Purpose` section, the CLI writes "TBD" as the Purpose of the new main spec.
-- Write in the `## Purpose` section only what `plan.md` or an answer of the user states. The CLI instruction asks "what the capability is for". If `plan.md` does not state a purpose, describe what the capability does, not why a user wants it.
+- Write in the `## Purpose` section only what `plan.md` or an answer of the user states.
+- The CLI instruction asks "what the capability is for". If `plan.md` does not state a purpose, describe what the capability does, not why a user wants it.
 - Use the headers `## ADDED Requirements`, `## MODIFIED Requirements`, `## REMOVED Requirements`, or `## RENAMED Requirements`.
 - Give each ADDED or MODIFIED requirement at least one `#### Scenario:` with **WHEN** and **THEN** lines.
 - For MODIFIED, copy the full requirement from `openspec/specs/<capability>/spec.md`, then edit the copy.
@@ -255,18 +296,22 @@ Read the answer of the user:
 - Run the instructions command for `design` with the instructions rule.
 - Non-Goals go to `## Goals / Non-Goals`.
 - Each `### Decision` entry of `plan.md` goes to `## Decisions`.
-- If a part of the answer supersedes, changes, or corrects a decision of `plan.md`, or a fact or a 🤖 decision that the question turn of step 2 planned, write only the item that follows the answer, with no 🤖. Do not copy the old item. If the part leaves the new choice to you, follow the bullet of this step that starts with "If a part of the answer leaves a choice to you". Write each part that the user chose with no 🤖.
-- A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet. Two bullets of this step are exceptions: a part of the answer that supersedes, changes, or corrects the decision, and a yes to a requirement from the decision.
+- If a part of the answer supersedes, changes, or corrects a decision of `plan.md`, or a fact or a 🤖 decision that the question turn of step 2 planned, write only the item that follows the answer, with no 🤖. Do not copy the old item.
+- If the part of the answer that supersedes, changes, or corrects an item leaves the new choice to you, follow the bullet of this step that starts with "If a part of the answer leaves a choice to you".
+- Write each part that the user chose with no 🤖.
+- Write each decision with 🤖 in `plan.md` with the agent-decision rule.
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji, unless a part of the answer corrected the fact.
-- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless a part of the answer superseded, changed, or corrected the decision, or the user said yes to a requirement from that decision. If a part of the answer superseded, changed, or corrected the decision, follow the bullet of this step that starts with "If a part of the answer supersedes". If the user said yes to a requirement from the decision, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
+- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with the agent-decision rule.
 - Write each choice that the user made in the answer and that is not a contract to `## Decisions`, with no 🤖.
 - If a part of the answer leaves a choice to you, decide the point with the question rule. Write a decision with 🤖 to `## Decisions` only if the decision rule records the choice, or the point is a fact that only the user knows. Otherwise, give the choice in the summary. If the point is a contract, also name the point in the summary, because the point has no requirement.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
-- An open question, also a kept question that no message of the user answered, that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says. A kept question also stays in `plan.md`.
-- An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
-- If the user did not answer a question, also a kept question, that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
+- An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says. This bullet also applies to a kept question that no message of the user answered.
+- A kept question in `## Open Questions` of `design.md` also stays in `plan.md`.
+- An open question that changes the specs, the approach, or the tasks has no slot in `design.md`. Do not put that question, or a note that points to it, in `design.md`.
+- If the user did not answer a question that changes the specs, the approach, or the tasks, keep the question in `plan.md`. This bullet also applies to a kept question.
+- Put each question that the user did not answer and that changes the specs, the approach, or the tasks, also a kept question, as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
 - Go to step 2.4.
 
 ### Step 2.4: Write `tasks.md`
@@ -302,7 +347,9 @@ Read the answer of the user:
 ### Step 3: Switch the schema
 
 - Input: `<dir>/.openspec.yaml`, and the four artifacts.
-- Before you switch, check that `proposal.md`, `design.md`, and `tasks.md` exist, and that `<dir>/specs/` holds a delta or `<dir>/.openspec.yaml` has `skip_specs: true`. If a check fails, follow the failure rule. Do not switch the schema.
+- Before you switch, check that `proposal.md`, `design.md`, and `tasks.md` exist.
+- Before you switch, check that `<dir>/specs/` holds a delta or `<dir>/.openspec.yaml` has `skip_specs: true`.
+- If a check before the switch fails, follow the failure rule. Do not switch the schema.
 - Change `schema: plan-lite` to `schema: spec-driven` in `<dir>/.openspec.yaml`.
 - Read the `schema` line again. If the line is not `schema: spec-driven`, follow the failure rule.
 - Go to step 4.
@@ -375,14 +422,21 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Give each item that a step or a rule of this skill sends to the summary.
 - Do not name `plan.md` in the file list, as deleted or as kept. Step 5.4 says what happens to `plan.md` after the answer.
 - If an artifact has 🤖 items, list each 🤖 item with its new claim, or as an agent decision of `plan.md`.
-- A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user, because the mark goes away only after an action of the user: a yes in the question turn of step 2, an answer that supersedes, changes, or corrects the decision, or an edit of the user. Do not ask the user to confirm the decision again, also on a resumed run.
+- A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user.
+- The 🤖 mark of a decision of `plan.md` goes away only after an action of the user: a yes in the question turn of step 2, an answer that supersedes, changes, or corrects the decision, or an edit of the user.
+- Do not ask the user again to confirm a decision that has the confirmation of the user, also on a resumed run.
 - Say the final `skip_specs` state: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
 - Name each part of the answer whose artifact the resume rule kept. Tell the user to add the part to that artifact by hand.
-- Name each `plan.md` item that stays in `plan.md` and that no artifact holds, also each content that step 5.2 lists as "kept, in no artifact". Name each item one time. Advise the user to add the item to an artifact by hand, or to resolve it before `/opsx:apply`, because the stock skills do not read `plan.md`.
+- Name each `plan.md` item that stays in `plan.md` and that no artifact holds, also each content that step 5.2 lists as "kept, in no artifact".
+- Name each item that stays in `plan.md` one time.
+- For each item that stays in `plan.md` and that no artifact holds, advise the user to add the item to an artifact by hand, or to resolve the item before `/opsx:apply`. Give the reason: the stock skills do not read `plan.md`.
 - If `design.md` has `### Decision` entries, warn: stock `/opsx:archive` does not turn them into ADRs.
 - If `design.md` has `### Decision` entries, say: to keep them as ADRs, copy them to `openspec/adr/` before the archive. `openspec-lite-archive` can do this copy: run it before `/opsx:archive`.
-- At the end of the summary, advise the user to review all artifacts. If an artifact has 🤖 items, advise the user to review each 🤖 item: remove the mark to accept the item, or delete the item. Advise an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference. This advice comes before the prune question of step 5.3.
+- At the end of the summary, advise the user to review all artifacts.
+- At the end of the summary, if an artifact has 🤖 items, advise the user to review each 🤖 item: remove the mark to accept the item, or delete the item.
+- At the end of the summary, advise an extra review of `tasks.md`, because `tasks.md` is a contract, not a reference.
+- The review advice at the end of the summary comes before the prune question of step 5.3.
 
 ## 4. Rules
 
@@ -405,12 +459,16 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 - Split the answer of the user, as the answer rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` says.
 - In steps 2.1 to 2.4, write each part of the answer to its artifact, not to `plan.md`. Where the answer rule says a section of `plan.md`, use the artifact that this split rule names.
-- The last check of the split rule: after steps 2.1 to 2.4 write the answer, read the answer again, part by part. If a part of kind 1 of the answer rule is in no artifact, write the part to its artifact before step 2.5. If that write is the first delta, first remove the `skip_specs: true` line, and run the instructions command for `specs`, as step 2.2 says.
+- The last check of the split rule: after steps 2.1 to 2.4 write the answer, read the answer again, part by part.
+- In the last check of the split rule, if a part of kind 1 of the answer rule is in no artifact, write the part to its artifact before step 2.5.
+- In the last check of the split rule, if the write is the first delta, first remove the `skip_specs: true` line. Then run the instructions command for `specs`, as step 2.2 says.
 - If the resume rule kept the artifact of a part, do not edit the artifact. Section 3 names the part in the summary.
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice.
-- A constraint of the answer is a requirement source, like a constraint of `plan.md`. If `<dir>/specs/` holds no delta, write its requirement with no new question, because the answer of the user is the source of the requirement. If the resume rule kept a delta in `<dir>/specs/`, follow the kept-artifact bullet of this rule.
+- A constraint of the answer is a requirement source, like a constraint of `plan.md`.
+- If `<dir>/specs/` holds no delta, write the requirement of a constraint of the answer with no new question, because the answer of the user is the source of the requirement.
+- If the resume rule kept a delta in `<dir>/specs/`, follow the bullet of this rule that starts with "If the resume rule kept the artifact of a part".
 - A choice of the answer goes to the specs only when the choice is a contract, and the user made the choice.
 - A part of the answer that leaves a choice to you is not a choice of the user. Step 2.3 says what to write for the part.
 - A choice of the answer that is not a contract goes to `## Decisions` of `design.md`.
@@ -430,7 +488,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Before you mark an item, check each sentence of the item, not only its main source.
 - If one sentence holds a new claim, mark the item, and name that claim in a few words.
 - If no sentence holds a new claim, do not mark the item.
-- One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet. Step 2.3 removes the 🤖 when the user said yes to a requirement from that decision, or from a contract point that step 2 decided, or when a part of the answer supersedes, changes, or corrects the decision.
+- One exception: a `### Decision` from a decision with 🤖 in `plan.md` follows the agent-decision rule, also when the decision holds no new claim.
 - These are not new claims:
   - other words for a `plan.md` item or an answer;
   - another form of a `plan.md` item, for example a `#### Scenario:` that only restates its requirement;
@@ -446,6 +504,19 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 - Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact.
 - To refer to a `plan.md` item in an artifact, use its title, or a short form of its text, with the change name.
+
+### Agent-decision rule
+
+- The agent-decision rule applies to two kinds of decision: a decision with 🤖 in `plan.md`, and a decision with 🤖 that the question turn of step 2 planned.
+- If no exception of the agent-decision rule applies, write the decision to `## Decisions` of `design.md`, with 🤖 at the end of its heading, because the user did not confirm the decision yet.
+- Exception 1: if a part of the answer supersedes, changes, or corrects the decision, follow the bullet of step 2.3 that starts with "If a part of the answer supersedes".
+- Exception 2: if the user said yes in the question turn of step 2 to a requirement that you planned from the decision, or from a contract point that step 2 decided, follow the bullet of step 2.3 that starts with "If the user said yes in the question turn of step 2".
+
+### No-artifact answer rule
+
+- Plan the answer for no artifact.
+- If the question turn of step 2 runs, give the answer in the question-turn reply.
+- If no question turn runs, give the answer in the summary.
 
 ### Instructions rule
 
