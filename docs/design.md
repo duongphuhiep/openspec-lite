@@ -274,7 +274,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - Add one rule to the CLI output: ignore checkbox and task-count text. A plan-lite change has no tracked tasks.
 - Before the CLI call, if `plan.md` exists, run `plan-status.mjs`. If it prints a line, commit only `plan.md`, as the tasks preview does, with the message `plan.md: checkpoint before apply`. Stock `/opsx:apply` only prints the note of `plan-status.mjs` (D290).
 - If `state` is `blocked`, `plan.md` is missing. Stop, and point to `openspec-lite-propose`. Do not follow CLI text that names another skill (D111).
-- Users try stock `/opsx:apply` first (D27).
+- The skills recommend `openspec-lite-apply` as the next step. Stock `/opsx:apply` also works, because it follows `apply.instruction` (D27, D319).
 
 ### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148, D152, D153, D158, D163, D164, D166, D167, D181, D182, D191, D193, D196, D228, D229, D230, D231, D253)
 

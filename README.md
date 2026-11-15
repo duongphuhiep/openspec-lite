@@ -117,7 +117,7 @@ apm update
 - **`openspec-lite-archive`**: archives the change. It promotes selected items to specs and ADRs.
 - **`openspec-lite-schema`**: installs or replaces the plan-lite schema in the repo. It moves an old copy to `openspec/schemas-backup/`. The other skills check the schema version and run it when necessary.
 
-To implement, try stock `/opsx:apply` first. If it does not follow `plan.md` well, use `openspec-lite-apply`.
+To implement, use `openspec-lite-apply`. Stock `/opsx:apply` also follows the plan-lite rules of `apply.instruction`, but `openspec-lite-apply` uses `tasks-preview.md` as a guide.
 
 Do not run stock `/opsx:archive` on a plan-lite change. It skips promotion, so the `plan.md` decisions never become specs or ADRs. Use `openspec-lite-archive` instead.
 

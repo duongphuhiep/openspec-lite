@@ -9,7 +9,7 @@ Create a plan-lite change.
 
 How to read this skill:
 
-- Do sections 1 to 5 in order.
+- Do sections 1 to 4 in order.
 - The general rules apply at all times, in each section.
 - A named rule, for example the question rule, applies in each step where its topic comes up, also when the step does not name the rule.
 - `<name>` is the change name that step 1 of section 3 picks.

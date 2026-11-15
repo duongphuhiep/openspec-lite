@@ -344,6 +344,8 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 
 **Review trigger**: Remove `openspec-lite-apply` if real use shows that stock `/opsx:apply` does the same job.
 
+**Status**: D319 revises the advice: the skills and the README recommend `openspec-lite-apply`, not stock `/opsx:apply` first.
+
 **Status**: D64 makes the schema `apply.instruction` the only copy of the rules.
 
 ---
@@ -1178,7 +1180,7 @@ This revises D10.
 - `validate` fails on a plan-lite change with no deltas and no `skip_specs`. A change created without propose has no flag.
 - The other items define a failure path or an input that was undefined.
 
-**Status**: D109 revises the "newer schema" message and lets any tag bump the schema. D110 revises the archive `skip_specs` rule: it decides from the files on disk. D111 adds `apm update -g` to the message. Revised by D175: a script compares the OpenSpec version.
+**Status**: D109 revises the "newer schema" message and lets any tag bump the schema. D110 revises the archive `skip_specs` rule: it decides from the files on disk. D111 adds `apm update -g` to the message. Revised by D175: a script compares the OpenSpec version. D316 removes the upgrade signals, so `apply.instruction` no longer lists them.
 
 ---
 
@@ -1590,7 +1592,7 @@ This revises D103.
 
 ## D119: A Contract Goes to a Spec Even If It Is Obvious
 
-**Status**: The optional ADR of a contract decision is revised by D298.
+**Status**: The optional ADR of a contract decision is revised by D298. D316 removes the upgrade signal "a contract (spec) becomes necessary".
 
 **Decision**: At archive, a third filter selects requirements:
 
@@ -1881,7 +1883,7 @@ This revises the "append-only" rule of D10 and of `design.md` §4. It extends D1
 
 This extends D134, D135, and D136.
 
-**Status**: D144 replaces "an ID that is not used yet" with "a number higher than each ID of its kind in the file". Revised by D191: a fact that justifies a requirement goes into the requirement text.
+**Status**: D144 replaces "an ID that is not used yet" with "a number higher than each ID of its kind in the file". Revised by D191: a fact that justifies a requirement goes into the requirement text. D316 removes the upgrade signals of `design.md` §5.
 
 **Rationale**: With the literal `D1` in the instruction, apply could write a second `D1` in a file that already has one. The README said "at any time", but the glossary said "when its scope grows". A spec states behavior, not the facts behind it, so a fact has no slot in a spec.
 
@@ -4460,3 +4462,16 @@ The next steps of the flow are: propose asks for a tasks preview, the tasks prev
 5. Scenario 23a checks the D317 order of the end reply. Scenario 23b checks that apply does not suggest an upgrade.
 
 **Rationale**: review round 1 of `v1.8.0..local`. With no next step on a no, the user did not know what to run after propose. A tip that repeats in each reply is noise. Some harnesses have no slash commands. The glossary called Level 3 a size, which contradicts D316.
+
+---
+
+## D319: Fixes of Review Round 2 on D316 to D318
+
+**Decision**:
+
+1. The README and `design.md` recommend `openspec-lite-apply` to implement, as the skills do since D317 and D318. Stock `/opsx:apply` also works, because it follows `apply.instruction`. This revises D27.
+2. Propose says "Do sections 1 to 4 in order", because D316 removed section 4 "Upgrade signals".
+3. D93, D119, and D137 get a Status line that points to D316.
+4. Scenario 1 answers no to the preview question, and checks the D318 branch.
+
+**Rationale**: review round 2 of `v1.8.0..local`. The user chose `openspec-lite-apply` as the next step of the tasks preview. The README still said to try stock `/opsx:apply` first, so the two pieces of advice disagreed.

@@ -36,7 +36,10 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 
 ## 1. Fresh repo: propose
 
-**Steps**: Ask: "openspec-lite-propose: add a CSV export to the report page."
+**Steps**:
+
+1. Ask: "openspec-lite-propose: add a CSV export to the report page."
+2. Answer no to "Do you want a tasks preview?".
 
 **Expected**:
 
@@ -47,6 +50,7 @@ Record the agent, the model, the OpenSpec version, and the result of each scenar
 - The request has open points, for example which rows and columns the export holds. So the agent does not ask the Level 1 question, and `## Open Questions` holds each open point (D260). The summary lists each open question (D265).
 - The summary tells the user that the agent added the archive guidance to `openspec/config.yaml`, a file that the user owns.
 - The agent asks: "Do you want a tasks preview?" It writes no code.
+- After the no of step 2, the agent recommends `openspec-lite-apply` as the next step, and ends its turn. It writes no code, no `tasks-preview.md`, and gives no upgrade tip (D318).
 
 ## 2. Small request: Level 1
 
