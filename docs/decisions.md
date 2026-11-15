@@ -4484,7 +4484,19 @@ The next steps of the flow are: propose asks for a tasks preview, the tasks prev
 
 1. The README names what `openspec-lite-apply` adds to stock `/opsx:apply`: the `plan.md` checkpoint commit, no checkbox text, and a stop when `plan.md` is missing. Stock `/opsx:apply` also uses `tasks-preview.md` as a guide, because `apply.instruction` says so.
 2. The README lifecycle puts `openspec-lite-apply` first, and names the team convention as the condition of the upgrade.
-3. The upgrade description says "when the team convention requires stock OpenSpec", not "for example when". D316 item 5 says "reason".
+3. The upgrade description says "when the team convention requires stock OpenSpec", not "for example when". D316 item 5 says "reason". D321 revises this item.
 4. The D27 review trigger stays. Stock `/opsx:apply` still works and the README still names it, so real use can still show that it does the same job.
 
 **Rationale**: review round 3 of `v1.8.0..local`. The README gave a false difference between the two apply paths. "For example" told the agent that other reasons to upgrade exist, against D316.
+
+---
+
+## D321: Upgrade Does Not Ask for the Reason
+
+**Decision**:
+
+1. If the user asks for an upgrade, upgrade does the upgrade, and does not ask for the reason. The upgrade description says that the usual reason is a team convention that requires stock OpenSpec. This revises D320 item 3.
+2. The README says "if your team convention requires stock OpenSpec" where it offers the upgrade "at any time".
+3. The `design.md` headings of apply and upgrade cite D319, D316, D320, and D321.
+
+**Rationale**: review round 4 of `v1.8.0..local`. After D320, the description read as a precondition, so an agent could ask for the reason or refuse. D316 says that the user decides when to upgrade. The agent cannot check a team convention, so a check only adds a turn.

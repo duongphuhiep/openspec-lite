@@ -46,7 +46,7 @@ A custom OpenSpec schema alone can give you a one-artifact workflow. openspec-li
 
 **To review the AI's plan before it writes code**, use `tasks-preview.md`. See [Preview the code changes](#preview-the-code-changes).
 
-**At any time**, you can convert a plan-lite change (`plan.md`) to a stock OpenSpec change (`proposal.md`, `design.md`, and so on). See [Upgrade to a spec-driven change](#upgrade-to-a-spec-driven-change).
+**At any time**, if your team convention requires stock OpenSpec, you can convert a plan-lite change (`plan.md`) to a stock OpenSpec change (`proposal.md`, `design.md`, and so on). See [Upgrade to a spec-driven change](#upgrade-to-a-spec-driven-change).
 
 ### What openspec-lite adds to OpenSpec
 
@@ -113,7 +113,7 @@ apm update
 - **`openspec-lite-propose`**: creates a plan-lite change. It asks if you want a tasks preview.
 - **`openspec-lite-tasks-preview`**: generates or regenerates `tasks-preview.md`. It records the facts, decisions, and open questions that it finds in `plan.md`.
 - **`openspec-lite-apply`**: implements the change from `plan.md`. It uses `tasks-preview.md` as a guide.
-- **`openspec-lite-upgrade`**: upgrades a plan-lite change to spec-driven, at any time.
+- **`openspec-lite-upgrade`**: upgrades a plan-lite change to spec-driven, at any time, if your team convention requires stock OpenSpec.
 - **`openspec-lite-archive`**: archives the change. It promotes selected items to specs and ADRs.
 - **`openspec-lite-schema`**: installs or replaces the plan-lite schema in the repo. It moves an old copy to `openspec/schemas-backup/`. The other skills check the schema version and run it when necessary.
 

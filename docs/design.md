@@ -268,7 +268,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - Before it writes `tasks-preview.md`, the preview checks each fact that the run added, except a 👤 fact. If a reader can see it in the code or the file list, it is obvious, also after a run: move it to the "because" part of the decision that it justifies, or remove it (D211, D227). In the same step, it removes each added 🤖 decision that matches neither criterion (D221, D230, D234).
 - In the summary, list each fact, decision, and open question that the run added, changed, or removed (D171). Then show a table of each added 🤖 decision, with its criterion, (1) or (2), and why (D221, D234).
 
-### openspec-lite-apply (D27, D64, D73, D171, D172, D177, D193, D290)
+### openspec-lite-apply (D27, D64, D73, D171, D172, D177, D193, D290, D319)
 
 - Run `openspec instructions apply --change "<name>" --json`. Follow its `instruction`. The schema `apply.instruction` is the only copy of the plan-lite apply rules.
 - Add one rule to the CLI output: ignore checkbox and task-count text. A plan-lite change has no tracked tasks.
@@ -276,8 +276,9 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - If `state` is `blocked`, `plan.md` is missing. Stop, and point to `openspec-lite-propose`. Do not follow CLI text that names another skill (D111).
 - The skills recommend `openspec-lite-apply` as the next step. Stock `/opsx:apply` also works, because it follows `apply.instruction` (D27, D319).
 
-### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148, D152, D153, D158, D163, D164, D166, D167, D181, D182, D191, D193, D196, D228, D229, D230, D231, D253)
+### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148, D152, D153, D158, D163, D164, D166, D167, D181, D182, D191, D193, D196, D228, D229, D230, D231, D253, D316, D320, D321)
 
+- If the user asks for an upgrade, do the upgrade, and do not ask for its reason. The usual reason is a team convention (D316, D321).
 1. Keep `skip_specs: true` in `.openspec.yaml` until the first spec write. Then remove it, before `openspec instructions specs`, because while it is set, the CLI forbids spec files (D99). A run that stops before the specs then leaves a change that passes `validate` (D208).
 2. Before any artifact, plan the requirements (D164, D166). A requirement comes only from these sources:
    - a constraint of `plan.md`. A fact is not a source of a requirement, so it goes to `design.md` → `## Context`, with its source emoji (D227);

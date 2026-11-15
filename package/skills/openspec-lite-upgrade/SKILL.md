@@ -1,6 +1,6 @@
 ---
 name: openspec-lite-upgrade
-description: Upgrade a plan-lite change to a full spec-driven OpenSpec change, at any time, when the team convention requires stock OpenSpec. It writes proposal.md, specs, design.md, and tasks.md from plan.md and tasks-preview.md. Use only when the user asks for openspec-lite-upgrade, or to upgrade a plan-lite change.
+description: Upgrade a plan-lite change to a full spec-driven OpenSpec change, at any time. The usual reason is a team convention that requires stock OpenSpec. It writes proposal.md, specs, design.md, and tasks.md from plan.md and tasks-preview.md. Use only when the user asks for openspec-lite-upgrade, or to upgrade a plan-lite change.
 ---
 
 # openspec-lite-upgrade
@@ -25,6 +25,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
 ## General rules
 
+- If the user asks for an upgrade, do the upgrade. Do not ask for the reason of the upgrade.
 - When you write `proposal.md`, `specs/`, `design.md`, or `tasks.md`, follow the ID rule.
 - When you write `proposal.md`, `specs/`, or `design.md`, mark each inferred item with the inferred-item rule.
 - Do not mark an item of `tasks.md` with 🤖.
