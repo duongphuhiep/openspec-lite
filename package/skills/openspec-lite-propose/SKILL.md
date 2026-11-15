@@ -80,7 +80,8 @@ How to read this skill:
 - Before you decide on the Level 1 question, list the open points of the outcomes for yourself. Do not write them yet: section 3, step 5 records them in `plan.md` with the question rule.
 - A point that the user leaves to the agent is not an open point for this test. On yes to the Level 1 question, decide such a point in the fix.
 - If the list of open points is not empty, the outcomes are not small.
-- Ask the Level 1 question only if the outcomes that stay are small: one obvious fix, and no constraints or open questions worth recording.
+- Ask the Level 1 question only if the outcomes that stay are one obvious fix, and the list of open points is empty.
+- A constraint of the request does not block the Level 1 question, because the fix follows each constraint of the request.
 - If the outcomes that stay are not small, do not ask the Level 1 question. Go to section 2.
 - Ask: "This looks small. Implement directly with no change?"
 - After the Level 1 question, end your turn, and wait for the answer.

@@ -4661,3 +4661,16 @@ This revises D323.
 4. The leftover plan.md questions rule defines "holds the answer": the artifact states the answer as a fact, a decision, or a requirement. Archive guard step 5 uses the same words.
 
 **Rationale**: review B round 8 of `v1.8.0..local`. The round had 4 remarks, so the review loop stops after this round.
+
+---
+
+## D332: Fixes of Review B Round 9
+
+**Decision**:
+
+1. Upgrade has the fact branch of D331: for a fact that only the user knows and that the user left to the agent, upgrade plans and writes a 🤖 decision in `design.md` for the value that the code uses, and says in the summary that the fact stays unknown.
+2. The fact branch of the question rule says that the 🤖 decision matches criterion (3), so the end checks of apply and of the tasks preview do not remove it.
+3. Upgrade: when the requirement text comes in a later reply, upgrade keeps the plans of the earlier reply, and reads only the new reply.
+4. The Level 1 test of propose has one test: one obvious fix, and an empty list of open points. A constraint of the request does not block Level 1, because the fix follows each constraint of the request. This revises D148 and D202, which named "no constraints worth recording".
+
+**Rationale**: review B round 9 of `v1.8.0..local`. For item 4, propose already told the Level 1 fix to follow each constraint of the request, so the constraint test only gave two results for one request.

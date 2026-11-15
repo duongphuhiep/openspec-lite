@@ -178,6 +178,7 @@ Close the open questions of `plan.md`:
 - If you find an answer that is obvious, give the answer only in the summary.
 - If you decide a point, and the decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` records the choice, plan a decision with 🤖 in `design.md`.
 - If you decide a point, and the point matches no criterion of the decision rule, give the answer only in the summary.
+- If the user left to you a fact that only the user knows, plan a decision with 🤖 in `design.md` for the value that the code uses, and say in the summary that the fact stays unknown. The question rule says that this decision matches criterion (3).
 - If a decided point is a contract, and `<dir>/specs/` holds no delta, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
 - Do not ask a question that you closed.
 
@@ -209,7 +210,7 @@ Read the answer of the user:
 - If the user did not answer an open question, keep the question in `plan.md`, with no marker.
 - If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
-- If the user answers yes to the question if the change has a requirement, but gives no requirement text, ask for the text, and end the turn. Do not write an artifact before the answer. When the user gives the text, read that reply with this part again.
+- If the user answers yes to the question if the change has a requirement, but gives no requirement text, ask for the text, and end the turn. Do not write an artifact before the answer. When the user gives the text, keep the plans of the earlier reply, and read only the new reply with this part.
 - If the user gives no answer to the question if the change has a requirement, write no spec, as for "None", and name the question in the summary.
 - Go to step 2.1.
 
@@ -261,7 +262,7 @@ Read the answer of the user:
 - Write each fact that step 2 planned to `## Context`, with its source emoji, unless a part of the answer corrected the fact.
 - Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless a part of the answer superseded, changed, or corrected the decision, or the user said yes to a requirement from that decision. If a part of the answer superseded, changed, or corrected the decision, follow the bullet of this step that starts with "If a part of the answer supersedes". If the user said yes to a requirement from the decision, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
 - Write each choice that the user made in the answer and that is not a contract to `## Decisions`, with no 🤖.
-- If a part of the answer leaves a choice to you, decide the point with the question rule. Write a decision with 🤖 to `## Decisions` only if the decision rule records the choice. Otherwise, give the choice in the summary. If the point is a contract, also name the point in the summary, because the point has no requirement.
+- If a part of the answer leaves a choice to you, decide the point with the question rule. Write a decision with 🤖 to `## Decisions` only if the decision rule records the choice, or the point is a fact that only the user knows. Otherwise, give the choice in the summary. If the point is a contract, also name the point in the summary, because the point has no requirement.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question, also a kept question that no message of the user answered, that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says. A kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
