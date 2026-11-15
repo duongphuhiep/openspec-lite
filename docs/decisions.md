@@ -344,7 +344,7 @@ The user starts with stock `/opsx:apply`. The schema `apply.instruction` holds t
 
 **Review trigger**: Remove `openspec-lite-apply` if real use shows that stock `/opsx:apply` does the same job.
 
-**Status**: D319 revises the advice: the skills and the README recommend `openspec-lite-apply`, not stock `/opsx:apply` first.
+**Status**: D319 revises the advice: the skills and the README recommend `openspec-lite-apply`, not stock `/opsx:apply` first. The review trigger stays (D320).
 
 **Status**: D64 makes the schema `apply.instruction` the only copy of the rules.
 
@@ -4427,7 +4427,7 @@ This revises D119, D166, D182, D219, and D256.
 2. The only reason to upgrade to a spec-driven change is a team convention: the team does not accept plan-lite and requires stock spec-driven changes.
 3. The size of the change is not a reason to upgrade. Work in a team is not a reason to upgrade, because a team can share `plan.md` as it shares a stock change.
 4. The upgrade signals of D54 are removed. Propose and `apply.instruction` do not suggest an upgrade. The user runs `openspec-lite-upgrade` when the team convention requires it. The schema `version` goes to 8.
-5. The propose description triggers on "medium or large change", not on "medium change". The upgrade description gives the team convention as the example, not a scope that grows.
+5. The propose description triggers on "medium or large change", not on "medium change". The upgrade description gives the team convention as the reason, not a scope that grows.
 
 This supersedes D54, and revises D1, D11, D50, and D104.
 
@@ -4475,3 +4475,16 @@ The next steps of the flow are: propose asks for a tasks preview, the tasks prev
 4. Scenario 1 answers no to the preview question, and checks the D318 branch.
 
 **Rationale**: review round 2 of `v1.8.0..local`. The user chose `openspec-lite-apply` as the next step of the tasks preview. The README still said to try stock `/opsx:apply` first, so the two pieces of advice disagreed.
+
+---
+
+## D320: Fixes of Review Round 3 on D319
+
+**Decision**:
+
+1. The README names what `openspec-lite-apply` adds to stock `/opsx:apply`: the `plan.md` checkpoint commit, no checkbox text, and a stop when `plan.md` is missing. Stock `/opsx:apply` also uses `tasks-preview.md` as a guide, because `apply.instruction` says so.
+2. The README lifecycle puts `openspec-lite-apply` first, and names the team convention as the condition of the upgrade.
+3. The upgrade description says "when the team convention requires stock OpenSpec", not "for example when". D316 item 5 says "reason".
+4. The D27 review trigger stays. Stock `/opsx:apply` still works and the README still names it, so real use can still show that it does the same job.
+
+**Rationale**: review round 3 of `v1.8.0..local`. The README gave a false difference between the two apply paths. "For example" told the agent that other reasons to upgrade exist, against D316.
