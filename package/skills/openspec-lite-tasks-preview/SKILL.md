@@ -112,7 +112,7 @@ Do these checks in order.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. List each item that you recorded, with its ID. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
 - A new constraint in a reply follows the answer rule.
 - If a reply after step 8 changes no item of `plan.md`, answer the reply, and do not run step 8 again.
-- If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Add, update, or remove each task, so that the preview follows the changed items. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again. In the end summary of item 3, list only the items that the reply changed. Item 8 asks each open question that is still open.
+- If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Add, update, or remove each task, so that the preview follows the changed items. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again. In the end summary of item 3, list only the items that the reply changed, and show the table only for the 🤖 decisions that you added after the reply. Item 8 asks each open question that is still open.
 
 ### Failure rule
 
@@ -126,7 +126,7 @@ Do these checks in order.
 - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
-- If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
+- If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
 
 ### Reply order rule
 
@@ -235,6 +235,7 @@ When the checks are done, go to step 6.
    - For each open question that you removed, give its answer.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1), (2), or (3) of the decision rule. In the Why column, write the visible result for (1), the close options for (2), or what can surprise for (3).
    - If you added no 🤖 decision, show no table.
+   - Give each other item that a step or a rule sends to the end summary.
    - For each decision that you added in this run to record a constraint of the user, say that the user can move the decision to `## Constraints`, and that the move makes the preview stale, so the user runs this skill again after the move.
 4. In one sentence, give a tip: `openspec-lite-upgrade` can convert the change to a stock spec-driven OpenSpec change, if the team convention requires one. Do not recommend the upgrade. If you gave the tip in an earlier reply of this run, do not give the tip again.
 5. Tell the user to read the preview.

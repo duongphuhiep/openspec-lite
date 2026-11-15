@@ -46,7 +46,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
-- If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
+- If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
 
 ### Reply order rule
 
@@ -169,10 +169,8 @@ Close the open questions of `plan.md`:
 
 - Read each question in `## Open Questions` of `plan.md`.
 - A question that ends with "(kept open by the user)" is a kept question.
-- Keep each kept question until a message of the user answers the kept question, also if you can decide the kept question. Do not ask a kept question.
 - For each question that is not a kept question, try to decide the question or find its answer. Use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
 - In the question turn of step 2, do not do the `plan.md` writes of the question rule: record no fact or decision in `plan.md`, and remove no question from `plan.md`. Plan each answer for an artifact or for the summary, as the next bullets say.
-- A question is open only while you cannot decide the question and cannot find its answer.
 - If you find an answer that is a non-obvious fact, plan the answer as a fact in `design.md` → `## Context`.
 - If you find an answer that is obvious, give the answer only in the summary.
 - If you decide a point, and the decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` records the choice, plan a decision with 🤖 in `design.md`.
@@ -260,11 +258,9 @@ Read the answer of the user:
 - Write each choice that the user made in the answer and that is not a contract to `## Decisions`, with no 🤖.
 - If a part of the answer leaves a choice to you, decide the point with the question rule. Write a decision with 🤖 to `## Decisions` only if the decision rule records the choice. Otherwise, give the choice in the summary.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
-- An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
-- A kept question that no message of the user answered, and that does not change the specs, the approach, or the tasks, goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
+- An open question, also a kept question that no message of the user answered, that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says. A kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
-- If the user did not answer a question that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
-- If a kept question that no message of the user answered changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
+- If the user did not answer a question, also a kept question, that changes the specs, the approach, or the tasks, keep the question in `plan.md`. Also put the question as the first task of `tasks.md` (step 2.4), because the stock skills do not read `plan.md`.
 - Go to step 2.4.
 
 ### Step 2.4: Write `tasks.md`

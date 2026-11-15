@@ -31,7 +31,7 @@ How to read this skill:
 - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
-- If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
+- If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
 
 ### Reply order rule
 

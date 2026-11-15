@@ -4581,3 +4581,23 @@ This revises D323.
 9. Archive: a constraint skips the filters only when `plan.md` says that the constraint applies only to this change. Each other constraint goes through the filters. This revises D315 item 1.
 
 **Rationale**: review B round 3 of `v1.8.0..local`. For item 9, `plan.md` seldom says if a later change must keep a constraint, and archive asks no question, so the D315 test gave two results for the same `plan.md`. The user chose the filters as the default: archive keeps more knowledge, and the filters already decide each other item.
+
+---
+
+## D327: Fixes of Review B Round 4
+
+**Decision**:
+
+1. The end summaries of apply and of the tasks preview give each item that a step or a rule sends to the end summary, with one bullet, as upgrade does (D326 item 5). Apply names a failed test one time, in step 6, with the error text.
+2. Apply defines "the preview is current now": step 2 found the preview current, and no edit of this session changed Goal, Background, Non-Goals, or Constraints. The note "your edits do not make the preview stale" needs this state.
+3. On a re-run of step 8, the tasks preview shows the 🤖 table only for the decisions that it added after the reply, as D326 item 3 says.
+4. If apply check 5 records an open question after code that depends on the question, the end summary names that code, and says that the code holds a guess until the user answers.
+5. Archive step 3, not step 4, skips a constraint that `plan.md` says applies only to this change. Step 4 no longer holds the exception.
+6. Archive names the requirement that holds each contract decision. The "only in the archive" note needs a decision with a reason that no ADR and no requirement text holds.
+7. Archive prints the summary before the stop report of each step from step 7 to step 11.
+8. Archive guard step 4: if the user will not edit the 🤖 lines of a delta, archive says that the archive stays blocked, and stops.
+9. The shared failure rule asks a yes-or-no question again only when the step gives no branch for a reply with no yes and no no.
+10. Upgrade does not restate the question rule for a kept question. One bullet covers an open question and a kept question that no message answered, for each destination.
+11. Archive step 4 no longer repeats the summary group of a contract decision, or the not-drafted list of the facts.
+
+**Rationale**: review B round 4 of `v1.8.0..local`. Each remark had one clear fix.

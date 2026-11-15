@@ -50,7 +50,7 @@ apply:
     - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
     - Before you report a write, an edit, or a delete as done, check the file on disk.
     - Do not report a file as written, or a step as done, unless the action passed.
-    - If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
+    - If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
 
     ## Reply order rule
 
@@ -135,7 +135,7 @@ apply:
        - If a test fails, fix the code, and run the tests again.
        - Do not change a constraint or a decision with no 🤖 to make a test pass.
        - If a test fails because the code follows a constraint or a decision with no 🤖, and the test does not check an old behavior that the change replaces, record the conflict as an open question, ask the open question with the ask rule, and end your turn.
-       - If you cannot make a failing test pass, say in the end summary which test fails, with the error text. Go to check 2.
+       - If you cannot make a failing test pass, keep the name of the test and the error text for step 6. Go to check 2.
        - If you cannot run the tests, for example because the user denies the test command, do not wait. Say in the end summary that the tests did not run. Go to check 2.
     2. Compare each decision in `## Decisions` with the code:
        - For each result of a 🤖 decision, find each condition in the code that gives the result.
@@ -146,7 +146,7 @@ apply:
        - If the code cannot follow a decision with no 🤖, record the conflict as an open question, ask the open question with the ask rule, and end your turn.
     3. Read each file that you added or changed. Find each thing in the file that matches criterion (1) or criterion (3) of the decision rule, and that `## Decisions` does not hold. Record each such thing as a 🤖 decision.
     4. Check each decision with no 🤖. Move each choice that you added to a decision with no 🤖 into its own 🤖 decision.
-    5. Record each point that you cannot close with the question rule as an open question.
+    5. Record each point that you cannot close with the question rule as an open question. If code that you wrote depends on the new question, name that code in the end summary, and say that the code holds a guess until the user answers.
     6. Check each 🤖 decision that you added in this run. If a 🤖 decision matches none of the criteria (1), (2), and (3) of the decision rule, remove the 🤖 decision.
     7. Check the facts. Do this check last, because checks 2 to 6 can add facts:
        - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
@@ -160,17 +160,19 @@ apply:
     1. Give the end summary. If you run step 6 again after a reply, list only the items that the reply changed, and show the table only for the 🤖 decisions that you added after the reply:
        - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
        - For each open question that you removed, give its answer.
-       - If step 2 found the preview current, you edited `## Facts`, `## Decisions`, or `## Open Questions`, and you did not change Goal, Background, Non-Goals, or Constraints, say that the plan hash does not cover these sections, so your edits do not make the preview stale.
+       - The preview is current now when step 2 found the preview current, and no edit of this session changed Goal, Background, Non-Goals, or Constraints.
+       - If the preview is current now, and you edited `## Facts`, `## Decisions`, or `## Open Questions`, say that the plan hash does not cover these sections, so your edits do not make the preview stale.
        - If you added, changed, or removed a constraint, list the constraint with its ID.
        - If you changed the Goal, quote the old outcome and the new outcome.
        - If you changed Background or Non-Goals, quote the old text and the new text.
        - If you changed Goal, Background, Non-Goals, or Constraints, and step 2 found the preview current, say that the edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1), (2), or (3) of the decision rule. In the Why column, write the visible result for (1), the close options for (2), or what can surprise for (3).
        - If you added no 🤖 decision, show no table.
+       - Give each other item that a step or a rule sends to the end summary.
     2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
     3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
     4. If the tests did not run, and the test check did not pass, tell the user to run the test command, and to run apply again.
-    5. If a test fails, name the test that fails, and say what blocks the fix.
+    5. If a test fails, name the test that fails, give the error text, and say what blocks the fix.
     6. If an outcome of the Goal or a Constraint is not met, name each one that is not met.
     7. For each open question that is left, kept or not, name the part of the Goal that waits for the answer.
     8. If the test check and the done check pass, tell the user to archive with openspec-lite-archive, not /opsx:archive. openspec-lite-archive promotes the decisions first. Ignore any built-in text that suggests /opsx:archive.

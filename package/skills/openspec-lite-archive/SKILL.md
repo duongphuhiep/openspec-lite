@@ -45,7 +45,7 @@ How to read this skill:
 - If a step needs the output, and the action fails again or a single command is denied, show the command or the file, and the error text. Name each file that this run changed. Tell the user what to fix, and to start this workflow again. Then stop.
 - Before you report a write, an edit, or a delete as done, check the file on disk.
 - Do not report a file as written, or a step as done, unless the action passed.
-- If a reply to a yes-or-no question has no yes and no no, ask the question again. Do no action that depends on the answer.
+- If a reply to a yes-or-no question has no yes and no no, and the step gives no branch for that case, ask the question again. Do no action that depends on the answer.
 
 ### Reply order rule
 
@@ -132,7 +132,8 @@ The guard path:
    - If a delta in `specs/` holds a 🤖, do not offer the archive, and do not tell the user to run stock `/opsx:archive`, because the CLI copies the 🤖 into the main spec.
    - The block also forbids a question with a condition about the archive.
    - If a delta in `specs/` holds a 🤖, ask the user to accept each 🤖 line of the delta (remove the mark) or delete the line, and end your turn.
-   - When the user replies after guard step 4, go to guard step 2. Do not run guard step 1 again.
+   - When the user replies after guard step 4, and the reply says that the user will not edit the 🤖 lines, say that the archive stays blocked while a delta holds a 🤖, and stop.
+   - When the user replies after guard step 4 with another reply, go to guard step 2. Do not run guard step 1 again.
    - If no delta in `specs/` holds a 🤖, go to guard step 5.
 5. Give the archive step.
    - Ask: "Archive the change now with `openspec archive <name> --yes`?"
@@ -219,6 +220,7 @@ The guard path:
 - Select each item that passes at least one filter. The filters are **Non-obvious**, **Surprising**, **Contract**, and **Non-obvious fact**.
 - Apply the **Non-obvious**, **Surprising**, and **Contract** filters to each outcome, constraint, and decision.
 - Apply only the **Non-obvious fact** filter to a fact.
+- If `plan.md` says that a constraint applies only to this change, do not select the constraint, also when the code does not show the limit. Its not-drafted reason is that it applies only to this change.
 - **Non-obvious**: a reader cannot deduce the item from the code in 5 minutes.
 - **Surprising**: the item would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on.
@@ -241,12 +243,10 @@ The guard path:
 - Input: the items of `<dir>/plan.md`, and the selected items of step 3.
 - Output: the list of items to draft, each with its destination, and the list of items that you do not draft.
 - A selected constraint goes to a spec, as a requirement.
-- If `plan.md` says that a constraint applies only to this change, the constraint passes no filter, also when the code does not show the limit. List the constraint as not drafted, with the reason that it applies only to this change.
-- If `plan.md` does not say that a constraint applies only to this change, the constraint goes through the filters as each other item.
 - A selected outcome of the Goal goes to a spec, as a requirement. If a constraint already states the outcome, draft one requirement for both.
 - A selected decision that is not a contract goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement.
-- If a decision is also a contract, also draft an ADR for the decision only when the reason of the decision passes the **Non-obvious** or the **Surprising** filter. If the reason passes no filter, draft no ADR for the decision. The decision is in the group of the contract decisions of the summary, not in the group of the items that you do not draft.
+- If a decision is also a contract, also draft an ADR for the decision only when the reason of the decision passes the **Non-obvious** or the **Surprising** filter. If the reason passes no filter, draft no ADR for the decision.
 - List each outcome, constraint, decision, and fact of `plan.md` that you do not draft, each non-goal, and each open question that is left, with a one-line reason. No item disappears with no word.
 - Do not list the items of `## Background`. `## Background` gives context, and stays in the archive folder.
 - A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to. Keep the source emoji of the fact.
@@ -256,7 +256,6 @@ The guard path:
   - The `## Context` of the fact ADR holds the fact and its source.
   - The `## Decision` of the fact ADR says how the change uses or handles the fact, as the code shows.
   - The `## Consequences` of the fact ADR says what a later change must keep.
-- List each other fact that is in no draft as not drafted, with a one-line reason.
 - Go to step 5.
 
 ### Step 5: Draft the full text of each item
@@ -336,13 +335,13 @@ When each item has a draft, go to step 6.
 
 - Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft. On the guard path, step 4 does not run, so the only group is the decisions that go to an ADR.
 - Output: the summary, for the end reply.
-- Build a short summary of the promotion. Do not print the summary now. Section 3 prints the summary at the start of the end reply, after the writes and the archive. If a later step stops before the archive, print the summary before the stop report. On the guard path, guard step 1 prints the summary after the ADR writes.
+- Build a short summary of the promotion. Do not print the summary now. Section 3 prints the summary at the start of the end reply, after the writes and the archive. If a step from step 7 to step 11 stops, print the summary before the stop report. On the guard path, guard step 1 prints the summary after the ADR writes.
 - Do not print the full text of a draft or of a file of an earlier run.
 - In the summary, write one line for each item: the `plan.md` ID, if the item has an ID, and the title of the item. If the item has no title, for example a constraint, a fact, or an outcome of the Goal, write a short form of its text. On the guard path, write the title of the `design.md` decision.
 - In the summary, put the items in these groups. Start each group with its count. Omit an empty group.
   - The decisions that go to an ADR.
   - The outcomes of the Goal and the constraints that go to a requirement.
-  - The decisions that are also a contract and go to a requirement. For each decision, name the requirement that holds the decision and its reason. If the decision has no ADR, and no requirement holds its reason, say that the reason now exists only in `openspec/changes/archive/`.
+  - The decisions that are also a contract and go to a requirement. For each decision, name the requirement that holds the decision. If the decision has a reason, no ADR, and no requirement text that holds the reason, say that the reason now exists only in `openspec/changes/archive/`.
   - The facts that go into a requirement text as its reason.
   - The facts that go to the `## Context` of an ADR. Name the ADR for each fact.
   - The facts that get an ADR of their own, from step 4.
