@@ -278,7 +278,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 
 ### openspec-lite-upgrade (D13, D31, D46, D52, D62, D79, D97, D120, D121, D148, D152, D153, D158, D163, D164, D166, D167, D181, D182, D191, D193, D196, D228, D229, D230, D231, D253, D316, D320, D321)
 
-- If the user asks for an upgrade, do the upgrade, and do not ask for its reason. The usual reason is a team convention (D316, D321).
+- If the user asks for an upgrade, do the upgrade, and do not ask for its reason. The reason to upgrade is a team convention. The user decides, and upgrade does not check it (D316, D321).
 1. Keep `skip_specs: true` in `.openspec.yaml` until the first spec write. Then remove it, before `openspec instructions specs`, because while it is set, the CLI forbids spec files (D99). A run that stops before the specs then leaves a change that passes `validate` (D208).
 2. Before any artifact, plan the requirements (D164, D166). A requirement comes only from these sources:
    - a constraint of `plan.md`. A fact is not a source of a requirement, so it goes to `design.md` → `## Context`, with its source emoji (D227);

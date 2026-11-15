@@ -4433,6 +4433,8 @@ This supersedes D54, and revises D1, D11, D50, and D104.
 
 **Rationale**: the user said that openspec-lite no longer targets only medium changes. The upgrade signals (handoff, more than one capability or repo, a contract) are size and team signals, so they told the agent to suggest an upgrade that the user does not need. An agent cannot detect a team convention from the request, so no signal replaces them. Rejected: a signal "the repo uses stock changes", because a repo can hold stock changes and plan-lite changes together.
 
+
+**Status**: D321 revises item 5: the upgrade description adds that the user decides, and that the skill does not check the reason.
 ---
 
 ## D317: The Tasks Preview Names the Next Step and the Upgrade
@@ -4484,19 +4486,33 @@ The next steps of the flow are: propose asks for a tasks preview, the tasks prev
 
 1. The README names what `openspec-lite-apply` adds to stock `/opsx:apply`: the `plan.md` checkpoint commit, no checkbox text, and a stop when `plan.md` is missing. Stock `/opsx:apply` also uses `tasks-preview.md` as a guide, because `apply.instruction` says so.
 2. The README lifecycle puts `openspec-lite-apply` first, and names the team convention as the condition of the upgrade.
-3. The upgrade description says "when the team convention requires stock OpenSpec", not "for example when". D316 item 5 says "reason". D321 revises this item.
+3. The upgrade description says "when the team convention requires stock OpenSpec", not "for example when". D316 item 5 says "reason".
 4. The D27 review trigger stays. Stock `/opsx:apply` still works and the README still names it, so real use can still show that it does the same job.
 
 **Rationale**: review round 3 of `v1.8.0..local`. The README gave a false difference between the two apply paths. "For example" told the agent that other reasons to upgrade exist, against D316.
 
+
+**Status**: D321 revises item 3: the upgrade description no longer reads as a precondition.
 ---
 
 ## D321: Upgrade Does Not Ask for the Reason
 
 **Decision**:
 
-1. If the user asks for an upgrade, upgrade does the upgrade, and does not ask for the reason. The upgrade description says that the usual reason is a team convention that requires stock OpenSpec. This revises D320 item 3.
+1. If the user asks for an upgrade, upgrade does the upgrade, and does not ask for the reason. The upgrade description says that the reason to upgrade is a team convention that requires stock OpenSpec, that the user decides, and that the skill does not check the reason. This revises D320 item 3.
 2. The README says "if your team convention requires stock OpenSpec" where it offers the upgrade "at any time".
 3. The `design.md` headings of apply and upgrade cite D319, D316, D320, and D321.
 
 **Rationale**: review round 4 of `v1.8.0..local`. After D320, the description read as a precondition, so an agent could ask for the reason or refuse. D316 says that the user decides when to upgrade. The agent cannot check a team convention, so a check only adds a turn.
+
+---
+
+## D322: Fixes of Review Round 5 on D321
+
+**Decision**:
+
+1. The upgrade description and `design.md` say "the reason to upgrade is a team convention", not "the usual reason". The user decides, and upgrade does not check the reason.
+2. D316 and D320 get a Status line that points to D321.
+3. Scenario 7 checks that upgrade asks no reason, asks no team-convention question, and does not advise against the upgrade.
+
+**Rationale**: review round 5 of `v1.8.0..local`. "Usual" told the agent that other reasons exist, against the "only reason" of D316, `GLOSSARY.md`, and the README.
