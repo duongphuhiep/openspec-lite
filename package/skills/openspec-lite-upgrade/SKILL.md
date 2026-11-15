@@ -255,7 +255,7 @@ Read the answer of the user:
 - Run the instructions command for `design` with the instructions rule.
 - Non-Goals go to `## Goals / Non-Goals`.
 - Each `### Decision` entry of `plan.md` goes to `## Decisions`.
-- If a part of the answer supersedes, changes, or corrects a decision of `plan.md`, or a fact or a 🤖 decision that the question turn of step 2 planned, write only the item that follows the answer, with no 🤖. Do not copy the old item.
+- If a part of the answer supersedes, changes, or corrects a decision of `plan.md`, or a fact or a 🤖 decision that the question turn of step 2 planned, write only the item that follows the answer, with no 🤖. Do not copy the old item. If the part leaves the new choice to you, write the new choice with 🤖, because the choice is yours.
 - A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet. Two bullets of this step are exceptions: a part of the answer that supersedes, changes, or corrects the decision, and a yes to a requirement from the decision.
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.

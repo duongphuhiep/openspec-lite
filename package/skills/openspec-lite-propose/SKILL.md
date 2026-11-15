@@ -78,13 +78,15 @@ How to read this skill:
 
 - Input: the outcomes that stay in this change.
 - Before you decide on the Level 1 question, list the open points of the outcomes for yourself. Do not write them yet: section 3, step 5 records them in `plan.md` with the question rule.
-- A point that the user leaves to the agent is not an open point for this test. On yes to the Level 1 question, decide such a point in the fix.
+- Put each point that the user leaves to the agent in the list too, so that section 3, step 5 records the point with its marker.
 - A constraint of the request does not block the Level 1 question, because the fix follows each constraint of the request.
-- If the outcomes that stay are one obvious fix, and the list of open points is empty, ask: "This looks small. Implement directly with no change?"
+- If the outcomes that stay are one obvious fix, and each open point of the list is a point that the user leaves to the agent, ask: "This looks small. Implement directly with no change?" An empty list also passes this test.
+- On yes to the Level 1 question, decide each point that the user leaves to the agent in the fix.
 - Otherwise, do not ask the Level 1 question. Go to section 2.
 - After the Level 1 question, end your turn, and wait for the answer.
 - On yes, make the fix directly, with no change and no file under `openspec/`. Follow each fact, constraint, and choice of the request and of the replies that you kept.
 - On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
+- On yes, if you find a point during the fix that you cannot decide, and that the user did not leave to you, stop the fix. Name the point and the code that you already changed. Ask the user to answer the point, or to run `openspec-lite-propose` again for a change. End your turn. Write no file under `openspec/`.
 - On yes, stop after the fix and the names.
 - On no, continue with section 2.
 

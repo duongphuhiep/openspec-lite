@@ -114,7 +114,7 @@ Do these checks in order.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. List each item that you recorded, with its ID. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
 - A new constraint in a reply follows the answer rule.
 - If a reply after step 8 changes no item of `plan.md`, answer the reply, and do not run step 8 again.
-- If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Add, update, or remove each task, so that the preview follows the changed items. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 7 and step 8 again. Step 7 also reads the reply as an input. In the end summary of item 3, list only the items that the reply changed, and show the table only for the 🤖 decisions that you added after the reply. Item 8 asks each open question that is still open.
+- If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Add, update, or remove each task, so that the preview follows the changed items. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 7 and step 8 again. In the end summary of item 3, list only the items that the reply changed, and show the table only for the 🤖 decisions that you added after the reply. Item 8 asks each open question that is still open.
 
 ### Failure rule
 
@@ -221,7 +221,7 @@ When the checks are done, go to step 6.
 
 ### Step 7: Record the new open questions
 
-- Input: the points that you found in steps 3 to 6.
+- Input: the points that you found in steps 3 to 6, and the reply of the user when step 7 runs again after a reply.
 - Output: the new questions in `## Open Questions` of `plan.md`, and the updates of `tasks-preview.md`.
 - Record each point that you cannot close with the question rule as an open question.
 - If a task of the preview depends on a new open question, add to that task that the task waits for the answer.
@@ -353,6 +353,7 @@ When the checks are done, go to step 6.
 - A decision with no 🤖 belongs to the user, also a decision that the user wrote by hand.
 - A decision with no 🤖 holds only what the user said. Put each choice that you add, and that the decision rule records, in its own 🤖 decision.
 - When you update a 🤖 decision to follow an answer or an instruction of the user, remove the 🤖 of that decision.
+- If the answer leaves the new choice to you, the new choice is your choice. End the heading of the decision with 🤖.
 - The user removes the 🤖 to accept a decision.
 
 ### Current-decisions rule: keep `## Decisions` current

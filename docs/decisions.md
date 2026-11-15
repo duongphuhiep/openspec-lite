@@ -4689,3 +4689,16 @@ This revises D323.
 6. Archive: a fact that goes into another draft is drafted, and is not listed as not drafted.
 
 **Rationale**: review B round 10 of `v1.8.0..local`. Each remark had one clear fix.
+
+---
+
+## D334: Fixes of Review B Round 11
+
+**Decision**:
+
+1. The mark rule of `apply.instruction` and of the tasks preview, and upgrade step 2.3: if an answer changes a decision and leaves the new choice to the agent, the new choice is the choice of the agent, and its heading ends with 🤖.
+2. Propose puts each point that the user leaves to the agent in the list of open points, so that section 3 records the point with its marker. The Level 1 test passes when each open point of the list is such a point. This revises D330 item 3.
+3. After a yes to Level 1, if the fix finds a point that the agent cannot decide and that the user did not leave to the agent, the agent stops the fix, names the point and the changed code, and asks the user to answer or to run propose again. It writes no file under `openspec/`.
+4. The Input line of tasks-preview step 7 names the reply of the user, for a run after a reply.
+
+**Rationale**: review B round 11 of `v1.8.0..local`. Each remark had one clear fix.

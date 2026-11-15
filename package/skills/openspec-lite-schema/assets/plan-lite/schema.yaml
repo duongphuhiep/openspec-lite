@@ -267,6 +267,7 @@ apply:
     - A decision with no 🤖 belongs to the user, also a decision that the user wrote by hand.
     - A decision with no 🤖 holds only what the user said. Put each choice that you add, and that the decision rule records, in its own 🤖 decision.
     - When you update a 🤖 decision to follow an answer or an instruction of the user, remove the 🤖 of that decision.
+- If the answer leaves the new choice to you, the new choice is your choice. End the heading of the decision with 🤖.
     - The user removes the 🤖 to accept a decision.
 
     ## Current-decisions rule: keep `## Decisions` current
