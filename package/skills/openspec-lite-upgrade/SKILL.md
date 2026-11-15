@@ -117,6 +117,7 @@ Do these checks in order.
 - For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
+- An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
 - If no artifact holds the question, and no artifact holds its answer, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
@@ -183,7 +184,7 @@ Close the open questions of `plan.md`:
 Ask the question turn:
 
 - Make the question list from these items:
-  - each open question in `plan.md` that is still open and that changes the specs, the approach, or the tasks;
+  - each open question in `plan.md` that is still open, that is not a kept question, and that changes the specs, the approach, or the tasks;
   - each requirement that you plan to write from the Goal, from `tasks-preview.md`, or from a decision with 🤖 in `plan.md`;
   - each requirement that you plan from a point that step 2 decided and that is a contract;
   - if you plan no requirement at all, and `<dir>/specs/` holds no delta, the question if the change has a requirement.
@@ -196,8 +197,6 @@ Ask the question turn:
 - Ask each open question with the ask rule.
 - For each planned requirement in the list, show its text, and ask if you can write it.
 - For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", upgrade writes no spec (step 2.2).
-- If the user answers yes to the question if the change has a requirement, but gives no requirement text, ask for the text, and end the turn. Do not write an artifact before the answer.
-- If the user gives no answer to the question if the change has a requirement, write no spec, as for "None", and name the question in the summary.
 - End the turn, and wait for the answer.
 
 Read the answer of the user:
@@ -210,6 +209,8 @@ Read the answer of the user:
 - If the user did not answer an open question, keep the question in `plan.md`, with no marker.
 - If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
+- If the user answers yes to the question if the change has a requirement, but gives no requirement text, ask for the text, and end the turn. Do not write an artifact before the answer. When the user gives the text, read that reply with this part again.
+- If the user gives no answer to the question if the change has a requirement, write no spec, as for "None", and name the question in the summary.
 - Go to step 2.1.
 
 ### Step 2.1: Write `proposal.md`

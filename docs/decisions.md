@@ -4648,3 +4648,16 @@ This revises D323.
 6. Archive: the general rule says that the end reply holds the summary in place of the text of a draft, not "only the summary". Section 3 adds the other lists.
 
 **Rationale**: review B round 7 of `v1.8.0..local`. Each remark had one clear fix.
+
+---
+
+## D331: Fixes of Review B Round 8
+
+**Decision**:
+
+1. Upgrade: the branches for a yes with no requirement text, and for no answer to the requirement question, are in the part that reads the answer of the user. When the user gives the text, upgrade reads that reply with the same part again.
+2. The upgrade question list does not take a kept question.
+3. The question rule of `apply.instruction` and of the tasks preview has one bullet for a point that the user leaves to the agent, with two branches. For an intent or a choice, the decision rule decides if the choice gets a 🤖 decision. For a fact that only the user knows, the agent records no guess as a fact, chooses the value that the code uses, records the choice as a 🤖 decision, and says in the end summary that the fact stays unknown. A guessed value can surprise a reader, so it always gets a decision. This revises D330 item 4.
+4. The leftover plan.md questions rule defines "holds the answer": the artifact states the answer as a fact, a decision, or a requirement. Archive guard step 5 uses the same words.
+
+**Rationale**: review B round 8 of `v1.8.0..local`. The round had 4 remarks, so the review loop stops after this round.
