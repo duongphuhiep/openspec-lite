@@ -198,12 +198,12 @@ Do these checks in order. When the checks are done, go to section 3.
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
 - An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
-- Sort each part of the answer into one of three kinds. Each part has one kind.
+- If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
+- Sort each other part of the answer into one of three kinds. Each part has one kind. A part that the bullets above handle has no kind.
 - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that the agent named is a choice of the user.
 - Kind 2, a part that leaves a choice to the agent: the user names no option, and says that the agent can choose, or that each option is good for the user. Follow the question rule for the point.
 - Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing.
-- If a part of kind 1 answers an open question of `plan.md`, remove the question from `## Open Questions`.
-- If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
+- If a part of kind 1 answers an open question of `plan.md`, remove that question from `## Open Questions`. Remove no other question.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
 - Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".

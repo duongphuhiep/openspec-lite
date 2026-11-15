@@ -4743,3 +4743,15 @@ This revises D323.
 4. After a Level 1 stop, a reply that is not an answer and not a request for a change does not continue the fix. If the reply asks to undo the fix, propose reverts only the code that the stopped fix changed. The general rule allows this revert.
 
 **Rationale**: review B round 14 of `v1.8.0..local`. Item 2 removes a scenario hint that round 13 added.
+
+---
+
+## D338: Fixes of Review B Round 15
+
+**Decision**:
+
+1. The keep-open bullets of the answer rules come before the sort into three kinds. The sort takes each other part. A part that an earlier bullet handles has no kind: a request to run a command or a skill, an answer to a question of the workflow, and a request to keep a question open.
+2. A part of kind 1 or kind 2 removes only the question that the part answers. No other question is removed.
+3. In the tasks preview, a part that asks to change Goal, Background, Non-Goals, or Constraints follows the general rules of the skill, which tell the user to make the edit. The record bullet does not record it as a decision.
+
+**Rationale**: review B round 15 of `v1.8.0..local`. All 3 remarks come from D337. The round had 3 remarks, so the review loop stops after this round.
