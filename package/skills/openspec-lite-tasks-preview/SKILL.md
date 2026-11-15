@@ -297,7 +297,11 @@ When the checks are done, go to step 6.
 
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
 - An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
-- If a reply of the user in this session answers an open question, remove the question from `## Open Questions`.
+- Sort each part of the reply into one of three kinds. Each part has one kind.
+- Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that you named is a choice of the user.
+- Kind 2, a part that leaves a choice to you: the user names no option, and says that you can choose, or that each option is good for the user. Follow the question rule for the point.
+- Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing.
+- If a reply of the user in this session of kind 1 or kind 2 answers an open question, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
 - Split the reply of the user as well as you can into facts, constraints, and choices.
@@ -306,12 +310,11 @@ When the checks are done, go to step 6.
 - If a part limits the result and also says how to build the result, record the limit and the build choice as two decisions with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - If the user names an item of `## Facts`, `## Decisions`, or `## Open Questions`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
-- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖. A part that leaves a choice to you is not a choice of the user. A part leaves a choice to you when the user names no option, and tells you to choose or says that the user has no preference. A part that accepts an option or a recommended answer that you named is a choice of the user. A part that says that the user does not know the answer yet leaves the question open.
-- If a part of the reply leaves a choice to you, follow the question rule for that point.
+- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖. A part that leaves a choice to you is not a choice of the user.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
-- An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary. One exception: if the answer leaves the choice to you, follow the question rule.
-- After you record the reply, read the reply again, part by part. If a part of the reply is in no section of plan.md, record the part now, unless the part only asks you to run a command or a skill, or asks you a question.
+- Record each part of kind 1 in a section of plan.md, also an answer to an open question. Do not put a part of kind 1 only in the end summary.
+- After you record the reply, read the reply again, part by part. If a part of kind 1 is in no section of plan.md, record the part now.
 - You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".

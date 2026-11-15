@@ -16,7 +16,7 @@ How to read this skill:
 
 ## General rules
 
-- Do not write code, except after a yes to the Level 1 question.
+- Do not write code, except after a yes to the Level 1 question, or to revert the code of a stopped Level 1 fix.
 - When you write `## Goal`, follow the goal rule.
 - When you record an open point, follow the question rule.
 - If `plan.md` exists, record each reply of the user with the answer rule.
@@ -87,10 +87,10 @@ How to read this skill:
 - On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
 - On yes, decide each point that the user leaves to the agent in the fix.
 - On yes, in the reply, name each point that the user left to the agent, and the choice that the fix made. If a choice is a guessed value of a fact that only the user knows, say so.
-- On yes, if you find a point during the fix that you cannot decide, and that the user did not leave to you, stop the fix. Name the point and the code that you already changed. Ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
+- On yes, if you find a point during the fix that you cannot decide, and that the user did not leave to you, stop the fix. You cannot decide a point when the point is an intent of the user, a fact that only the user knows, or a value that must match something outside the repo that no code or doc that you can reach shows. Name the point and the code that you already changed. Ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
 - After the stop, if the user answers the point, finish the fix with the answer, and give the reply of a yes.
 - After the stop, if the user asks for a change, add the point that stopped the fix to the list of open points, and continue with section 2. In the summary of section 4, name the code that the stopped fix already changed.
-- After the stop, if the reply is not an answer and not a request for a change, write no code, and create no change. Do what the reply asks, and name the code that the stopped fix already changed.
+- After the stop, if the reply is not an answer and not a request for a change, do not continue the fix, and create no change. Do what the reply asks. If the reply asks to undo the fix, revert only the code that the stopped fix changed. Name the code that the stopped fix changed.
 - On yes, stop after the fix and the names.
 - On no, continue with section 2.
 
@@ -188,7 +188,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 ### Question rule
 
-- Propose does not explore the code, so propose decides no open point.
+- Outside the Level 1 fix, propose does not explore the code, so propose decides no open point.
 - Record each open point as an open question in `## Open Questions`. The tasks preview tries to decide the open question later.
 - If the user says to keep a question open, end the text of the question with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -198,7 +198,11 @@ Do these checks in order. When the checks are done, go to section 3.
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
 - An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
-- If the user answers an open question of `plan.md`, remove the question from `## Open Questions`, unless the answer leaves the point to the agent. For an answer that leaves the point to the agent, follow the question rule.
+- Sort each part of the answer into one of three kinds. Each part has one kind.
+- Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that the agent named is a choice of the user.
+- Kind 2, a part that leaves a choice to the agent: the user names no option, and says that the agent can choose, or that each option is good for the user. Follow the question rule for the point.
+- Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing.
+- If a part of kind 1 answers an open question of `plan.md`, remove the question from `## Open Questions`.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
 - Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
@@ -209,11 +213,11 @@ Do these checks in order. When the checks are done, go to section 3.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - If the user names an item of `plan.md`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
-- Record each other choice or instruction in the answer as a decision with no 🤖. A part that leaves a choice to the agent is not a choice of the user: follow the question rule. A part leaves a choice to the agent when the user names no option, and tells the agent to choose or says that the user has no preference. A part that accepts an option or a recommended answer that the agent named is a choice of the user. A part that says that the user does not know the answer yet leaves the question open.
+- Record each other choice or instruction in the answer as a decision with no 🤖. A part of kind 2 is not a choice of the user.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
-- An answer to an open question is a part of the answer. Record the answer in a section of plan.md. Do not put the answer only in the end summary. One exception: an answer that leaves the point to the agent follows the question rule.
-- After you record the answer, read the answer again, part by part. If a part of the answer is in no section of plan.md, record the part now, unless the part only asks you to run a command or a skill, or asks you a question.
+- Record each part of kind 1 in a section of plan.md, also an answer to an open question. Do not put a part of kind 1 only in the end summary.
+- After you record the answer, read the answer again, part by part. If a part of kind 1 is in no section of plan.md, record the part now.
 
 ### Fact rule
 

@@ -4730,3 +4730,16 @@ This revises D323.
 4. Propose, after the Level 1 stop: a request for a change adds the point that stopped the fix to the list of open points. Another reply writes no code and creates no change, does what the reply asks, and names the code that the stopped fix changed.
 
 **Rationale**: review B round 13 of `v1.8.0..local`. Each remark had one clear fix.
+
+---
+
+## D337: Fixes of Review B Round 14
+
+**Decision**:
+
+1. The answer rules of propose, `apply.instruction`, and the tasks preview sort each part of a reply into three kinds. Kind 1 is a part to record: a fact, a constraint, a choice, or an instruction of the user, also the acceptance of an option that the agent named. Kind 2 leaves a choice to the agent: the user names no option, and says that the agent can choose, or that each option is good for the user. Kind 2 follows the question rule. Kind 3 says that the user cannot answer now: the question stays with no marker, and nothing is recorded. The remove, record, and re-read bullets name the kinds, and the copies of the old exception are removed. Upgrade uses kind 1 in the last check of the split rule.
+2. The definition of kind 2 uses general words. The words of D336 copied the answers of the test scenarios, and the verb "leave" also named a question with the marker "(kept open by the user)". This revises D336 item 1.
+3. Propose decides no open point outside the Level 1 fix. The Level 1 fix stops on a point that is an intent of the user, a fact that only the user knows, or a value that must match something outside the repo that no code or doc shows.
+4. After a Level 1 stop, a reply that is not an answer and not a request for a change does not continue the fix. If the reply asks to undo the fix, propose reverts only the code that the stopped fix changed. The general rule allows this revert.
+
+**Rationale**: review B round 14 of `v1.8.0..local`. Item 2 removes a scenario hint that round 13 added.
