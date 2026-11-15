@@ -4674,3 +4674,18 @@ This revises D323.
 4. The Level 1 test of propose has one test: one obvious fix, and an empty list of open points. A constraint of the request does not block Level 1, because the fix follows each constraint of the request. This revises D148 and D202, which named "no constraints worth recording".
 
 **Rationale**: review B round 9 of `v1.8.0..local`. For item 4, propose already told the Level 1 fix to follow each constraint of the request, so the constraint test only gave two results for one request.
+
+---
+
+## D333: Fixes of Review B Round 10
+
+**Decision**:
+
+1. The Level 1 test of propose has one condition and one "otherwise" branch: if the outcomes are one obvious fix, and the list of open points is empty, ask the Level 1 question. Otherwise, go to section 2. The word "small" no longer works as a second test.
+2. After a reply that changes an item, the tasks preview runs step 7 and step 8 again. Step 7 reads the reply, so a new point becomes an open question.
+3. The question rule: for a point that the user leaves to the agent, and that depends on an intent and on a fact that only the user knows, the agent does both branches.
+4. The tasks preview chooses "the value that the tasks plan for the code". Upgrade chooses "the value that you choose for the code". Neither skill writes code.
+5. Upgrade: an obvious answer, or a decided point that matches no criterion, goes to no artifact. The question-turn reply gives the answer, or the summary gives it if no question turn runs.
+6. Archive: a fact that goes into another draft is drafted, and is not listed as not drafted.
+
+**Rationale**: review B round 10 of `v1.8.0..local`. Each remark had one clear fix.

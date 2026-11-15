@@ -175,10 +175,10 @@ Close the open questions of `plan.md`:
 - For each question that is not a kept question, try to decide the question or find its answer. Use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
 - In the question turn of step 2, do not do the `plan.md` writes of the question rule: record no fact or decision in `plan.md`, and remove no question from `plan.md`. Plan each answer for an artifact or for the summary, as the next bullets say.
 - If you find an answer that is a non-obvious fact, plan the answer as a fact in `design.md` → `## Context`.
-- If you find an answer that is obvious, give the answer only in the summary.
+- If you find an answer that is obvious, plan the answer for no artifact. Give the answer in the question-turn reply, or in the summary if no question turn runs.
 - If you decide a point, and the decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` records the choice, plan a decision with 🤖 in `design.md`.
-- If you decide a point, and the point matches no criterion of the decision rule, give the answer only in the summary.
-- If the user left to you a fact that only the user knows, plan a decision with 🤖 in `design.md` for the value that the code uses, and say in the summary that the fact stays unknown. The question rule says that this decision matches criterion (3).
+- If you decide a point, and the point matches no criterion of the decision rule, plan the answer for no artifact. Give the answer in the question-turn reply, or in the summary if no question turn runs.
+- If the user left to you a fact that only the user knows, plan a decision with 🤖 in `design.md` for the value that you choose for the code, and say in the summary that the fact stays unknown. The question rule says that this decision matches criterion (3).
 - If a decided point is a contract, and `<dir>/specs/` holds no delta, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
 - Do not ask a question that you closed.
 

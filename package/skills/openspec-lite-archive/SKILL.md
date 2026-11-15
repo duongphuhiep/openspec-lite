@@ -250,7 +250,7 @@ The guard path:
 - A selected decision that is not a contract goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement.
 - If a decision is also a contract, also draft an ADR for the decision only when the reason of the decision passes the **Non-obvious** or the **Surprising** filter. If the reason passes no filter, draft no ADR for the decision.
-- List each outcome, constraint, decision, and fact of `plan.md` that you do not draft, each non-goal, and each open question that is left, with a one-line reason. No item disappears with no word.
+- List each outcome, constraint, decision, and fact of `plan.md` that you do not draft, each non-goal, and each open question that is left, with a one-line reason. No item disappears with no word. A fact that goes into another draft is drafted: do not list the fact as not drafted.
 - Do not list the items of `## Background`. `## Background` gives context, and stays in the archive folder.
 - A non-obvious fact goes to the `## Context` of each drafted ADR that the fact relates to. Keep the source emoji of the fact.
 - An obvious fact goes to the `## Context` of an ADR only when the fact justifies the decision of that ADR. Keep the source emoji of the fact.
