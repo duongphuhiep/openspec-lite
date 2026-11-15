@@ -224,6 +224,7 @@ The guard path:
 - Apply the **Non-obvious**, **Surprising**, and **Contract** filters to each outcome, constraint, and decision.
 - Apply only the **Non-obvious fact** filter to a fact.
 - If `plan.md` says that a constraint applies only to this change, do not select the constraint. Its not-drafted reason is that it applies only to this change.
+- A constraint that says only what the change must not add limits only how this change is built. Do not select such a constraint, unless `plan.md` says that a later change must keep it. Its not-drafted reason is that it limits only how this change is built.
 - **Non-obvious**: a reader cannot deduce the item from the code in 5 minutes.
 - **Surprising**: the item would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on.

@@ -4582,6 +4582,8 @@ This revises D323.
 
 **Rationale**: review B round 3 of `v1.8.0..local`. For item 9, `plan.md` seldom says if a later change must keep a constraint, and archive asks no question, so the D315 test gave two results for the same `plan.md`. The user chose the filters as the default: archive keeps more knowledge, and the filters already decide each other item.
 
+
+**Status**: D339 revises item 9: a constraint that says only what the change must not add is not drafted, unless `plan.md` says that a later change must keep it.
 ---
 
 ## D327: Fixes of Review B Round 4
@@ -4755,3 +4757,18 @@ This revises D323.
 3. In the tasks preview, a part that asks to change Goal, Background, Non-Goals, or Constraints follows the general rules of the skill, which tell the user to make the edit. The record bullet does not record it as a decision.
 
 **Rationale**: review B round 15 of `v1.8.0..local`. All 3 remarks come from D337. The round had 3 remarks, so the review loop stops after this round.
+
+---
+
+## D339: Fixes of the Full Scenario Run on 77bf20a
+
+**Decision**:
+
+1. Archive step 3: a constraint that says only what the change must not add limits only how this change is built. Archive does not select it, unless `plan.md` says that a later change must keep it. Its not-drafted reason is that it limits only how this change is built. Scenario 5 checks this. This revises D326 item 9.
+2. Scenario 3: if stock `/opsx:apply` loads the `openspec-lite-apply` skill, the run is judged by the `openspec-lite-apply` branch.
+3. Scenario 7 step 1: if the preview already wrote a quoting decision, the step replaces that decision, so `plan.md` has one quoting decision.
+4. Scenario 4c: a decision with no ADR passes in the group of the contract decisions, with its requirement, or as not drafted.
+5. Scenario 4d: an exit code for an error that the Goal does not name does not contradict "with code 0 otherwise".
+6. No change for the defects that the model causes while the skill text is clear, and for two defects that the triage did not confirm: the kept `proposal.md` gap on a resumed upgrade, and a fact ADR for a test-runner quirk.
+
+**Rationale**: the user asked to run all scenarios, to ignore the defects that the model causes, and to confirm and fix each defect that a skill or a scenario causes. Run: `.scenario-runs/20261115-77bf20a-full/`. Result: 44 of 49 runs and 320 of 325 checks pass, and each failed run has the class llm. For item 1, the same constraint was a requirement in 3 runs and not drafted in 3 runs. The user chose "not drafted by default": a spec keeps behavior, and such a constraint keeps a place in a spec only when `plan.md` says that it must stay.
