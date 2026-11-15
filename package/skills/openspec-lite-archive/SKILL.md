@@ -241,8 +241,8 @@ The guard path:
 - Input: the items of `<dir>/plan.md`, and the selected items of step 3.
 - Output: the list of items to draft, each with its destination, and the list of items that you do not draft.
 - A selected constraint goes to a spec, as a requirement.
-- A constraint that limits only how this change is built, and that no later change must keep, passes no filter, also when the code does not show the limit. List the constraint as not drafted, with the reason that it applies only to this change.
-- A constraint that a later change must keep, for example because a client or another team depends on it, goes through the filters as each other constraint.
+- If `plan.md` says that a constraint applies only to this change, the constraint passes no filter, also when the code does not show the limit. List the constraint as not drafted, with the reason that it applies only to this change.
+- If `plan.md` does not say that a constraint applies only to this change, the constraint goes through the filters as each other item.
 - A selected outcome of the Goal goes to a spec, as a requirement. If a constraint already states the outcome, draft one requirement for both.
 - A selected decision that is not a contract goes to an ADR.
 - If a decision is also a contract, draft the contract as a requirement.
@@ -336,13 +336,13 @@ When each item has a draft, go to step 6.
 
 - Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft. On the guard path, step 4 does not run, so the only group is the decisions that go to an ADR.
 - Output: the summary, for the end reply.
-- Build a short summary of the promotion. Do not print the summary now. Section 3 prints the summary at the start of the end reply, after the writes and the archive. On the guard path, guard step 1 prints the summary after the ADR writes.
+- Build a short summary of the promotion. Do not print the summary now. Section 3 prints the summary at the start of the end reply, after the writes and the archive. If a later step stops before the archive, print the summary before the stop report. On the guard path, guard step 1 prints the summary after the ADR writes.
 - Do not print the full text of a draft or of a file of an earlier run.
 - In the summary, write one line for each item: the `plan.md` ID, if the item has an ID, and the title of the item. If the item has no title, for example a constraint, a fact, or an outcome of the Goal, write a short form of its text. On the guard path, write the title of the `design.md` decision.
 - In the summary, put the items in these groups. Start each group with its count. Omit an empty group.
   - The decisions that go to an ADR.
   - The outcomes of the Goal and the constraints that go to a requirement.
-  - The decisions that are also a contract and go to a requirement.
+  - The decisions that are also a contract and go to a requirement. For each decision, name the requirement that holds the decision and its reason. If the decision has no ADR, and no requirement holds its reason, say that the reason now exists only in `openspec/changes/archive/`.
   - The facts that go into a requirement text as its reason.
   - The facts that go to the `## Context` of an ADR. Name the ADR for each fact.
   - The facts that get an ADR of their own, from step 4.
@@ -415,6 +415,3 @@ When each item has a draft, go to step 6.
 
 - Start the end reply with the summary of step 6, with its groups and its counts. One line with the result of the archive can come before the summary.
 - Then list the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
-- If a decision of `plan.md` went to a requirement and has no ADR, name the decision and the requirement that holds the decision.
-- If a requirement holds the reason of such a decision, name that requirement.
-- If no ADR and no requirement holds the reason of such a decision, say that the reason now exists only in `openspec/changes/archive/`.

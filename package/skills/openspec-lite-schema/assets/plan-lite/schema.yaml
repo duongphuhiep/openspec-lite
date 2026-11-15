@@ -102,7 +102,7 @@ apply:
     - When the user replies to the questions of step 3:
       - Record each answer with the answer rule.
       - Do not run step 2 again after you record the answers.
-      - A question that the user did not answer stays open. Do not write the code that depends on that question.
+      - A question that the user did not answer stays open.
       - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
       - If the user says to continue from plan.md, go to step 4.
       - If step 2 found the preview stale, and the user does not answer the stale question, ask the stale question again, and end your turn.
@@ -157,10 +157,10 @@ apply:
 
     ## Step 6: End
 
-    1. Give the end summary:
+    1. Give the end summary. If you run step 6 again after a reply, list only the items that the reply changed, and show the table only for the 🤖 decisions that you added after the reply:
        - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
        - For each open question that you removed, give its answer.
-       - If step 2 found the preview current, and you edited `## Facts`, `## Decisions`, or `## Open Questions`, say that the plan hash does not cover these sections, so your edits do not make the preview stale.
+       - If step 2 found the preview current, you edited `## Facts`, `## Decisions`, or `## Open Questions`, and you did not change Goal, Background, Non-Goals, or Constraints, say that the plan hash does not cover these sections, so your edits do not make the preview stale.
        - If you added, changed, or removed a constraint, list the constraint with its ID.
        - If you changed the Goal, quote the old outcome and the new outcome.
        - If you changed Background or Non-Goals, quote the old text and the new text.
@@ -196,7 +196,7 @@ apply:
     - Keep each kept question until a message of the user answers the kept question, also if you can decide the kept question.
     - Do not ask a kept question.
     - If a message of the user answers a kept question, record the answer with the answer rule.
-    - Do not write the code that depends on a kept question.
+    - Do not write the code that depends on an open question, kept or not, until the user answers the question.
 
     ## Ask rule: ask an open question
 

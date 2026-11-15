@@ -15,7 +15,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - In section 2, do steps 1 to 5 in order. Each step names its next step.
 - Step 2 has the sub-steps 2.1 to 2.5. Step 5 has the sub-steps 5.1 to 5.4. For example, "step 2.4" is the sub-step 4 of step 2.
 - "The question turn of step 2" is the part of step 2 before step 2.1: the plan, the questions, and the reply of the user.
-- Section 3 gives the content of the summary. Step 5.3 writes the summary.
+- Section 3 gives the content of the summary. Steps and rules of this skill also send items to the summary. Step 5.3 writes the summary.
 - Section 4 holds the named rules of this skill, for example the requirement-source rule.
 - The general rules apply at all times, in each step.
 - A named rule applies in each step where its topic comes up, also when the step does not name the rule.
@@ -257,7 +257,8 @@ Read the answer of the user:
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji, unless a part of the answer corrected the fact.
 - Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless a part of the answer superseded, changed, or corrected the decision, or the user said yes to a requirement from that decision. If a part of the answer superseded, changed, or corrected the decision, follow the bullet of this step that starts with "If a part of the answer supersedes". If the user said yes to a requirement from the decision, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
-- Write each choice from the answer of the user that is not a contract to `## Decisions`, with no 🤖.
+- Write each choice that the user made in the answer and that is not a contract to `## Decisions`, with no 🤖.
+- If a part of the answer leaves a choice to you, decide the point with the question rule. Write a decision with 🤖 to `## Decisions` only if the decision rule records the choice. Otherwise, give the choice in the summary.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
 - A kept question that no message of the user answered, and that does not change the specs, the approach, or the tasks, goes to `## Open Questions`, like each other such question. The kept question also stays in `plan.md`.
@@ -369,6 +370,7 @@ Do steps 5.1 to 5.4 in order.
 Write the summary in the reply of step 5.3, before the prune question. In the summary:
 
 - List the files that you wrote, and `tasks-preview.md` if you deleted it.
+- Give each item that a step or a rule of this skill sends to the summary.
 - Do not name `plan.md` in the file list, as deleted or as kept. Step 5.4 says what happens to `plan.md` after the answer.
 - If an artifact has 🤖 items, list each 🤖 item with its new claim, or as an agent decision of `plan.md`.
 - A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user, because the mark goes away only after an action of the user: a yes in the question turn of step 2, an answer that supersedes, changes, or corrects the decision, or an edit of the user. Do not ask the user to confirm the decision again, also on a resumed run.

@@ -4418,7 +4418,7 @@ This revises D119, D166, D182, D219, and D256.
 **Rationale**: the user asked to run all scenarios, to ignore the defects that the model causes, and to confirm and fix each defect that a skill or a scenario causes. Run: `.scenario-runs/20261114-482ccfa-full/`. Result: 44 of 50 runs and 308 of 320 checks pass. The six failed runs are 4 r2 (llm), 4c-1 (llm), 21a (scenario), 23a r1 (llm), and 23c ×2 (llm, and the 23c result line).
 
 
-**Status**: D323 revises item 3: a "left to you" answer gives a 🤖 decision only if the decision rule records the choice.
+**Status**: D326 revises item 1: a constraint skips the filters only when `plan.md` says that it applies only to this change. D323 revises item 3: a "left to you" answer gives a 🤖 decision only if the decision rule records the choice.
 ---
 
 ## D316: plan-lite Fits Large Changes, and Only a Team Convention Is a Reason to Upgrade
@@ -4563,3 +4563,21 @@ The next steps of the flow are: propose asks for a tasks preview, the tasks prev
 This revises D323.
 
 **Rationale**: review B round 2 of `v1.8.0..local`. Remarks 1 to 4 come from D323. Each remark had one clear fix.
+
+---
+
+## D326: Fixes of Review B Round 3
+
+**Decision**:
+
+1. The question rule of `apply.instruction` holds one rule for the code: do not write the code that depends on an open question, kept or not, until the user answers the question. The two partial rules are removed.
+2. The apply end summary gives the note "your edits do not make the preview stale" only when Goal, Background, Non-Goals, and Constraints did not change. So the note and the stale note never come in the same reply.
+3. When apply runs step 6 again after a reply, the summary lists only the items that the reply changed, and the 🤖 table shows only the decisions that apply added after the reply. The tasks preview does the same (D324).
+4. Upgrade: a part of the answer that leaves a choice to the agent goes through the question rule. A 🤖 decision goes to `design.md` only if the decision rule records the choice. The no-🤖 bullet covers only the choices that the user made.
+5. Upgrade section 3 gives each item that a step or a rule sends to the summary, with one bullet, not one bullet for each item.
+6. Archive: the step 6 group of the contract decisions names the requirement that holds each decision and its reason. Section 3 no longer repeats it.
+7. Archive: if a step stops before the archive, the summary of step 6 comes before the stop report, because the deltas are already written.
+8. The tasks preview says that a move of a decision to `## Constraints` makes the preview stale in the end summary, where it offers the move. The general rule for the move is removed.
+9. Archive: a constraint skips the filters only when `plan.md` says that the constraint applies only to this change. Each other constraint goes through the filters. This revises D315 item 1.
+
+**Rationale**: review B round 3 of `v1.8.0..local`. For item 9, `plan.md` seldom says if a later change must keep a constraint, and archive asks no question, so the D315 test gave two results for the same `plan.md`. The user chose the filters as the default: archive keeps more knowledge, and the filters already decide each other item.

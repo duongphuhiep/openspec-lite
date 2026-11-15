@@ -108,7 +108,6 @@ Do these checks in order.
 - When an action fails, follow the failure rule.
 - When you write a reply to the user, follow the reply order rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
-- If the user moves the decision that records a constraint of the user to `## Constraints`, the preview is stale. Tell the user to run this skill again.
 - A reply that changes an outcome that the Goal states asks to change the existing text of the Goal.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. List each item that you recorded, with its ID. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
 - A new constraint in a reply follows the answer rule.
@@ -236,7 +235,7 @@ When the checks are done, go to step 6.
    - For each open question that you removed, give its answer.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1), (2), or (3) of the decision rule. In the Why column, write the visible result for (1), the close options for (2), or what can surprise for (3).
    - If you added no 🤖 decision, show no table.
-   - For each decision that you added in this run to record a constraint of the user, say that the user can move the decision to `## Constraints`.
+   - For each decision that you added in this run to record a constraint of the user, say that the user can move the decision to `## Constraints`, and that the move makes the preview stale, so the user runs this skill again after the move.
 4. In one sentence, give a tip: `openspec-lite-upgrade` can convert the change to a stock spec-driven OpenSpec change, if the team convention requires one. Do not recommend the upgrade. If you gave the tip in an earlier reply of this run, do not give the tip again.
 5. Tell the user to read the preview.
 6. Tell the user what to do on disagreement: put the correction in `plan.md`, and run this skill again. The user does not edit `tasks-preview.md`.
