@@ -1,6 +1,6 @@
 ---
 name: openspec-lite-propose
-description: Create a plan-lite change with openspec-lite. It writes a lightweight plan.md with goal, an optional background, non-goals, constraints, open questions, facts, and decisions. It does not write the full spec-driven artifacts. Use when the user asks for openspec-lite-propose or a plan-lite change. Also use it for a lightweight plan, or for a medium change that needs a plan but not a full OpenSpec change.
+description: Create a plan-lite change with openspec-lite. It writes a lightweight plan.md with goal, an optional background, non-goals, constraints, open questions, facts, and decisions. It does not write the full spec-driven artifacts. Use when the user asks for openspec-lite-propose or a plan-lite change. Also use it for a lightweight plan, or for a medium or large change that needs a plan but not a full OpenSpec change.
 ---
 
 # openspec-lite-propose
@@ -113,7 +113,7 @@ Do these checks in order. When the checks are done, go to section 3.
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare the version with the shipped version:
 
-   Shipped schema version: 7
+   Shipped schema version: 8
 
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
@@ -171,7 +171,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - Do not remove a `<!-- ... -->` guidance comment from `plan.md`, or a line of a guidance comment that spans more than one line. Each guidance comment must still be in the file when you are done.
    - Write the content of a section on the lines under the guidance comment, not in place of it.
    - Do not invent non-goals, constraints, facts, or decisions.
-   - Do not write an outcome that the user moved out, also not in `## Non-Goals`. The summary of section 5 names the outcome.
+   - Do not write an outcome that the user moved out, also not in `## Non-Goals`. The summary of section 4 names the outcome.
    - Go to section 4.
 
 ### Goal rule
@@ -233,18 +233,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - You can use the `plan.md` IDs in `plan.md` and in your reply to the user, for example in the summary.
 - In another file, a code comment, or a commit message, refer to an item by its title, or a short form of its text, with the change name.
 
-## 4. Upgrade signals
-
-- Input: `plan.md`, and the request of the user.
-- Suggest `openspec-lite-upgrade` if one of these conditions is true:
-  - Another person or agent must continue the work.
-  - The change touches more than one capability.
-  - The change touches more than one repo.
-  - A contract (spec) becomes necessary.
-- If no condition is true, do not suggest `openspec-lite-upgrade`.
-- Go to section 5.
-
-## 5. End
+## 4. End
 
 1. Give the summary:
    - Show the change name and the path of `plan.md`, if `plan.md` exists.

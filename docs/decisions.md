@@ -18,7 +18,7 @@ This log is append-only. Do not edit an old entry. Add a `**Status**` line that 
 
 **Rationale**: OpenSpec overhead is only justified when context persistence matters across sessions, agents, or people. Most work is Level 1 or 2.
 
-**Status**: D54 removes sessions as a trigger. Level 2 can span context clears. Level 3 triggers are handoff, more than one capability or repo, and a contract.
+**Status**: D54 removes sessions as a trigger. Level 2 can span context clears. Level 3 triggers are handoff, more than one capability or repo, and a contract. D316 supersedes the size triggers of Level 2 and Level 3: plan-lite fits medium and large changes, and only a team convention triggers Level 3.
 
 ---
 
@@ -150,7 +150,7 @@ The Decisions section is append-only: decisions are captured as they crystallize
 
 **Rationale**: Explicit covers intentional upgrades. AI-suggested catches the case where complexity crept in while the user was heads-down.
 
-**Status**: D54 revises the signals.
+**Status**: D54 revises the signals. D316 removes the AI-suggested trigger.
 
 ---
 
@@ -622,7 +622,7 @@ The other skills do not suggest an upgrade.
 
 **Rationale**: Scope becomes visible at these two points. Checks in the other skills would only add noise.
 
-**Status**: D54 revises the signals. D68 adds a Level 1 signal to propose.
+**Status**: D54 revises the signals. D68 adds a Level 1 signal to propose. D316 removes the upgrade signals: no skill suggests an upgrade.
 
 ---
 
@@ -674,6 +674,8 @@ This revises D25. D12 is current again, with the `apply` block from D25.
 This revises D11 and D50.
 
 **Rationale**: plan-lite expects context clears (D22, D26), so a new session is normal. No skill can detect a session. A session count was a proxy for handoff, and handoff is the real reason for a contract. Cross-repo was a Level 3 trigger in D1 but was missing from the signals.
+
+**Status**: Superseded by D316.
 
 ---
 
@@ -1322,6 +1324,8 @@ This revises D81 and D83.
 **Decision**: `openspec-lite-propose` triggers on its name, on "plan-lite", and on "lightweight plan" or "medium change". The other five skills trigger only on their name or on "plan-lite".
 
 **Rationale**: propose is the entry point, so it must be easy to find. The other skills act on a plan-lite change, and the guard (D75) refuses other changes. The stock OpenSpec skills compete for general wording. For archive, the README warning and D95 handle that competition.
+
+**Status**: D316 revises the propose trigger to "medium or large change".
 
 ---
 
@@ -4410,3 +4414,35 @@ This revises D119, D166, D182, D219, and D256.
 7. No change for the defects that the model causes while the skill text is clear: a missing reason in a decision, an inferred ADR claim, a third command form, a count in the summary, a contract decision in the not-drafted group, and a fallback recommendation for a fact that only the user knows.
 
 **Rationale**: the user asked to run all scenarios, to ignore the defects that the model causes, and to confirm and fix each defect that a skill or a scenario causes. Run: `.scenario-runs/20261114-482ccfa-full/`. Result: 44 of 50 runs and 308 of 320 checks pass. The six failed runs are 4 r2 (llm), 4c-1 (llm), 21a (scenario), 23a r1 (llm), and 23c ×2 (llm, and the 23c result line).
+
+---
+
+## D316: plan-lite Fits Large Changes, and Only a Team Convention Is a Reason to Upgrade
+
+**Decision**:
+
+1. plan-lite fits medium and large changes. A Goal can hold many related outcomes. `plan.md` gives each constraint, open question, fact, and decision an ID, so other items refer to an item and do not repeat it.
+2. The only reason to upgrade to a spec-driven change is a team convention: the team does not accept plan-lite and requires stock spec-driven changes.
+3. The size of the change is not a reason to upgrade. Work in a team is not a reason to upgrade, because a team can share `plan.md` as it shares a stock change.
+4. The upgrade signals of D54 are removed. Propose and `apply.instruction` do not suggest an upgrade. The user runs `openspec-lite-upgrade` when the team convention requires it. The schema `version` goes to 8.
+5. The propose description triggers on "medium or large change", not on "medium change". The upgrade description gives the team convention as the example, not a scope that grows.
+
+This supersedes D54, and revises D1, D11, D50, and D104.
+
+**Rationale**: the user said that openspec-lite no longer targets only medium changes. The upgrade signals (handoff, more than one capability or repo, a contract) are size and team signals, so they told the agent to suggest an upgrade that the user does not need. An agent cannot detect a team convention from the request, so no signal replaces them. Rejected: a signal "the repo uses stock changes", because a repo can hold stock changes and plan-lite changes together.
+
+---
+
+## D317: The Tasks Preview Names the Next Step and the Upgrade
+
+**Decision**: The end reply of the tasks preview has this order:
+
+1. The end summary.
+2. A tip in one sentence: `/openspec-lite-upgrade` can convert the change to a stock spec-driven change, if the team convention requires one. The reply does not recommend the upgrade.
+3. Read the preview, and what to do on disagreement.
+4. The recommendation of `/openspec-lite-apply` as the next step.
+5. The open questions.
+
+The next steps of the flow are: propose asks for a tasks preview, the tasks preview recommends apply, and apply recommends `openspec-lite-archive`.
+
+**Rationale**: D316 removed the upgrade signals, so no skill names `openspec-lite-upgrade`. A user who does not read the README does not know that the skill exists. The tasks preview is the last step before code, so a notice there comes before the plan becomes code. The notice is not a recommendation, because only a team convention is a reason to upgrade (D316). The tip has low priority, so it goes in the middle of the reply. The items that the user must act on go at the end, where the user reads first.

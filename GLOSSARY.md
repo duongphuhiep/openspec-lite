@@ -1,6 +1,6 @@
 # openspec-lite
 
-A lightweight workflow on top of OpenSpec for medium changes. It replaces the full spec-driven change with a plan and an optional tasks preview.
+A lightweight workflow on top of OpenSpec for medium and large changes. It replaces the full spec-driven change with a plan and an optional tasks preview.
 
 ## Language
 
@@ -45,7 +45,7 @@ The move of non-obvious information and contracts from a plan into permanent spe
 _Avoid_: Sync, merge, upgrade
 
 **Contract**:
-Externally observable behavior that a client or another team depends on. The format of a file or of an output that another program reads is a contract, for example the line format of a log file that a monitor parses. Promotion writes it to a spec, even if it is obvious from the code. Three other uses of the word are different. "`tasks.md` is a contract" means that apply must follow its steps. The upgrade signal "a contract (spec) becomes necessary" means a spec that others must agree on before the work. In `docs/design.md`, "contract" also names the command-line interface of a script, for example `install.mjs`.
+Externally observable behavior that a client or another team depends on. The format of a file or of an output that another program reads is a contract, for example the line format of a log file that a monitor parses. Promotion writes it to a spec, even if it is obvious from the code. Two other uses of the word are different. "`tasks.md` is a contract" means that apply must follow its steps. In `docs/design.md`, "contract" also names the command-line interface of a script, for example `install.mjs`.
 _Avoid_: Interface, API (for this meaning)
 
 **Outcome**:
@@ -85,7 +85,7 @@ The question at the end of apply, before the done check: Did the tests run and p
 _Avoid_: Test gate
 
 **Upgrade**:
-The switch of an active change from plan-lite to spec-driven. You can upgrade a change at any time.
+The switch of an active change from plan-lite to spec-driven. You can upgrade a change at any time. The only reason to upgrade is a team convention that requires stock spec-driven changes. The size of the change and work in a team are not reasons to upgrade.
 _Avoid_: Graduation, promotion, migration
 
 **Schema update**:

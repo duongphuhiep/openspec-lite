@@ -103,7 +103,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 1. Read the `version` line from `openspec/schemas/plan-lite/schema.yaml`.
 2. Compare the version with the shipped version:
 
-   Shipped schema version: 7
+   Shipped schema version: 8
 
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.

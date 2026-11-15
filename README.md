@@ -18,13 +18,13 @@ The OpenSpec workflow `explore → proposal → apply → archive` generates `pr
      - To guide a small model when a large model writes it.
      - To track implementation progress.
      - To preview the implementation.
-   - For a medium change, the same model usually plans and codes, and you do not need to track progress. So you often read `tasks.md` only to preview the code changes that the AI intends to make.
+   - If the same model plans and codes. Then you often read `tasks.md` only to preview the code changes that the AI intends to make.
 - **The artifacts do not show who decided what.** They do not separate your decisions from the guesses of the AI. They do not keep the facts that justify a decision.
 - **The artifacts go out of date during implementation.** When the AI finds a better approach in the code, the artifacts keep the old plan.
 
 ## The solution
 
-openspec-lite works for medium and large changes. The workflow is `plan → implement (→ doc)`:
+openspec-lite works for medium and large changes. A large change can have a Goal with many related outcomes. The workflow is `plan → implement (→ doc)`:
 
 - **Plan**: `openspec-lite-propose` creates `plan.md` in `openspec/changes/<name>/`. Add the context that the AI needs to implement the change correctly.
 - **Implement**: `openspec-lite-apply` implements the change from `plan.md`.
@@ -134,22 +134,10 @@ openspec-lite has no explore skill. You can use stock `/opsx:explore`, but you u
 
 - It is a reference, not a contract. Apply can change the approach, for example to make the code simpler.
 - It uses the OpenSpec `tasks.md` layout, with plain bullets instead of checkboxes. Tasks are in dependency order. Each task has verification criteria. Tests and docs go with the related code.
-- Each task is a meaningful, verifiable result. Do not split the work into very small subtasks.
+- Each task is a meaningful, verifiable result.
 - Do not edit it by hand. Put corrections in `plan.md`. Then run `openspec-lite-tasks-preview` again. It overwrites the old file.
-
-During apply:
-
-- When the two files conflict, `plan.md` wins.
-- If `plan.md` changed after the AI generated the preview, apply warns you. The preview stores a hash of `plan.md` for this check. The hash covers only Goal, Background, Non-Goals, and Constraints, because apply edits the other sections. It ignores HTML comments.
-- Apply records a deviation from the preview as a decision in `plan.md` only when it changes a visible result or was a close call. It removes each 🤖 decision that the deviation supersedes, and updates each 🤖 decision that it makes stale. It changes a decision with no 🤖 only when you say so. Then it removes each fact that justifies no current decision or constraint, except a non-obvious fact.
-
-The tasks preview and apply both keep `plan.md` up to date while they work:
-
-- **Facts**: each non-obvious fact, with its source and a source emoji, for example 👤 for you, 📖 for documentation, or 🔬 for a test run. An obvious or well-known fact goes into the "because" part of the decision that it justifies. A non-obvious fact needs an answer of you, a run or a test result, research of remote sources (docs, another repo, logs, a remote database), a long analysis of the code, or other work that is worth an agent to find it. This includes each tool error that makes them change the work, unless the code shows the same output. A run alone is not enough. They do not record a fact that you can easily deduce from the code. At the end, apply updates or removes each fact that its work made false, and writes a test for each changed behavior.
-- **Decisions**: each choice that changes a visible result, for example a UI, an interface, or the input or output of a program, or where no option is a clear winner, with the reason and the rejected options. The agent does not record other choices. A decision that the agent made ends with 🤖, unless it records your answer or your instruction. A decision with no 🤖 is yours: the agent asks before it changes it. Remove the 🤖 to accept a decision of the agent. The end summary shows a table of each 🤖 decision that the agent added, with the reason why it is a decision.
-- **Open questions**: each point that the agent cannot decide and cannot find the answer to, because only you have the information. Before apply writes code, it tries to resolve each open question from the code, the docs, or a run. It records each answer that it finds as a fact or a 🤖 decision. It asks you each question that is still open, with its recommended answer. An open question makes the done check fail until it is closed.
-
-These sections are not in the hash, so the preview stays current. The summary lists each item that the run added, changed, or removed. To see the full change, commit `plan.md` before the run, then run `git diff`. If `plan.md` is not committed, the agent tells you at the start.
+- While the tasks preview builds `tasks-preview.md`, it records facts and decisions in `plan.md`. Each decision of the agent ends with 🤖.
+- `tasks-preview.md` stores a hash of `plan.md`. If `plan.md` changed after the preview, the hash shows that the preview is out of date, and `openspec-lite-apply` asks to generate it again.
 
 ## Lifecycle
 
@@ -199,9 +187,11 @@ After an upgrade, archive with stock `/opsx:archive`. It does not turn the decis
 
 ### You may not need `openspec-lite-upgrade`
 
-openspec-lite works well for large changes. An upgrade often doubles the size of the change, because the spec-driven artifacts repeat the same content.
+An upgrade is not necessary for a large change. `plan.md` gives each constraint, open question, fact, and decision an ID. Other items refer to an item by its ID, so `plan.md` does not repeat information. An upgrade often doubles the size of the change, because the spec-driven artifacts repeat the same content.
 
-So you rarely need to upgrade a plan-lite change to a spec-driven change.
+An upgrade is also not necessary for work in a team. Your team can share and review `plan.md`, as it shares a stock change.
+
+Upgrade only to follow a team convention: your team does not accept plan-lite and requires stock spec-driven changes.
 
 ## Compatibility
 
