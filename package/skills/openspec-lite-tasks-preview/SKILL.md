@@ -237,10 +237,10 @@ When the checks are done, go to step 6.
    - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
    - If you added no 🤖 decision, show no table.
    - For each decision that you added in this run to record a constraint of the user, say that the user can move the decision to `## Constraints`.
-4. In one sentence, give a tip: `/openspec-lite-upgrade` can convert the change to a stock spec-driven OpenSpec change, if the team convention requires one. Do not recommend the upgrade.
+4. In one sentence, give a tip: `openspec-lite-upgrade` can convert the change to a stock spec-driven OpenSpec change, if the team convention requires one. Do not recommend the upgrade. If you gave the tip in an earlier reply of this run, do not give the tip again.
 5. Tell the user to read the preview.
 6. Tell the user what to do on disagreement: put the correction in `plan.md`, and run this skill again. The user does not edit `tasks-preview.md`.
-7. Recommend `/openspec-lite-apply` as the next step.
+7. Recommend `openspec-lite-apply` as the next step.
 8. Last, ask each open question that is still open and is not a kept question, new or existing, with the ask rule. Put the questions at the end of the reply, after items 3 to 7, as the reply order rule says.
 
 ## 3. Rules

@@ -615,7 +615,7 @@ Common start state for 23a and 23b:
 - The agent writes no code. `## Goal`, `## Background`, `## Non-Goals`, and `## Constraints` of `plan.md` do not change. Each template comment is still in `plan.md`.
 - Each visible result that the preview plans and that `plan.md` does not say is a 🤖 decision or an open question (D219, D220). The separator, the result for a letter with an accent, and the result for a title with no letter or digit are examples, not a list of musts: a preview that plans no length limit passes. A point that depends only on an intent of the user is an open question with a recommended answer, or a 🤖 decision.
 - The format of the slug must match the existing post URLs, which are outside the repo. So the format is an open question with no recommended answer, not a 🤖 decision that follows a convention (D195, D225).
-- The end reply has this order: the summary of the items that the run added, changed, or removed, the table of the added 🤖 decisions, the advice to read the preview and to correct `plan.md` on a disagreement, and last the open questions in one numbered list. Another summary block, for example an overview of the preview, can come before the advice. Nothing comes after the last question (D300, D301). Each open question asks one thing (D314).
+- The end reply has this order: the summary of the items that the run added, changed, or removed, the table of the added 🤖 decisions, a tip in one sentence that `openspec-lite-upgrade` can convert the change to a stock change, the advice to read the preview and to correct `plan.md` on a disagreement, the recommendation of `openspec-lite-apply` as the next step, and last the open questions in one numbered list. The tip does not recommend the upgrade. Another summary block, for example an overview of the preview, can come before the tip. Nothing comes after the last question (D300, D301, D317). Each open question asks one thing (D314).
 
 ### 23b. Apply alone
 
@@ -634,7 +634,7 @@ Common start state for 23a and 23b:
 - After step 3, OQ1 is gone from `## Open Questions`. The answer is in `plan.md` as a fact with 👤, a constraint, or a decision with no 🤖 (D226, D240).
 - `src/slug.js` exports `slugify`. A test file covers it, and the test fails if the separator is not `-`. The agent runs the tests, and they pass. `package.json` has no new dependency.
 - Each visible result that the agent put in the code and that `plan.md` and the user did not say is a 🤖 decision, for example the result for a letter with an accent or for a title with no letter or digit (D219, D220). The end summary has the table of these decisions.
-- The end summary gives no note about the plan hash, because no preview exists (D295). If the test check and the done check pass, it tells the user to archive with `openspec-lite-archive`. If an open question is left, the question is the last part of the reply (D300).
+- The end summary gives no note about the plan hash, because no preview exists (D295). If the test check and the done check pass, it tells the user to archive with `openspec-lite-archive`. The agent does not suggest `openspec-lite-upgrade` (D316). If an open question is left, the question is the last part of the reply (D300).
 - In step 4, the agent answers the question. It changes no item of `plan.md`, does not run the tests again, and does not give the end summary again (D296, D304).
 
 ### 23c. Archive alone

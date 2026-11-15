@@ -4438,11 +4438,25 @@ This supersedes D54, and revises D1, D11, D50, and D104.
 **Decision**: The end reply of the tasks preview has this order:
 
 1. The end summary.
-2. A tip in one sentence: `/openspec-lite-upgrade` can convert the change to a stock spec-driven change, if the team convention requires one. The reply does not recommend the upgrade.
+2. A tip in one sentence: `openspec-lite-upgrade` can convert the change to a stock spec-driven change, if the team convention requires one. The reply does not recommend the upgrade.
 3. Read the preview, and what to do on disagreement.
-4. The recommendation of `/openspec-lite-apply` as the next step.
+4. The recommendation of `openspec-lite-apply` as the next step.
 5. The open questions.
 
-The next steps of the flow are: propose asks for a tasks preview, the tasks preview recommends apply, and apply recommends `openspec-lite-archive`.
+The next steps of the flow are: propose asks for a tasks preview, the tasks preview recommends `openspec-lite-apply`, and apply recommends `openspec-lite-archive`.
 
-**Rationale**: D316 removed the upgrade signals, so no skill names `openspec-lite-upgrade`. A user who does not read the README does not know that the skill exists. The tasks preview is the last step before code, so a notice there comes before the plan becomes code. The notice is not a recommendation, because only a team convention is a reason to upgrade (D316). The tip has low priority, so it goes in the middle of the reply. The items that the user must act on go at the end, where the user reads first.
+**Rationale**: D316 removed the upgrade signals, so before D317 no skill named `openspec-lite-upgrade`. A user who does not read the README does not know that the skill exists. The tasks preview is the last step before code, so a notice there comes before the plan becomes code. The notice is not a recommendation, because only a team convention is a reason to upgrade (D316). The tip has low priority, so it goes in the middle of the reply. The items that the user must act on go at the end, where the user reads first.
+
+---
+
+## D318: Fixes of Review Round 1 on D316 and D317
+
+**Decision**:
+
+1. On a no to "Do you want a tasks preview?", propose recommends `openspec-lite-apply` as the next step, and ends its turn. Propose gives no upgrade tip.
+2. The tasks preview gives the upgrade tip only once per run. If a reply runs step 8 again, the tip does not repeat.
+3. The skills, `design.md`, and D317 name the openspec-lite skills with no slash, as the other skill text does.
+4. `GLOSSARY.md` defines Level 3 by the team convention, not by size. `design.md` §5 says "medium and large changes", and says that only the tasks preview names the upgrade, as a tip.
+5. Scenario 23a checks the D317 order of the end reply. Scenario 23b checks that apply does not suggest an upgrade.
+
+**Rationale**: review round 1 of `v1.8.0..local`. With no next step on a no, the user did not know what to run after propose. A tip that repeats in each reply is noise. Some harnesses have no slash commands. The glossary called Level 3 a size, which contradicts D316.

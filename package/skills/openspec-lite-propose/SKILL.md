@@ -248,5 +248,5 @@ Do these checks in order. When the checks are done, go to section 3.
    - If you changed an outcome of the Goal, quote the old outcome and the new outcome.
    - Then, on yes, run the `openspec-lite-tasks-preview` skill.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
-   - On no, end your turn.
+   - On no, recommend `openspec-lite-apply` as the next step, and end your turn.
    - If the reply has no yes and no no, ask the tasks-preview question again.

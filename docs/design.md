@@ -220,7 +220,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - Report the copied files, the backup path, and the `config.yaml` line. Do not use `git diff` or `git status`. Tell the user to compare and delete the backup.
 - Tell the user to commit the schema to git.
 
-### openspec-lite-propose (D10, D26, D28, D50, D54, D68, D78, D80, D148, D168, D169, D182, D184)
+### openspec-lite-propose (D10, D26, D28, D68, D78, D80, D148, D168, D169, D182, D184, D316, D318)
 
 - If the request names no outcome, ask what the change does, end the turn, and do not invent a Goal (D255). The split questions go in one reply, and the turn ends after them. The turn also ends after the Level 1 question (D255).
 - The first outcome of the request is the main outcome, also when the request has only one outcome. If another outcome touches the same code as the main outcome, keep it, with no question. Otherwise, if it can ship alone, ask: "<outcome> can ship alone. Leave it out of this change, and propose it later as a separate change?" On yes, leave it out of this change. On no, keep it (D148).
@@ -231,7 +231,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - Get the template from `openspec instructions plan --change "<name>" --json` → `template`. Write `plan.md` from it. Fill only what is known. Leave the other sections empty. Keep each `<!-- ... -->` guidance comment, also in a section that you fill. Write the content on the lines under the comment (D127, D131). Do not invent non-goals, constraints, facts, or decisions (D114). Propose decides no open point: it records each one as an open question, and the tasks preview tries to decide it. Each fact starts with a source emoji, and stays true after the change (D227, D233). Propose records no fact for a problem that the Goal fixes, because the Goal already states the problem (D288). A user answer is split: a fact goes to `## Facts` with 👤 and "Source: the user", a limit on the result that a user or a program sees, or on what the change must not add, is a constraint, and each other choice or instruction is a decision with no 🤖 (D226, D229). Each part of the answer goes to a section of `plan.md`, not only to the summary. Propose and the tasks preview use the same four answer bullets as apply (D261, D262). Do not write an outcome that the user moved out in `plan.md`, also not in `## Non-Goals`. The summary names it (D169). Keep only the current decisions, and no facts with statistics that soon go out of date (D136). Remove each fact that justifies no current decision or constraint, except a non-obvious fact (D140, D171, D184).
 - `## Goal` holds one outcome by preference. If the change has more than one outcome, write one outcome per bullet, in one or two sentences each (D148).
 - In the summary, show the change name. Name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for it (D148).
-- At the end, ask the open questions of `plan.md` and then "Do you want a tasks preview?", in one numbered list, as the last part of the reply (D300). When the user replies, propose first records each part of the reply with the answer rule. Then, on yes, it runs `openspec-lite-tasks-preview`. On no, it ends its turn. If the reply has no yes and no no, it asks again (D266, D271).
+- At the end, ask the open questions of `plan.md` and then "Do you want a tasks preview?", in one numbered list, as the last part of the reply (D300). When the user replies, propose first records each part of the reply with the answer rule. Then, on yes, it runs `openspec-lite-tasks-preview`. On no, it recommends `openspec-lite-apply` as the next step, and ends its turn (D318). If the reply has no yes and no no, it asks again (D266, D271).
 - Do not write code, except after a yes to the Level 1 question (D202).
 
 ### openspec-lite-tasks-preview (D19, D23, D24, D26, D32, D49, D52, D53, D72, D76, D171, D172, D174, D177, D180, D181, D182, D183, D184, D193, D211, D217, D218, D219, D220, D221, D222, D223, D224, D225, D226, D227, D228, D229, D230, D231, D236, D290, D317)
@@ -258,7 +258,7 @@ If it prints a `plan-hash:` message and no hash (exit code 1), show the message 
 - Each task is a meaningful, verifiable result. Do not split into very small subtasks.
 - Get `<hash>` with the plan hash command.
 - Overwrite the old file.
-- At the end, after the end summary, give a tip in one sentence: `/openspec-lite-upgrade` can convert the change to a stock spec-driven change, if the team convention requires one. Do not recommend the upgrade. The tip has low priority, so it comes before the items that the user must act on. Then tell the user to read the preview and what to do on disagreement. Then recommend `/openspec-lite-apply` as the next step. The open questions come last (D317).
+- At the end, after the end summary, give a tip in one sentence: `openspec-lite-upgrade` can convert the change to a stock spec-driven change, if the team convention requires one. Do not recommend the upgrade. The tip has low priority, so it comes before the items that the user must act on. Then tell the user to read the preview and what to do on disagreement. Then recommend `openspec-lite-apply` as the next step. The open questions come last. If a reply runs the end step again, the tip does not repeat (D317, D318).
 - At the start, run `node openspec/schemas/plan-lite/plan-status.mjs <plan.md>` alone. If it prints a line, commit only `plan.md`, with `git add -- <plan.md>` and `git commit -m "plan.md: checkpoint before tasks-preview" -- <plan.md>`, so that a file that the user staged stays out of the commit. Tell the user about the commit, and continue. If it prints nothing, say nothing about commits (D171, D193, D290).
 - The ID rule of the preview allows the IDs in the reply to the user, and wins over the ID comment of an older `plan.md` (D294).
 - Record in `plan.md`, with no question (D171). Edit only `## Facts`, `## Decisions`, and `## Open Questions`. The plan hash does not cover them, so the preview stays current.
@@ -732,12 +732,12 @@ When the checks are done, go to step 6.
 
 ## 5. When to Upgrade (D316)
 
-plan-lite fits changes of each size, also a large change with many related outcomes. A team can share `plan.md`, as it shares a stock change.
+plan-lite fits medium and large changes, also a large change with many related outcomes. A team can share `plan.md`, as it shares a stock change.
 
 - The only reason to upgrade is a team convention: the team does not accept plan-lite and requires stock spec-driven changes.
 - The size of the change is not a reason to upgrade.
 - Work with other persons or agents is not a reason to upgrade.
-- No skill suggests an upgrade. The user runs `openspec-lite-upgrade` when the team convention requires it.
+- No skill recommends an upgrade. Only the end reply of the tasks preview names `openspec-lite-upgrade`, as a tip (D317). The user runs `openspec-lite-upgrade` when the team convention requires it.
 
 ## 6. Out of Scope
 

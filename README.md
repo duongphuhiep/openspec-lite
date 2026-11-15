@@ -18,7 +18,7 @@ The OpenSpec workflow `explore → proposal → apply → archive` generates `pr
      - To guide a small model when a large model writes it.
      - To track implementation progress.
      - To preview the implementation.
-   - If the same model plans and codes. Then you often read `tasks.md` only to preview the code changes that the AI intends to make.
+   - If the same model plans and codes, you often read `tasks.md` only to preview the code changes that the AI intends to make.
 - **The artifacts do not show who decided what.** They do not separate your decisions from the guesses of the AI. They do not keep the facts that justify a decision.
 - **The artifacts go out of date during implementation.** When the AI finds a better approach in the code, the artifacts keep the old plan.
 
@@ -137,7 +137,7 @@ openspec-lite has no explore skill. You can use stock `/opsx:explore`, but you u
 - Each task is a meaningful, verifiable result.
 - Do not edit it by hand. Put corrections in `plan.md`. Then run `openspec-lite-tasks-preview` again. It overwrites the old file.
 - While the tasks preview builds `tasks-preview.md`, it records facts and decisions in `plan.md`. Each decision of the agent ends with 🤖.
-- `tasks-preview.md` stores a hash of `plan.md`. If `plan.md` changed after the preview, the hash shows that the preview is out of date, and `openspec-lite-apply` asks to generate it again.
+- `tasks-preview.md` stores a hash of the Goal, Background, Non-Goals, and Constraints of `plan.md`. If one of these sections changed after the preview, the hash shows that the preview is out of date. Then `openspec-lite-apply` asks if you want to generate the preview again or to continue from `plan.md`.
 
 ## Lifecycle
 

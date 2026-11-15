@@ -5,7 +5,7 @@ A lightweight workflow on top of OpenSpec for medium and large changes. It repla
 ## Language
 
 **Level 1 / Level 2 / Level 3**:
-The three sizes of a change. Level 1 is a direct implementation with no artifacts. Level 2 is a plan-lite change. Level 3 is a spec-driven change.
+The three ways to make a change. Level 1 is a direct implementation of a small change, with no artifacts. Level 2 is a plan-lite change, for a medium or a large change. Level 3 is a spec-driven change, only when a team convention requires stock OpenSpec (D316).
 _Avoid_: Tier, mode
 
 **plan-lite**:
