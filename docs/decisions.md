@@ -4702,3 +4702,18 @@ This revises D323.
 4. The Input line of tasks-preview step 7 names the reply of the user, for a run after a reply.
 
 **Rationale**: review B round 11 of `v1.8.0..local`. Each remark had one clear fix.
+
+---
+
+## D335: Fixes of Review B Round 12
+
+**Decision**:
+
+1. If an answer changes a decision and leaves the new choice to the agent, the agent decides the new choice with the question rule. Each part that the user chose keeps no 🤖. This revises D334 item 1, which always wrote a 🤖 decision.
+2. An answer leaves a choice to the agent only when the user names no option and tells the agent to choose. An answer that accepts an option or a recommended answer that the agent named is a choice of the user. The answer rules and `GLOSSARY.md` say so.
+3. Propose: the "otherwise" branch of the Level 1 test comes right after the test. Each "On yes" bullet comes after the question.
+4. Propose: after the Level 1 stop, an answer finishes the fix. A request for a change continues with section 2, and the summary names the code that the stopped fix already changed.
+5. Propose: the Level 1 reply names each point that the user left to the agent, and the choice of the fix. It says when a choice is a guessed value of a fact that only the user knows.
+6. `docs/design.md` no longer holds the old Level 1 test.
+
+**Rationale**: review B round 12 of `v1.8.0..local`. Each remark had one clear fix.

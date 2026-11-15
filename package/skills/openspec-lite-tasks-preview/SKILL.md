@@ -306,7 +306,7 @@ When the checks are done, go to step 6.
 - If a part limits the result and also says how to build the result, record the limit and the build choice as two decisions with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - If the user names an item of `## Facts`, `## Decisions`, or `## Open Questions`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
-- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖. A part that leaves a choice to you is not a choice of the user.
+- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖. A part that leaves a choice to you is not a choice of the user. A part leaves a choice to you only when the user names no option and tells you to choose. A part that accepts an option or a recommended answer that you named is a choice of the user.
 - If a part of the reply leaves a choice to you, follow the question rule for that point.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
@@ -353,7 +353,7 @@ When the checks are done, go to step 6.
 - A decision with no 🤖 belongs to the user, also a decision that the user wrote by hand.
 - A decision with no 🤖 holds only what the user said. Put each choice that you add, and that the decision rule records, in its own 🤖 decision.
 - When you update a 🤖 decision to follow an answer or an instruction of the user, remove the 🤖 of that decision.
-- If the answer leaves the new choice to you, the new choice is your choice. End the heading of the decision with 🤖.
+- If the answer leaves the new choice to you, decide the new choice with the question rule. Each part that the user chose keeps no 🤖.
 - The user removes the 🤖 to accept a decision.
 
 ### Current-decisions rule: keep `## Decisions` current

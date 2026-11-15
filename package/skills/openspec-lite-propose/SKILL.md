@@ -81,12 +81,15 @@ How to read this skill:
 - Put each point that the user leaves to the agent in the list too, so that section 3, step 5 records the point with its marker.
 - A constraint of the request does not block the Level 1 question, because the fix follows each constraint of the request.
 - If the outcomes that stay are one obvious fix, and each open point of the list is a point that the user leaves to the agent, ask: "This looks small. Implement directly with no change?" An empty list also passes this test.
-- On yes to the Level 1 question, decide each point that the user leaves to the agent in the fix.
 - Otherwise, do not ask the Level 1 question. Go to section 2.
 - After the Level 1 question, end your turn, and wait for the answer.
 - On yes, make the fix directly, with no change and no file under `openspec/`. Follow each fact, constraint, and choice of the request and of the replies that you kept.
 - On yes, name each outcome that the user moved out, and tell the user to run `openspec-lite-propose` for each outcome.
-- On yes, if you find a point during the fix that you cannot decide, and that the user did not leave to you, stop the fix. Name the point and the code that you already changed. Ask the user to answer the point, or to run `openspec-lite-propose` again for a change. End your turn. Write no file under `openspec/`.
+- On yes, decide each point that the user leaves to the agent in the fix.
+- On yes, in the reply, name each point that the user left to the agent, and the choice that the fix made. If a choice is a guessed value of a fact that only the user knows, say so.
+- On yes, if you find a point during the fix that you cannot decide, and that the user did not leave to you, stop the fix. Name the point and the code that you already changed. Ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
+- After the stop, if the user answers the point, finish the fix with the answer, and give the reply of a yes.
+- After the stop, if the user asks for a change, continue with section 2. In the summary of section 4, name the code that the stopped fix already changed.
 - On yes, stop after the fix and the names.
 - On no, continue with section 2.
 
@@ -205,7 +208,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - If the user names an item of `plan.md`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
-- Record each other choice or instruction in the answer as a decision with no 🤖. A part that leaves a choice to the agent is not a choice of the user: follow the question rule.
+- Record each other choice or instruction in the answer as a decision with no 🤖. A part that leaves a choice to the agent is not a choice of the user: follow the question rule. A part leaves a choice to the agent only when the user names no option and tells the agent to choose. A part that accepts an option or a recommended answer that the agent named is a choice of the user.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
 - An answer to an open question is a part of the answer. Record the answer in a section of plan.md. Do not put the answer only in the end summary. One exception: an answer that leaves the point to the agent follows the question rule.
