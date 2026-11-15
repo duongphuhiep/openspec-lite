@@ -4717,3 +4717,16 @@ This revises D323.
 6. `docs/design.md` no longer holds the old Level 1 test.
 
 **Rationale**: review B round 12 of `v1.8.0..local`. Each remark had one clear fix.
+
+---
+
+## D336: Fixes of Review B Round 13
+
+**Decision**:
+
+1. An answer leaves a choice to the agent when the user names no option, and tells the agent to choose or says that the user has no preference. An answer that accepts an option or a recommended answer of the agent is a choice of the user. An answer that says that the user does not know yet leaves the question open. This revises D335 item 2.
+2. The current-decisions rule: an instruction that supersedes a decision with no 🤖 and does not name it removes the old decision. Each part that the user chose is a decision with no 🤖. Each part that the user leaves to the agent goes to the question rule. An instruction that names the decision follows the answer rule, which edits the item in place.
+3. Upgrade step 2.3: the left-choice branch points to the bullet that gives the write target in `design.md`.
+4. Propose, after the Level 1 stop: a request for a change adds the point that stopped the fix to the list of open points. Another reply writes no code and creates no change, does what the reply asks, and names the code that the stopped fix changed.
+
+**Rationale**: review B round 13 of `v1.8.0..local`. Each remark had one clear fix.

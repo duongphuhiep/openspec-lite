@@ -306,7 +306,7 @@ When the checks are done, go to step 6.
 - If a part limits the result and also says how to build the result, record the limit and the build choice as two decisions with no 🤖.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - If the user names an item of `## Facts`, `## Decisions`, or `## Open Questions`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
-- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖. A part that leaves a choice to you is not a choice of the user. A part leaves a choice to you only when the user names no option and tells you to choose. A part that accepts an option or a recommended answer that you named is a choice of the user.
+- Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖. A part that leaves a choice to you is not a choice of the user. A part leaves a choice to you when the user names no option, and tells you to choose or says that the user has no preference. A part that accepts an option or a recommended answer that you named is a choice of the user. A part that says that the user does not know the answer yet leaves the question open.
 - If a part of the reply leaves a choice to you, follow the question rule for that point.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
@@ -360,7 +360,7 @@ When the checks are done, go to step 6.
 
 - `## Decisions` holds only the current decisions.
 - Remove each 🤖 decision that a new decision supersedes.
-- If a new instruction of the user supersedes a decision with no 🤖, record the new decision, and remove the old decision.
+- If a new instruction of the user supersedes a decision with no 🤖, and the instruction does not name the decision, remove the old decision. Record each part that the user chose as a decision with no 🤖. Decide each part that the user leaves to you with the question rule. An instruction that names the decision follows the answer rule.
 - Update each 🤖 decision that a new decision makes stale.
 - Update or remove each 🤖 decision that conflicts with a constraint or with a decision with no 🤖, for example after the user corrected `plan.md`, and record no question.
 - Change a decision with no 🤖 only when the user tells you to in this session, when a new instruction of the user supersedes the decision, or to move a choice that you added into its own 🤖 decision.
