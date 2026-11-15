@@ -19,7 +19,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Section 4 holds the named rules of this skill, for example the requirement-source rule.
 - The general rules apply at all times, in each step.
 - A named rule applies in each step where its topic comes up, also when the step does not name the rule.
-- The question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these six rules in that file. A step number in these rules names a step of `apply.instruction`, not a step of this skill. In this skill, only step 2.3 writes a fact, to `## Context` of `design.md`, not to `plan.md`. If you find a fact after step 2.3, or if the resume rule kept `design.md`, do not edit `design.md`: name the fact in the summary as content in no artifact.
+- The question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`. Read these six rules in that file. A step number in these rules names a step of `apply.instruction`, not a step of this skill. In this skill, a fact goes to `## Context` of `design.md`, not to `plan.md`. Two writers add a fact: step 2.3, and the last check of the split rule for a fact of the answer. If you find another fact after step 2.3, or if the resume rule kept `design.md`, do not edit `design.md`: name the fact in the summary as content in no artifact.
 - `<name>` is the name of the change. The change selection check gives `<name>`.
 - `<dir>` is `openspec/changes/<name>`.
 
@@ -176,7 +176,7 @@ Close the open questions of `plan.md`:
 - If you find an answer that is a non-obvious fact, plan the answer as a fact in `design.md` → `## Context`.
 - If you find an answer that is obvious, give the answer only in the summary.
 - If you decide a point, and the point changes a visible result or was a close call, plan a decision with 🤖 in `design.md`. The decision rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml` gives these two criteria.
-- If you decide a point, and the point matches neither criterion of the decision rule, give the answer only in the summary.
+- If you decide a point, and the point matches no criterion of the decision rule, give the answer only in the summary.
 - If a decided point is a contract, and `<dir>/specs/` holds no delta, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
 - Do not ask a question that you closed.
 
@@ -252,11 +252,11 @@ Read the answer of the user:
 - Non-Goals go to `## Goals / Non-Goals`.
 - Each `### Decision` entry of `plan.md` goes to `## Decisions`.
 - If a part of the answer supersedes, changes, or corrects a decision of `plan.md`, or a fact or a 🤖 decision that the question turn of step 2 planned, write only the item that follows the answer, with no 🤖. Do not copy the old item.
-- A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet. Two bullets of this step are exceptions: a choice of the answer that supersedes the decision, and a yes to a requirement from the decision.
+- A decision with 🤖 in `plan.md` keeps its 🤖 in `design.md`, because the user did not confirm it yet. Two bullets of this step are exceptions: a part of the answer that supersedes, changes, or corrects the decision, and a yes to a requirement from the decision.
 - Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji, unless a part of the answer corrected the fact.
-- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless a part of the answer superseded the decision, or the user said yes to a requirement from that decision. For that case, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
+- Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless a part of the answer superseded, changed, or corrected the decision, or the user said yes to a requirement from that decision. For that case, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
 - Write each choice from the answer of the user that is not a contract to `## Decisions`, with no 🤖.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says.
@@ -371,7 +371,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - List the files that you wrote, and `tasks-preview.md` if you deleted it.
 - Do not name `plan.md` in the file list, as deleted or as kept. Step 5.4 says what happens to `plan.md` after the answer.
 - If an artifact has 🤖 items, list each 🤖 item with its new claim, or as an agent decision of `plan.md`.
-- A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user, because the mark goes away only after an action of the user: a yes in the question turn of step 2, an answer that supersedes the decision, or an edit of the user. Do not ask the user to confirm the decision again, also on a resumed run.
+- A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user, because the mark goes away only after an action of the user: a yes in the question turn of step 2, an answer that supersedes, changes, or corrects the decision, or an edit of the user. Do not ask the user to confirm the decision again, also on a resumed run.
 - Say the final `skip_specs` state: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
 - Name each part of the answer whose artifact the resume rule kept. Tell the user to add the part to that artifact by hand.
@@ -425,7 +425,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Before you mark an item, check each sentence of the item, not only its main source.
 - If one sentence holds a new claim, mark the item, and name that claim in a few words.
 - If no sentence holds a new claim, do not mark the item.
-- One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet. Step 2.3 removes the 🤖 when the user said yes to a requirement from that decision, or from a contract point that step 2 decided.
+- One exception: a `### Decision` from a decision with 🤖 in `plan.md` keeps its 🤖, because the user did not confirm it yet. Step 2.3 removes the 🤖 when the user said yes to a requirement from that decision, or from a contract point that step 2 decided, or when a part of the answer supersedes, changes, or corrects the decision.
 - These are not new claims:
   - other words for a `plan.md` item or an answer;
   - another form of a `plan.md` item, for example a `#### Scenario:` that only restates its requirement;

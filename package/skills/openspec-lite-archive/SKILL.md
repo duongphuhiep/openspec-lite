@@ -416,5 +416,5 @@ When each item has a draft, go to step 6.
 - Start the end reply with the summary of step 6, with its groups and its counts. One line with the result of the archive can come before the summary.
 - Then list the specs that changed, the ADRs that you wrote, the ADRs that you marked as superseded, and the archive path.
 - If a decision of `plan.md` has no ADR, name the decision. If a requirement holds the decision, name the requirement.
-- If a requirement holds the reason of such a decision, name that requirement. The requirement can be another requirement than the requirement that holds the decision.
+- If a requirement holds the reason of such a decision, name that requirement.
 - If no ADR and no requirement holds the reason of such a decision, say that the reason now exists only in `openspec/changes/archive/`.

@@ -134,7 +134,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - If `plan-status.mjs` prints nothing, say nothing about commits, and go to step 2.
 - If `plan-status.mjs` prints a line, commit only `openspec/changes/<name>/plan.md`, from the OpenSpec root, so that a file that the user staged stays out of the commit. Run `git add -- openspec/changes/<name>/plan.md` alone. Then run `git commit -m "plan.md: checkpoint before apply" -- openspec/changes/<name>/plan.md` alone.
 - If the commit succeeds, tell the user that you committed `plan.md`.
-- If `git add` or `git commit` fails, show the error. Tell the user to commit `plan.md` themselves before the next run.
+- If `git add` or `git commit` fails, show the error, and give no other commit advice. Step 2 copies the note of `plan-status.mjs`, and the note tells the user to commit `plan.md`.
 - Wait for the result of `git commit` before you go to step 2. Do not run a command of step 2 in parallel with the commit.
 - Go to step 2.
 

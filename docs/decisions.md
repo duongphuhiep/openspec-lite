@@ -4417,6 +4417,8 @@ This revises D119, D166, D182, D219, and D256.
 
 **Rationale**: the user asked to run all scenarios, to ignore the defects that the model causes, and to confirm and fix each defect that a skill or a scenario causes. Run: `.scenario-runs/20261114-482ccfa-full/`. Result: 44 of 50 runs and 308 of 320 checks pass. The six failed runs are 4 r2 (llm), 4c-1 (llm), 21a (scenario), 23a r1 (llm), and 23c ×2 (llm, and the 23c result line).
 
+
+**Status**: D323 revises item 3: a "left to you" answer gives a 🤖 decision only if the decision rule records the choice.
 ---
 
 ## D316: plan-lite Fits Large Changes, and Only a Team Convention Is a Reason to Upgrade
@@ -4516,3 +4518,29 @@ The next steps of the flow are: propose asks for a tasks preview, the tasks prev
 3. Scenario 7 checks that upgrade asks no reason, asks no team-convention question, and does not advise against the upgrade.
 
 **Rationale**: review round 5 of `v1.8.0..local`. "Usual" told the agent that other reasons exist, against the "only reason" of D316, `GLOSSARY.md`, and the README.
+
+---
+
+## D323: The Decision Rule Filters a "Left to You" Choice, and Records a Surprising Choice
+
+**Decision**:
+
+1. If the user leaves a point to the agent, the agent decides the point, and records a 🤖 decision only if the decision rule records the choice, as for each other choice of the agent. Otherwise, the choice goes to the end summary. An obvious choice gets no decision. This revises D315 item 3.
+2. The decision rule gets criterion (3): a choice that is not obvious, and that can surprise a reader of the code or a user, or that gives a behavior that a user does not expect. Criterion (3) also applies to an internal choice. The end table writes what can surprise in the Why column.
+
+**Rationale**: review B round 1, remark 1, of `v1.8.0..local`. The question rule always recorded a 🤖 decision for a "left to you" point, and the answer rule recorded one only through the decision rule. For an obvious choice, the two rules gave two results. The user chose the decision rule: many obvious 🤖 decisions are noise. The user also wants a record of each non-obvious choice that can surprise, also when the choice is not visible and not a close call. Criteria (1) and (2) did not cover such a choice.
+
+---
+
+## D324: Fixes of Review B Round 1
+
+**Decision**:
+
+1. Upgrade: an answer that supersedes, changes, or corrects a 🤖 decision removes the 🤖. Each bullet that lists the exceptions names the same three verbs.
+2. Upgrade: a fact goes to `## Context` of `design.md`. Step 2.3 and the last check of the split rule both write facts.
+3. Apply end summary: one bullet gives the stale note for an edit of Goal, Background, Non-Goals, or Constraints. A changed Background or non-goal is quoted, because a non-goal has no ID.
+4. Tasks preview: after a reply that changes an item, step 8 runs again. The summary lists only the changed items, and item 8 asks each open question that is still open.
+5. Archive: the end reply no longer says that the requirement that holds the reason can be another requirement. The sentence described one scenario, and the bullet before it already covers the case.
+6. Apply: if the checkpoint commit fails, the skill shows the error and gives no other commit advice, because the `plan-status.mjs` note of step 2 already asks for the commit.
+
+**Rationale**: review B round 1 of `v1.8.0..local`, with a focus on overlaps, scenario hints, flow, ambiguity, and gaps. Each remark had one clear fix.

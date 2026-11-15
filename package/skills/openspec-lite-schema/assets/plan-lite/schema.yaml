@@ -147,7 +147,7 @@ apply:
     3. Read each file that you added or changed. Find each thing in the file that matches criterion (1) of the decision rule, and that `## Decisions` does not hold. Record each such thing as a 🤖 decision.
     4. Check each decision with no 🤖. Move each choice that you added to a decision with no 🤖 into its own 🤖 decision.
     5. Record each point that you cannot close with the question rule as an open question.
-    6. Check each 🤖 decision that you added in this run. If a 🤖 decision matches neither criterion (1) nor criterion (2) of the decision rule, remove the 🤖 decision.
+    6. Check each 🤖 decision that you added in this run. If a 🤖 decision matches none of the criteria (1), (2), and (3) of the decision rule, remove the 🤖 decision.
     7. Check the facts. Do this check last, because checks 2 to 6 can add facts:
        - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
        - Check each fact that you added in this run, except a fact that the user gave (👤). If a reader can easily deduce the fact from the code or the file list, with no long analysis, the fact is obvious, also if you found the fact with a run.
@@ -162,9 +162,10 @@ apply:
        - For each open question that you removed, give its answer.
        - If the preview is not absent, and you edited `## Facts`, `## Decisions`, or `## Open Questions`, say that the plan hash does not cover these sections, so your edits do not make the preview stale.
        - If you added, changed, or removed a constraint, list the constraint with its ID.
-       - If you added, changed, or removed a constraint, and the preview is not absent, say that the constraint edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
-       - If you changed the Goal, quote the old outcome and the new outcome. If the preview is not absent, say that the Goal edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
-       - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1) or (2) of the decision rule. In the Why column, write the visible result for (1), or the close options for (2).
+       - If you changed the Goal, quote the old outcome and the new outcome.
+       - If you changed Background or Non-Goals, quote the old text and the new text.
+       - If you changed Goal, Background, Non-Goals, or Constraints, and the preview is not absent, say that the edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
+       - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1), (2), or (3) of the decision rule. In the Why column, write the visible result for (1), the close options for (2), or what can surprise for (3).
        - If you added no 🤖 decision, show no table.
     2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
     3. Do the done check: Is each outcome of the Goal met? Is each Constraint met? Is `## Open Questions` empty? An HTML comment does not count as a question.
@@ -181,7 +182,7 @@ apply:
     - A question is open only while you cannot decide the question and cannot find its answer.
     - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
     - You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. For example, the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
-    - If the user answered that a point is left to you, the point is not open any more, also when the code must match something outside the repo. Decide the point with the decision rule, and record a 🤖 decision that says that the user left the choice to you.
+    - If the user answered that a point is left to you, the point is not open any more, also when the code must match something outside the repo. Decide the point. Record a 🤖 decision only if the decision rule records the choice, as for each other choice of yours. Otherwise, give the choice in the end summary.
     - To close a question, read the code and the docs, or run a command.
     - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
     - If you find the answer, and the answer is obvious, give the answer in the end summary.
@@ -229,7 +230,7 @@ apply:
 
     ## Decision rule: when to record a decision
 
-    - Record a decision when criterion (1) or criterion (2) is true.
+    - Record a decision when criterion (1), criterion (2), or criterion (3) is true.
     - Criterion (1): you put something in the code, or plan to put something in the code, that changes a visible result, and plan.md and the user did not say it. The thing is your choice, so record the thing as a decision.
     - A visible result is one of these things:
       - a UI, a public interface, or the signature of an exported function
@@ -241,8 +242,9 @@ apply:
       - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
     - plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you put in the code is your choice, for example the height, the file format, or the file name.
     - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
-    - Do not record your other choices.
-    - Record only the part of the decision that matches criterion (1) or criterion (2).
+    - Criterion (3): your choice is not obvious, and the choice can surprise a reader of the code or a user, or gives a behavior that a user does not expect. Criterion (3) also applies to an internal choice.
+    - Do not record your other choices. An obvious choice gets no decision, also when the user left the choice to you.
+    - Record only the part of the decision that matches criterion (1), criterion (2), or criterion (3).
     - If you need an internal detail to explain the reason, write the detail in the "because" part, not in the title or in "Chose X".
 
     ## Decision format
