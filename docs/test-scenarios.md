@@ -390,7 +390,7 @@ This scenario checks that no non-obvious knowledge and no contract of `plan.md` 
 
 **Expected**:
 
-- Each item tagged `spec` is in a requirement of the delta. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. If no ADR holds the file name decision, the end summary says that the reason of the decision now exists only in `openspec/changes/archive/`, names the requirement that holds the decision, and says that the requirement keeps only the rule (D204, D291). Each item tagged `ADR` is in an ADR. The Goal outcome "Export the report table as CSV" is a requirement, or is in the requirement of a constraint, because it is a contract for the users (D290).
+- Each item tagged `spec` is in a requirement of the delta. The file name decision is a contract for the finance team, so it becomes a requirement. An ADR for it is optional. If no ADR holds the file name decision, the end summary names the requirement that holds the decision, and the requirement text keeps the reason of the decision (D328). Each item tagged `ADR` is in an ADR. The Goal outcome "Export the report table as CSV" is a requirement, or is in the requirement of a constraint, because it is a contract for the users (D290).
 - For each item that the agent does not draft, the summary names the item and says why it skips it. No item disappears with no word. The summary gives each promoted item by its `plan.md` ID, if it has one, and its title or a short form of its text, in its group, and does not print the full text of a draft (D289).
 - The reason for the semicolon (French Excel) stays in the requirement text or in the ADR, not only in a scenario title. It is the non-obvious part (D147).
 - No line of the written deltas or specs holds a source emoji, for example 👤. No spec or ADR gets a 👤 for an item that has none in `plan.md` (D252).
@@ -693,7 +693,7 @@ Common start state for 23a and 23b:
 - F2 is not selected, because a fact passes only the Non-obvious fact filter, and a reader sees F2 in the code (D310). F1 is never in the not-drafted group, because a 👤 fact is always non-obvious (D308).
 - `openspec/specs/<capability>/spec.md` holds requirements for the Goal outcome, C1, C2, D2, and D3. Each requirement has at least one `#### Scenario:`. The C2 requirement keeps its reason, the CMS limit, in its text. No line of the spec holds a 🤖, a 👤, or a `plan.md` ID such as `C1` or `D2` (D142, D181, D252).
 - `openspec/adr/` holds an ADR for D1, with `Status: Accepted` and `Change: add-slugify`. The ADR makes no claim that `plan.md`, the code, or the facts do not state (D289). An ADR for D2 fails, because its reason passes no filter (D298). An ADR for D3 is optional.
-- The end summary names D2 as a decision with no ADR, and names the requirement that holds it. If a requirement holds the reason of D2, also another requirement, for example the C1 requirement, the summary names that requirement. Only if no requirement holds the reason, the summary says that the reason exists only in `openspec/changes/archive/` (D291, D313, D314). The change is in `openspec/changes/archive/`.
+- The end summary names D2 as a contract decision, and names the requirement that holds it (D314, D328). The change is in `openspec/changes/archive/`.
 
 ## Running the Scenarios Headless
 

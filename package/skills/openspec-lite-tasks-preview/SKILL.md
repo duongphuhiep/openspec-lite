@@ -269,7 +269,7 @@ When the checks are done, go to step 6.
 - A question is open only while you cannot decide the question and cannot find its answer.
 - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
 - You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. For example, the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
-- If the user answered that a point is left to you, the point is not open any more, also when the code must match something outside the repo. Decide the point. Record a 🤖 decision only if the decision rule records the choice, as for each other choice of yours. Otherwise, give the choice in the end summary.
+- If the user answered that a point is left to you, or the question ends with "(left to the agent by the user)", the point is not open any more, also when the code must match something outside the repo. Decide the point. Record a 🤖 decision only if the decision rule records the choice, as for each other choice of yours. Otherwise, give the choice in the end summary.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary of step 8.
@@ -308,7 +308,7 @@ When the checks are done, go to step 6.
 - If a part of the reply leaves a choice to you, follow the question rule for that point.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
-- An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
+- An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary. One exception: if the answer leaves the choice to you, follow the question rule.
 - After you record the reply, read the reply again, part by part. If a part of the reply is in no section of plan.md, record the part now, unless the part only asks you to run a command or a skill, or asks you a question.
 - You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.

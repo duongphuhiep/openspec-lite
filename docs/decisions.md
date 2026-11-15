@@ -4110,7 +4110,7 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D291: Fixes of Review Round 2 on v1.8.0..local
 
-**Status**: Item 3 is revised by D313: the line about the archive folder applies only when no ADR and no requirement holds the reason.
+**Status**: Item 3 is revised by D313: the line about the archive folder applies only when no ADR and no requirement holds the reason. D328 removes the line: step 5 keeps the reason in the requirement text.
 
 **Decision**:
 
@@ -4601,3 +4601,20 @@ This revises D323.
 11. Archive step 4 no longer repeats the summary group of a contract decision, or the not-drafted list of the facts.
 
 **Rationale**: review B round 4 of `v1.8.0..local`. Each remark had one clear fix.
+
+---
+
+## D328: Fixes of Review B Round 5
+
+**Decision**:
+
+1. The answer rule of `apply.instruction` and of the tasks preview has one exception to "do not put the answer only in the end summary": an answer that leaves the choice to the agent follows the question rule.
+2. Propose keeps an open question that the user leaves to the agent, and ends its text with "(left to the agent by the user)". The question rules of `apply.instruction` and of the tasks preview treat such a question as a point that the user left to the agent.
+3. Upgrade: a choice that the user leaves to the agent is not a requirement source. For a contract point, upgrade writes no requirement, writes the 🤖 decision, and names the point in the summary.
+4. Apply check 3 does not record a decision for a thing that must match something outside the repo, when the question rule cannot close the point. Check 5 records the point as an open question.
+5. Apply keeps the "tests did not run" result for step 6, which says it one time.
+6. Archive step 3 drops the clause "also when the code does not show the limit", a leftover of D315.
+7. Archive no longer says that the reason of a contract decision exists only in the archive folder. Step 5 keeps each reason in the requirement text, so the note never applied. Scenarios 6 and 23c expect the requirement that holds the decision. This revises D204 item 3, D291 item 3, and D313.
+8. Archive step 6 gives the guard-path group rule one time.
+
+**Rationale**: review B round 5 of `v1.8.0..local`. Remarks 1 to 3 complete D323. Each remark had one clear fix.

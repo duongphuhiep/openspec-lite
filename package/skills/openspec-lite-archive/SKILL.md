@@ -220,7 +220,7 @@ The guard path:
 - Select each item that passes at least one filter. The filters are **Non-obvious**, **Surprising**, **Contract**, and **Non-obvious fact**.
 - Apply the **Non-obvious**, **Surprising**, and **Contract** filters to each outcome, constraint, and decision.
 - Apply only the **Non-obvious fact** filter to a fact.
-- If `plan.md` says that a constraint applies only to this change, do not select the constraint, also when the code does not show the limit. Its not-drafted reason is that it applies only to this change.
+- If `plan.md` says that a constraint applies only to this change, do not select the constraint. Its not-drafted reason is that it applies only to this change.
 - **Non-obvious**: a reader cannot deduce the item from the code in 5 minutes.
 - **Surprising**: the item would surprise a new team member.
 - **Contract**: externally observable behavior that a client or another team depends on.
@@ -333,7 +333,7 @@ When each item has a draft, go to step 6.
 
 ### Step 6: Build the summary
 
-- Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft. On the guard path, step 4 does not run, so the only group is the decisions that go to an ADR.
+- Input: the drafts of step 5, the files of an earlier run of step 5, and the items that step 4 does not draft. On the guard path, step 4 does not run.
 - Output: the summary, for the end reply.
 - Build a short summary of the promotion. Do not print the summary now. Section 3 prints the summary at the start of the end reply, after the writes and the archive. If a step from step 7 to step 11 stops, print the summary before the stop report. On the guard path, guard step 1 prints the summary after the ADR writes.
 - Do not print the full text of a draft or of a file of an earlier run.
@@ -341,7 +341,7 @@ When each item has a draft, go to step 6.
 - In the summary, put the items in these groups. Start each group with its count. Omit an empty group.
   - The decisions that go to an ADR.
   - The outcomes of the Goal and the constraints that go to a requirement.
-  - The decisions that are also a contract and go to a requirement. For each decision, name the requirement that holds the decision. If the decision has a reason, no ADR, and no requirement text that holds the reason, say that the reason now exists only in `openspec/changes/archive/`.
+  - The decisions that are also a contract and go to a requirement. For each decision, name the requirement that holds the decision.
   - The facts that go into a requirement text as its reason.
   - The facts that go to the `## Context` of an ADR. Name the ADR for each fact.
   - The facts that get an ADR of their own, from step 4.
