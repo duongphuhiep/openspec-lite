@@ -15,7 +15,7 @@ Write all prose in ASD-STE100 Simplified Technical Language.
 
 ## Write Instructions as Code
 
-The instructions in `SKILL.md`, `schema.yaml`, and the template comments are code in natural language. An agent runs them with no human to fix a misread.
+The instructions in `SKILL.md`, `schema.yaml`, and the template comments are code in natural language.
 
 - A file is a program.
 - An ordered step is a statement. A rule is a function that the steps call.

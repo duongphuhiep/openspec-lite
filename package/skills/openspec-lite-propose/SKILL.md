@@ -186,13 +186,13 @@ Do these checks in order. When the checks are done, go to section 3.
 - Record each open point as an open question in `## Open Questions`. The tasks preview tries to decide the open question later.
 - If the user says to keep a question open, end the text of the question with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
+- If the request or a reply of the user leaves a point to the agent, keep or record the point as an open question in `## Open Questions`, and end the text of the question with "(left to the agent by the user)". The tasks preview or apply decides the point later.
 
 ### Answer rule
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
 - An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
-- If the user answers an open question of `plan.md`, remove the question from `## Open Questions`.
-- If the answer leaves the point to the agent, do not remove the question. End the text of the question with "(left to the agent by the user)". The tasks preview or apply decides the point later.
+- If the user answers an open question of `plan.md`, remove the question from `## Open Questions`, unless the answer leaves the point to the agent. For an answer that leaves the point to the agent, follow the question rule.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
 - Record each part of the answer in one section only. If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
@@ -203,10 +203,10 @@ Do these checks in order. When the checks are done, go to section 3.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
 - If the user names an item of `plan.md`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
-- Record each other choice or instruction in the answer as a decision with no 🤖.
+- Record each other choice or instruction in the answer as a decision with no 🤖. A part that leaves a choice to the agent is not a choice of the user: follow the question rule.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
-- An answer to an open question is a part of the answer. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
+- An answer to an open question is a part of the answer. Record the answer in a section of plan.md. Do not put the answer only in the end summary. One exception: an answer that leaves the point to the agent follows the question rule.
 - After you record the answer, read the answer again, part by part. If a part of the answer is in no section of plan.md, record the part now, unless the part only asks you to run a command or a skill, or asks you a question.
 
 ### Fact rule

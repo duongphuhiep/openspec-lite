@@ -4618,3 +4618,18 @@ This revises D323.
 8. Archive step 6 gives the guard-path group rule one time.
 
 **Rationale**: review B round 5 of `v1.8.0..local`. Remarks 1 to 3 complete D323. Each remark had one clear fix.
+
+---
+
+## D329: Fixes of Review B Round 6
+
+**Decision**:
+
+1. Upgrade: a part of the answer that leaves a choice to the agent is not a requirement source, in the requirement-source rule and in the split rule. Step 2.2 writes no requirement for the part. Step 2.3 writes the 🤖 decision, if the decision rule records the choice, and names a contract point in the summary.
+2. The answer rules of propose, `apply.instruction`, and the tasks preview say that a part that leaves a choice to the agent is not a choice of the user, so it never becomes a decision with no 🤖. Propose routes such a part to its question rule with one bullet.
+3. The propose question rule records a point that the request or a reply leaves to the agent as an open question with the marker "(left to the agent by the user)", also when no question existed before.
+4. Apply keeps the "no test command" result for step 6, and step 6 item 4 says why the tests did not run.
+5. The leftover plan.md questions rule also reads the other content of `design.md` and `specs/`. If an artifact holds the answer, the rule names the question as closed, with that artifact, and does not ask the user to answer.
+6. Archive step 1 and the upgrade question turn read the marker "(left to the agent by the user)". Archive tells the user to run `openspec-lite-apply`, which decides the point. Upgrade decides the point and does not ask it.
+
+**Rationale**: review B round 6 of `v1.8.0..local`. Remarks 1, 2, 3, and 6 complete D328. Each remark had one clear fix.

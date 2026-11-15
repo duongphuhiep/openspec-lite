@@ -147,13 +147,14 @@ The guard path:
 ### Leftover plan.md questions
 
 - Run this rule only when a step of the guard calls it. It is not a check of its own.
-- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, and `## Open Questions` of `openspec/changes/<name>/design.md`.
+- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, `## Open Questions` of `openspec/changes/<name>/design.md`, and the other content of `design.md` and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
+- If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
 - If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
@@ -201,7 +202,8 @@ The guard path:
 - If the user says yes to "Archive anyway?", go to step 2.
 - If the user says no to "Archive anyway?", give the paths below, then stop:
   - For each outcome or constraint that is not met, give two paths: implement it with `openspec-lite-apply`, or remove it from `plan.md` and propose it as a separate change with `openspec-lite-propose`.
-  - For each open question that is left, tell the user to run `openspec-lite-apply` with the answer, so that apply records it.
+  - For each open question that is left and does not end with "(left to the agent by the user)", tell the user to run `openspec-lite-apply` with the answer, so that apply records it.
+  - For each open question that ends with "(left to the agent by the user)", tell the user to run `openspec-lite-apply`, which decides the point.
   - Tell the user to run `openspec-lite-archive` again.
   - If the user names an item that is not in `plan.md`, say: to keep the item, add it to `plan.md` first.
 

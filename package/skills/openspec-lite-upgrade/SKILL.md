@@ -111,13 +111,14 @@ Do these checks in order.
 ### Leftover plan.md questions
 
 - Run this rule only when a step of the guard calls it. It is not a check of its own.
-- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, and `## Open Questions` of `openspec/changes/<name>/design.md`.
+- Input: `## Open Questions` of `openspec/changes/<name>/plan.md`, `## 0. Open questions` of `openspec/changes/<name>/tasks.md`, `## Open Questions` of `openspec/changes/<name>/design.md`, and the other content of `design.md` and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - For each open question of `plan.md`, check if `## 0. Open questions` of `tasks.md` or `## Open Questions` of `design.md` holds the question. A missing file holds no question.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
+- If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
 - If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
@@ -169,6 +170,7 @@ Close the open questions of `plan.md`:
 
 - Read each question in `## Open Questions` of `plan.md`.
 - A question that ends with "(kept open by the user)" is a kept question.
+- A question that ends with "(left to the agent by the user)" is a point that the user left to you. Decide the point with the question rule, and do not ask the question.
 - For each question that is not a kept question, try to decide the question or find its answer. Use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
 - In the question turn of step 2, do not do the `plan.md` writes of the question rule: record no fact or decision in `plan.md`, and remove no question from `plan.md`. Plan each answer for an artifact or for the summary, as the next bullets say.
 - If you find an answer that is a non-obvious fact, plan the answer as a fact in `design.md` → `## Context`.
@@ -256,7 +258,7 @@ Read the answer of the user:
 - Write each fact that step 2 planned to `## Context`, with its source emoji, unless a part of the answer corrected the fact.
 - Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with 🤖 at the end of its heading, unless a part of the answer superseded, changed, or corrected the decision, or the user said yes to a requirement from that decision. If a part of the answer superseded, changed, or corrected the decision, follow the bullet of this step that starts with "If a part of the answer supersedes". If the user said yes to a requirement from the decision, follow the bullet of this step that starts with "If the user said yes in the question turn of step 2".
 - Write each choice that the user made in the answer and that is not a contract to `## Decisions`, with no 🤖.
-- If a part of the answer leaves a choice to you, decide the point with the question rule. Write a decision with 🤖 to `## Decisions` only if the decision rule records the choice. Otherwise, give the choice in the summary. A choice that the user leaves to you is not a requirement source: if the point is a contract, write no requirement for the point, write the decision with 🤖, and name the point in the summary.
+- If a part of the answer leaves a choice to you, decide the point with the question rule. Write a decision with 🤖 to `## Decisions` only if the decision rule records the choice. Otherwise, give the choice in the summary. If the point is a contract, also name the point in the summary, because the point has no requirement.
 - If the user said yes in the question turn of step 2 to a requirement that you planned from a decision with 🤖, or from a contract point that step 2 decided, write that decision with no 🤖, because the yes confirms the choice. In the summary, say that the yes removed the mark.
 - An open question, also a kept question that no message of the user answered, that does not change the specs, the approach, or the tasks goes to `## Open Questions`, as the `design` instruction says. A kept question also stays in `plan.md`.
 - An open question that changes the specs, the approach, or the tasks has no slot. Do not put that question, or a note that points to it, in `design.md`.
@@ -385,7 +387,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - A requirement can come only from one of these sources:
   - a constraint of `plan.md`;
   - a decision of `plan.md` that is also a contract;
-  - an answer of the user.
+  - an answer of the user, except a part that leaves a choice to you.
 - A contract is externally observable behavior that a client or another team depends on.
 - Internal helpers, log text, and UI layout are not contracts.
 - The format of a file or of an output that another program reads is a contract, for example the line format of a log file that a monitor parses, or the date format of a JSON field.
@@ -405,7 +407,8 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice.
 - A constraint of the answer is a requirement source, like a constraint of `plan.md`. If `<dir>/specs/` holds no delta, write its requirement with no new question, because the answer of the user is the source of the requirement. If the resume rule kept a delta in `<dir>/specs/`, follow the kept-artifact bullet of this rule.
-- A choice of the answer goes to the specs only when the choice is a contract.
+- A choice of the answer goes to the specs only when the choice is a contract, and the user made the choice.
+- A part of the answer that leaves a choice to you is not a choice of the user. Step 2.3 says what to write for the part.
 - A choice of the answer that is not a contract goes to `## Decisions` of `design.md`.
 - A part of the answer that changes an outcome of the Goal goes to What Changes of `proposal.md`, and to the requirement of that outcome if step 2 planned one.
 - A part of the answer that changes or removes a named item of `plan.md` changes or removes the copy of the item in the artifact that holds the copy.
