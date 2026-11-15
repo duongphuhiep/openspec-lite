@@ -4633,3 +4633,18 @@ This revises D323.
 6. Archive step 1 and the upgrade question turn read the marker "(left to the agent by the user)". Archive tells the user to run `openspec-lite-apply`, which decides the point. Upgrade decides the point and does not ask it.
 
 **Rationale**: review B round 6 of `v1.8.0..local`. Remarks 1, 2, 3, and 6 complete D328. Each remark had one clear fix.
+
+---
+
+## D330: Fixes of Review B Round 7
+
+**Decision**:
+
+1. The leftover plan.md questions rule asks the user to write an answer only when no artifact holds the question and no artifact holds its answer. Archive guard step 5 counts only such questions.
+2. The end of propose does not ask a kept question, or a question with the marker "(left to the agent by the user)".
+3. The Level 1 test of propose does not count a point that the user leaves to the agent as an open point. On yes, the fix decides the point.
+4. The question rule of `apply.instruction` and of the tasks preview: if the user leaves to the agent a fact that only the user knows, the agent records no guess as a fact. The agent decides how the code handles the unknown fact, records that choice with the decision rule, and says in the end summary that the fact stays unknown.
+5. Upgrade: a yes with no requirement text to the requirement question gets a question for the text. No answer to the requirement question gives no spec, as "None", and a line in the summary.
+6. Archive: the general rule says that the end reply holds the summary in place of the text of a draft, not "only the summary". Section 3 adds the other lists.
+
+**Rationale**: review B round 7 of `v1.8.0..local`. Each remark had one clear fix.

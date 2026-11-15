@@ -69,7 +69,7 @@ Do these checks in order.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
-- If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+- If no artifact holds the question, and no artifact holds its answer, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
@@ -271,6 +271,7 @@ When the checks are done, go to step 6.
 - You cannot decide a question when its answer is an intent of the user, or a fact that only the user knows.
 - You cannot decide a point when the code must match something outside the repo, and no code, doc, or run that you can reach shows it. For example, the folder where a deploy tool expects the build output. A convention or "Reason not checked." does not decide such a point, because the other side can use another form. Record such a point as an open question, not as a 🤖 decision.
 - If the user answered that a point is left to you, or the question ends with "(left to the agent by the user)", the point is not open any more, also when the code must match something outside the repo. Decide the point. Record a 🤖 decision only if the decision rule records the choice, as for each other choice of yours. Otherwise, give the choice in the end summary.
+- If the user leaves to you a fact that only the user knows, do not record a guess as a fact. Decide how the code handles the unknown fact, and record that choice with the decision rule. Say in the end summary that the fact stays unknown.
 - To close a question, read the code and the docs, or run a command.
 - If you find the answer, and the answer is a non-obvious fact, record the fact with the fact rule.
 - If you find the answer, and the answer is obvious, give the answer in the end summary of step 8.

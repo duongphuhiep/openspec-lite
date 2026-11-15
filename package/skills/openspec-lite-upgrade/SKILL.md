@@ -119,7 +119,7 @@ Do these checks in order.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
-- If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+- If no artifact holds the question, and no artifact holds its answer, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
@@ -196,6 +196,8 @@ Ask the question turn:
 - Ask each open question with the ask rule.
 - For each planned requirement in the list, show its text, and ask if you can write it.
 - For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", upgrade writes no spec (step 2.2).
+- If the user answers yes to the question if the change has a requirement, but gives no requirement text, ask for the text, and end the turn. Do not write an artifact before the answer.
+- If the user gives no answer to the question if the change has a requirement, write no spec, as for "None", and name the question in the summary.
 - End the turn, and wait for the answer.
 
 Read the answer of the user:

@@ -20,7 +20,7 @@ How to read this skill:
 ## General rules
 
 - Ask no approval for a draft, an ADR of an earlier run, a delta file of an earlier run, or a `Status:` edit. Do not ask the user to answer yes, no, or edit for a draft.
-- Do not print the full text of a draft or of a file of an earlier run. The end reply holds only the short summary of step 6.
+- Do not print the full text of a draft or of a file of an earlier run. In place of the text of a draft, the end reply holds the short summary of step 6.
 - The user does not see the output of a tool call. To print a text for the user, write the full text in your reply.
 - Write each draft exactly as step 5 drafted the draft.
 - Do not remove a 🤖 yourself. Only the user removes a 🤖.
@@ -139,7 +139,7 @@ The guard path:
    - Ask: "Archive the change now with `openspec archive <name> --yes`?"
    - If `tasks.md` has unchecked tasks, name how many in the same question, because `--yes` skips the CLI prompt for them.
    - If `tasks.md` has no unchecked tasks, or does not exist, say nothing about tasks.
-   - If `plan.md` still has open questions that no artifact holds, name how many in the same question, because the archive moves `plan.md` to the archive folder, and no artifact holds these questions.
+   - If `plan.md` still has open questions that no artifact holds, and that no artifact answers, name how many in the same question, because the archive moves `plan.md` to the archive folder, and no artifact holds these questions.
    - After the archive question, end your turn, and wait for the answer.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
@@ -155,7 +155,7 @@ The guard path:
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
-- If no artifact holds the question, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
+- If no artifact holds the question, and no artifact holds its answer, name the question. Tell the user to write the answer of the question in an artifact of the change before the next stock skill or archive, because the stock skills do not read `plan.md`. Tell the user that the question can then be deleted from `plan.md`.
 
 ### Schema check
 
