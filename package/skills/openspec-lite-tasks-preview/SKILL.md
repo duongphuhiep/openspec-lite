@@ -113,7 +113,7 @@ Do these checks in order.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, record the other parts of the reply with the answer rule. List each item that you recorded, with its ID. Then tell the user to make the change in `plan.md` and to run this skill again, and end your turn.
 - A new constraint in a reply follows the answer rule.
 - If a reply after step 8 changes no item of `plan.md`, answer the reply, and do not run step 8 again.
-- If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Update each task of the preview that the changed items make wrong. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again. In the end summary of item 3, list only the items that the reply changed. Item 8 asks each open question that is still open.
+- If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, record the reply with the general rules. Add, update, or remove each task, so that the preview follows the changed items. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task, and change the task to follow the answer. Then run step 8 again. In the end summary of item 3, list only the items that the reply changed. Item 8 asks each open question that is still open.
 
 ### Failure rule
 
@@ -305,7 +305,7 @@ When the checks are done, go to step 6.
 - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
 - If the user names an item of `## Facts`, `## Decisions`, or `## Open Questions`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
-- If a part of the reply leaves a choice to you, record no decision for that part. Decide the point with the decision rule, and record a 🤖 decision if the decision rule records the choice.
+- If a part of the reply leaves a choice to you, follow the question rule for that point.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
@@ -328,8 +328,8 @@ When the checks are done, go to step 6.
   - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
 - plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you plan for the code is your choice, for example the height, the file format, or the file name.
 - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
-- Criterion (3): your choice is not obvious, and the choice can surprise a reader of the code or a user, or gives a behavior that a user does not expect. Criterion (3) also applies to an internal choice.
-- Do not record your other choices. An obvious choice gets no decision, also when the user left the choice to you.
+- Criterion (3): your choice is not obvious, and the choice can surprise a reader of the code or a user. Criterion (3) also applies to an internal choice.
+- Do not record your other choices. An obvious choice gets no decision.
 - Record only the part of the decision that matches criterion (1), criterion (2), or criterion (3).
 - If you need an internal detail to explain the reason, write the detail in the "because" part, not in the title or in "Chose X".
 

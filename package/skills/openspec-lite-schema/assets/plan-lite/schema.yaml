@@ -144,7 +144,7 @@ apply:
        - If the code no longer matches a 🤖 decision, update the 🤖 decision, so that the decision names each condition.
        - If the code does not match a decision with no 🤖, fix the code, because plan.md wins.
        - If the code cannot follow a decision with no 🤖, record the conflict as an open question, ask the open question with the ask rule, and end your turn.
-    3. Read each file that you added or changed. Find each thing in the file that matches criterion (1) of the decision rule, and that `## Decisions` does not hold. Record each such thing as a 🤖 decision.
+    3. Read each file that you added or changed. Find each thing in the file that matches criterion (1) or criterion (3) of the decision rule, and that `## Decisions` does not hold. Record each such thing as a 🤖 decision.
     4. Check each decision with no 🤖. Move each choice that you added to a decision with no 🤖 into its own 🤖 decision.
     5. Record each point that you cannot close with the question rule as an open question.
     6. Check each 🤖 decision that you added in this run. If a 🤖 decision matches none of the criteria (1), (2), and (3) of the decision rule, remove the 🤖 decision.
@@ -160,11 +160,11 @@ apply:
     1. Give the end summary:
        - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
        - For each open question that you removed, give its answer.
-       - If the preview is not absent, and you edited `## Facts`, `## Decisions`, or `## Open Questions`, say that the plan hash does not cover these sections, so your edits do not make the preview stale.
+       - If step 2 found the preview current, and you edited `## Facts`, `## Decisions`, or `## Open Questions`, say that the plan hash does not cover these sections, so your edits do not make the preview stale.
        - If you added, changed, or removed a constraint, list the constraint with its ID.
        - If you changed the Goal, quote the old outcome and the new outcome.
        - If you changed Background or Non-Goals, quote the old text and the new text.
-       - If you changed Goal, Background, Non-Goals, or Constraints, and the preview is not absent, say that the edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
+       - If you changed Goal, Background, Non-Goals, or Constraints, and step 2 found the preview current, say that the edit makes the preview stale, and that the next run of apply asks to regenerate the preview.
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1), (2), or (3) of the decision rule. In the Why column, write the visible result for (1), the close options for (2), or what can surprise for (3).
        - If you added no 🤖 decision, show no table.
     2. Do the test check, with the result of step 5, check 1: Did the tests run and pass? If the repo has no test command, and the change changes no behavior, the test check passes.
@@ -222,7 +222,7 @@ apply:
     - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
     - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".
     - Record each other choice or instruction of the reply, that is not a fact and not a constraint, in `## Decisions`, as a decision with no 🤖.
-    - If a part of the reply leaves a choice to you, record no decision for that part. Decide the point with the decision rule, and record a 🤖 decision if the decision rule records the choice.
+    - If a part of the reply leaves a choice to you, follow the question rule for that point.
     - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
     - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
     - An answer to an open question is a part of the reply. Record the answer in a section of plan.md. Do not put the answer only in the end summary.
@@ -242,8 +242,8 @@ apply:
       - the result on an error or an edge case, for example a status code, an exit code, an error message, or a thrown error
     - plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you put in the code is your choice, for example the height, the file format, or the file name.
     - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
-    - Criterion (3): your choice is not obvious, and the choice can surprise a reader of the code or a user, or gives a behavior that a user does not expect. Criterion (3) also applies to an internal choice.
-    - Do not record your other choices. An obvious choice gets no decision, also when the user left the choice to you.
+    - Criterion (3): your choice is not obvious, and the choice can surprise a reader of the code or a user. Criterion (3) also applies to an internal choice.
+    - Do not record your other choices. An obvious choice gets no decision.
     - Record only the part of the decision that matches criterion (1), criterion (2), or criterion (3).
     - If you need an internal detail to explain the reason, write the detail in the "because" part, not in the title or in "Chose X".
 

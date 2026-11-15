@@ -4544,3 +4544,22 @@ The next steps of the flow are: propose asks for a tasks preview, the tasks prev
 6. Apply: if the checkpoint commit fails, the skill shows the error and gives no other commit advice, because the `plan-status.mjs` note of step 2 already asks for the commit.
 
 **Rationale**: review B round 1 of `v1.8.0..local`, with a focus on overlaps, scenario hints, flow, ambiguity, and gaps. Each remark had one clear fix.
+
+---
+
+## D325: Fixes of Review B Round 2
+
+**Decision**:
+
+1. Upgrade does not copy the criteria of the decision rule. It plans a 🤖 decision when the decision rule of `apply.instruction` records the choice.
+2. For a choice that the user leaves to the agent, the answer rule points to the question rule. Only the question rule says what to record. The decision rule says only that an obvious choice gets no decision.
+3. Criterion (3) reads: the choice is not obvious, and the choice can surprise a reader of the code or a user. The clause "gives a behavior that a user does not expect" is removed, because "can surprise a user" covers it.
+4. The apply end check scans the added or changed files for criterion (1) or criterion (3).
+5. The apply end summary gives the plan hash notes only when step 2 found the preview current.
+6. After a reply that changes an item, the tasks preview adds, updates, or removes each task, so that the preview follows the changed items.
+7. The archive end reply names only a decision that went to a requirement and has no ADR. Step 6 already names the not-drafted decisions.
+8. Upgrade step 2.3 gives one pointer for each exception to the 🤖 mark.
+
+This revises D323.
+
+**Rationale**: review B round 2 of `v1.8.0..local`. Remarks 1 to 4 come from D323. Each remark had one clear fix.
