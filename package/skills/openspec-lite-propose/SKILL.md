@@ -21,7 +21,7 @@ How to read this skill:
 - When you record an open point, follow the question rule.
 - If `plan.md` exists, record each reply of the user with the answer rule.
 - If `plan.md` does not exist yet, keep each part of the reply that the answer rule records, also a change of an outcome of the Goal. Record each part with the answer rule in section 3, step 5.
-- If this workflow stops before `plan.md` exists, list in the stop report each answer of the user in this session, and each outcome that the user moved out. Tell the user to add the list to the request of the next run.
+- If this workflow stops before `plan.md` exists, and the stop is not the end of a finished Level 1 fix, list in the stop report each answer of the user in this session, and each outcome that the user moved out. Tell the user to add the list to the request of the next run.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
@@ -100,7 +100,7 @@ How to read this skill:
 - On yes, follow the moved-out outcome rule.
 - On yes, decide each point that the user leaves to the agent in the fix.
 - On yes, in the reply, name each point that the user left to the agent, and the choice that the fix made.
-- On yes, if a choice of the fix is a guessed value of a fact that only the user knows, say so in the reply.
+- On yes, if the choice for a point that the user left to the agent is a guessed value of a fact that only the user knows, say so in the reply.
 - On yes, if you find a point during the fix that you cannot decide, and that the user did not leave to you, stop the fix.
 - You cannot decide a point when the point is an intent of the user, or a fact that only the user knows.
 - You also cannot decide a point when the point is a value that must match something outside the repo, and no code or doc that you can reach shows the value.
@@ -108,7 +108,6 @@ How to read this skill:
 - At the stop, ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
 - After the stop, if the user answers the point, or leaves the point to you, finish the fix, and give the reply that the "On yes" bullets describe.
 - After the stop, if the user asks for a change, add the point that stopped the fix to the list of open points, and continue with section 2.
-- After the stop, if the user asks for a change, name the code that the stopped fix already changed in the summary of section 4.
 - After the stop, if the reply is not an answer, does not leave the point to you, and is not a request for a change, do not continue the fix, and create no change. Do what the reply asks.
 - After the stop, if the reply asks to undo the fix, revert only the code that the stopped fix changed.
 - After the stop, if the reply is not an answer, does not leave the point to you, and is not a request for a change, name the code that the stopped fix changed.
@@ -152,7 +151,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill. Give the OpenSpec root in the prompt of the skill call.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
-   - If the user declines the copy of the schema, stop.
+   - If the user says no to the replace question of `openspec-lite-schema`, stop.
    - Do not end your turn after `openspec-lite-schema` finishes.
    - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
    - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
@@ -234,7 +233,7 @@ Do these checks in order. When the checks are done, go to section 3.
 ### Answer rule
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. The step questions of this workflow are the split, Level 1, folder, resume, name, and tasks-preview questions.
+- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. The step questions of this workflow are the outcome, split, Level 1, folder, resume, name, and tasks-preview questions, and the replace question of `openspec-lite-schema`.
 - For an answer to a question of a workflow step, follow the step that asked the question. Record the other parts of the answer.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - Sort each other part of the answer into one of three kinds. Each part has one kind.
@@ -295,7 +294,8 @@ Do these checks in order. When the checks are done, go to section 3.
 ## 4. End
 
 1. Give the summary:
-   - Show the change name and the path of `plan.md`, if `plan.md` exists.
+   - Show the change name and the path of `plan.md`.
+   - If a stopped Level 1 fix changed code, name each file that the stopped fix changed.
    - Follow the moved-out outcome rule.
    - Go to step 2.
 2. At the end of the reply, after the summary, write the questions in one numbered list:

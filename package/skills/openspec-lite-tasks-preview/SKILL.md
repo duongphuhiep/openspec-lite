@@ -100,7 +100,7 @@ Do these checks in order.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill. Give the OpenSpec root in the prompt of the skill call.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
-   - If the user declines the copy of the schema, stop.
+   - If the user says no to the replace question of `openspec-lite-schema`, stop.
    - Do not end your turn after `openspec-lite-schema` finishes.
    - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
    - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
@@ -124,6 +124,7 @@ Do these checks in order.
 
 - Edit `plan.md` only as the plan.md rule says.
 - Each time the user replies, record the reply with the answer rule.
+- Before step 3, record the request that starts this run with the answer rule.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
 - When you find a fact, record the fact with the fact rule and the fact format.
@@ -350,7 +351,7 @@ When the checks are done, go to step 6.
 ### Answer rule: record a reply of the user
 
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. The step questions of this workflow are the folder questions of the OpenSpec root, and the pick question of the change selection.
+- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. The step questions of this workflow are the folder questions of the OpenSpec root, the pick question of the change selection, and the replace question of `openspec-lite-schema`.
 - For an answer to a question that a step of this workflow asks, follow the step that asked the question. Record the other parts of the reply.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.

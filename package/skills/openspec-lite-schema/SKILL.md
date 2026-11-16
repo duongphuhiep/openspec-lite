@@ -101,6 +101,7 @@ How to read this skill:
 
 - Input: the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped), and the `version` line of `openspec/schemas/plan-lite/schema.yaml` (repo).
 - Output: the next section to do, or stop.
+- The repo copy is the folder `openspec/schemas/plan-lite/`. The repo copy exists when the folder exists, also when the folder has no `schema.yaml`.
 - Read the shipped version and the repo version.
 - If the shipped `schema.yaml` is missing, or has no readable `version` line, the shipped assets are damaged. Stop, and tell the user to reinstall openspec-lite.
 - If no repo copy exists, go to section 3.
@@ -170,7 +171,7 @@ operations:
 - If section 3 did not run, report "The plan-lite schema is already current."
 - Report the `config.yaml` line that you added, or why you did not add the line.
 - If the script printed a `backup:` line, tell the user to compare the backup with the new schema and then delete the backup.
-- Run `git rev-parse --show-toplevel` alone.
+- Run `git rev-parse --show-toplevel` alone, from the OpenSpec root. If the OpenSpec root is not the current folder, start the command with `cd <root> && `.
 - If `git rev-parse --show-toplevel` succeeds, tell the user to commit each of `openspec/schemas/plan-lite/` and `openspec/config.yaml` that this run changed.
 - If this run changed no file, say nothing about commits.
 - If `git rev-parse --show-toplevel` fails, the repo does not use git. Say nothing about commits.

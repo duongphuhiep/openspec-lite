@@ -3767,6 +3767,8 @@ This revises D119, D166, D182, D219, and D256.
 
 **Rationale**: the review `.review-reports/review_20261112143415_eu.anthropic.claude-opus-5-5_99d8656-local.md`, 7 remarks. Four remarks came from the constraint split of D265.
 
+**Status**: D343 revises item 1: upgrade uses the constraint selection of archive (D339). A constraint that applies only to this change, or that says only what the change must not add, is not a requirement source.
+
 ## D267: Clear Wording of the Condition Rule in Apply Step 5 Check 2
 
 **Decision**: apply step 5 check 2 says the condition rule as two bullets. The second bullet says: do not count a condition as named only because the condition gives the same result as a named condition. The thumbnail example names both conditions, and says that both skip the thumbnail.
@@ -4608,6 +4610,8 @@ This revises D323.
 
 **Rationale**: review B round 4 of `v1.8.0..local`. Each remark had one clear fix.
 
+**Status**: D343 revises item 2: the preview is current now when no edit after step 2 of this run changed a hashed section.
+
 ---
 
 ## D328: Fixes of Review B Round 5
@@ -4825,3 +4829,24 @@ This revises D323.
 15. Rejected: propose remark 3, the choice of a stopped Level 1 fix in the text of an open question. The changed code stays in the working tree, the tasks preview explores that code, and the summary names it. Rejected: traversal remark 4, a skip of "Archive anyway?" on a rerun. A delta file or an ADR does not show a yes of the user, and the warnings of the rerun can differ.
 
 **Rationale**: review C round 2 of the skill text at 1106240 had 27 remarks from eight reviewers, 25 distinct. 25 are fixed and 2 are rejected. The check of apply remark 1 also found that `openspec list --json` exits with code 1 when `root` is `null`, so the old "fails" branch of the root block stopped before the subfolder search. The schema `version` stays 8, because 8 is not released yet.
+
+---
+
+## D343: Fixes of Review C Round 3
+
+**Decision**:
+
+1. Upgrade, requirement-source rule: a constraint that `plan.md` or the answer says applies only to this change is not a requirement source. A constraint that says only what the change must not add is not a requirement source, unless `plan.md` or the answer says that a later change must keep it. This is the selection of archive step 3 (D339), so stock `/opsx:archive` does not copy a limit of this change to the main specs. This revises D266 item 1.
+2. Upgrade question turn: the reason "not a contract" for a 🤖 decision of `plan.md` applies only when the specs step of an earlier run is not done. If the specs step is done, a contract 🤖 decision with no requirement in the kept specs gets the same summary line as a decided contract point.
+3. Upgrade guard: the ADR warning applies each time the guard stops on a `spec-driven` change whose `design.md` has `### Decision` entries, also on the no to the resume question.
+4. Apply: the general rule "follow each rule of the `instruction` field" applies only when `state` is not `blocked`. Apply step 1 has an Output line.
+5. Schema skill: the repo copy is the folder `openspec/schemas/plan-lite/`, also when the folder has no `schema.yaml`. The skill runs `git rev-parse --show-toplevel` from the OpenSpec root.
+6. Archive step 5: a missing `openspec/adr/` holds no ADR. Outside the guard path, an item that an ADR of an earlier run holds goes to the not-drafted list, as for a delta file of an earlier run. Step 10 no longer repeats the skip of the first check.
+7. Propose: the stop report rule does not apply at the end of a finished Level 1 fix. The "say so" bullet for a guessed value applies to a point that the user left to the agent. The outcome question and the replace question of `openspec-lite-schema` are step questions. Section 4 step 1 names the files of a stopped Level 1 fix.
+8. Tasks preview: the replace question of `openspec-lite-schema` is a step question. The shared schema check names the replace question, not "the copy of the schema".
+9. `apply.instruction` and the tasks preview record the request that starts the run with the answer rule, before step 3. So an answer that archive tells the user to give to apply closes the question.
+10. `apply.instruction` step 6: the preview is current now when no edit after step 2 of this run changed a hashed section. The stale note uses the same scope. This revises D327 item 2.
+11. Rejected: traversal remark 2, the change name and the OpenSpec root in each next-step advice. The next skill asks the root question only when the current folder has no OpenSpec root, and the pick question only when more than one change is active. A named rule in six files costs more than one question in a new session.
+12. Rejected: the `apply.instruction` part of tasks-preview remark 1. Apply runs the schema check before it loads `apply.instruction`, so the answer rule of `apply.instruction` never reads the reply to the replace question.
+
+**Rationale**: review C round 3 of the skill text at 07e6c47 had 18 remarks from eight reviewers. 17 are fixed and 1 is rejected. The schema `version` stays 8, because 8 is not released yet.

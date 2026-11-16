@@ -31,6 +31,7 @@ apply:
     - If plan.md and tasks-preview.md conflict, follow plan.md.
     - Do not edit tasks-preview.md.
     - Each time the user replies, record the reply with the answer rule.
+    - Before step 3, record the request that starts this run with the answer rule.
     - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
     - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
     - When you find a fact, record the fact with the fact rule and the fact format.
@@ -177,12 +178,12 @@ apply:
        - If you run step 6 again after a reply, show the table only for the 🤖 decisions that you added after the reply. If you added no 🤖 decision after the reply, show no table.
        - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
        - For each open question that you removed, give its answer.
-       - The preview is current now when step 2 found the preview current, and no edit of this session changed a hashed section of the plan hash rule.
+       - The preview is current now when step 2 found the preview current, and no edit after step 2 of this run changed a hashed section of the plan hash rule.
        - If the preview is current now, and you edited an unhashed section of the plan hash rule, say that the plan hash does not cover the unhashed sections. Say that your edits of the unhashed sections do not make the preview stale.
        - If you added, changed, or removed a constraint, list the constraint with its ID.
        - If you changed the Goal, quote the old outcome and the new outcome.
        - If you changed Background or Non-Goals, quote the old text and the new text.
-       - If you changed a hashed section of the plan hash rule, and step 2 found the preview current, say that the edit makes the preview stale. Also say that the next run of apply asks to regenerate the preview.
+       - If an edit after step 2 of this run changed a hashed section of the plan hash rule, and step 2 found the preview current, say that the edit makes the preview stale. Also say that the next run of apply asks to regenerate the preview.
        - Show a table of each 🤖 decision that you added: `| Decision | Criterion | Why |`. In the Criterion column, write (1), (2), or (3) of the decision rule. In the Why column, write the visible result for (1), the close options for (2), or what can surprise for (3).
        - If you added no 🤖 decision, show no table.
        - Give each other item that a step or a rule sends to the end summary.

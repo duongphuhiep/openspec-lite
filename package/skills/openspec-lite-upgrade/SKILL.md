@@ -121,7 +121,7 @@ Do these checks in order.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` exists, go to the schema check.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
 - If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` does not exist, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
-- If `schema` is `spec-driven`, `openspec/changes/<name>/plan.md` does not exist, and `openspec/changes/<name>/design.md` has `### Decision` entries, also say that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` copies them to `openspec/adr/`: run it before `/opsx:archive`.
+- If `schema` is `spec-driven`, the guard stops, and `openspec/changes/<name>/design.md` has `### Decision` entries, also say that stock `/opsx:archive` does not turn them into ADRs, and that `openspec-lite-archive` copies them to `openspec/adr/`: run it before `/opsx:archive`.
 - If `schema` has any other value, stop. Point the user to the stock skills `/opsx:apply` and `/opsx:archive`.
 - If `schema` is `spec-driven`, and `openspec/changes/<name>/plan.md` still exists, ask the resume question.
 - The guard asks the resume question because an earlier run can stop after it wrote the artifacts, and a finished upgrade can keep `plan.md`.
@@ -166,7 +166,7 @@ Do these checks in order.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill. Give the OpenSpec root in the prompt of the skill call.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
-   - If the user declines the copy of the schema, stop.
+   - If the user says no to the replace question of `openspec-lite-schema`, stop.
    - Do not end your turn after `openspec-lite-schema` finishes.
    - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
    - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
@@ -224,7 +224,7 @@ Close the open questions of `plan.md`:
 - If the user left to you a fact that only the user knows, plan a decision with 🤖 in `design.md` for the value that you choose for the code.
 - If the user left to you a fact that only the user knows, say in the summary that the fact stays unknown. The question rule says that the decision for this fact matches criterion (3).
 - If a decided point is a contract, and the specs step of an earlier run is not done, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
-- If a decided point is a contract, the specs step of an earlier run is done, and no requirement of a delta states the rule of the point, name the point in the summary. Say that the point has no requirement, because the resume rule kept the specs of the earlier run. Tell the user to add the requirement by hand.
+- If a decided point or a decision with 🤖 in `plan.md` is a contract, the specs step of an earlier run is done, and no requirement of a delta states the rule of the point, name the point in the summary. Say that the point has no requirement, because the resume rule kept the specs of the earlier run. Tell the user to add the requirement by hand.
 - Do not ask a question that you closed.
 
 Ask the question turn:
@@ -238,7 +238,7 @@ Ask the question turn:
 - If `proposal.md`, `design.md`, and `tasks.md` already exist, do not ask. Go to step 2.1.
 - If the question list is not empty, and one of `proposal.md`, `design.md`, and `tasks.md` does not exist, ask all items of the question list in one reply, before you write any artifact.
 - First in the reply, give the answer of each question that you closed.
-- Then, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, and whose rule no requirement of a delta of an earlier run states, give the reason why the decision is not a contract, in one sentence.
+- Then, if the specs step of an earlier run is not done, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, and whose rule no requirement of a delta of an earlier run states, give the reason why the decision is not a contract, in one sentence.
 - Last in the reply, ask all items of the question list, in one numbered list.
 - Ask each open question with the ask rule.
 - For each planned requirement in the list, show its text, and ask if you can write it.
@@ -248,7 +248,7 @@ Ask the question turn:
 Read the answer of the user:
 
 - Split each answer of the user with the split rule, and plan each part for its artifact. Steps 2.1 to 2.4 write the parts.
-- If the specs step of an earlier run is not done, plan a requirement for each constraint of the answer, with no new question.
+- If the specs step of an earlier run is not done, plan a requirement for each constraint of the answer that the requirement-source rule accepts, with no new question.
 - If the user says yes to a planned requirement that the question turn asked, the user is the source of that requirement.
 - If the user says no to a planned requirement that the question turn asked, do not write that requirement.
 - If the user gave no answer for a planned requirement that the question turn asked, do not write that requirement. Name the requirement in the summary.
@@ -458,6 +458,8 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
   - a constraint of `plan.md`;
   - a decision of `plan.md` that is also a contract;
   - an answer of the user, except a part that leaves a choice to you.
+- A constraint that `plan.md` or the answer says applies only to this change is not a requirement source.
+- A constraint that says only what the change must not add is not a requirement source, unless `plan.md` or the answer says that a later change must keep the constraint.
 - A contract is externally observable behavior that a client or another team depends on.
 - Internal helpers, log text, and UI layout are not contracts.
 - The format of a file or of an output that another program reads is a contract, for example the line format of a log file that a monitor parses, or the date format of a JSON field.
@@ -479,7 +481,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice.
 - A constraint of the answer is a requirement source, like a constraint of `plan.md`.
-- If the specs step of an earlier run is not done, write the requirement of a constraint of the answer with no new question, because the answer of the user is the source of the requirement.
+- If the specs step of an earlier run is not done, write the requirement of a constraint of the answer that the requirement-source rule accepts, with no new question, because the answer of the user is the source of the requirement.
 - If the resume rule kept the specs step of an earlier run, follow the bullet of this rule that starts with "If the resume rule kept the artifact of a part".
 - A choice of the answer goes to the specs only when the choice is a contract, and the user made the choice.
 - A part of the answer that leaves a choice to you is not a choice of the user. Step 2.3 says what to write for the part.

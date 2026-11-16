@@ -216,7 +216,7 @@ The guard path:
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
    - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill. Give the OpenSpec root in the prompt of the skill call.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
-   - If the user declines the copy of the schema, stop.
+   - If the user says no to the replace question of `openspec-lite-schema`, stop.
    - Do not end your turn after `openspec-lite-schema` finishes.
    - After `openspec-lite-schema` finishes, copy the report of `openspec-lite-schema` to your reply. Copy the report also when this skill stops later.
    - The report of `openspec-lite-schema` is the `status:` line, the `backup:` line, each `copied:` line, and the `config.yaml` line.
@@ -371,9 +371,11 @@ The sources of an ADR draft:
 
 The first check, for existing ADRs:
 
+- If `openspec/adr/` does not exist, the folder holds no ADR. The first check and the second check find no file. Step 10 creates the folder.
 - Before you draft a decision, search `openspec/adr/` for files with the line `Change: <name>`.
 - An earlier run of this archive can have written these files.
 - Do not draft a decision or a fact that already has an ADR.
+- Outside the guard path, put each item that an ADR of an earlier run holds in the not-drafted list, with the reason that the ADR of the earlier run keeps the item.
 - An ADR with the line `Change: <name>` holds a decision when the `## Decision` of the ADR records the same choice as the decision.
 - An ADR with the line `Change: <name>` holds a fact when the `## Context` of the ADR records the same fact.
 - The title of the ADR alone does not decide the match.
@@ -472,7 +474,6 @@ When each item has a draft, go to step 6.
 - Only after `validate` passes in step 9, write each ADR draft to `openspec/adr/YYYY-MM-DD-<slug>.md`.
 - Do not write an ADR in the same command as `validate`.
 - Use today's date.
-- Skip a decision or a fact that already has an ADR with `Change: <name>`.
 - If the file name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR.
 - After you write a new ADR with a `Supersedes:` line, edit the old ADR. Change only the `Status:` line of the old ADR to `Status: Superseded by <new file name>`. Do not change any other line of the old ADR.
 - Then check each ADR with `Change: <name>` and a `Supersedes:` line, also the ADRs of an earlier run. If the old ADR of such an ADR does not have `Status: Superseded by`, edit the `Status:` line of the old ADR now.
