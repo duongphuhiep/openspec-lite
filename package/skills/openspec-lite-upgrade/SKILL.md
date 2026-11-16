@@ -107,12 +107,11 @@ Do these checks in order.
 - A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
-- If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
-  - The named change is not in the `changes` list.
-  - The named change has no schema.
+- If the prompt names a change that is not in the `changes` list, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names no change, and only one active change exists, use that change.
 - If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
+- If the change to use has no schema, stop. Tell the user that the change has no schema, so this skill cannot use the change.
 
 ### Guard
 
@@ -225,7 +224,7 @@ Close the open questions of `plan.md`:
 - If the user left to you a fact that only the user knows, plan a decision with 🤖 in `design.md` for the value that you choose for the code.
 - If the user left to you a fact that only the user knows, say in the summary that the fact stays unknown. The question rule says that the decision for this fact matches criterion (3).
 - If a decided point is a contract, and the specs step of an earlier run is not done, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
-- If a decided point or a decision with 🤖 in `plan.md` is a contract, the specs step of an earlier run is done, and no requirement of a delta states the rule of the point, name the point in the summary. Say that the point has no requirement, because the resume rule kept the specs of the earlier run. Tell the user to add the requirement by hand.
+- If the specs step of an earlier run is done, check each source of `plan.md` that the requirement-source rule accepts, and each decided point that is a contract. If no requirement of a delta states the rule of the item, name the item in the summary. Say that the item has no requirement, because the resume rule kept the specs of the earlier run. Tell the user to add the requirement by hand.
 - Do not ask a question that you closed.
 
 Ask the question turn:

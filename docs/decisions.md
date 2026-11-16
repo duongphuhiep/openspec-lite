@@ -4902,3 +4902,20 @@ This revises D323.
 9. Archive step 1: if the reply to "Archive anyway?" answers an open question, or gives a fact, a constraint, or a choice for `plan.md`, archive does not go on. Archive quotes that part, and tells the user to run `openspec-lite-apply` with the part, then archive again.
 
 **Rationale**: review C round 6 of the skill text at cb16d86 had 10 remarks from eight reviewers. 10 are fixed and 0 are rejected. Schema-skill 1 and schema-skill 2 touch the same text and get one fix. The schema `version` stays 8, because 8 is not released yet.
+
+**Status**: D347 revises item 4: a change with no schema stops the run on each path of the selection, also a named change.
+
+## D347: Fixes of Review C Round 7
+
+**Decision**:
+
+1. Change selection, in each copy: if the change to use has no schema, stop, and tell the user that the change has no schema. The rule applies on each path: a named change, the only active change, and a picked change. The guard then never reads the `.openspec.yaml` of a change with no schema. A named change with no schema no longer gives a pick question. This closes the gap that D346 item 4 left.
+2. Upgrade: if the specs step of an earlier run is done, the summary check covers each source of `plan.md` that the requirement-source rule accepts, and each decided point that is a contract. Before, the check covered only a decided point and a decision with 🤖. A run that stops between two delta writes can leave a constraint or a contract decision with no requirement.
+3. Schema skill, file system error of section 3: if a repo copy existed, and no `install:` line names the folder of the old schema, the old schema did not move. The skill tells the user that `openspec/schemas/plan-lite/` still holds the old schema, with no backup, and does not tell the user to delete the folder.
+4. Propose: the stop report lists the answers of the user and the moved-out outcomes when the workflow stops before section 3, step 5 is done. Before, the test was "before `plan.md` exists", but step 4 writes `plan.md` as the bare template.
+5. Propose: the question rule lets propose read the code to answer a question of the user. Propose still decides no open point outside the Level 1 fix.
+6. Tasks preview: a part that asks to change Goal, Background, Non-Goals, or Constraints has no kind in the answer rule. The general rules of section 2 handle the part. The separate bullet for that part is deleted.
+7. Tasks preview and `apply.instruction`: if the request that starts the run already answers a step question, the agent follows that answer, and does not ask the question. Propose already has this rule.
+8. Rejected: the resume of a change whose `plan.md` holds only the template (propose remark 1, second part). The case needs a failed edit in section 3 step 5. The stop report of item 4 keeps the answers, and the user can delete the folder. A test for "only the template" costs more than the risk.
+
+**Rationale**: review C round 7 of the skill text at 2924b13 had 9 remarks from eight reviewers. 9 are fixed, and one part of propose 1 is rejected. Apply 1 and archive 1 touch the same text and get one fix. Propose 1 and traversal 1 touch the same text and get one fix. The schema `version` stays 8, because 8 is not released yet.

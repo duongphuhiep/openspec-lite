@@ -258,6 +258,7 @@ apply:
     - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
     - A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
     - An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question, also when the answer asks you to run a command or a skill. Record the other parts of the reply.
+    - If the request that starts the run already answers a step question, follow that answer, and do not ask the question.
     - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
     - Add the "(kept open by the user)" marker only when the user says to keep the question open.
     - These parts of the reply have no kind: a part that only asks you to run a command or a skill, or asks you a question; an answer to a step question; and a part that says to keep a question open.

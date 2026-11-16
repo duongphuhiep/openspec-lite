@@ -49,12 +49,11 @@ Do these checks in order.
 - A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
-- If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
-  - The named change is not in the `changes` list.
-  - The named change has no schema.
+- If the prompt names a change that is not in the `changes` list, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names no change, and only one active change exists, use that change.
 - If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
+- If the change to use has no schema, stop. Tell the user that the change has no schema, so this skill cannot use the change.
 
 ### Guard
 
@@ -355,10 +354,11 @@ When the checks are done, go to step 6.
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
 - A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
 - An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question, also when the answer asks you to run a command or a skill. Record the other parts of the reply.
+- If the request that starts the run already answers a step question, follow that answer, and do not ask the question.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
 - Sort each other part of the reply into one of three kinds. Each part has one kind.
-- These parts have no kind: a part that only asks you to run a command or a skill, or asks you a question; an answer to a step question; and a part that says to keep a question open.
+- These parts have no kind: a part that only asks you to run a command or a skill, or asks you a question; an answer to a step question; a part that says to keep a question open; and a part that asks to change Goal, Background, Non-Goals, or Constraints. The general rules of section 2 handle a part that asks to change Goal, Background, Non-Goals, or Constraints.
 - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that you named is a choice of the user.
 - Kind 2, a part that leaves a choice to you: the user names no option, and says that you can choose, or that each option is good for the user. Follow the question rule for the point.
 - Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing. Do not ask the question again in this session.
@@ -375,7 +375,6 @@ When the checks are done, go to step 6.
 - An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - Record each part of kind 1 in a section of plan.md, also an answer to an open question. Do not put a part of kind 1 only in the end summary.
-- A part that asks to change Goal, Background, Non-Goals, or Constraints follows the general rules of section 2. Do not record that part in a section of plan.md.
 - After you record the reply, read the reply again, part by part. If a part of kind 1 is in no section of plan.md, record the part now.
 - You cannot edit `## Constraints`, so record each constraint of the reply in `## Decisions`, as a decision with no 🤖.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.

@@ -114,12 +114,11 @@ Do these checks in order.
 - A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
-- If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
-  - The named change is not in the `changes` list.
-  - The named change has no schema.
+- If the prompt names a change that is not in the `changes` list, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names no change, and only one active change exists, use that change.
 - If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
+- If the change to use has no schema, stop. Tell the user that the change has no schema, so this skill cannot use the change.
 
 ### Guard
 
