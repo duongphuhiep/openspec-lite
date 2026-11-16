@@ -410,8 +410,8 @@ When the checks are done, go to step 6.
 - A 🤖 in an HTML comment, for example in a template comment, is not a mark. A decision is a 🤖 decision only when its heading ends with 🤖.
 - A decision with no 🤖 belongs to the user, also a decision that the user wrote by hand.
 - A decision with no 🤖 holds only what the user said. Put each choice that you add, and that the decision rule records, in its own 🤖 decision.
-- When you update a 🤖 decision to follow an answer or an instruction of the user, remove the 🤖 of that decision.
-- If the answer of the user leaves the new choice of a 🤖 decision to you, decide the new choice with the question rule.
+- When you update a 🤖 decision to follow a part of kind 1 of the answer rule, remove the 🤖 of that decision.
+- If a part of kind 2 of the answer rule leaves the new choice of a 🤖 decision to you, decide the new choice with the question rule. A decision for the new choice keeps its 🤖, because a part of kind 2 is not a choice of the user.
 - Each part that the user chose keeps no 🤖.
 - The user removes the 🤖 to accept a decision.
 

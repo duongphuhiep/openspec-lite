@@ -4785,3 +4785,15 @@ This revises D323.
 4. The refactor changes no behavior. A review of the diff against the old text found 8 changes of behavior, and each one was restored: a condition for the newer schema rule, the scope of the wait rule (check 5 of apply does not end the turn), a local term that collided with "a question that is left", the source of exception 2 of the agent-decision rule, the `Change: <name>` filter of the ADR delete advice, the exact condition of the "promotes no item" case, the not-drafted list as a list for the summary and not a file, and the sections that the fact rule names.
 
 **Rationale**: the user asked to refactor long bullets and complex phrases, as the "Write Instructions as Code" rules of `CLAUDE.md` say, and to treat a rule that appears in more than one place of a file like shared code. A named rule has one copy to keep correct, as a function does.
+
+---
+
+## D341: Fixes of Review C Round 1
+
+**Decision**:
+
+1. Upgrade step 2: if an artifact of an earlier run states the answer of an open question of `plan.md` as a fact, a decision, or a requirement, the question is closed. Upgrade plans nothing for the question, gives the answer with the artifact, and does not ask the question again on a resumed run. This revises D208 item 2.
+2. Upgrade, agent-decision rule, exception 3: if a requirement of a delta of an earlier run states the rule of a decision with 🤖 in `plan.md`, upgrade writes the decision with no 🤖 in `design.md`, because step 2.2 writes such a requirement only after a yes of the user. The summary says that the requirement of the earlier run removed the mark. The question turn does not call such a decision "not a contract".
+3. The mark rule of `apply.instruction` and of the tasks preview: a part of kind 1 of the answer rule removes the 🤖 of the decision that the part updates. If a part of kind 2 leaves the new choice of a 🤖 decision to the agent, the agent decides the new choice with the question rule, and a decision for the new choice keeps its 🤖.
+
+**Rationale**: review C round 1 of the skill text at f4f705c had 3 remarks. Items 1 and 2 remove redundant questions on a resumed upgrade: the answers of the earlier session are partly on disk, in the kept artifacts. Item 3 removes a contradiction: the old mark rule removed the 🤖 for each answer of the user, but the answer rule says that a part of kind 2 is not a choice of the user. The schema `version` stays 8, because 8 is not released yet.

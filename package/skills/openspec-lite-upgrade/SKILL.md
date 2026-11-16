@@ -199,6 +199,7 @@ Do these checks in order.
 Plan the requirements:
 
 - If `<dir>/specs/` already holds a delta, plan no requirement, because step 2.2 keeps the delta.
+- If `<dir>/specs/` already holds a delta, find each decision with 🤖 in `plan.md` whose rule a requirement of the delta states. The agent-decision rule says what to write for such a decision.
 - If `<dir>/specs/` holds no delta, plan each requirement with the requirement-source rule.
 
 Close the open questions of `plan.md`:
@@ -207,6 +208,7 @@ Close the open questions of `plan.md`:
 - A question that ends with "(kept open by the user)" is a kept question.
 - A question that ends with "(left to the agent by the user)" is a point that the user left to you. Decide the point with the question rule, and do not ask the question.
 - For each question that is not a kept question, try to decide the question or find its answer.
+- If an artifact of an earlier run in `<dir>` states the answer of a question as a fact, a decision, or a requirement, the question is closed. Plan nothing for that question. Give the answer and the name of the artifact, as for each other question that you closed.
 - To try, use the test of the question rule of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: can you decide the question, or find its answer?
 - In the question turn of step 2, do not do the `plan.md` writes of the question rule. Record no fact or decision in `plan.md`, and remove no question from `plan.md`.
 - In the question turn of step 2, plan each answer for an artifact or for the summary, as the next bullets say.
@@ -230,7 +232,7 @@ Ask the question turn:
 - If each of the four artifacts already exists, do not ask. Go to step 2.1.
 - If the question list is not empty, and at least one of the four artifacts does not exist, ask all items of the question list in one reply, before you write any artifact.
 - First in the reply, give the answer of each question that you closed.
-- Then, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, give the reason why the decision is not a contract, in one sentence.
+- Then, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, and whose rule no requirement of a delta of an earlier run states, give the reason why the decision is not a contract, in one sentence.
 - Last in the reply, ask all items of the question list, in one numbered list.
 - Ask each open question with the ask rule.
 - For each planned requirement in the list, show its text, and ask if you can write it.
@@ -423,7 +425,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - Do not name `plan.md` in the file list, as deleted or as kept. Step 5.4 says what happens to `plan.md` after the answer.
 - If an artifact has 🤖 items, list each 🤖 item with its new claim, or as an agent decision of `plan.md`.
 - A decision with 🤖 in `plan.md` and no 🤖 in `design.md` has the confirmation of the user.
-- The 🤖 mark of a decision of `plan.md` goes away only after an action of the user: a yes in the question turn of step 2, an answer that supersedes, changes, or corrects the decision, or an edit of the user.
+- The 🤖 mark of a decision of `plan.md` goes away only after an action of the user: a yes in the question turn of step 2, a yes of an earlier run that exception 3 of the agent-decision rule finds, an answer that supersedes, changes, or corrects the decision, or an edit of the user.
 - Do not ask the user again to confirm a decision that has the confirmation of the user, also on a resumed run.
 - Say the final `skip_specs` state: absent, because the change has spec deltas, or set, because it has none.
 - Say that from now on the change uses the stock skills: `/opsx:apply` and `/opsx:archive`.
@@ -511,6 +513,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - If no exception of the agent-decision rule applies, write the decision to `## Decisions` of `design.md`, with 🤖 at the end of its heading, because the user did not confirm the decision yet.
 - Exception 1: if a part of the answer supersedes, changes, or corrects the decision, follow the bullet of step 2.3 that starts with "If a part of the answer supersedes".
 - Exception 2: if the user said yes in the question turn of step 2 to a requirement that you planned from the decision, or from a contract point that step 2 decided, follow the bullet of step 2.3 that starts with "If the user said yes in the question turn of step 2".
+- Exception 3: if a requirement of a delta of an earlier run states the rule of a decision with 🤖 in `plan.md`, write the decision with no 🤖. Step 2.2 writes a requirement from a decision with 🤖 only after a yes of the user, so the requirement shows that yes. In the summary, say that the requirement of the earlier run removed the mark.
 
 ### No-artifact answer rule
 
@@ -532,4 +535,5 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 
 - If an artifact already exists from an earlier run, keep the artifact, and go to the next artifact.
 - On a resumed run, ask the questions of step 2 again before you write a missing artifact, because the answers of the earlier session are not on disk.
+- On a resumed run, do not ask again a question whose answer an artifact of the earlier run states. Step 2 closes that question.
 - If a kept artifact looks incomplete, for example a template section that is still empty, name the section in the summary, and tell the user to complete it by hand.
