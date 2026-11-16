@@ -4868,3 +4868,21 @@ This revises D323.
 11. Rejected: traversal remark 1, a stop report for the answers of the upgrade question turn. D208 asks the questions of step 2 again on a resumed run, so the user can give each answer again. The cost is one question turn on a rare failure path. Three new rules cost more.
 
 **Rationale**: review C round 4 of the skill text at 2ab5a23 had 15 remarks from eight reviewers. 13 are fixed and 2 are rejected. The schema `version` stays 8, because 8 is not released yet.
+
+## D345: Fixes of Review C Round 5
+
+**Decision**:
+
+1. A step question has one general definition in propose, the tasks preview, and `apply.instruction`: a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question. The lists of step questions are deleted. Rounds 2 to 5 each found a question that a list left out. The definition covers the Level 1 stop question of propose, the replace question of `openspec-lite-schema`, and the questions of upgrade, because upgrade reads the answer rule of `apply.instruction` as its current workflow. This revises D342 and D343 for the lists.
+2. Upgrade: a requirement text that the user gives for the question if the change has a requirement is a planned requirement, with the user as its source.
+3. Failure rule: an action fails when it exits non-zero, is denied, or gives an error. An output fails the action only when the step names the outputs of the action. The stop steps apply when a step needs the output of a failed action and no second form is left to try. This replaces "fails again".
+4. `apply.instruction` step 2 and tasks preview step 4: a `plan-hash:` message follows the failure rule, so that the stop names each file that the run changed.
+5. Schema skill: if the edit of `openspec/config.yaml` fails or leaves invalid YAML, restore the file once. If the restore fails, tell the user that OpenSpec ignores the whole file.
+6. Propose section 3 step 5 records the open points before the request and the kept replies, so that the answer rule removes an open point that a kept answer closes.
+7. Tasks preview: the general rules handle the request that starts the run as a reply. A requested edit of the Goal that answers an open question names the question with its ID.
+8. If a part of a reply asks to run an openspec-lite skill, the agent gives the change name and the OpenSpec root in the prompt of the skill call. This is the call in the same session. D343 item 11 stays for the advice for a new session.
+9. Rejected: archive remark 1, a 🤖 in a delta of a stopped upgrade. The case needs a failed upgrade, and then an archive in place of the rerun that the failure rule of upgrade asks for. A new check and stop cost more than the risk.
+10. Rejected: schema-yaml remark 2, the stale question after the answers of step 3. plan.md wins over the preview, the user gave the edit in the same turn, and step 6 says that the edit makes the preview stale. A second question turn costs more.
+11. Rejected: traversal remark 1, the kind 3 answer of the tasks preview before an upgrade in the same reply. The repeated question costs one answer, and upgrade then keeps the question in `plan.md` and `tasks.md`, the same result.
+
+**Rationale**: review C round 5 of the skill text at 9eacd6e had 13 remarks from eight reviewers. 10 are fixed and 3 are rejected. The schema `version` stays 8, because 8 is not released yet.

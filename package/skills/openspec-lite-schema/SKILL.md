@@ -27,7 +27,7 @@ How to read this skill:
 ### Failure rule
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
-- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
+- An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -36,7 +36,7 @@ How to read this skill:
 - Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+- If a step needs the output of a failed action, and no second form is left to try, do these steps in order:
   1. Show the command or the file, and the error text.
   2. Name each file that this run changed.
   3. Tell the user what to fix, and to start this workflow again.
@@ -163,7 +163,8 @@ operations:
 - If `operations.archive.guidance` is a list, and the list does not have the guidance item yet, add the guidance item.
 - If `operations.archive.guidance` is a list, and the list already has the guidance item, do not edit `openspec/config.yaml`.
 - If `operations.archive.guidance` is a plain string, OpenSpec ignores the string. Do not edit the string. Show the user how to change the string to a list.
-- If the edit of `openspec/config.yaml` fails, or the file is not valid YAML after the edit, do not edit the file again. Report that the guidance item is not added, and show the guidance item block for a manual edit. Say that the schema install is still good.
+- If the edit of `openspec/config.yaml` fails, or the file is not valid YAML after the edit, restore the file as it was before the edit, once. Do not edit the file again. Report that the guidance item is not added, and show the guidance item block for a manual edit. Say that the schema install is still good.
+- If the restore fails, tell the user that OpenSpec ignores the whole `openspec/config.yaml` until the user fixes the file.
 - Go to section 5.
 
 ## 5. End

@@ -30,7 +30,7 @@ How to read this skill:
 ### Failure rule
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
-- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
+- An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -39,7 +39,7 @@ How to read this skill:
 - Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+- If a step needs the output of a failed action, and no second form is left to try, do these steps in order:
   1. Show the command or the file, and the error text.
   2. Name each file that this run changed.
   3. Tell the user what to fix, and to start this workflow again.
@@ -203,9 +203,9 @@ Do these checks in order. When the checks are done, go to section 3.
    - Output: `openspec/changes/<name>/plan.md`.
    - Fill only what is known. Leave the other sections empty.
    - Write `## Goal` with the goal rule, from the outcomes that stay in this change.
+   - Record each open point of the list in `## Open Questions` with the question rule.
    - Record each fact, constraint, or choice of the request with the answer rule.
    - Record each part of a reply that you kept before `plan.md` existed with the answer rule.
-   - Record each open point of the list in `## Open Questions` with the question rule.
    - Do not remove a `<!-- ... -->` guidance comment from `plan.md`.
    - Do not remove a line of a guidance comment that spans more than one line.
    - Each guidance comment must still be in `plan.md` when you are done.
@@ -232,12 +232,12 @@ Do these checks in order. When the checks are done, go to section 3.
 
 ### Answer rule
 
-- If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. The step questions of this workflow are the outcome, split, Level 1, folder, resume, name, and tasks-preview questions, and the replace question of `openspec-lite-schema`.
-- For an answer to a question of a workflow step, follow the step that asked the question. Record the other parts of the answer.
+- If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
+- A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
+- An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - Sort each other part of the answer into one of three kinds. Each part has one kind.
-- These parts have no kind: a part that only asks for a command, a skill, or an answer; an answer to a question of a workflow step; and a part that says to keep a question open.
+- These parts have no kind: a part that only asks for a command, a skill, or an answer; an answer to a step question; and a part that says to keep a question open.
 - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that the agent named is a choice of the user.
 - Kind 2, a part that leaves a choice to the agent: the user names no option, and says that the agent can choose, or that each option is good for the user. Follow the question rule for the point.
 - Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing. Do not ask the question again in this session.

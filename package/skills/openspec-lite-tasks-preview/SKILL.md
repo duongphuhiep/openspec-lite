@@ -124,7 +124,7 @@ Do these checks in order.
 
 - Edit `plan.md` only as the plan.md rule says.
 - Each time the user replies, record the reply with the answer rule.
-- After step 2, and before step 3, record the request that starts this run with the answer rule.
+- After step 2, and before step 3, record the request that starts this run with the answer rule. The general rules handle the request as a reply.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
 - When you find a fact, record the fact with the fact rule and the fact format.
@@ -137,8 +137,8 @@ Do these checks in order.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, do these actions in order:
   1. Record the other parts of the reply with the answer rule.
   2. List each item that you recorded, with its ID.
-  3. Tell the user to make the change in `plan.md` and to run this skill again.
-  4. If the change answers an open question, tell the user to remove the question in the same edit of `plan.md`.
+  3. Tell the user to make the requested edit in `plan.md` and to run this skill again.
+  4. If the requested edit answers an open question, name the question with its ID, and tell the user to remove the question in the same edit of `plan.md`.
   5. End your turn.
 - A new constraint in a reply follows the answer rule.
 - If a reply after step 8 changes no item of `plan.md`, answer the reply. Do not run step 8 again.
@@ -153,7 +153,7 @@ Do these checks in order.
 ### Failure rule
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
-- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
+- An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -162,7 +162,7 @@ Do these checks in order.
 - Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+- If a step needs the output of a failed action, and no second form is left to try, do these steps in order:
   1. Show the command or the file, and the error text.
   2. Name each file that this run changed.
   3. Tell the user what to fix, and to start this workflow again.
@@ -223,7 +223,7 @@ Do these checks in order.
   ```
 
 - You do not need the exit code of `plan-hash.mjs`.
-- If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, show the message, and stop. Ask the user to fix `plan.md` as the message says.
+- If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, follow the failure rule. The message says what to fix in `plan.md`.
 - If the output has no hash and no `plan-hash:` message, follow the failure rule. Do not compute the hash another way.
 - If `plan-hash.mjs` prints a hash, keep the hash for step 6. Go to step 5.
 
@@ -351,13 +351,13 @@ When the checks are done, go to step 6.
 
 ### Answer rule: record a reply of the user
 
-- If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. The step questions of this workflow are the folder questions of the OpenSpec root, the pick question of the change selection, and the replace question of `openspec-lite-schema`.
-- For an answer to a question that a step of this workflow asks, follow the step that asked the question. Record the other parts of the reply.
+- If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
+- A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
+- An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
 - Sort each other part of the reply into one of three kinds. Each part has one kind.
-- These parts have no kind: a part that only asks you to run a command or a skill, or asks you a question; an answer to a question that a step of this workflow asks; and a part that says to keep a question open.
+- These parts have no kind: a part that only asks you to run a command or a skill, or asks you a question; an answer to a step question; and a part that says to keep a question open.
 - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that you named is a choice of the user.
 - Kind 2, a part that leaves a choice to you: the user names no option, and says that you can choose, or that each option is good for the user. Follow the question rule for the point.
 - Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing. Do not ask the question again in this session.

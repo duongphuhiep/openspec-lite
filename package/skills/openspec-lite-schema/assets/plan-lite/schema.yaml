@@ -45,7 +45,7 @@ apply:
     ## Failure rule
 
     - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
-    - An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
+    - An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
     - If a step gives its own failure branch, follow that branch.
     - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
     - Do not try a third form.
@@ -54,7 +54,7 @@ apply:
     - Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
     - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
     - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-    - If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+    - If a step needs the output of a failed action, and no second form is left to try, do these steps in order:
       1. Show the command or the file, and the error text.
       2. Name each file that this run changed.
       3. Tell the user what to fix, and to start this workflow again.
@@ -91,7 +91,7 @@ apply:
     - Output: the preview is current, stale, or absent.
     - If `<changeDir>/tasks-preview.md` does not exist, the preview is absent. Go to step 3.
     - Run `node openspec/schemas/plan-lite/plan-hash.mjs <changeDir>/plan.md`. You do not need the exit code of `plan-hash.mjs`.
-    - If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, show the message to the user, and stop. Ask the user to fix plan.md as the message says.
+    - If `plan-hash.mjs` prints a message that starts with `plan-hash:` and no hash, follow the failure rule. The message says what to fix in plan.md.
     - If the output has no hash and no `plan-hash:` message, the preview is stale. Do not compute the hash another way.
     - If the hash differs from the `plan-sha256` line in the preview header, the preview is stale.
     - If the preview header has no `plan-sha256` line, the preview is stale.
@@ -254,8 +254,8 @@ apply:
 
     ## Answer rule: record a reply of the user
 
-    - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-    - A step question is a question that a step of this workflow asks: the stale question of step 3.
+    - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
+    - A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
     - An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
     - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
     - Add the "(kept open by the user)" marker only when the user says to keep the question open.

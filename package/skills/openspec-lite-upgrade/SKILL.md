@@ -42,7 +42,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 ### Failure rule
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
-- An action fails when the action exits non-zero, is denied, gives an error, or prints an output that the steps do not name.
+- An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -51,7 +51,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Examples of an action whose output no step needs: an extra check, or a read of a link for more context.
 - A step always needs the output of these actions: a run of the tests that the step names, and a write, an edit, or a delete of a file.
 - Do not make up a missing output yourself, for example a template, a hash, a version, or a status line.
-- If a step needs the output, and the action fails again or a single command is denied, do these steps in order:
+- If a step needs the output of a failed action, and no second form is left to try, do these steps in order:
   1. Show the command or the file, and the error text.
   2. Name each file that this run changed.
   3. Tell the user what to fix, and to start this workflow again.
@@ -250,6 +250,7 @@ Read the answer of the user:
 - Split each answer of the user with the split rule, and plan each part for its artifact. Steps 2.1 to 2.4 write the parts.
 - If the user says yes to a planned requirement that the question turn asked, the user is the source of that requirement.
 - If the user says no to a planned requirement that the question turn asked, do not write that requirement.
+- If the user gives requirement text for the question if the change has a requirement, plan each requirement of the text, with the user as its source.
 - If the user gave no answer for a planned requirement that the question turn asked, do not write that requirement. Name the requirement in the summary.
 - If the user did not answer an open question, keep the question in `plan.md`, with no marker.
 - If the user says to keep a question open, add the "(kept open by the user)" marker to the question in `plan.md`.
