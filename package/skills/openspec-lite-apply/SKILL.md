@@ -62,36 +62,40 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 
 ### OpenSpec root
 
-- Input: the output of `openspec list --json`.
+- Input: the prompt, and the output of `openspec list --json`.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
-- Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
-- If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
+- If the prompt gives no OpenSpec root, run `openspec list --json`.
+- If the prompt gives an OpenSpec root, run `cd <root> && openspec list --json`, with the folder of the prompt as `<root>`.
+- Read `root.path` of the output. The folder in `root.path` is the OpenSpec root.
+- If `openspec list --json` prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
+- If `root` is `null`, `openspec list --json` exits with code 1. That exit code is not a failure of the action.
 - Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
 - Read each `openspec/...` path from the OpenSpec root.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
-- The `cd <root> && ` prefix does not count as a chain.
+- The `cd <root> && ` prefix does not count as a chain. A command with the prefix is a single command, also for the failure rule.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
 - If more than one folder matches, ask the user to pick one folder. End your turn, and wait for the answer.
+- After the user confirms or picks a folder, run `cd <root> && openspec list --json`, with that folder as `<root>`. The next checks use the output of this run.
 - If the user rejects the folder, or picks no folder, stop. Tell the user to run the skill from the OpenSpec root.
 - If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.
 
 ### Change selection
 
-- Input: the prompt, and the `changes` list of `openspec list --json`.
+- Input: the prompt, and the `changes` list of the last `openspec list --json` output of the OpenSpec root block.
 - Output: the name of the change, written `<name>` in this skill.
+- An active change is an entry of the `changes` list.
+- If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
 - If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
   - The named change is not in the `changes` list.
   - The `.openspec.yaml` of the named change is missing.
   - The `.openspec.yaml` of the named change has no `schema` line.
-- If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
-- If only one active change exists, use that change.
-- If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
-- If no active change exists, stop. Tell the user that no active change exists.
+- If the prompt names no change, and only one active change exists, use that change.
+- If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
 
 ### Guard
 
@@ -135,7 +139,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 
    - If the version equals the shipped version, go to item 3 of the schema check.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-   - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
+   - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill. Give the OpenSpec root in the prompt of the skill call.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
    - If the user declines the copy of the schema, stop.
    - Do not end your turn after `openspec-lite-schema` finishes.

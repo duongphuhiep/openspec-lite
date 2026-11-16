@@ -4545,6 +4545,8 @@ The next steps of the flow are: propose asks for a tasks preview, the tasks prev
 
 **Rationale**: review B round 1 of `v1.8.0..local`, with a focus on overlaps, scenario hints, flow, ambiguity, and gaps. Each remark had one clear fix.
 
+**Status**: D342 revises item 4: the rerun summary lists each item that the run added, changed, or removed after the reply, and item 8 does not ask a kept question.
+
 ---
 
 ## D325: Fixes of Review B Round 2
@@ -4581,6 +4583,8 @@ This revises D323.
 9. Archive: a constraint skips the filters only when `plan.md` says that the constraint applies only to this change. Each other constraint goes through the filters. This revises D315 item 1.
 
 **Rationale**: review B round 3 of `v1.8.0..local`. For item 9, `plan.md` seldom says if a later change must keep a constraint, and archive asks no question, so the D315 test gave two results for the same `plan.md`. The user chose the filters as the default: archive keeps more knowledge, and the filters already decide each other item.
+
+**Status**: D342 revises item 3: the rerun summary lists each item that the run added, changed, or removed after the reply, not only the items that the reply changed.
 
 
 **Status**: D339 revises item 9: a constraint that says only what the change must not add is not drafted, unless `plan.md` says that a later change must keep it.
@@ -4797,3 +4801,27 @@ This revises D323.
 3. The mark rule of `apply.instruction` and of the tasks preview: a part of kind 1 of the answer rule removes the 🤖 of the decision that the part updates. If a part of kind 2 leaves the new choice of a 🤖 decision to the agent, the agent decides the new choice with the question rule, and a decision for the new choice keeps its 🤖.
 
 **Rationale**: review C round 1 of the skill text at f4f705c had 3 remarks. Items 1 and 2 remove redundant questions on a resumed upgrade: the answers of the earlier session are partly on disk, in the kept artifacts. Item 3 removes a contradiction: the old mark rule removed the 🤖 for each answer of the user, but the answer rule says that a part of kind 2 is not a choice of the user. The schema `version` stays 8, because 8 is not released yet.
+
+---
+
+## D342: Fixes of Review C Round 2
+
+**Decision**:
+
+1. OpenSpec root block (each copy): after the user confirms or picks a root, the skill runs `cd <root> && openspec list --json` again, and the next checks use that output. The output with `root: null` has an empty `changes` list. The exit code 1 of `openspec list --json` with `root: null` is not a failure of the action.
+2. OpenSpec root block: if the prompt gives an OpenSpec root, the skill runs `cd <root> && openspec list --json` first. A skill that calls another openspec-lite skill gives the OpenSpec root in the prompt of the call, and propose also gives `<name>` to the tasks preview. So a called skill does not ask the root question or the pick question again.
+3. A command with the `cd <root> && ` prefix is a single command, also for the failure rule. The same holds for the `cd <folder> && ` prefix of the exit-code rule.
+4. Change selection (each copy): an active change is an entry of the `changes` list of the last `openspec list --json` output. If the list is empty, the skill stops. The "one active change" and "more than one active change" bullets apply only when the prompt names no change.
+5. Schema skill: a missing or unreadable shipped `schema.yaml` stops the skill before the version compare. The skill does not edit an `openspec/config.yaml` that is not valid YAML or has more than one `operations:` key. The commit advice names only the paths that the run changed. The Skill folder block no longer jumps to section 2.
+6. Archive and upgrade: for a reused capability, the agent reads the main spec, and picks MODIFIED, REMOVED, or ADDED from it. Archive: a delta file of an earlier run also holds a requirement with the same name. Such an item goes to the not-drafted list. The merge rule for a same-name requirement is removed as dead text.
+7. Upgrade: the specs step of an earlier run is done when `specs/` holds a delta, or when `design.md` or `tasks.md` exists. Then upgrade plans no requirement, and does not ask the question if the change has a requirement. If a contract point that step 2 decides has no requirement in the kept specs, the summary names the point.
+8. Propose: the split check reads the code that the outcomes touch. After a stopped Level 1 fix, a reply that leaves the point to the agent lets the fix go on. If propose stops before `plan.md` exists, the stop report lists the answers of the user and the moved-out outcomes, for the request of the next run.
+9. Each answer rule lists only the step questions of its own workflow: propose, the tasks preview, and `apply.instruction`.
+10. Kind 3 of the answer rule (propose, tasks preview, `apply.instruction`): the agent does not ask the question again in the same session. The end step of apply and of the tasks preview names such a question, and does not ask it.
+11. Decision rule (`apply.instruction` and tasks preview): an obvious choice gets no decision only when the choice matches none of the criteria. A choice that matches criterion (1) gets a decision.
+12. Rerun of the end step after a reply (`apply.instruction` step 6 and tasks preview step 8): the summary lists each item that the run added, changed, or removed after the reply. With no new 🤖 decision after the reply, there is no table. The tasks-preview bullet that dropped the kept-question condition is removed. This revises D324 item 4 and D326 item 3.
+13. Exit-code rule: `exit-code.mjs` runs its command in the current folder. If the command must run in another folder than the OpenSpec root, the call starts with `cd <folder> && ` and uses the absolute path of the script.
+14. Apply step 3: on "continue from plan.md", the end summary says that each new run of apply asks the stale question again while the preview is stale, and how to end the question.
+15. Rejected: propose remark 3, the choice of a stopped Level 1 fix in the text of an open question. The changed code stays in the working tree, the tasks preview explores that code, and the summary names it. Rejected: traversal remark 4, a skip of "Archive anyway?" on a rerun. A delta file or an ADR does not show a yes of the user, and the warnings of the rerun can differ.
+
+**Rationale**: review C round 2 of the skill text at 1106240 had 27 remarks from eight reviewers, 25 distinct. 25 are fixed and 2 are rejected. The check of apply remark 1 also found that `openspec list --json` exits with code 1 when `root` is `null`, so the old "fails" branch of the root block stopped before the subfolder search. The schema `version` stays 8, because 8 is not released yet.

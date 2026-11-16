@@ -21,36 +21,40 @@ Do these checks in order.
 
 ### OpenSpec root
 
-- Input: the output of `openspec list --json`.
+- Input: the prompt, and the output of `openspec list --json`.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
-- Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
-- If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
+- If the prompt gives no OpenSpec root, run `openspec list --json`.
+- If the prompt gives an OpenSpec root, run `cd <root> && openspec list --json`, with the folder of the prompt as `<root>`.
+- Read `root.path` of the output. The folder in `root.path` is the OpenSpec root.
+- If `openspec list --json` prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
+- If `root` is `null`, `openspec list --json` exits with code 1. That exit code is not a failure of the action.
 - Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
 - Read each `openspec/...` path from the OpenSpec root.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
-- The `cd <root> && ` prefix does not count as a chain.
+- The `cd <root> && ` prefix does not count as a chain. A command with the prefix is a single command, also for the failure rule.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
 - If more than one folder matches, ask the user to pick one folder. End your turn, and wait for the answer.
+- After the user confirms or picks a folder, run `cd <root> && openspec list --json`, with that folder as `<root>`. The next checks use the output of this run.
 - If the user rejects the folder, or picks no folder, stop. Tell the user to run the skill from the OpenSpec root.
 - If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.
 
 ### Change selection
 
-- Input: the prompt, and the `changes` list of `openspec list --json`.
+- Input: the prompt, and the `changes` list of the last `openspec list --json` output of the OpenSpec root block.
 - Output: the name of the change, written `<name>` in this skill.
+- An active change is an entry of the `changes` list.
+- If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
 - If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
   - The named change is not in the `changes` list.
   - The `.openspec.yaml` of the named change is missing.
   - The `.openspec.yaml` of the named change has no `schema` line.
-- If the prompt names no change, read the `changes` list from the same `openspec list --json` output.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
-- If only one active change exists, use that change.
-- If more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
-- If no active change exists, stop. Tell the user that no active change exists.
+- If the prompt names no change, and only one active change exists, use that change.
+- If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
 
 ### Guard
 
@@ -94,7 +98,7 @@ Do these checks in order.
 
    - If the version equals the shipped version, go to item 3 of the schema check.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-   - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
+   - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill. Give the OpenSpec root in the prompt of the skill call.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
    - If the user declines the copy of the schema, stop.
    - Do not end your turn after `openspec-lite-schema` finishes.
@@ -141,9 +145,8 @@ Do these checks in order.
   2. Add, update, or remove each task, so that the preview follows the changed items.
   3. If the reply answers a question that a task waits for, remove the "waits for the answer" note from that task. Change that task to follow the answer.
   4. Run step 7 and step 8 again.
-- When step 8 runs again after a reply, list in the end summary of item 3 only the items that the reply changed.
-- When step 8 runs again after a reply, show the table of item 3 only for the 🤖 decisions that you added after the reply.
-- When step 8 runs again after a reply, item 8 asks each open question that is still open.
+- When step 8 runs again after a reply, list in the end summary of item 3 only the items that you added, changed, or removed after the reply.
+- When step 8 runs again after a reply, show the table of item 3 only for the 🤖 decisions that you added after the reply. If you added no 🤖 decision after the reply, show no table.
 
 ### Failure rule
 
@@ -283,6 +286,7 @@ When the checks are done, go to step 6.
 6. Tell the user what to do on disagreement: put the correction in `plan.md`, and run this skill again. The user does not edit `tasks-preview.md`.
 7. Recommend `openspec-lite-apply` as the next step.
 8. Last, ask each open question that is still open and is not a kept question, new or existing, with the ask rule. Put the questions at the end of the reply, after items 3 to 7, as the reply order rule says.
+   - Do not ask a question for which a part of kind 3 of the answer rule came in this session. Name the question as still open, with each task that waits for the answer.
 
 ## 3. Rules
 
@@ -346,7 +350,7 @@ When the checks are done, go to step 6.
 ### Answer rule: record a reply of the user
 
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. Examples are a resume, split, stale, prune, name, or folder question.
+- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. The step questions of this workflow are the folder questions of the OpenSpec root, and the pick question of the change selection.
 - For an answer to a question that a step of this workflow asks, follow the step that asked the question. Record the other parts of the reply.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -354,7 +358,7 @@ When the checks are done, go to step 6.
 - These parts have no kind: a part that only asks you to run a command or a skill, or asks you a question; an answer to a question that a step of this workflow asks; and a part that says to keep a question open.
 - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that you named is a choice of the user.
 - Kind 2, a part that leaves a choice to you: the user names no option, and says that you can choose, or that each option is good for the user. Follow the question rule for the point.
-- Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing.
+- Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing. Do not ask the question again in this session.
 - If a part of kind 1 or kind 2 answers an open question, remove that question from `## Open Questions`. Remove no other question.
 - Split the reply of the user as well as you can into facts, constraints, and choices.
 - A fact says how something is, for example "before this change, the thumbnail folder did not exist". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
@@ -389,7 +393,7 @@ When the checks are done, go to step 6.
 - plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you plan for the code is your choice, for example the height, the file format, or the file name.
 - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
 - Criterion (3): your choice is not obvious, and the choice can surprise a reader of the code or a user. Criterion (3) also applies to an internal choice.
-- Do not record your other choices. An obvious choice gets no decision.
+- Do not record a choice that matches none of the criteria (1), (2), and (3). An obvious choice gets no decision only when the choice matches none of the criteria.
 - Record only the part of the decision that matches criterion (1), criterion (2), or criterion (3).
 - If you need an internal detail to explain the reason, write the detail in the "because" part, not in the title or in "Chose X".
 
@@ -465,6 +469,7 @@ When the checks are done, go to step 6.
 
 - To know the exit code of a command, run `node openspec/schemas/plan-lite/exit-code.mjs <command> <args...>` from the OpenSpec root.
 - Run the `exit-code.mjs` command alone, not in a chain.
+- `exit-code.mjs` runs `<command>` in the current folder. If `<command>` must run in a folder that is not the OpenSpec root, start the call with `cd <folder> && `, and give the absolute path of `exit-code.mjs`. A command with the `cd <folder> && ` prefix is a single command.
 - Read the last line of the output: `exit: <code>`.
 - If the last line is `exit: not run (...)`, or has no `exit:`, the command did not run. Follow the failure rule.
 - Do not add `echo $?`.

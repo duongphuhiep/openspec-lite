@@ -67,18 +67,22 @@ How to read this skill:
 
 ### OpenSpec root
 
-- Input: the output of `openspec list --json`.
+- Input: the prompt, and the output of `openspec list --json`.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
-- Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
-- If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
+- If the prompt gives no OpenSpec root, run `openspec list --json`.
+- If the prompt gives an OpenSpec root, run `cd <root> && openspec list --json`, with the folder of the prompt as `<root>`.
+- Read `root.path` of the output. The folder in `root.path` is the OpenSpec root.
+- If `openspec list --json` prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
+- If `root` is `null`, `openspec list --json` exits with code 1. That exit code is not a failure of the action.
 - Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
 - Read each `openspec/...` path from the OpenSpec root.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
-- The `cd <root> && ` prefix does not count as a chain.
+- The `cd <root> && ` prefix does not count as a chain. A command with the prefix is a single command, also for the failure rule.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
 - If more than one folder matches, ask the user to pick one folder. End your turn, and wait for the answer.
+- After the user confirms or picks a folder, run `cd <root> && openspec list --json`, with that folder as `<root>`. The next checks use the output of this run.
 - If the user rejects the folder, or picks no folder, stop. Tell the user to run the skill from the OpenSpec root.
 - If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.
@@ -87,18 +91,18 @@ How to read this skill:
 
 - Output: `<skillDir>`, the folder of this `SKILL.md`. `<skillDir>` holds `scripts/install.mjs` and `assets/plan-lite/`.
 
-1. If the harness gives a base directory for this skill, use the base directory as `<skillDir>`. Go to section 2.
+1. If the harness gives a base directory for this skill, use the base directory as `<skillDir>`.
 2. If the harness gives no base directory, search for the folder `openspec-lite-schema/` that holds `assets/plan-lite/`. Search the paths in this order, and use the first match as `<skillDir>`:
    1. Project folders: start in `<root>`, then go to each parent folder of `<root>`. In each folder, check `.agents/skills/`, `.claude/skills/`, `.kiro/skills/`, `.grok/skills/`, and then `apm_modules/` (at any depth).
    2. User folders, only after all project folders: `~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`.
-3. If a path has the folder, go to section 2.
-4. If no path has the folder, stop and tell the user.
+3. If no path has the folder, stop and tell the user.
 
 ## 2. Compare the versions
 
 - Input: the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped), and the `version` line of `openspec/schemas/plan-lite/schema.yaml` (repo).
 - Output: the next section to do, or stop.
 - Read the shipped version and the repo version.
+- If the shipped `schema.yaml` is missing, or has no readable `version` line, the shipped assets are damaged. Stop, and tell the user to reinstall openspec-lite.
 - If no repo copy exists, go to section 3.
 - If the repo version is higher than the shipped version, follow the Newer schema rule.
 - If the repo version equals the shipped version, tell the user how to repair a damaged schema: delete `openspec/schemas/plan-lite/`, and run this skill again. Skip section 3, and go to section 4.
@@ -147,6 +151,7 @@ operations:
       - "For a plan-lite change, run openspec-lite-archive first. It promotes plan.md decisions to specs and ADRs, then archives."
 ```
 
+- If `openspec/config.yaml` exists, and the file is not valid YAML or has more than one `operations:` key, do not edit the file. Report that the guidance item is not added. Name the error, and show the guidance item block for a manual edit.
 - When you edit `openspec/config.yaml`, keep the other keys, the other items, and the comments.
 - Never add a second `operations:` key. If `openspec/config.yaml` has a second `operations:` key, OpenSpec ignores the whole `openspec/config.yaml`.
 - If `openspec/config.yaml` is missing, create `openspec/config.yaml` with only the guidance item block.
@@ -156,7 +161,7 @@ operations:
 - If `operations.archive.guidance` is a list, and the list does not have the guidance item yet, add the guidance item.
 - If `operations.archive.guidance` is a list, and the list already has the guidance item, do not edit `openspec/config.yaml`.
 - If `operations.archive.guidance` is a plain string, OpenSpec ignores the string. Do not edit the string. Show the user how to change the string to a list.
-- If the edit of `openspec/config.yaml` fails, or the file is not valid YAML, do not edit the file again. Report that the guidance item is not added, and show the guidance item block for a manual edit. Say that the schema install is still good.
+- If the edit of `openspec/config.yaml` fails, or the file is not valid YAML after the edit, do not edit the file again. Report that the guidance item is not added, and show the guidance item block for a manual edit. Say that the schema install is still good.
 - Go to section 5.
 
 ## 5. End
@@ -166,5 +171,6 @@ operations:
 - Report the `config.yaml` line that you added, or why you did not add the line.
 - If the script printed a `backup:` line, tell the user to compare the backup with the new schema and then delete the backup.
 - Run `git rev-parse --show-toplevel` alone.
-- If `git rev-parse --show-toplevel` succeeds, tell the user to commit `openspec/schemas/plan-lite/` and `openspec/config.yaml`.
+- If `git rev-parse --show-toplevel` succeeds, tell the user to commit each of `openspec/schemas/plan-lite/` and `openspec/config.yaml` that this run changed.
+- If this run changed no file, say nothing about commits.
 - If `git rev-parse --show-toplevel` fails, the repo does not use git. Say nothing about commits.

@@ -505,6 +505,7 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - That `instruction` says to use SHALL or MUST for normative requirements. `validate` also accepts SHOULD and MAY.
 - An `openspec/` folder marks an OpenSpec root only if it holds `config.yaml`, `changes/`, or `specs/`. A folder with only `schemas/` does not: `openspec list --json` gives `root: null` and `no_openspec_root`. `openspec init` creates `config.yaml`, so an initialized repo always has a root. Tested 2026-10-15.
 - `openspec list --json` searches only up from the current folder, never down. From the git root of a repo whose only root is `svc/openspec/`, it gives `root: null` with code `no_openspec_root` and the fix text "Run openspec init to create a root here". Tested 2026-10-15.
+- OpenSpec 1.14.2: with `root: null`, `openspec list --json` prints `"changes": []`, also when a subfolder root holds active changes, and exits with code 1. Run with `cd sub && openspec list --json`, the same command lists the changes of `sub/openspec/`. Tested 2026-11-16 in a temp git repo with `sub/openspec/config.yaml` and one change (review C round 2).
 - `openspec archive <name> --yes` fails (exit code 1) when `openspec/changes/archive/<YYYY-MM-DD>-<name>/` already exists: "Archive '<YYYY-MM-DD>-<name>' already exists." The change stays in `openspec/changes/`. Tested 2026-10-15.
 
 ---

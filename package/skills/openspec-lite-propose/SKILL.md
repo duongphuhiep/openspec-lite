@@ -21,6 +21,7 @@ How to read this skill:
 - When you record an open point, follow the question rule.
 - If `plan.md` exists, record each reply of the user with the answer rule.
 - If `plan.md` does not exist yet, keep each part of the reply that the answer rule records, also a change of an outcome of the Goal. Record each part with the answer rule in section 3, step 5.
+- If this workflow stops before `plan.md` exists, list in the stop report each answer of the user in this session, and each outcome that the user moved out. Tell the user to add the list to the request of the next run.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
@@ -71,7 +72,7 @@ How to read this skill:
 
 ### Split check
 
-- Input: each outcome that is not the main outcome.
+- Input: each outcome that is not the main outcome, and the code that the outcomes touch.
 - Output: the outcomes that stay in this change, and the outcomes that the user moved out.
 - Do the split check for each outcome that is not the main outcome.
 - If the outcome touches the same code as the main outcome, keep the outcome in this change. Do not ask.
@@ -105,12 +106,12 @@ How to read this skill:
 - You also cannot decide a point when the point is a value that must match something outside the repo, and no code or doc that you can reach shows the value.
 - At the stop, name the point and the code that you already changed.
 - At the stop, ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
-- After the stop, if the user answers the point, finish the fix with the answer, and give the reply that the "On yes" bullets describe.
+- After the stop, if the user answers the point, or leaves the point to you, finish the fix, and give the reply that the "On yes" bullets describe.
 - After the stop, if the user asks for a change, add the point that stopped the fix to the list of open points, and continue with section 2.
 - After the stop, if the user asks for a change, name the code that the stopped fix already changed in the summary of section 4.
-- After the stop, if the reply is not an answer and not a request for a change, do not continue the fix, and create no change. Do what the reply asks.
+- After the stop, if the reply is not an answer, does not leave the point to you, and is not a request for a change, do not continue the fix, and create no change. Do what the reply asks.
 - After the stop, if the reply asks to undo the fix, revert only the code that the stopped fix changed.
-- After the stop, if the reply is not an answer and not a request for a change, name the code that the stopped fix changed.
+- After the stop, if the reply is not an answer, does not leave the point to you, and is not a request for a change, name the code that the stopped fix changed.
 - On yes, stop after the fix and the names.
 - On no, continue with section 2.
 
@@ -120,18 +121,22 @@ Do these checks in order. When the checks are done, go to section 3.
 
 ### OpenSpec root
 
-- Input: the output of `openspec list --json`.
+- Input: the prompt, and the output of `openspec list --json`.
 - Output: the OpenSpec root, the folder that holds `openspec/`.
-- Run `openspec list --json`, and read `root.path`. The folder in `root.path` is the OpenSpec root.
-- If `openspec list --json` fails, or prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
+- If the prompt gives no OpenSpec root, run `openspec list --json`.
+- If the prompt gives an OpenSpec root, run `cd <root> && openspec list --json`, with the folder of the prompt as `<root>`.
+- Read `root.path` of the output. The folder in `root.path` is the OpenSpec root.
+- If `openspec list --json` prints no JSON, show the error, and stop. Tell the user to check that `openspec` is installed.
+- If `root` is `null`, `openspec list --json` exits with code 1. That exit code is not a failure of the action.
 - Run each `openspec` command, and each command with a relative `openspec/...` path, from the OpenSpec root.
 - Read each `openspec/...` path from the OpenSpec root.
 - If the OpenSpec root is not the current folder, start each `openspec` command, and each command with a relative `openspec/...` path, with `cd <root> && `.
-- The `cd <root> && ` prefix does not count as a chain.
+- The `cd <root> && ` prefix does not count as a chain. A command with the prefix is a single command, also for the failure rule.
 - In a monorepo, the OpenSpec root can be a subfolder of the git root. OpenSpec searches only up from the current folder, not down.
 - If `root` is `null`, search the subfolders for an `openspec/` folder that holds `config.yaml`, `changes/`, or `specs/`. Skip `.git/`, `node_modules/`, and `apm_modules/`.
 - If one folder matches, ask the user to confirm the folder as the root. End your turn, and wait for the answer.
 - If more than one folder matches, ask the user to pick one folder. End your turn, and wait for the answer.
+- After the user confirms or picks a folder, run `cd <root> && openspec list --json`, with that folder as `<root>`. The next checks use the output of this run.
 - If the user rejects the folder, or picks no folder, stop. Tell the user to run the skill from the OpenSpec root.
 - If no folder matches, stop. Tell the user to run `openspec init --tools <harness>` in the folder that must hold `openspec/`.
 - Do not run `openspec init` in a parent of an existing root.
@@ -145,7 +150,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
    - If the version equals the shipped version, go to item 3 of the schema check.
    - If the version is higher than the shipped version, stop. Tell the user: "This repo uses a newer plan-lite schema. Run `apm update`. If the schema is still newer, edit the openspec-lite ref in `apm.yml` to the next major version, then run `apm install`. If you installed openspec-lite with `apm install -g`, use `apm update -g` and edit `~/.apm/apm.yml`."
-   - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill.
+   - If the file is missing, the version is lower, or the file has no readable `version` line, run the `openspec-lite-schema` skill. Give the OpenSpec root in the prompt of the skill call.
    - If you cannot invoke a skill, tell the user to run `openspec-lite-schema`, and stop.
    - If the user declines the copy of the schema, stop.
    - Do not end your turn after `openspec-lite-schema` finishes.
@@ -218,7 +223,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 ### Question rule
 
-- Outside the Level 1 fix, propose does not explore the code, so propose decides no open point.
+- Outside the Level 1 fix, propose decides no open point. Propose reads the code only for the split check and the Level 1 test.
 - Record each open point as an open question in `## Open Questions`. The tasks preview tries to decide the open question later.
 - If the user says to keep a question open, end the text of the question with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -229,14 +234,14 @@ Do these checks in order. When the checks are done, go to section 3.
 ### Answer rule
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-- An answer to a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question, is not a fact, a constraint, or a choice for plan.md.
+- An answer to a question that a step of this workflow asks is not a fact, a constraint, or a choice for plan.md. The step questions of this workflow are the split, Level 1, folder, resume, name, and tasks-preview questions.
 - For an answer to a question of a workflow step, follow the step that asked the question. Record the other parts of the answer.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - Sort each other part of the answer into one of three kinds. Each part has one kind.
 - These parts have no kind: a part that only asks for a command, a skill, or an answer; an answer to a question of a workflow step; and a part that says to keep a question open.
 - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that the agent named is a choice of the user.
 - Kind 2, a part that leaves a choice to the agent: the user names no option, and says that the agent can choose, or that each option is good for the user. Follow the question rule for the point.
-- Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing.
+- Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing. Do not ask the question again in this session.
 - If a part of kind 1 answers an open question of `plan.md`, remove that question from `## Open Questions`. Remove no other question.
 - A fact says how something is. An instruction says what to do. An instruction is never a fact.
 - Record each part of the answer in one section only.
@@ -301,7 +306,7 @@ Do these checks in order. When the checks are done, go to section 3.
    - When the user replies, first record the reply with the answer rule.
    - If you added, changed, or removed an item in `plan.md`, list each such item, with its ID.
    - If you changed an outcome of the Goal, quote the old outcome and the new outcome.
-   - Then, on yes, run the `openspec-lite-tasks-preview` skill.
+   - Then, on yes, run the `openspec-lite-tasks-preview` skill. Give `<name>` and the OpenSpec root in the prompt of the skill call.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
    - On no, recommend `openspec-lite-apply` as the next step, and end your turn.
    - If the reply has no yes and no no, ask the tasks-preview question again.

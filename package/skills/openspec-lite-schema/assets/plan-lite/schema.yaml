@@ -23,7 +23,7 @@ apply:
     - A root command is an `openspec` command, or a command with a relative `openspec/...` path.
     - Run each root command from the OpenSpec root.
     - If the OpenSpec root is not the current folder, start each root command with `cd <root> && `.
-    - The `cd <root> && ` prefix does not count as a chain.
+    - The `cd <root> && ` prefix does not count as a chain. A command with the prefix is a single command, also for the failure rule.
     - `<changeDir>` is the folder of the change.
 
     ## General rules
@@ -117,6 +117,7 @@ apply:
       - A question that the user did not answer stays open.
       - If the user says to regenerate the preview, give the end summary of step 6 for your edits to plan.md. Tell the user to run openspec-lite-tasks-preview. End your turn.
       - If the user says to continue from plan.md, go to step 4.
+      - If the user says to continue from plan.md, say in the end summary of step 6 that each new run of apply asks the stale question again while the preview is stale. Say that a run of openspec-lite-tasks-preview, or a delete of tasks-preview.md, ends the stale question.
       - If step 2 found the preview stale, and the user does not answer the stale question, ask the stale question again, and end your turn.
       - If step 2 did not find the preview stale, go to step 4.
 
@@ -172,8 +173,8 @@ apply:
     ## Step 6: End
 
     1. Give the end summary:
-       - If you run step 6 again after a reply, list only the items that the reply changed.
-       - If you run step 6 again after a reply, show the table only for the 🤖 decisions that you added after the reply.
+       - If you run step 6 again after a reply, list only the items that you added, changed, or removed after the reply.
+       - If you run step 6 again after a reply, show the table only for the 🤖 decisions that you added after the reply. If you added no 🤖 decision after the reply, show no table.
        - List each fact, decision, and open question that you added, changed, or removed in plan.md, with its ID.
        - For each open question that you removed, give its answer.
        - The preview is current now when step 2 found the preview current, and no edit of this session changed a hashed section of the plan hash rule.
@@ -195,6 +196,7 @@ apply:
     9. If the test check or the done check fails, do not suggest an archive.
     10. Last, ask each open question that is left and is not a kept question, with the ask rule:
         - Ask each question one time in this reply, also a question that step 3 or step 4 asked before.
+        - Do not ask a question for which a part of kind 3 of the answer rule came in this session. Item 7 names the question.
         - Tell the user to answer in the next message, so that you record the answer.
         - Do not ask for the answer of a kept question.
         - When the user replies, step 4 says what to do.
@@ -252,7 +254,7 @@ apply:
     ## Answer rule: record a reply of the user
 
     - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part.
-    - A step question is a question that a step of this workflow asks, for example a resume, split, stale, prune, name, or folder question.
+    - A step question is a question that a step of this workflow asks: the stale question of step 3.
     - An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
     - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
     - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -260,7 +262,7 @@ apply:
     - Sort each other part of the reply into one of three kinds. Each part has one kind.
     - Kind 1, a part to record: a fact, a constraint, a choice, or an instruction of the user. A part that accepts an option or a recommended answer that you named is a choice of the user.
     - Kind 2, a part that leaves a choice to you: the user names no option, and says that you can choose, or that each option is good for the user. Follow the question rule for the point.
-    - Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing.
+    - Kind 3, a part that says that the user cannot answer the question now: keep the question in `## Open Questions`, with no marker, and record nothing. Do not ask the question again in this session.
     - If a part of kind 1 or kind 2 answers an open question, remove that question from `## Open Questions`. Remove no other question.
     - Split the reply of the user as well as you can into facts, constraints, and choices.
     - A fact says how something is, for example "before this change, the thumbnail folder did not exist". An instruction says what to do, for example "write the thumbnails to `public/thumbs/`". An instruction is never a fact.
@@ -294,7 +296,7 @@ apply:
     - plan.md or the user can fix only one part of a visible result, for example the width of a thumbnail. Each other part that you put in the code is your choice, for example the height, the file format, or the file name.
     - Criterion (2): you weighed two or more close options, and no option was a clear winner. Criterion (2) also applies to an internal choice.
     - Criterion (3): your choice is not obvious, and the choice can surprise a reader of the code or a user. Criterion (3) also applies to an internal choice.
-    - Do not record your other choices. An obvious choice gets no decision.
+    - Do not record a choice that matches none of the criteria (1), (2), and (3). An obvious choice gets no decision only when the choice matches none of the criteria.
     - Record only the part of the decision that matches criterion (1), criterion (2), or criterion (3).
     - If you need an internal detail to explain the reason, write the detail in the "because" part, not in the title or in "Chose X".
 
@@ -376,6 +378,7 @@ apply:
 
     - To know the exit code of a command, run `node openspec/schemas/plan-lite/exit-code.mjs <command> <args...>`.
     - Run the `exit-code.mjs` command alone, not in a chain.
+    - `exit-code.mjs` runs `<command>` in the current folder. If `<command>` must run in a folder that is not the OpenSpec root, start the call with `cd <folder> && `, and give the absolute path of `exit-code.mjs`. A command with the `cd <folder> && ` prefix is a single command.
     - Read the last line of the output: `exit: <code>`.
     - If the last line is `exit: not run (...)`, or has no `exit:`, the command did not run. Follow the failure rule.
     - Do not add `echo $?`.
