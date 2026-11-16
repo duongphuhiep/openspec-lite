@@ -115,7 +115,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
   - `## Open Questions` of `plan.md`.
   - `## 0. Open questions` of `tasks.md`.
   - `## Open Questions` of `design.md`.
-  - The other content of `design.md` and `specs/` of the change, for an answer.
+  - The other content of `proposal.md`, `design.md`, and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
@@ -123,7 +123,7 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - A missing file holds no question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
-- If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
+- If an artifact holds the question, and no artifact holds the answer of the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
 - If no artifact holds the question, and no artifact holds the answer of the question, do these steps:
   1. Name the question.

@@ -2180,7 +2180,7 @@ This extends D77.
 
 **Rationale**: In scenario 22c, 2 of 2 runs changed the question. On 627b8fb, the agent showed a menu: "1. Archive anyway", "2. Stop", "3. Record first". Option 3 asked the user for new content from memory, for example the CSV column format, to write as a spec or an ADR before the archive. On f0a5cad, the agent asked "Archive anyway, or finish the time-zone work first?". The done check is a gate, and a gate needs one yes or no answer, also in a headless run. Option 3 also skips `plan.md`, the source of each promotion, and the step 6 rule that lets the user pick only an item that archive skipped. The need behind option 3 is real: a user can see at the last moment that a decision is worth keeping. The hint gives that need a correct path, through `plan.md` and the normal filter and approval. Rejected: accept a menu in the scenario, because each run can invent new options, and the scenario cannot check them.
 
-**Status**: Revised by D191: on no, archive gives the paths for each item that is not met.
+**Status**: Revised by D191: on no, archive gives the paths for each item that is not met. D348 deletes the "add it to `plan.md` first" hint: the reply rule of D346 covers an item that the user names.
 
 ---
 
@@ -3818,7 +3818,7 @@ This revises D119, D166, D182, D219, and D256.
 
 ## D271: Fixes From the Review of the Skill Text at 98efbdb
 
-**Status**: The full text of each draft in item 10 is superseded by D289.
+**Status**: The full text of each draft in item 10 is superseded by D289. D348 deletes the "add it to `plan.md` first" line of item 10.
 
 **Decision**:
 
@@ -4919,3 +4919,20 @@ This revises D323.
 8. Rejected: the resume of a change whose `plan.md` holds only the template (propose remark 1, second part). The case needs a failed edit in section 3 step 5. The stop report of item 4 keeps the answers, and the user can delete the folder. A test for "only the template" costs more than the risk.
 
 **Rationale**: review C round 7 of the skill text at 2924b13 had 9 remarks from eight reviewers. 9 are fixed, and one part of propose 1 is rejected. Apply 1 and archive 1 touch the same text and get one fix. Propose 1 and traversal 1 touch the same text and get one fix. The schema `version` stays 8, because 8 is not released yet.
+
+## D348: Fixes of Review C Round 8
+
+**Decision**:
+
+1. Leftover plan.md questions, in each copy: the answer search also reads `proposal.md`, because upgrade can write an answer that changes a Goal outcome only there. If an artifact holds the answer, the question is closed, also when an artifact still holds the question. The "holds the question" branch applies only when no artifact holds the answer.
+2. Upgrade, resume summary check: the summary says that the specs of an earlier run have no requirement for the item, and tells the user to add one only if the item needs one. The agent cannot tell a stopped run from a no of the user. This simplifies the text of D347 item 2.
+3. Upgrade step 5.4: on no to the prune question, the agent names each "closed" question with its answer, and tells the user to delete the question from `plan.md`. No artifact holds the answer, so the guards of the other skills ask for it again.
+4. Schema skill, file system error of section 3: the last branch covers each other case, also a first install. The agent tells the user to delete `openspec/schemas/plan-lite/` if the folder exists, because the folder can be a partial copy. This closes the gap that D347 item 3 left.
+5. Archive step 1: the reply rule of "Archive anyway?" also covers a new outcome. The "add it to `plan.md` first" hint of the no branch is deleted, because the reply rule covers the same input. This revises D155 and D271 item 10.
+6. Archive guard step 5: if the reply to the archive question answers an open question, or gives a fact, a constraint, or a choice, archive does not run the command. Archive quotes the part, and tells the user to write the part in an artifact, then to run archive again.
+7. Propose, Level 1 stop: the fix goes on only when the reply does not ask for a change. The scope "Outside the Level 1 fix" now covers both parts of the first bullet of the question rule. This fixes the text of D347 item 5.
+8. Answer rule of propose, the tasks preview, and `apply.instruction`: a part that asks to run a command or a skill runs last, after the agent records and finishes the other parts of the reply. A called skill reads only the files on disk.
+9. Answer rule of propose, the tasks preview, and `apply.instruction`: a reply that adds an outcome to the Goal is a Goal change, as a reply that changes an outcome is. Only an instruction that adds work for an outcome of the Goal is a decision of the user.
+10. `apply.instruction` step 4: skip each task of `tasks-preview.md` that no item of plan.md needs. Step 5 check 2: after a fix of the code for a decision with no 🤖, do check 1 again.
+
+**Rationale**: review C round 8 of the skill text at 505270d had 14 remarks from eight reviewers. 14 are fixed and 0 are rejected. Upgrade 1 and apply 1 touch the same shared block and get one fix. Schema-yaml 2 and tasks-preview 1 touch the same text and get one fix. Four remarks come from the text of D346 and D347 (upgrade 2, schema-skill 1, propose 2, and archive 1): each fix simplifies or closes that text, with no new rule on top. The schema `version` stays 8, because 8 is not released yet.

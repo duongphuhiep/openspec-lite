@@ -180,6 +180,7 @@ The guard path:
    - If `plan.md` still has open questions that no artifact holds, and whose answer no artifact holds, name how many in the same question.
    - The count of these open questions matters because the archive moves `plan.md` to the archive folder, and no artifact holds these questions.
    - After the archive question, end your turn, and wait for the answer.
+   - If the reply to the archive question answers an open question, or gives a fact, a constraint, or a choice, do not run the command. Quote that part of the reply. Tell the user to write the part in an artifact of the change, and then to run `openspec-lite-archive` again. Stop.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
 
@@ -190,7 +191,7 @@ The guard path:
   - `## Open Questions` of `plan.md`.
   - `## 0. Open questions` of `tasks.md`.
   - `## Open Questions` of `design.md`.
-  - The other content of `design.md` and `specs/` of the change, for an answer.
+  - The other content of `proposal.md`, `design.md`, and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
@@ -198,7 +199,7 @@ The guard path:
 - A missing file holds no question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
-- If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
+- If an artifact holds the question, and no artifact holds the answer of the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
 - If no artifact holds the question, and no artifact holds the answer of the question, do these steps:
   1. Name the question.
@@ -253,14 +254,13 @@ The guard path:
 - Name each outcome and each constraint that is not met, and each open question that is left.
 - If each answer is "yes", go to step 2.
 - If an answer is "no", show the warnings, and ask only: "Archive anyway?" Give no other options in this question. End your turn.
-- If the reply to "Archive anyway?" answers an open question, or gives a fact, a constraint, or a choice for `plan.md`, do not go to step 2. Quote that part of the reply. Tell the user to run `openspec-lite-apply` with that part, so that apply records the part, and then to run `openspec-lite-archive` again. Stop.
+- If the reply to "Archive anyway?" answers an open question, or gives an outcome, a fact, a constraint, or a choice for `plan.md`, do not go to step 2. Quote that part of the reply. Tell the user to run `openspec-lite-apply` with that part, so that apply records the part, and then to run `openspec-lite-archive` again. Stop.
 - If the user says yes to "Archive anyway?", go to step 2.
 - If the user says no to "Archive anyway?", give the paths below, then stop:
   - For each outcome or constraint that is not met, give two paths. Path 1: implement the item with `openspec-lite-apply`. Path 2: remove the item from `plan.md`, and propose the item as a separate change with `openspec-lite-propose`.
   - For each open question that is left and does not end with "(left to the agent by the user)", tell the user to run `openspec-lite-apply` with the answer, so that apply records the answer.
   - For each open question that ends with "(left to the agent by the user)", tell the user to run `openspec-lite-apply`, which decides the point.
   - Tell the user to run `openspec-lite-archive` again.
-  - If the user names an item that is not in `plan.md`, say: to keep the item, add it to `plan.md` first.
 
 ### Step 2: Read plan.md
 

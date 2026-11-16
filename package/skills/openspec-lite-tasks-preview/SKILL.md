@@ -73,7 +73,7 @@ Do these checks in order.
   - `## Open Questions` of `plan.md`.
   - `## 0. Open questions` of `tasks.md`.
   - `## Open Questions` of `design.md`.
-  - The other content of `design.md` and `specs/` of the change, for an answer.
+  - The other content of `proposal.md`, `design.md`, and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
@@ -81,7 +81,7 @@ Do these checks in order.
 - A missing file holds no question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
-- If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
+- If an artifact holds the question, and no artifact holds the answer of the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
 - If no artifact holds the question, and no artifact holds the answer of the question, do these steps:
   1. Name the question.
@@ -132,7 +132,7 @@ Do these checks in order.
 - When an action fails, follow the failure rule.
 - When you write a reply to the user, follow the reply order rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
-- A reply that changes an outcome that the Goal states asks to change the existing text of the Goal.
+- A reply that adds an outcome to the Goal, or changes an outcome that the Goal states, asks to change the existing text of the Goal.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, do these actions in order:
   1. Record the other parts of the reply with the answer rule.
   2. List each item that you recorded, with its ID.
@@ -351,7 +351,7 @@ When the checks are done, go to step 6.
 
 ### Answer rule: record a reply of the user
 
-- If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
+- If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call. Do the request of the part last, after you record and finish the other parts of the reply.
 - A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
 - An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question, also when the answer asks you to run a command or a skill. Record the other parts of the reply.
 - If the request that starts the run already answers a step question, follow that answer, and do not ask the question.
@@ -372,7 +372,7 @@ When the checks are done, go to step 6.
 - If the user names an item and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
 - Record each choice or instruction of the reply in `## Decisions`, as a decision with no 🤖.
 - A part that leaves a choice to you is not a choice of the user.
-- An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
+- An instruction that adds work for an outcome of the Goal is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of a reply of the user.
 - Record each part of kind 1 in a section of plan.md, also an answer to an open question. Do not put a part of kind 1 only in the end summary.
 - After you record the reply, read the reply again, part by part. If a part of kind 1 is in no section of plan.md, record the part now.

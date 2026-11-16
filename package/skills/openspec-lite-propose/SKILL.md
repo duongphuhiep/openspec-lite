@@ -108,7 +108,7 @@ How to read this skill:
 - You also cannot decide a point when the point is a value that must match something outside the repo, and no code or doc that you can reach shows the value.
 - At the stop, name the point and the code that you already changed.
 - At the stop, ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
-- After the stop, if the user answers the point, or leaves the point to you, finish the fix, and give the reply that the "On yes" bullets describe.
+- After the stop, if the user answers the point, or leaves the point to you, and does not ask for a change, finish the fix, and give the reply that the "On yes" bullets describe.
 - After the stop, if the user asks for a change, add the point that stopped the fix to the list of open points, and continue with section 2.
 - After the stop, if the reply is not an answer, does not leave the point to you, and is not a request for a change, do not continue the fix, and create no change. Do what the reply asks, and name the code that the stopped fix changed.
 - After the stop, if the reply asks to undo the fix, revert only the code that the stopped fix changed, and say that the code is reverted.
@@ -223,7 +223,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 ### Question rule
 
-- Outside the Level 1 fix, propose decides no open point. Propose reads the code only for the split check, for the Level 1 test, and to answer a question of the user.
+- Outside the Level 1 fix, propose decides no open point, and reads the code only for the split check, for the Level 1 test, and to answer a question of the user.
 - Record each open point as an open question in `## Open Questions`. The tasks preview tries to decide the open question later.
 - If the user says to keep a question open, end the text of the question with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
@@ -233,7 +233,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 ### Answer rule
 
-- If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
+- If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call. Do the request of the part last, after you record and finish the other parts of the answer.
 - A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
 - An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question, also when the answer asks you to run a command or a skill. Record the other parts of the answer.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
@@ -248,7 +248,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
 - A problem that the Goal fixes is part of the Goal. Do not record the problem as a fact.
-- If a part of the answer changes an outcome that the Goal states, edit that outcome of the Goal to match the answer.
+- If a part of the answer adds an outcome to the Goal, or changes an outcome that the Goal states, edit the Goal to match the answer.
 - Do not record a constraint or a decision that contradicts the Goal.
 - Record each constraint in the answer in `## Constraints`.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
@@ -256,7 +256,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - If the user names an item of `plan.md`, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
 - Record each other choice or instruction in the answer as a decision with no 🤖.
 - A part of kind 2 is not a choice of the user.
-- An instruction that adds work to the change is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
+- An instruction that adds work for an outcome of the Goal is a choice of the user, for example "also add a migration for the old data" or "update the deploy script".
 - The decision rule and the question rule select only your own choices. Do not use the decision rule or the question rule to drop a part of an answer of the user.
 - Record each part of kind 1 in a section of plan.md, also an answer to an open question.
 - Do not put a part of kind 1 only in the end summary.

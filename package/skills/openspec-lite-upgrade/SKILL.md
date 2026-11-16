@@ -140,7 +140,7 @@ Do these checks in order.
   - `## Open Questions` of `plan.md`.
   - `## 0. Open questions` of `tasks.md`.
   - `## Open Questions` of `design.md`.
-  - The other content of `design.md` and `specs/` of the change, for an answer.
+  - The other content of `proposal.md`, `design.md`, and `specs/` of the change, for an answer.
 - Output: each open question of `plan.md`, with the artifact that holds the question.
 - If `plan.md` does not exist, or `plan.md` has no open question, say nothing about `plan.md`.
 - An HTML comment in `## Open Questions` of `plan.md` is not a question.
@@ -148,7 +148,7 @@ Do these checks in order.
 - A missing file holds no question.
 - An artifact holds a question when the artifact asks the same question. The ID, a prefix such as "Answer:", and other words around the question do not decide the match.
 - An artifact holds the answer of a question when the artifact states the answer as a fact, a decision, or a requirement. Content on the same topic that does not answer the question is not the answer.
-- If an artifact holds the question, name the question and the artifact, because the stock skills meet the question there.
+- If an artifact holds the question, and no artifact holds the answer of the question, name the question and the artifact, because the stock skills meet the question there.
 - If an artifact holds the answer of the question, name the question as closed, with the artifact that holds the answer. Do not ask the user to answer the question.
 - If no artifact holds the question, and no artifact holds the answer of the question, do these steps:
   1. Name the question.
@@ -224,7 +224,7 @@ Close the open questions of `plan.md`:
 - If the user left to you a fact that only the user knows, plan a decision with 🤖 in `design.md` for the value that you choose for the code.
 - If the user left to you a fact that only the user knows, say in the summary that the fact stays unknown. The question rule says that the decision for this fact matches criterion (3).
 - If a decided point is a contract, and the specs step of an earlier run is not done, ask its requirement in the question turn, as for a decision with 🤖 in `plan.md`.
-- If the specs step of an earlier run is done, check each source of `plan.md` that the requirement-source rule accepts, and each decided point that is a contract. If no requirement of a delta states the rule of the item, name the item in the summary. Say that the item has no requirement, because the resume rule kept the specs of the earlier run. Tell the user to add the requirement by hand.
+- If the specs step of an earlier run is done, check each source of `plan.md` that the requirement-source rule accepts, and each decided point that is a contract. If no requirement of a delta states the rule of the item, name the item in the summary. Say that the specs of an earlier run have no requirement for the item. Tell the user to add the requirement by hand if the item needs one.
 - Do not ask a question that you closed.
 
 Ask the question turn:
@@ -413,6 +413,7 @@ Do steps 5.1 to 5.4 in order.
 ### Step 5.4: Act on the answer
 
 - If the user answers no, keep `plan.md` as it is. Say in one line that its moved sections are old copies, and that the artifacts are the source of truth.
+- If the user answers no, name each question with the destination "closed", with its answer. Tell the user to delete the question from `plan.md`, because no artifact holds the answer, and the other skills ask for the answer again.
 - If the user answers yes, delete each section or item whose content moved, except the items that stay.
 - These items stay in `plan.md` after a yes:
   - each row of step 5.1 whose `Heading` holds "kept"
