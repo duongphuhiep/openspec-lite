@@ -445,6 +445,8 @@ With skillpm, harness folders are symlinks to `.agents/skills/`. A harness can r
 - **Node child processes**: `spawnSync(cmd, [args], { shell: true })` prints `[DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities`. Without `shell: true`, Node does not find a Windows `.cmd` shim such as `openspec.cmd`.
 - **`fs.renameSync`** onto an existing non-empty folder fails with `ENOTEMPTY` (D102).
 - **`fs.readdirSync(dir, { recursive: true, withFileTypes: true })`** gives entries with `parentPath`. `install.mjs` uses it to list the copied files.
+- **`fs.renameSync`** error message: a failed move names both paths, for example `EACCES: permission denied, rename '<repo>/openspec/schemas/plan-lite' -> '<repo>/openspec/schemas-backup/plan-lite-v1-<time>'`. So the `install: <message>` line of a failed move names the folder of the old schema, also when the move did not occur (review C round 10, schema-skill 1; D350).
+- **Git and empty folders**: git tracks files, not folders, so git keeps no empty folder. A fresh clone of a repo whose `openspec/specs/` is empty has no `openspec/specs/` folder. Source: Git FAQ, "Can I add empty directories?", https://git.wiki.kernel.org/index.php/GitFaq#Can_I_add_empty_directories.3F (D350).
 
 ---
 

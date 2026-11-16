@@ -121,8 +121,8 @@ apply:
       - Do not run step 2 again after you record the answers.
       - A question that the user did not answer stays open.
       - If the reply gives the stale answer, follow the stale answer bullets of step 3.
-      - If the user says to continue from plan.md, go to step 4.
-      - If step 2 found the preview stale, and the user does not answer the stale question, ask the stale question again, and end your turn.
+      - If the stale answer is to continue from plan.md, go to step 4.
+      - If step 2 found the preview stale, and no stale answer exists, ask the stale question again, and end your turn.
       - If step 2 did not find the preview stale, go to step 4.
 
     ## Step 4: Write the code

@@ -135,8 +135,8 @@ The first output line is the status:
 - If the output has no `status:` line and no `install:` line, the script did not run. Follow the failure rule. Do not copy the schema files with another tool.
 - If the output has no `status:` line in each other case, a file system error occurred. Do these steps in order, and then stop:
   1. Show each `install:` line.
-  2. If a repo copy existed before section 3, and no `install:` line names the folder of the old schema, tell the user that the old schema is still in `openspec/schemas/plan-lite/`, with no backup. Tell the user to fix the error, and to run this skill again.
-  3. In each other case, tell the user to delete `openspec/schemas/plan-lite/` if the folder exists, because the folder can be a partial copy. If an `install:` line names the folder of the old schema, also tell the user where the old schema folder is. Tell the user to fix the error, and to run this skill again.
+  2. If a repo copy existed before section 3, and the output has no line `install: the old schema is in <path>`, tell the user that the old schema is still in `openspec/schemas/plan-lite/`, with no backup. Tell the user to fix the error, and to run this skill again.
+  3. In each other case, tell the user to delete `openspec/schemas/plan-lite/` if the folder exists, because the folder can be a partial copy. If the output has the line `install: the old schema is in <path>`, also tell the user that the old schema is in that `<path>`. Tell the user to fix the error, and to run this skill again.
 
 ## 4. Archive guidance
 

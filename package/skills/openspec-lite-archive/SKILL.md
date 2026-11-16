@@ -113,11 +113,12 @@ Do these checks in order.
 - An active change is an entry of the `changes` list.
 - A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
+- Read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names a change, use that change.
-- If the prompt names a change that is not in the `changes` list, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
-- If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
+- If the prompt names a change that is not in the `changes` list, ask the user to pick one change. End your turn, and wait for the answer.
 - If the prompt names no change, and only one active change exists, use that change.
-- If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
+- If the prompt names no change, and more than one active change exists, ask the user to pick one change. End your turn, and wait for the answer.
+- When you ask the user to pick one change, show the name and the schema of each active change, so that the user sees which changes this skill accepts.
 - If the change to use has no schema, stop. Tell the user that the change has no schema, so this skill cannot use the change.
 
 ### Guard
@@ -341,7 +342,7 @@ The delta format:
 
 **Requirement**: a delta for `<dir>/specs/<capability>/spec.md`.
 
-- To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new capability only when none matches.
+- To pick `<capability>`, list `openspec/specs/`. If `openspec/specs/` does not exist, no capability matches. Reuse a capability that matches. Name a new capability only when none matches.
 - If you reuse a capability, read `openspec/specs/<capability>/spec.md`.
 - If a requirement changes a requirement of the main spec, write the requirement under `## MODIFIED Requirements`, with the name of the requirement of the main spec.
 - If a requirement removes a requirement of the main spec, write the requirement under `## REMOVED Requirements`.

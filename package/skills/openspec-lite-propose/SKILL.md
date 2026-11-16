@@ -309,7 +309,8 @@ Do these checks in order. When the checks are done, go to section 3.
    - When the user replies, first record the reply with the answer rule.
    - If you added, changed, or removed an item in `plan.md`, list each such item, with its ID.
    - If you added an outcome to the Goal, quote the new outcome. If you changed an outcome of the Goal, quote the old outcome and the new outcome.
-   - Then, on a yes of the reply or of the request, run the `openspec-lite-tasks-preview` skill. Give `<name>` and the OpenSpec root in the prompt of the skill call.
-   - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
-   - On no, recommend `openspec-lite-apply` as the next step, and end your turn.
-   - If the reply has no yes and no no, and the request does not answer the tasks-preview question, ask the tasks-preview question again.
+   - The tasks-preview answer is the answer of the reply to the tasks-preview question. If the reply does not answer the tasks-preview question, the tasks-preview answer is the answer of the request.
+   - Then, if the tasks-preview answer is yes, run the `openspec-lite-tasks-preview` skill. Give `<name>` and the OpenSpec root in the prompt of the skill call.
+   - If the tasks-preview answer is yes, and you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
+   - If the tasks-preview answer is no, recommend `openspec-lite-apply` as the next step, and end your turn.
+   - If no tasks-preview answer exists, ask the tasks-preview question again.

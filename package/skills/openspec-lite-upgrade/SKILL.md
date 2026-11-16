@@ -106,11 +106,12 @@ Do these checks in order.
 - An active change is an entry of the `changes` list.
 - A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
+- Read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names a change, use that change.
-- If the prompt names a change that is not in the `changes` list, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
-- If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
+- If the prompt names a change that is not in the `changes` list, ask the user to pick one change. End your turn, and wait for the answer.
 - If the prompt names no change, and only one active change exists, use that change.
-- If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
+- If the prompt names no change, and more than one active change exists, ask the user to pick one change. End your turn, and wait for the answer.
+- When you ask the user to pick one change, show the name and the schema of each active change, so that the user sees which changes this skill accepts.
 - If the change to use has no schema, stop. Tell the user that the change has no schema, so this skill cannot use the change.
 
 ### Guard
@@ -283,7 +284,7 @@ Read the answer of the user:
 - While the `skip_specs: true` line is set, the CLI forbids spec files.
 - After you remove the `skip_specs: true` line, run the instructions command for `specs` with the instructions rule.
 - Write one delta per capability, for the requirements of step 2.
-- To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new capability only when none matches.
+- To pick `<capability>`, list `openspec/specs/`. If `openspec/specs/` does not exist, no capability matches. Reuse a capability that matches. Name a new capability only when none matches.
 - If you reuse a capability, read `openspec/specs/<capability>/spec.md`.
 - If a requirement changes a requirement of the main spec, write the requirement under `## MODIFIED Requirements`, with the name of the requirement of the main spec.
 - If a requirement removes a requirement of the main spec, write the requirement under `## REMOVED Requirements`.
@@ -388,7 +389,7 @@ Do steps 5.1 to 5.4 in order.
 - If a question also stays in `plan.md` (step 2.3 or step 2.4), write the heading of the artifact and "kept", for example "`## Open Questions`, kept".
 - If an artifact holds a question of `plan.md` or its answer, give the question the heading of that artifact, or `## 0. Open questions`.
 - If no artifact holds a question or its answer, and step 2 did not run in this session, for example on the resume path, use the test of the question rule again to find the answer.
-- The closed rule: a question that no artifact holds has the destination "closed", with its answer, only when the answer is obvious, or the answer is a decision that the decision rule does not record.
+- The closed rule: a question that no artifact holds has the destination "closed", with its answer, only when you found or decided the answer, and the answer is obvious or is a decision that the decision rule does not record.
 - A yes to the prune question deletes a closed question.
 - If no artifact holds a question, and its answer is a non-obvious fact or a decision that the decision rule records, the destination is "kept, in no artifact". This case occurs when step 2.3 kept a `design.md` of an earlier run.
 - If no artifact holds a question, and you cannot decide the question or find its answer, the destination is "kept, in no artifact".
@@ -397,7 +398,7 @@ Do steps 5.1 to 5.4 in order.
 
 ### Step 5.2: Find the content in no artifact
 
-- If a section has content that is in no artifact, list the content as "kept, in no artifact".
+- If a section has content that no artifact holds, and step 5.1 gave the content no destination, list the content as "kept, in no artifact".
 - A yes to the prune question does not delete content that is "kept, in no artifact".
 - Go to step 5.3.
 

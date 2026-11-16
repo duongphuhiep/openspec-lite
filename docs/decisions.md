@@ -4951,3 +4951,17 @@ This revises D323.
 8. Tasks preview: a reply to a question of section 1 is recorded at the record point after step 2, with the request. Before, the general rules recorded the reply before the guard and step 1 checked the change. `apply.instruction` is not changed: apply loads it after section 1.
 
 **Rationale**: review C round 9 of the skill text at 8cec8af had 9 remarks from eight reviewers. 9 are fixed and 0 are rejected. Propose 2 and schema-yaml 2 touch the same rule and get one fix: no split question for an outcome that the user adds, in place of a new split check. Five remarks come from the text of D347 or D348 (propose 1, propose 2, schema-yaml 1, schema-yaml 2, archive 1): each fix completes or moves that text. The schema `version` stays 8, because 8 is not released yet.
+
+## D350: Fixes of Review C Round 10
+
+**Decision**:
+
+1. Upgrade step 5.1: a question that no artifact holds is "closed" only when the agent found or decided the answer. An answer of the user that the resume rule kept out of an artifact is not "closed".
+2. Upgrade step 5.2: the step lists content as "kept, in no artifact" only when step 5.1 gave the content no destination. A "closed" question no longer gets two destinations. With item 1, the answer of the user from item 1 gets the destination "kept, in no artifact", with no new bullet.
+3. Schema skill, file system error of section 3: the branches test the exact line `install: the old schema is in <path>`, not a path in any `install:` line. The error message of a failed move names the old schema folder, also when the move did not occur. This fixes the text of D347 item 3 and D348 item 4.
+4. Archive step 5 and upgrade step 2.2: if `openspec/specs/` does not exist, no capability matches. Git keeps no empty folder, so the folder can be missing in a fresh clone.
+5. Propose section 4, step 2: the tasks-preview answer is the answer of the reply. If the reply does not answer the tasks-preview question, the answer of the request applies. This fixes the text of D349 item 6.
+6. `apply.instruction` step 3, reply block: the bullets use the term "stale answer", so a stale answer of the request is followed after the reply. This completes D349 item 7.
+7. Change selection, in each copy: the skill reads the schema of each change before a pick question. Each pick question shows the name and the schema of each active change, also after a name that is not in the `changes` list.
+
+**Rationale**: review C round 10 of the skill text at 7ea6bb2 had 7 remarks from eight reviewers. 7 are fixed and 0 are rejected. Upgrade 1 and upgrade 2 touch the same text and get one fix. Three remarks come from the text of D347 to D349 (schema-skill 1, propose 1, schema-yaml 1): each fix makes that text exact, with no new rule on top. Review C ran 10 rounds, and the loop stops here. The schema `version` stays 8, because 8 is not released yet.
