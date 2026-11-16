@@ -19,8 +19,8 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 - Section 4 holds the named rules of this skill, for example the requirement-source rule.
 - The general rules apply at all times, in each step.
 - A named rule applies in each step where its topic comes up, also when the step does not name the rule.
-- These six rules are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: the question rule, the ask rule, the decision rule, the answer rule, the fact rule, and the fact format. Read these six rules in that file.
-- A step number in the six rules of `apply.instruction` names a step of `apply.instruction`, not a step of this skill.
+- These seven rules are rules of `apply.instruction` in `openspec/schemas/plan-lite/schema.yaml`: the question rule, the ask rule, the decision rule, the answer rule, the fact rule, the fact format, and the decision format. Read these seven rules in that file.
+- A step number in the seven rules of `apply.instruction` names a step of `apply.instruction`, not a step of this skill.
 - In this skill, a fact goes to `## Context` of `design.md`, not to `plan.md`.
 - Two writers add a fact to `design.md`: step 2.3, and the last check of the split rule for a fact of the answer.
 - If you find another fact after step 2.3, do not edit `design.md`. Name the fact in the summary as content in no artifact.
@@ -238,7 +238,7 @@ Ask the question turn:
 - If `proposal.md`, `design.md`, and `tasks.md` already exist, do not ask. Go to step 2.1.
 - If the question list is not empty, and one of `proposal.md`, `design.md`, and `tasks.md` does not exist, ask all items of the question list in one reply, before you write any artifact.
 - First in the reply, give the answer of each question that you closed.
-- Then, if the specs step of an earlier run is not done, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, and whose rule no requirement of a delta of an earlier run states, give the reason why the decision is not a contract, in one sentence.
+- Then, if the specs step of an earlier run is not done, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, give the reason why the decision is not a contract, in one sentence.
 - Last in the reply, ask all items of the question list, in one numbered list.
 - Ask each open question with the ask rule.
 - For each planned requirement in the list, show its text, and ask if you can write it.
@@ -248,7 +248,6 @@ Ask the question turn:
 Read the answer of the user:
 
 - Split each answer of the user with the split rule, and plan each part for its artifact. Steps 2.1 to 2.4 write the parts.
-- If the specs step of an earlier run is not done, plan a requirement for each constraint of the answer that the requirement-source rule accepts, with no new question.
 - If the user says yes to a planned requirement that the question turn asked, the user is the source of that requirement.
 - If the user says no to a planned requirement that the question turn asked, do not write that requirement.
 - If the user gave no answer for a planned requirement that the question turn asked, do not write that requirement. Name the requirement in the summary.
@@ -281,7 +280,7 @@ Read the answer of the user:
 - Without a delta and without the `skip_specs: true` line, `validate` fails.
 - If you write at least one delta, first remove the `skip_specs: true` line from `<dir>/.openspec.yaml`.
 - While the `skip_specs: true` line is set, the CLI forbids spec files.
-- After you remove the `skip_specs: true` line, run `openspec instructions specs`, in the full form of the instructions rule.
+- After you remove the `skip_specs: true` line, run the instructions command for `specs` with the instructions rule.
 - Write one delta per capability, for the requirements of step 2.
 - To pick `<capability>`, list `openspec/specs/`. Reuse a capability that matches. Name a new capability only when none matches.
 - If you reuse a capability, read `openspec/specs/<capability>/spec.md`.
@@ -312,7 +311,7 @@ Read the answer of the user:
 - If the part of the answer that supersedes, changes, or corrects an item leaves the new choice to you, follow the bullet of this step that starts with "If a part of the answer leaves a choice to you".
 - Write each part that the user chose with no 🤖.
 - Write each decision with 🤖 in `plan.md` with the agent-decision rule.
-- Constraints go to `## Context` or `## Risks / Trade-offs` if they fit.
+- Write each constraint of `plan.md` and of the answer to `## Context`, or to `## Risks / Trade-offs` if the constraint states a risk.
 - Facts go to `## Context`.
 - Write each fact that step 2 planned to `## Context`, with its source emoji, unless a part of the answer corrected the fact.
 - Write each decision with 🤖 that the question turn of step 2 planned to `## Decisions`, with the agent-decision rule.
@@ -480,7 +479,8 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 - A fact of the answer goes to `## Context` of `design.md`, with 👤 and "Source: the user".
 - A constraint of the answer is a constraint that the change must follow. A constraint limits the result that a user or a program sees, or says what the change must not add. Test: if the result breaks the constraint, the change is not done.
 - A choice of how to build the result is not a constraint, also when the user gives the choice.
-- A constraint of the answer is a requirement source, like a constraint of `plan.md`.
+- A constraint of the answer goes to `design.md`, as step 2.3 says.
+- A constraint of the answer is a requirement source only when the requirement-source rule accepts the constraint.
 - If the specs step of an earlier run is not done, write the requirement of a constraint of the answer that the requirement-source rule accepts, with no new question, because the answer of the user is the source of the requirement.
 - If the resume rule kept the specs step of an earlier run, follow the bullet of this rule that starts with "If the resume rule kept the artifact of a part".
 - A choice of the answer goes to the specs only when the choice is a contract, and the user made the choice.
@@ -517,6 +517,7 @@ Write the summary in the reply of step 5.3, before the prune question. In the su
 ### ID rule
 
 - Do not write the `plan.md` IDs (`C<n>`, `OQ<n>`, `F<n>`, `D<n>`) in an artifact.
+- If a format of `apply.instruction` holds a `plan.md` ID, for example the fact format or the decision format, write the format with no ID in an artifact.
 - To refer to a `plan.md` item in an artifact, use its title, or a short form of its text, with the change name.
 
 ### Agent-decision rule

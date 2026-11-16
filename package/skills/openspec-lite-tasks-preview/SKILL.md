@@ -124,7 +124,7 @@ Do these checks in order.
 
 - Edit `plan.md` only as the plan.md rule says.
 - Each time the user replies, record the reply with the answer rule.
-- Before step 3, record the request that starts this run with the answer rule.
+- After step 2, and before step 3, record the request that starts this run with the answer rule.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
 - When you find a fact, record the fact with the fact rule and the fact format.
@@ -138,7 +138,8 @@ Do these checks in order.
   1. Record the other parts of the reply with the answer rule.
   2. List each item that you recorded, with its ID.
   3. Tell the user to make the change in `plan.md` and to run this skill again.
-  4. End your turn.
+  4. If the change answers an open question, tell the user to remove the question in the same edit of `plan.md`.
+  5. End your turn.
 - A new constraint in a reply follows the answer rule.
 - If a reply after step 8 changes no item of `plan.md`, answer the reply. Do not run step 8 again.
 - If the user replies after step 8, the reply changes an item of `plan.md`, and the reply does not ask to change Goal, Background, Non-Goals, or Constraints, do these actions in order:

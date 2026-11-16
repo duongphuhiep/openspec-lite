@@ -474,7 +474,7 @@ When each item has a draft, go to step 6.
 - Only after `validate` passes in step 9, write each ADR draft to `openspec/adr/YYYY-MM-DD-<slug>.md`.
 - Do not write an ADR in the same command as `validate`.
 - Use today's date.
-- If the file name exists for another change, add `-2`, `-3`, and so on. Never overwrite an ADR.
+- If the file name exists, add `-2`, `-3`, and so on. Never overwrite an ADR.
 - After you write a new ADR with a `Supersedes:` line, edit the old ADR. Change only the `Status:` line of the old ADR to `Status: Superseded by <new file name>`. Do not change any other line of the old ADR.
 - Then check each ADR with `Change: <name>` and a `Supersedes:` line, also the ADRs of an earlier run. If the old ADR of such an ADR does not have `Status: Superseded by`, edit the `Status:` line of the old ADR now.
 - If a write of an ADR, or an edit of a `Status:` line, fails, follow the failure rule. Do not go to step 11.

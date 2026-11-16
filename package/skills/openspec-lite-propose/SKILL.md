@@ -21,6 +21,7 @@ How to read this skill:
 - When you record an open point, follow the question rule.
 - If `plan.md` exists, record each reply of the user with the answer rule.
 - If `plan.md` does not exist yet, keep each part of the reply that the answer rule records, also a change of an outcome of the Goal. Record each part with the answer rule in section 3, step 5.
+- If the request already answers a step question of the answer rule, follow that answer, and do not ask the question.
 - If this workflow stops before `plan.md` exists, and the stop is not the end of a finished Level 1 fix, list in the stop report each answer of the user in this session, and each outcome that the user moved out. Tell the user to add the list to the request of the next run.
 - When you record a fact, follow the fact rule.
 - When you record a decision, follow the decision rule.
@@ -108,9 +109,8 @@ How to read this skill:
 - At the stop, ask the user to answer the point, or to ask for a change. End your turn. Write no file under `openspec/`.
 - After the stop, if the user answers the point, or leaves the point to you, finish the fix, and give the reply that the "On yes" bullets describe.
 - After the stop, if the user asks for a change, add the point that stopped the fix to the list of open points, and continue with section 2.
-- After the stop, if the reply is not an answer, does not leave the point to you, and is not a request for a change, do not continue the fix, and create no change. Do what the reply asks.
-- After the stop, if the reply asks to undo the fix, revert only the code that the stopped fix changed.
-- After the stop, if the reply is not an answer, does not leave the point to you, and is not a request for a change, name the code that the stopped fix changed.
+- After the stop, if the reply is not an answer, does not leave the point to you, and is not a request for a change, do not continue the fix, and create no change. Do what the reply asks, and name the code that the stopped fix changed.
+- After the stop, if the reply asks to undo the fix, revert only the code that the stopped fix changed, and say that the code is reverted.
 - On yes, stop after the fix and the names.
 - On no, continue with section 2.
 
@@ -295,7 +295,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 1. Give the summary:
    - Show the change name and the path of `plan.md`.
-   - If a stopped Level 1 fix changed code, name each file that the stopped fix changed.
+   - If a stopped Level 1 fix changed code that you did not revert, name each file of that code.
    - Follow the moved-out outcome rule.
    - Go to step 2.
 2. At the end of the reply, after the summary, write the questions in one numbered list:

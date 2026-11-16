@@ -31,7 +31,7 @@ apply:
     - If plan.md and tasks-preview.md conflict, follow plan.md.
     - Do not edit tasks-preview.md.
     - Each time the user replies, record the reply with the answer rule.
-    - Before step 3, record the request that starts this run with the answer rule.
+    - After step 1, and before step 2, record the request that starts this run with the answer rule.
     - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
     - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
     - When you find a fact, record the fact with the fact rule and the fact format.

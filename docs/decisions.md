@@ -2722,7 +2722,7 @@ This revises D175, D177, D184, and D191.
 
 ## D193: The Prune Reply Holds the Summary, a Script Gives the Git Note, and Fixes From the Rerun on dd7ad75
 
-**Status**: Item 5 revised by D200: scenario 4c puts the error-body reason in the "because" part, also if a run showed it. The commit note of the tasks preview and of `openspec-lite-apply` is revised by D290: the two skills commit `plan.md`.
+**Status**: The order of the prune reply is revised by D300 item 4. Item 5 revised by D200: scenario 4c puts the error-body reason in the "because" part, also if a run showed it. The commit note of the tasks preview and of `openspec-lite-apply` is revised by D290: the two skills commit `plan.md`.
 
 **Decision**:
 
@@ -4850,3 +4850,21 @@ This revises D323.
 12. Rejected: the `apply.instruction` part of tasks-preview remark 1. Apply runs the schema check before it loads `apply.instruction`, so the answer rule of `apply.instruction` never reads the reply to the replace question.
 
 **Rationale**: review C round 3 of the skill text at 07e6c47 had 18 remarks from eight reviewers. 17 are fixed and 1 is rejected. The schema `version` stays 8, because 8 is not released yet.
+
+## D344: Fixes of Review C Round 4
+
+**Decision**:
+
+1. Upgrade reads seven rules of `apply.instruction`: the decision format joins the six rules. The ID rule of upgrade says that a format of `apply.instruction` with a `plan.md` ID, for example the fact format or the decision format, has no ID in an artifact.
+2. Upgrade: a constraint of the answer is a requirement source only when the requirement-source rule accepts it. Each constraint of `plan.md` and of the answer goes to `## Context` of `design.md`, or to `## Risks / Trade-offs` if it states a risk. The duplicate bullet of the answer step is deleted, and the split rule keeps the only copy.
+3. Upgrade: the question turn no longer checks a delta of an earlier run for a 🤖 decision when the specs step of an earlier run is not done, because no delta can exist then. Step 2.2 runs the instructions command for `specs` with the instructions rule, with no "full form" wording.
+4. `docs/design.md` gives the order of the upgrade prune reply of D300: the `validate` result, the list, the summary, and the prune question.
+5. Schema skill: read only the `version` line of each `schema.yaml`. If the repo copy has no readable version, the replace question writes `unknown` in place of `v<old>`.
+6. Archive step 10: if the ADR file name exists, for any change, add `-2`, `-3`, and so on. This revises D112 for the same change.
+7. Propose: if the request already answers a step question, propose follows that answer and does not ask the question. After a stop of the Level 1 fix, a revert says that the code is reverted, and section 4 names only the files that are not reverted.
+8. `apply.instruction` records the request that starts the run after step 1 and before step 2, so that the stale check covers the request. The tasks preview records the request after step 2 and before step 3. This revises D343 item 9.
+9. Tasks preview: if a reply changes the Goal and answers an open question, the agent tells the user to remove the question in the same edit of `plan.md`.
+10. Rejected: archive remark 1, a fact in a requirement that a delta file of an earlier run holds. The not-drafted line of the requirement names the delta file, and the delta file keeps the fact as the reason. The case needs a failed `validate` and a rerun.
+11. Rejected: traversal remark 1, a stop report for the answers of the upgrade question turn. D208 asks the questions of step 2 again on a resumed run, so the user can give each answer again. The cost is one question turn on a rare failure path. Three new rules cost more.
+
+**Rationale**: review C round 4 of the skill text at 2ab5a23 had 15 remarks from eight reviewers. 13 are fixed and 2 are rejected. The schema `version` stays 8, because 8 is not released yet.

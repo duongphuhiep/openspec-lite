@@ -102,12 +102,13 @@ How to read this skill:
 - Input: the `version` line of `<skillDir>/assets/plan-lite/schema.yaml` (shipped), and the `version` line of `openspec/schemas/plan-lite/schema.yaml` (repo).
 - Output: the next section to do, or stop.
 - The repo copy is the folder `openspec/schemas/plan-lite/`. The repo copy exists when the folder exists, also when the folder has no `schema.yaml`.
-- Read the shipped version and the repo version.
+- Read only the `version` line of each `schema.yaml`. The `version` line is not schema content for the general rules.
 - If the shipped `schema.yaml` is missing, or has no readable `version` line, the shipped assets are damaged. Stop, and tell the user to reinstall openspec-lite.
 - If no repo copy exists, go to section 3.
 - If the repo version is higher than the shipped version, follow the Newer schema rule.
 - If the repo version equals the shipped version, tell the user how to repair a damaged schema: delete `openspec/schemas/plan-lite/`, and run this skill again. Skip section 3, and go to section 4.
 - If the repo copy exists, and the repo version is lower or the repo copy has no readable version, ask the user the replace question: "This replaces `openspec/schemas/plan-lite/` (v<old> → v<new>). The old folder moves to `openspec/schemas-backup/`. Proceed?"
+- If the repo copy has no readable version, write `unknown` in place of `v<old>` in the replace question.
 - After you ask the replace question, end your turn, and wait for the answer.
 - Do not run the install script before the user says yes to the replace question.
 - On yes to the replace question, go to section 3.
