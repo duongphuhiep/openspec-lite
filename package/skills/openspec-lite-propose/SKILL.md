@@ -249,6 +249,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
 - A problem that the Goal fixes is part of the Goal. Do not record the problem as a fact.
 - If a part of the answer adds an outcome to the Goal, or changes an outcome that the Goal states, edit the Goal to match the answer. Do not ask the split question for an added outcome, because the user chose the outcome.
+- A part adds an outcome only when the part asks for a result that no outcome of the Goal needs. Work that an outcome of the Goal needs is work for that outcome, not a new outcome.
 - Do not record a constraint or a decision that contradicts the Goal.
 - Record each constraint in the answer in `## Constraints`.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.

@@ -276,6 +276,7 @@ apply:
     - Record each fact of the reply in `## Facts`, with 👤 and "Source: the user".
     - Record each constraint of the reply in `## Constraints`.
     - If a part of the reply adds an outcome to the Goal, or changes an outcome that the Goal states, edit the Goal to match the reply. Do not ask the user to make an added outcome a separate change, because the user chose the outcome. Do not record a constraint or a decision that contradicts the Goal.
+    - A part adds an outcome only when the part asks for a result that no outcome of the Goal needs. Work that an outcome of the Goal needs is work for that outcome, not a new outcome.
     - If the user names an item of plan.md, for example by its ID or its title, and tells you to change or remove the item, change or remove the item. Do not record the instruction as a decision.
     - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done. Examples: "add no new service", or "an upload over 10 MB gets an error message".
     - A choice of how to build the result is not a constraint, also when the user gives the choice. Examples: "resize the images in a background job", or "write the thumbnails to `public/thumbs/`".

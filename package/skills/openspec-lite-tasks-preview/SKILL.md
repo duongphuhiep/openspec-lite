@@ -134,6 +134,7 @@ Do these checks in order.
 - When you write a reply to the user, follow the reply order rule.
 - When you add an item to `plan.md`, give the item an ID with the ID rule.
 - A reply that adds an outcome to the Goal, or changes an outcome that the Goal states, asks to change the existing text of the Goal.
+- A part adds an outcome only when the part asks for a result that no outcome of the Goal needs. Work that an outcome of the Goal needs is work for that outcome, not a new outcome.
 - If a reply asks to change the existing text of Goal, Background, Non-Goals, or Constraints, do these actions in order:
   1. Record the other parts of the reply with the answer rule.
   2. List each item that you recorded, with its ID.
