@@ -28,6 +28,7 @@ How to read this skill:
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
+- A search that finds no match does not fail, also when the search command exits with code 1, as `grep` and `git grep` do. No match is the output of the search.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -153,7 +154,7 @@ operations:
       - "For a plan-lite change, run openspec-lite-archive first. It promotes plan.md decisions to specs and ADRs, then archives."
 ```
 
-- If `openspec/config.yaml` exists, and the file is not valid YAML or has more than one `operations:` key, do not edit the file. Report that the guidance item is not added. Name the error, and show the guidance item block for a manual edit.
+- If `openspec/config.yaml` exists, and the file is not valid YAML or has more than one `operations:` key, do not edit the file. Name the error, and show the guidance item block for a manual edit.
 - When you edit `openspec/config.yaml`, keep the other keys, the other items, and the comments.
 - Never add a second `operations:` key. If `openspec/config.yaml` has a second `operations:` key, OpenSpec ignores the whole `openspec/config.yaml`.
 - If `openspec/config.yaml` is missing, create `openspec/config.yaml` with only the guidance item block.
@@ -163,7 +164,7 @@ operations:
 - If `operations.archive.guidance` is a list, and the list does not have the guidance item yet, add the guidance item.
 - If `operations.archive.guidance` is a list, and the list already has the guidance item, do not edit `openspec/config.yaml`.
 - If `operations.archive.guidance` is a plain string, OpenSpec ignores the string. Do not edit the string. Show the user how to change the string to a list.
-- If the edit of `openspec/config.yaml` fails, or the file is not valid YAML after the edit, restore the file as it was before the edit, once. Do not edit the file again. Report that the guidance item is not added, and show the guidance item block for a manual edit. Say that the schema install is still good.
+- If the create or the edit of `openspec/config.yaml` fails, or the file is not valid YAML after the create or the edit, restore the file as it was before, once. If the file did not exist before, the restore is a delete of the file. Do not edit the file again. Show the guidance item block for a manual edit. Say that the schema install is still good.
 - If the restore fails, tell the user that OpenSpec ignores the whole `openspec/config.yaml` until the user fixes the file.
 - Go to section 5.
 
@@ -171,7 +172,7 @@ operations:
 
 - If section 3 ran, report the `status:`, `backup:`, and each `copied:` line of the script output, copied as they are.
 - If section 3 did not run, report "The plan-lite schema is already current."
-- Report the `config.yaml` line that you added, or why you did not add the line.
+- Report the output of section 4: the guidance item that you added, or the reason why you did not add the guidance item.
 - If the script printed a `backup:` line, tell the user to compare the backup with the new schema and then delete the backup.
 - Run `git rev-parse --show-toplevel` alone, from the OpenSpec root. If the OpenSpec root is not the current folder, start the command with `cd <root> && `.
 - If `git rev-parse --show-toplevel` succeeds, tell the user to commit each of `openspec/schemas/plan-lite/` and `openspec/config.yaml` that this run changed.

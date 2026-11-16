@@ -4886,3 +4886,19 @@ This revises D323.
 11. Rejected: traversal remark 1, the kind 3 answer of the tasks preview before an upgrade in the same reply. The repeated question costs one answer, and upgrade then keeps the question in `plan.md` and `tasks.md`, the same result.
 
 **Rationale**: review C round 5 of the skill text at 9eacd6e had 13 remarks from eight reviewers. 10 are fixed and 3 are rejected. The schema `version` stays 8, because 8 is not released yet.
+
+## D346: Fixes of Review C Round 6
+
+**Decision**:
+
+1. Failure rule, in each copy: a search that finds no match does not fail, also when the search command exits with code 1, as `grep` and `git grep` do. No match is the output of the search. This ends the class of a search with no match that stops a run, for example the done check, the ADR search, and the 🤖 search of archive.
+2. Upgrade: step 5.3 and step 2.2 use "`validate` reported errors" or "reports an error" for the result of step 4. "Fails" keeps the meaning of the failure rule.
+3. Upgrade: if no question turn runs, the reason why a decision with 🤖 in `plan.md` is not a contract goes to the summary.
+4. Change selection, in each copy: a change has no schema when its `.openspec.yaml` is missing or has no `schema` line, and the pick question shows `none` as its schema. The two conditions of the named change become one.
+5. Schema skill: the failure branch of section 4 covers the create and the edit of `openspec/config.yaml`. The restore of a created file is a delete. Section 5 reports the guidance item that the run added, or the reason why the run did not add it. Section 4 no longer reports the same reason a second time.
+6. Propose section 4 step 2 does not ask a question that the user said in this session that the user cannot answer now.
+7. Answer rule of propose, the tasks preview, and `apply.instruction`: the step that asked a step question decides what to do, also when the answer asks to run a command or a skill. On the stale question, "regenerate" thus follows step 3 of `apply.instruction`, as D228 says.
+8. Tasks preview and `apply.instruction`: an obvious fact goes only to the "because" part of a 🤖 decision. If the decision has no 🤖, the agent does not record the fact. The `plan.md` template comment says the same.
+9. Archive step 1: if the reply to "Archive anyway?" answers an open question, or gives a fact, a constraint, or a choice for `plan.md`, archive does not go on. Archive quotes that part, and tells the user to run `openspec-lite-apply` with the part, then archive again.
+
+**Rationale**: review C round 6 of the skill text at cb16d86 had 10 remarks from eight reviewers. 10 are fixed and 0 are rejected. Schema-skill 1 and schema-skill 2 touch the same text and get one fix. The schema `version` stays 8, because 8 is not released yet.

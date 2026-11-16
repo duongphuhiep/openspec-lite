@@ -46,12 +46,12 @@ Do these checks in order.
 - Input: the prompt, and the `changes` list of the last `openspec list --json` output of the OpenSpec root block.
 - Output: the name of the change, written `<name>` in this skill.
 - An active change is an entry of the `changes` list.
+- A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
 - If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
   - The named change is not in the `changes` list.
-  - The `.openspec.yaml` of the named change is missing.
-  - The `.openspec.yaml` of the named change has no `schema` line.
+  - The named change has no schema.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names no change, and only one active change exists, use that change.
 - If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
@@ -154,6 +154,7 @@ Do these checks in order.
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
+- A search that finds no match does not fail, also when the search command exits with code 1, as `grep` and `git grep` do. No match is the output of the search.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -234,7 +235,7 @@ Do these two checks before you write the preview, so that no task refers to an i
 1. Fact check: check each fact that you added in this run, except a fact that the user gave (👤).
    - Read the code or the file list that the fact is about.
    - Decide if the fact is obvious with the fact rule.
-   - Move each obvious fact to the "because" part of the decision that the fact justifies, or remove the obvious fact.
+   - Move each obvious fact to the "because" part of the 🤖 decision that the fact justifies, or remove the obvious fact.
 2. 🤖 decision check: check each 🤖 decision that you added in this run.
    - If a 🤖 decision matches none of the criteria (1), (2), and (3) of the decision rule, remove the 🤖 decision from `plan.md`.
 
@@ -353,7 +354,7 @@ When the checks are done, go to step 6.
 
 - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
 - A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
-- An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
+- An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question, also when the answer asks you to run a command or a skill. Record the other parts of the reply.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
 - Sort each other part of the reply into one of three kinds. Each part has one kind.
@@ -446,7 +447,7 @@ When the checks are done, go to step 6.
 - A fact that the user gave (👤) is always non-obvious. The rules about obvious facts do not apply to a 👤 fact, also not the fact check of step 5.
 - When a command, a tool, or a service gives an error or an output that makes you change what you do, and the output is a non-obvious fact, record the output as a fact, with the command and the error text.
 - Do not record an obvious fact or a well-known fact in `## Facts`.
-- If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
+- If an obvious fact or a well-known fact is the reason of a 🤖 decision, write the fact in the "because" part of that decision. If the decision has no 🤖, do not record the fact.
 - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact. The preview cannot edit `## Constraints` or `## Non-Goals`, so the fact has no place.
 - Do not record a guess.
 - A sentence that states a choice, for example "the code must resize the images in one batch", is a decision, not a fact.

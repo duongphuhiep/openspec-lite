@@ -43,6 +43,7 @@ Upgrade a plan-lite change to spec-driven. The schema switch comes after step 2 
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
+- A search that finds no match does not fail, also when the search command exits with code 1, as `grep` and `git grep` do. No match is the output of the search.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -103,12 +104,12 @@ Do these checks in order.
 - Input: the prompt, and the `changes` list of the last `openspec list --json` output of the OpenSpec root block.
 - Output: the name of the change, written `<name>` in this skill.
 - An active change is an entry of the `changes` list.
+- A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
 - If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
   - The named change is not in the `changes` list.
-  - The `.openspec.yaml` of the named change is missing.
-  - The `.openspec.yaml` of the named change has no `schema` line.
+  - The named change has no schema.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names no change, and only one active change exists, use that change.
 - If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
@@ -238,7 +239,7 @@ Ask the question turn:
 - If `proposal.md`, `design.md`, and `tasks.md` already exist, do not ask. Go to step 2.1.
 - If the question list is not empty, and one of `proposal.md`, `design.md`, and `tasks.md` does not exist, ask all items of the question list in one reply, before you write any artifact.
 - First in the reply, give the answer of each question that you closed.
-- Then, if the specs step of an earlier run is not done, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, give the reason why the decision is not a contract, in one sentence.
+- Then, if the specs step of an earlier run is not done, for each decision with 🤖 in `plan.md` that you do not plan as a requirement, give the reason why the decision is not a contract, in one sentence. If no question turn runs, give each such reason in the summary.
 - Last in the reply, ask all items of the question list, in one numbered list.
 - Ask each open question with the ask rule.
 - For each planned requirement in the list, show its text, and ask if you can write it.
@@ -278,7 +279,7 @@ Read the answer of the user:
 - Output: one delta per capability in `<dir>/specs/`, and the `skip_specs` state of `<dir>/.openspec.yaml`.
 - If the specs step of an earlier run is done, follow the resume rule, and go to step 2.3.
 - If no requirement is left after step 2, write no spec, and set `skip_specs: true` in `<dir>/.openspec.yaml`. Then go to step 2.3.
-- Without a delta and without the `skip_specs: true` line, `validate` fails.
+- Without a delta and without the `skip_specs: true` line, `validate` reports an error.
 - If you write at least one delta, first remove the `skip_specs: true` line from `<dir>/.openspec.yaml`.
 - While the `skip_specs: true` line is set, the CLI forbids spec files.
 - After you remove the `skip_specs: true` line, run the instructions command for `specs` with the instructions rule.
@@ -405,7 +406,7 @@ Do steps 5.1 to 5.4 in order.
 
 - Write one reply in this order: the result of step 4, the list from step 5.1, the summary of section 3, and last the prune question.
 - The prune question is: "Delete the moved sections from `plan.md`?"
-- If `validate` failed, write in the line just before the prune question: keep `plan.md` until the errors are fixed.
+- If `validate` reported errors in step 4, write in the line just before the prune question: keep `plan.md` until the errors are fixed.
 - The summary must not say that `plan.md` is deleted or kept, because the user did not answer yet. This ban is about the whole file. Name each item that stays in `plan.md` after any answer, as section 3 says.
 - The prune question is the last line of the reply.
 - End your turn, and wait for the answer. Then go to step 5.4.

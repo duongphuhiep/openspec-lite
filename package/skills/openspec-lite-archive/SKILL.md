@@ -50,6 +50,7 @@ How to read this skill:
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
+- A search that finds no match does not fail, also when the search command exits with code 1, as `grep` and `git grep` do. No match is the output of the search.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -110,12 +111,12 @@ Do these checks in order.
 - Input: the prompt, and the `changes` list of the last `openspec list --json` output of the OpenSpec root block.
 - Output: the name of the change, written `<name>` in this skill.
 - An active change is an entry of the `changes` list.
+- A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
 - If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
   - The named change is not in the `changes` list.
-  - The `.openspec.yaml` of the named change is missing.
-  - The `.openspec.yaml` of the named change has no `schema` line.
+  - The named change has no schema.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names no change, and only one active change exists, use that change.
 - If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.
@@ -253,6 +254,7 @@ The guard path:
 - Name each outcome and each constraint that is not met, and each open question that is left.
 - If each answer is "yes", go to step 2.
 - If an answer is "no", show the warnings, and ask only: "Archive anyway?" Give no other options in this question. End your turn.
+- If the reply to "Archive anyway?" answers an open question, or gives a fact, a constraint, or a choice for `plan.md`, do not go to step 2. Quote that part of the reply. Tell the user to run `openspec-lite-apply` with that part, so that apply records the part, and then to run `openspec-lite-archive` again. Stop.
 - If the user says yes to "Archive anyway?", go to step 2.
 - If the user says no to "Archive anyway?", give the paths below, then stop:
   - For each outcome or constraint that is not met, give two paths. Path 1: implement the item with `openspec-lite-apply`. Path 2: remove the item from `plan.md`, and propose the item as a separate change with `openspec-lite-propose`.

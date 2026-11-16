@@ -46,6 +46,7 @@ apply:
 
     - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
     - An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
+    - A search that finds no match does not fail, also when the search command exits with code 1, as `grep` and `git grep` do. No match is the output of the search.
     - If a step gives its own failure branch, follow that branch.
     - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
     - Do not try a third form.
@@ -167,7 +168,7 @@ apply:
     7. Check the facts. Do this check last, because checks 2 to 6 can add facts:
        - Compare each fact in `## Facts` with the code. Update or remove each fact that is no longer true.
        - Check each fact that you added in this run, except a fact that the user gave (👤). Find each obvious fact with the fact rule.
-       - Move each obvious fact to the "because" part of the decision that the fact justifies, or remove the obvious fact.
+       - Move each obvious fact to the "because" part of the 🤖 decision that the fact justifies, or remove the obvious fact.
 
     When the checks are done, go to step 6.
 
@@ -256,7 +257,7 @@ apply:
 
     - If a part of the reply only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
     - A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
-    - An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the reply.
+    - An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question, also when the answer asks you to run a command or a skill. Record the other parts of the reply.
     - If the user says to keep a question open, keep the question in `## Open Questions`, and end its text with "(kept open by the user)".
     - Add the "(kept open by the user)" marker only when the user says to keep the question open.
     - These parts of the reply have no kind: a part that only asks you to run a command or a skill, or asks you a question; an answer to a step question; and a part that says to keep a question open.
@@ -353,7 +354,7 @@ apply:
     - The other checks apply to a 👤 fact, for example the check of a fact that is no longer true.
     - When a command, a tool, or a service gives an error or an output that makes you change what you do, and the output is a non-obvious fact, record the output as a fact, with the command and the error text.
     - Do not record an obvious fact or a well-known fact in `## Facts`.
-    - If an obvious fact or a well-known fact is the reason of a decision, write the fact in the "because" part of that decision.
+    - If an obvious fact or a well-known fact is the reason of a 🤖 decision, write the fact in the "because" part of that decision. If the decision has no 🤖, do not record the fact.
     - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not record the fact in `## Facts`.
     - If an obvious fact or a well-known fact justifies only a constraint or a non-goal, do not add the fact to `## Constraints` or `## Non-Goals` either, because an edit of `## Constraints` or `## Non-Goals` makes the preview stale.
     - Do not record a guess.

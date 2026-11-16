@@ -27,6 +27,7 @@ How to read this skill:
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
+- A search that finds no match does not fail, also when the search command exits with code 1, as `grep` and `git grep` do. No match is the output of the search.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -87,12 +88,12 @@ Do these checks in order: OpenSpec root, change selection, guard, and schema che
 - Input: the prompt, and the `changes` list of the last `openspec list --json` output of the OpenSpec root block.
 - Output: the name of the change, written `<name>` in this skill.
 - An active change is an entry of the `changes` list.
+- A change has no schema when its `.openspec.yaml` is missing or has no `schema` line. Show `none` as the schema of such a change.
 - If the `changes` list is empty, stop. Tell the user that no active change exists.
 - If the prompt names a change, use that change.
 - If the prompt names a change, and one of these conditions is true, show the active changes, and ask the user to pick one change. End your turn, and wait for the answer.
   - The named change is not in the `changes` list.
-  - The `.openspec.yaml` of the named change is missing.
-  - The `.openspec.yaml` of the named change has no `schema` line.
+  - The named change has no schema.
 - If the prompt names no change, read `schema` from the `.openspec.yaml` of each change. The `changes` list does not give the schema.
 - If the prompt names no change, and only one active change exists, use that change.
 - If the prompt names no change, and more than one active change exists, ask the user to pick one change. Show the name and the schema of each change, so that the user sees which changes this skill accepts. End your turn, and wait for the answer.

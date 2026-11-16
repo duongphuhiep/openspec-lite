@@ -31,6 +31,7 @@ How to read this skill:
 
 - An action is a command, a script, a skill call, a tool call, or a read, a write, an edit, or a delete of a file.
 - An action fails when the action exits non-zero, is denied, or gives an error. If a step names the outputs of the action, the action also fails when the action prints another output.
+- A search that finds no match does not fail, also when the search command exits with code 1, as `grep` and `git grep` do. No match is the output of the search.
 - If a step gives its own failure branch, follow that branch.
 - If a Bash call with more than one command is denied, do the same action once more in a second form. The second form is single commands, one command in each call, or the Read, Write, or Edit tool.
 - Do not try a third form.
@@ -234,7 +235,7 @@ Do these checks in order. When the checks are done, go to section 3.
 
 - If a part of the answer only asks you to run a command or a skill, or asks you a question, do the request or answer the question. Record nothing from that part. If you run an openspec-lite skill for the part, give the change name and the OpenSpec root in the prompt of the skill call.
 - A step question is a question that a step or a rule of the current workflow asks, also a question of a skill that the current workflow runs. An open point or an open question is never a step question.
-- An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question. Record the other parts of the answer.
+- An answer to a step question is not a fact, a constraint, or a choice for plan.md. Follow the step that asked the question, also when the answer asks you to run a command or a skill. Record the other parts of the answer.
 - If the user says to keep a question open, keep the question in `## Open Questions`, and add the marker with the question rule.
 - Sort each other part of the answer into one of three kinds. Each part has one kind.
 - These parts have no kind: a part that only asks for a command, a skill, or an answer; an answer to a step question; and a part that says to keep a question open.
@@ -301,6 +302,7 @@ Do these checks in order. When the checks are done, go to section 3.
 2. At the end of the reply, after the summary, write the questions in one numbered list:
    - First, each open question that you recorded in `plan.md`, so that the user can answer the open question.
    - Do not ask a question that ends with "(kept open by the user)", or a question that ends with "(left to the agent by the user)".
+   - Do not ask a question that the user said in this session that the user cannot answer now. Name the question as still open.
    - Last, the question: "Do you want a tasks preview?"
    - After the question, end your turn, and wait for the answer.
    - When the user replies, first record the reply with the answer rule.
