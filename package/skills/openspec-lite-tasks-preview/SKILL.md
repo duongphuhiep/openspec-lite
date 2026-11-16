@@ -122,8 +122,8 @@ Do these checks in order.
 ### General rules
 
 - Edit `plan.md` only as the plan.md rule says.
-- Each time the user replies, record the reply with the answer rule.
-- After step 2, and before step 3, record the request that starts this run with the answer rule. The general rules handle the request as a reply.
+- Each time the user replies after step 2, record the reply with the answer rule.
+- After step 2, and before step 3, record with the answer rule the request that starts this run, and each reply of the user to a question of section 1. The general rules handle the request as a reply.
 - When you make a decision, record the decision with the decision rule, the decision format, and the mark rule.
 - When you add or change a decision, keep `## Decisions` current with the current-decisions rule.
 - When you find a fact, record the fact with the fact rule and the fact format.

@@ -164,7 +164,7 @@ operations:
 - If `operations.archive.guidance` is a list, and the list does not have the guidance item yet, add the guidance item.
 - If `operations.archive.guidance` is a list, and the list already has the guidance item, do not edit `openspec/config.yaml`.
 - If `operations.archive.guidance` is a plain string, OpenSpec ignores the string. Do not edit the string. Show the user how to change the string to a list.
-- If the create or the edit of `openspec/config.yaml` fails, or the file is not valid YAML after the create or the edit, restore the file as it was before, once. If the file did not exist before, the restore is a delete of the file. Do not edit the file again. Show the guidance item block for a manual edit. Say that the schema install is still good.
+- If the create or the edit of `openspec/config.yaml` fails, or the file is not valid YAML after the create or the edit, do these actions. If the file on disk differs from the file before, restore the file as it was before, once. If the file did not exist before, the restore is a delete of the file. Do not edit the file again. Show the guidance item block for a manual edit. Say that the schema install is still good.
 - If the restore fails, tell the user that OpenSpec ignores the whole `openspec/config.yaml` until the user fixes the file.
 - Go to section 5.
 

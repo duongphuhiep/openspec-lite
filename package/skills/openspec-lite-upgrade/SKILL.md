@@ -242,7 +242,7 @@ Ask the question turn:
 - Last in the reply, ask all items of the question list, in one numbered list.
 - Ask each open question with the ask rule.
 - For each planned requirement in the list, show its text, and ask if you can write it.
-- For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", upgrade writes no spec (step 2.2).
+- For the question if the change has a requirement, say that "None" is a valid answer. If the user answers "None", plan no requirement from the question.
 - End the turn, and wait for the answer.
 
 Read the answer of the user:
@@ -257,7 +257,7 @@ Read the answer of the user:
 - Add the "(kept open by the user)" marker only when the user says to keep the question open.
 - If the user answers yes to the question if the change has a requirement, but gives no requirement text, ask for the text, and end the turn. Do not write an artifact before the answer.
 - When the user gives the requirement text, keep the plans of the earlier reply. Read only the new reply with the "Read the answer of the user" part of step 2.
-- If the user gives no answer to the question if the change has a requirement, write no spec, as for "None", and name the question in the summary.
+- If the user gives no answer to the question if the change has a requirement, plan no requirement from the question, as for "None", and name the question in the summary.
 - Go to step 2.1.
 
 ### Step 2.1: Write `proposal.md`

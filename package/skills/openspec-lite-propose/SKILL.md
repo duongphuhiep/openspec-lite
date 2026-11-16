@@ -20,7 +20,7 @@ How to read this skill:
 - When you write `## Goal`, follow the goal rule.
 - When you record an open point, follow the question rule.
 - If `plan.md` exists, record each reply of the user with the answer rule.
-- If `plan.md` does not exist yet, keep each part of the reply that the answer rule records, also a change of an outcome of the Goal. Record each part with the answer rule in section 3, step 5.
+- If `plan.md` does not exist yet, keep each part of the reply that the answer rule records, also a part that adds or changes an outcome of the Goal. Record each part with the answer rule in section 3, step 5.
 - If the request already answers a step question of the answer rule, follow that answer, and do not ask the question.
 - If this workflow stops before section 3, step 5 is done, and the stop is not the end of a finished Level 1 fix, list in the stop report each answer of the user in this session, and each outcome that the user moved out. Tell the user to add the list to the request of the next run.
 - When you record a fact, follow the fact rule.
@@ -248,7 +248,7 @@ Do these checks in order. When the checks are done, go to section 3.
 - If a part limits the result and also says how to build the result, record the limit as a constraint, and the build choice as a decision with no 🤖.
 - Record each fact in the answer in `## Facts`, with 👤 and "Source: the user".
 - A problem that the Goal fixes is part of the Goal. Do not record the problem as a fact.
-- If a part of the answer adds an outcome to the Goal, or changes an outcome that the Goal states, edit the Goal to match the answer.
+- If a part of the answer adds an outcome to the Goal, or changes an outcome that the Goal states, edit the Goal to match the answer. Do not ask the split question for an added outcome, because the user chose the outcome.
 - Do not record a constraint or a decision that contradicts the Goal.
 - Record each constraint in the answer in `## Constraints`.
 - A constraint limits the result that a user or a program sees, or says what the change must not add. A constraint passes this test: if the result breaks the constraint, the change is not done.
@@ -304,11 +304,12 @@ Do these checks in order. When the checks are done, go to section 3.
    - Do not ask a question that ends with "(kept open by the user)", or a question that ends with "(left to the agent by the user)".
    - Do not ask a question that the user said in this session that the user cannot answer now. Name the question as still open.
    - Last, the question: "Do you want a tasks preview?"
-   - After the question, end your turn, and wait for the answer.
+   - If the list has a question, end your turn after the list, and wait for the answer.
+   - If the list has no question, because the request answers the tasks-preview question, follow that answer now.
    - When the user replies, first record the reply with the answer rule.
    - If you added, changed, or removed an item in `plan.md`, list each such item, with its ID.
-   - If you changed an outcome of the Goal, quote the old outcome and the new outcome.
-   - Then, on yes, run the `openspec-lite-tasks-preview` skill. Give `<name>` and the OpenSpec root in the prompt of the skill call.
+   - If you added an outcome to the Goal, quote the new outcome. If you changed an outcome of the Goal, quote the old outcome and the new outcome.
+   - Then, on a yes of the reply or of the request, run the `openspec-lite-tasks-preview` skill. Give `<name>` and the OpenSpec root in the prompt of the skill call.
    - On yes, if you cannot invoke a skill, tell the user to run `openspec-lite-tasks-preview`.
    - On no, recommend `openspec-lite-apply` as the next step, and end your turn.
-   - If the reply has no yes and no no, ask the tasks-preview question again.
+   - If the reply has no yes and no no, and the request does not answer the tasks-preview question, ask the tasks-preview question again.

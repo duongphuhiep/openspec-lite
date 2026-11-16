@@ -129,6 +129,11 @@ Do these checks in order.
 - If `schema` is `plan-lite`, and `openspec/changes/<name>/plan.md` does not exist, stop. Tell the user to write `plan.md` with `openspec-lite-propose` first.
 - If `schema` is not `plan-lite`, follow the guard path below. Do not run the schema check or section 3. Do not run section 2, except steps 5, 6, and 10 when guard step 1 calls them.
 
+The rules of the guard path apply at all times, in each guard step:
+
+- Archive does not record an answer on the guard path.
+- If a reply of the user on the guard path answers an open question, or gives a fact, a constraint, or a choice, do not run the command. Quote that part of the reply. Tell the user to write the part in an artifact of the change, and then to run `openspec-lite-archive` again. Stop.
+
 The guard path:
 
 1. Copy the decisions of `design.md` to ADRs.
@@ -163,7 +168,6 @@ The guard path:
    - Go to guard step 3.
 3. Name the open questions of a `plan.md` that still exists.
    - Input: the input of the leftover plan.md questions rule.
-   - Archive does not record an answer on the guard path.
    - Name the open questions of `plan.md` with the leftover plan.md questions rule, before the questions and the requests of the reply.
    - Go to guard step 4.
 4. Block the archive while a delta holds a 🤖.
@@ -180,7 +184,6 @@ The guard path:
    - If `plan.md` still has open questions that no artifact holds, and whose answer no artifact holds, name how many in the same question.
    - The count of these open questions matters because the archive moves `plan.md` to the archive folder, and no artifact holds these questions.
    - After the archive question, end your turn, and wait for the answer.
-   - If the reply to the archive question answers an open question, or gives a fact, a constraint, or a choice, do not run the command. Quote that part of the reply. Tell the user to write the part in an artifact of the change, and then to run `openspec-lite-archive` again. Stop.
    - If the user says yes to the archive question, run the command. The command applies the deltas of `specs/` and moves the change to the archive. Report the result.
    - If the user says no to the archive question, tell the user to run stock `/opsx:archive` later.
 

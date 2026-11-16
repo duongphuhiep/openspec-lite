@@ -4936,3 +4936,18 @@ This revises D323.
 10. `apply.instruction` step 4: skip each task of `tasks-preview.md` that no item of plan.md needs. Step 5 check 2: after a fix of the code for a decision with no 🤖, do check 1 again.
 
 **Rationale**: review C round 8 of the skill text at 505270d had 14 remarks from eight reviewers. 14 are fixed and 0 are rejected. Upgrade 1 and apply 1 touch the same shared block and get one fix. Schema-yaml 2 and tasks-preview 1 touch the same text and get one fix. Four remarks come from the text of D346 and D347 (upgrade 2, schema-skill 1, propose 2, and archive 1): each fix simplifies or closes that text, with no new rule on top. The schema `version` stays 8, because 8 is not released yet.
+
+## D349: Fixes of Review C Round 9
+
+**Decision**:
+
+1. Upgrade: a "None" answer, or no answer, to the question if the change has a requirement plans no requirement from that question. A requirement from another part of the answers stays planned, and step 2.2 decides on `skip_specs`. Before, the text said that upgrade writes no spec, and a constraint of the same reply could then get two results.
+2. Schema skill, section 4: if the create or the edit of `openspec/config.yaml` fails, the agent restores the file only if the file on disk differs from the file before. A failed action that did not change the file no longer gives a restore that can fail and give a false warning.
+3. Archive guard path: the content-reply rule of D348 item 6 moves to a list of rules that apply at all times on the guard path, with "Archive does not record an answer on the guard path". The rule now also covers the reply to the request of guard step 4.
+4. Propose: a reply that adds an outcome is kept before `plan.md` exists, and section 4 quotes an added outcome. This completes D348 item 9 for propose.
+5. Propose and `apply.instruction`: an outcome that a reply of the user adds gets no split question, because the user chose the outcome. The `plan.md` template comment applies to the outcomes of the request.
+6. Propose section 4, step 2: if the request answers the tasks-preview question, propose asks the other questions, ends its turn, and follows the answer of the request after the reply. If no other question is left, propose follows the answer at once.
+7. `apply.instruction` step 3: the stale answer can come from the request that starts the run or from a reply. The two branches of the stale answer apply to both sources, before the empty-list check. This completes D347 item 7.
+8. Tasks preview: a reply to a question of section 1 is recorded at the record point after step 2, with the request. Before, the general rules recorded the reply before the guard and step 1 checked the change. `apply.instruction` is not changed: apply loads it after section 1.
+
+**Rationale**: review C round 9 of the skill text at 8cec8af had 9 remarks from eight reviewers. 9 are fixed and 0 are rejected. Propose 2 and schema-yaml 2 touch the same rule and get one fix: no split question for an outcome that the user adds, in place of a new split check. Five remarks come from the text of D347 or D348 (propose 1, propose 2, schema-yaml 1, schema-yaml 2, archive 1): each fix completes or moves that text. The schema `version` stays 8, because 8 is not released yet.
